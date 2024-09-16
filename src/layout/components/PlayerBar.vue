@@ -1,0 +1,328 @@
+<template>
+  <footer class="player-bar">
+    <div class="player-bar__left">
+      <div class="player-bar__left__cover-wrapper">
+        <img class="player-bar__left__cover-wrapper__cover" :src="song.cover" alt="" />
+      </div>
+      <div class="player-bar__left__msg-wrapper">
+        <div class="player-bar__left__msg-wrapper__title">{{ song.title }}</div>
+        <div class="player-bar__left__msg-wrapper__artist">{{ song.artist }}</div>
+      </div>
+      <button class="icon-wrapper" @click="song.isLike = !song.isLike">
+        <IconInLikeSong v-if="song.isLike" />
+        <IconAddToLikeSong v-else />
+      </button>
+    </div>
+    <div class="player-bar__mid">
+      <div class="player-bar__mid__btn-group">
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': isShuffle }"
+          @click="isShuffle = !isShuffle"
+        >
+          <IconShuffle />
+        </button>
+        <button class="icon-wrapper">
+          <IconPrevious />
+        </button>
+        <button class="player-bar__mid__btn-group__play" @click="isPause = !isPause">
+          <span class="icon-wrapper-round">
+            <IconPlay v-if="isPause" />
+            <IconPause v-else />
+          </span>
+        </button>
+        <button class="icon-wrapper">
+          <IconNext />
+        </button>
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': isRepeat }"
+          @click="isRepeat = !isRepeat"
+        >
+          <IconRepeat />
+        </button>
+      </div>
+      <div class="player-bar__mid__bottom">
+        <div class="player-bar__mid__bottom__seek">-:--</div>
+        <ProcessBar :percentage="percentage" />
+        <div class="player-bar__mid__bottom__duration">-:--</div>
+      </div>
+    </div>
+    <div class="player-bar__right">
+      <button
+        class="icon-wrapper"
+        :class="{ 'btn-active': isNowPlayingView }"
+        @click="isNowPlayingView = !isNowPlayingView"
+      >
+        <IconNowPlayingView />
+      </button>
+      <button
+        class="icon-wrapper"
+        :class="{ 'btn-active': isLyrics }"
+        @click="isLyrics = !isLyrics"
+      >
+        <IconLyrics />
+      </button>
+      <button class="icon-wrapper" :class="{ 'btn-active': isQueen }" @click="isQueen = !isQueen">
+        <IconQueen />
+      </button>
+      <button
+        class="icon-wrapper"
+        :class="{ 'btn-active': isConnectToDevice }"
+        @click="isConnectToDevice = !isConnectToDevice"
+      >
+        <IconConnectToDevice />
+      </button>
+      <div class="player-bar__right__volume">
+        <button class="icon-wrapper" @click="isMute = !isMute">
+          <IconVolumeMuted v-if="isMute || volume == 0" />
+          <IconVolumeQuiet v-else-if="volume <= 33" />
+          <IconVolumeNormal v-else-if="volume <= 66" />
+          <IconVolumeLoud v-else />
+        </button>
+        <div class="player-bar__right__volume__progress-wrapper">
+          <ProcessBar :percentage="isMute ? 0 : volume" />
+        </div>
+      </div>
+      <button
+        class="icon-wrapper"
+        :class="{ 'btn-active': isMiniPlayer }"
+        @click="isMiniPlayer = !isMiniPlayer"
+      >
+        <IconMiniPlayer />
+      </button>
+      <button class="icon-wrapper">
+        <IconFullScreen />
+      </button>
+    </div>
+  </footer>
+</template>
+
+<script>
+import IconAddToLikeSong from '@/components/Icons/IconAddToLikeSong.vue'
+import IconNext from '@/components/Icons/IconNext.vue'
+import IconPause from '@/components/Icons/IconPause.vue'
+import IconPlay from '@/components/Icons/IconPlay.vue'
+import IconPrevious from '@/components/Icons/IconPrevious.vue'
+import IconRepeat from '@/components/Icons/IconRepeat.vue'
+import IconShuffle from '@/components/Icons/IconShuffle.vue'
+import cover from '@/assets/cover.jfif'
+import ProcessBar from '@/components/ProcessBar/index.vue'
+import IconVolumeLoud from '@/components/Icons/IconVolumeLoud.vue'
+import IconVolumeNormal from '@/components/Icons/IconVolumeNormal.vue'
+import IconVolumeQuiet from '@/components/Icons/IconVolumeQuiet.vue'
+import IconVolumeMuted from '@/components/Icons/IconVolumeMuted.vue'
+import IconNowPlayingView from '@/components/Icons/IconNowPlayingView.vue'
+import IconQueen from '@/components/Icons/IconQueen.vue'
+import IconConnectToDevice from '@/components/Icons/IconConnectToDevice.vue'
+import IconLyrics from '@/components/Icons/IconLyrics.vue'
+import IconMiniPlayer from '@/components/Icons/IconMiniPlayer.vue'
+import IconFullScreen from '@/components/Icons/IconFullScreen.vue'
+import IconInLikeSong from '@/components/Icons/IconInLikeSong.vue'
+
+export default {
+  name: 'PlayerBar',
+  components: {
+    IconPlay,
+    IconPause,
+    IconNext,
+    IconPrevious,
+    IconShuffle,
+    IconRepeat,
+    IconAddToLikeSong,
+    IconVolumeLoud,
+    IconVolumeNormal,
+    IconVolumeQuiet,
+    IconVolumeMuted,
+    IconNowPlayingView,
+    IconQueen,
+    IconConnectToDevice,
+    IconLyrics,
+    IconMiniPlayer,
+    IconFullScreen,
+    IconInLikeSong,
+    ProcessBar
+  },
+  data() {
+    return {
+      isPause: true,
+      isShuffle: false,
+      isRepeat: false,
+      isMute: false,
+      isFullScreen: false,
+      isMiniPlayer: false,
+      isConnectToDevice: false,
+      isQueen: false,
+      isLyrics: false,
+      isNowPlayingView: false,
+      song: {
+        cover: cover,
+        title: 'Airport Take Off',
+        artist: '陶喆',
+        isLike: false
+      },
+      percentage: 24,
+      volume: 66
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+$cover-width: 56px;
+$cover-height: 56px;
+$msg-title-font-size: 1.4rem;
+$msg-artist-font-size: 1.2rem;
+
+.btn-active:nth-child(n) {
+  fill: $font-color-active;
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    height: 0.4rem;
+    width: 0.4rem;
+    border-radius: 50%;
+    background-color: $font-color-active;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &:hover {
+    fill: $font-color-active;
+  }
+}
+
+.icon-wrapper {
+  display: inline-block;
+  fill: $font-color-light;
+  height: 3.2rem;
+  width: 3.2rem;
+  padding: $gutter;
+
+  &:hover {
+    fill: $font-color;
+  }
+
+  &:active {
+    fill: $font-color;
+  }
+}
+
+.player-bar {
+  height: $player-height;
+  margin-top: $gutter;
+  display: flex;
+
+  &__left {
+    flex: 3;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    &__msg-wrapper {
+      margin: 0 $gutter;
+
+      &__title {
+        font-size: $msg-title-font-size;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      &__artist {
+        font-size: $msg-artist-font-size;
+        color: $font-color-light;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+          color: $font-color;
+        }
+      }
+    }
+
+    &__cover-wrapper {
+      width: $cover-width;
+      height: $cover-height;
+      margin: 0 $gutter;
+
+      &__cover {
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  &__mid {
+    flex: 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &__btn-group {
+      display: flex;
+      justify-content: center;
+      gap: $gutter;
+      margin-bottom: $gutter;
+
+      &__play {
+        height: 3.2rem;
+        width: 3.2rem;
+        border-radius: 50%;
+        background-color: $font-color;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 $gutter;
+
+        .icon-wrapper-round {
+          display: inline-block;
+          fill: $bg-main-color;
+          height: 1.6rem;
+          width: 1.6rem;
+        }
+      }
+    }
+
+    &__bottom {
+      display: flex;
+      gap: $gutter;
+      font-size: 1.2rem;
+      color: $font-color-light;
+
+      &__seek {
+        min-width: 4rem;
+        text-align: right;
+      }
+
+      &__duration {
+        min-width: 4rem;
+        text-align: left;
+      }
+    }
+  }
+
+  &__right {
+    flex: 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    &__volume {
+      margin-right: $gutter;
+      display: flex;
+      align-items: center;
+
+      &__progress-wrapper {
+        width: 9.3rem;
+      }
+    }
+  }
+}
+</style>
