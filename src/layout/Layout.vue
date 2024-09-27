@@ -3,7 +3,9 @@
     <NavBar />
     <section class="mid-wrapper">
       <MyLibrary />
-      <MainView />
+      <div class="main-view">
+        <RouterView />
+      </div>
       <DetailInfo />
     </section>
     <PlayerBar />
@@ -12,7 +14,6 @@
 
 <script>
 import DetailInfo from './components/DetailInfo.vue'
-import MainView from './components/MainView.vue'
 import MyLibrary from './components/MyLibrary.vue'
 import NavBar from './components/NavBar.vue'
 import PlayerBar from './components/PlayerBar.vue'
@@ -22,7 +23,6 @@ export default {
   components: {
     NavBar,
     MyLibrary,
-    MainView,
     DetailInfo,
     PlayerBar
   }
@@ -39,6 +39,12 @@ export default {
     height: calc(100vh - $nav-height - $player-height - (4 * $gutter));
     display: flex;
     gap: $gutter;
+
+    .main-view {
+      background-color: $bg-main-color-light;
+      border-radius: $panel-border-radius;
+      flex: 4;
+    }
   }
 }
 </style>

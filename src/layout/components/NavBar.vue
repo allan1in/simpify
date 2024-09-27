@@ -36,20 +36,26 @@
     </div>
     <div class="nav-bar__right">
       <button class="nav-bar__right__photo-wrapper">
-        <img class="nav-bar__right__photo-wrapper__photo" :src="photo" alt="" />
+        <img
+          class="nav-bar__right__photo-wrapper__photo"
+          :src="avatar"
+          :alt="display_name"
+          :title="display_name"
+        />
       </button>
     </div>
   </nav>
 </template>
 
 <script>
-import photo from '@/assets/photo.jfif'
 import IconBrowse from '@/components/Icons/IconBrowse.vue'
 import IconBrowseActive from '@/components/Icons/IconBrowseActive.vue'
 import IconHome from '@/components/Icons/IconHome.vue'
 import IconHomeActive from '@/components/Icons/IconHomeActive.vue'
 import IconPrimaryLogo from '@/components/Icons/IconPrimaryLogo.vue'
 import IconSearch from '@/components/Icons/IconSearch.vue'
+import { useUserStore } from '@/stores/user'
+import { mapState } from 'pinia'
 
 export default {
   name: 'NavBar',
@@ -61,9 +67,11 @@ export default {
     IconBrowse,
     IconBrowseActive
   },
+  computed: {
+    ...mapState(useUserStore, ['avatar', 'display_name'])
+  },
   data() {
     return {
-      photo,
       isHome: true
     }
   }
