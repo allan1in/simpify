@@ -43,7 +43,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     // Has token
     if (to.path === '/login') {
-      next('/')
+      next()
     } else {
       let userStore = useUserStore()
       if (userStore.display_name) {
@@ -51,8 +51,14 @@ router.beforeEach(async (to, from, next) => {
         next()
       } else {
         // Has no userData
-        await userStore.getUserData()
-        next()
+        try {
+          await userStore.getUserData()
+          next()
+        } catch (error) {
+          // Bad or expired token
+          alert('Bad or expired token, please login again')
+          next('/login')
+        }
       }
     }
   }
