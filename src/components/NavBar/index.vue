@@ -7,7 +7,7 @@
     </div>
     <div class="nav-bar__mid-wrapper">
       <div class="nav-bar__mid">
-        <button class="nav-bar__mid__home-btn" @click="isHome = true">
+        <button class="nav-bar__mid__home-btn" @click="toHome">
           <span class="nav-bar__mid__home-btn__wrapper" :class="{ 'btn-active': isHome }">
             <IconHomeActive v-if="isHome" />
             <IconHome v-else />
@@ -18,17 +18,17 @@
             class="nav-bar__mid__search__input"
             type="text"
             placeholder="What do you want to play?"
-            @click="isHome = false"
+            @click="toSearch"
           />
           <div class="nav-bar__mid__search__icon-wrapper">
             <IconSearch />
           </div>
           <button
             class="nav-bar__mid__search__btn-wrapper"
-            :class="{ 'btn-active': !isHome }"
-            @click="isHome = false"
+            :class="{ 'btn-active': isSearch }"
+            @click="toSearch"
           >
-            <IconBrowseActive v-if="!isHome" />
+            <IconBrowseActive v-if="isSearch" />
             <IconBrowse v-else />
           </button>
         </div>
@@ -72,7 +72,31 @@ export default {
   },
   data() {
     return {
-      isHome: true
+      isHome: true,
+      isSearch: false
+    }
+  },
+  methods: {
+    toHome() {
+      this.$router.push({ name: 'Dashboard' })
+    },
+    toSearch() {
+      this.$router.push({ name: 'Search' })
+    }
+  },
+  watch: {
+    $route: {
+      handler(to, from) {
+        let path = to.path.split('/')[1]
+        if (path === '') {
+          this.isHome = true
+          this.isSearch = false
+        } else if (path === 'search') {
+          this.isHome = false
+          this.isSearch = true
+        }
+      },
+      immediate: true
     }
   }
 }
@@ -80,11 +104,11 @@ export default {
 
 <style lang="scss" scoped>
 .btn-active:nth-child(n) {
-  fill: $font-color;
+  fill: $color-font-primary;
 }
 
 .nav-bar {
-  height: $nav-height;
+  height: $height-nav;
   margin-bottom: $gutter;
   display: flex;
   justify-content: space-between;
@@ -97,9 +121,9 @@ export default {
 
     &__logo {
       display: block;
-      height: calc($nav-height * 2 / 3);
-      width: calc($nav-height * 2 / 3);
-      fill: $font-color;
+      height: calc($height-nav * 2 / 3);
+      width: calc($height-nav * 2 / 3);
+      fill: $color-font-primary;
       margin: 0 2rem;
     }
   }
@@ -117,22 +141,24 @@ export default {
     gap: $gutter;
 
     &__home-btn {
-      width: $nav-height;
-      height: $nav-height;
+      width: $height-nav;
+      height: $height-nav;
       border-radius: 50%;
-      background-color: $bg-nav-color;
+      background-color: $color-bg-3;
       display: flex;
       justify-content: center;
       align-items: center;
 
       &:hover &__wrapper {
-        fill: $font-color;
+        fill: $color-font-primary;
       }
 
+      @include clickAnimation;
+
       &__wrapper {
-        fill: $font-color-light;
-        height: calc($nav-height / 2);
-        width: calc($nav-height / 2);
+        fill: $color-font-secondary;
+        height: calc($height-nav / 2);
+        width: calc($height-nav / 2);
       }
     }
 
@@ -141,34 +167,38 @@ export default {
       cursor: pointer;
 
       &:hover &__input {
-        background-color: $bg-input-hover-color;
+        background-color: $color-bg-5;
+
+        @include transition;
       }
 
       &:hover &__icon-wrapper {
-        fill: $font-color;
+        fill: $color-font-primary;
       }
 
       &__input {
-        height: $nav-height;
-        background-color: $bg-nav-color;
-        color: $font-color;
+        height: $height-nav;
+        background-color: $color-bg-3;
+        color: $color-font-primary;
         padding: 1.2rem 6.4rem 1.2rem 4.8rem;
-        border-radius: calc($nav-height / 2);
+        border-radius: calc($height-nav / 2);
         font-size: 1.6rem;
         width: 47.4rem;
         cursor: pointer;
 
+        @include transition;
+
         &::placeholder {
-          color: $font-color-light;
+          color: $color-font-secondary;
         }
 
         &:focus {
-          box-shadow: inset 0 0 0 2px $font-color;
+          box-shadow: inset 0 0 0 2px $color-font-primary;
           cursor: text;
         }
 
         &:focus + div {
-          fill: $font-color;
+          fill: $color-font-primary;
         }
       }
 
@@ -177,9 +207,9 @@ export default {
         top: 50%;
         left: 1.2rem;
         transform: translateY(-50%);
-        fill: $font-color-light;
-        height: calc($nav-height / 2);
-        width: calc($nav-height / 2);
+        fill: $color-font-secondary;
+        height: calc($height-nav / 2);
+        width: calc($height-nav / 2);
       }
 
       &__btn-wrapper {
@@ -187,18 +217,18 @@ export default {
         top: 50%;
         transform: translateY(-50%);
         right: 0.6rem;
-        fill: $font-color-light;
+        fill: $color-font-secondary;
         box-sizing: content-box;
-        height: calc($nav-height / 2);
-        width: calc($nav-height / 2);
+        height: calc($height-nav / 2);
+        width: calc($height-nav / 2);
         padding: 0 1.2rem;
-        border-left: 1px solid $font-color-light;
+        border-left: 1px solid $color-font-secondary;
 
         &:hover {
-          fill: $font-color;
+          fill: $color-font-primary;
 
           & svg {
-            transform: scale(1.04);
+            @include clickAnimation;
           }
         }
       }
@@ -209,13 +239,15 @@ export default {
     z-index: 1;
 
     &__photo-wrapper {
-      height: $nav-height;
-      width: $nav-height;
+      height: $height-nav;
+      width: $height-nav;
       border-radius: 50%;
-      background-color: $bg-nav-color;
+      background-color: $color-bg-3;
       display: flex;
       justify-content: center;
       align-items: center;
+
+      @include clickAnimation;
 
       &__photo {
         height: 65%;

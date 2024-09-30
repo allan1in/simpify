@@ -25,7 +25,7 @@ $progress-line-color: #4d4d4d;
   width: 100%;
 
   &:hover &__line__seek {
-    background-color: $font-color-active;
+    background-color: $color-brand;
   }
 
   &:hover &__dot {
@@ -50,7 +50,7 @@ $progress-line-color: #4d4d4d;
       width: inherit;
       height: inherit;
       border-radius: inherit;
-      background-color: $font-color;
+      background-color: $color-font-primary;
     }
   }
 
@@ -62,7 +62,7 @@ $progress-line-color: #4d4d4d;
     transform: translate(-50%, -50%);
     height: 1.2rem;
     width: 1.2rem;
-    background-color: $font-color;
+    background-color: $color-font-primary;
     border-radius: 50%;
     cursor: pointer;
   }

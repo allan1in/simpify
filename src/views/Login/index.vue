@@ -28,7 +28,7 @@ import { mapActions } from 'pinia'
 import { useUserStore } from '@/stores/user'
 
 export default {
-  name: 'LoginUser',
+  name: 'Login',
   components: {
     IconPrimaryLogo
   },
@@ -56,33 +56,12 @@ export default {
       authUrl.search = new URLSearchParams(params).toString()
       window.location.href = authUrl.toString() // Redirect the user to the authorization server for login
     },
-    async getToken(code) {
-      const { clientId, redirectUrl, tokenEndpoint } = settings
-      const code_verifier = localStorage.getItem('code_verifier')
-
-      const response = await fetch(tokenEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({
-          client_id: clientId,
-          grant_type: 'authorization_code',
-          code: code,
-          redirect_uri: redirectUrl,
-          // Prove the client identity via code_verifier
-          code_verifier: code_verifier
-        })
-      })
-
-      return await response.json()
-    },
-    ...mapActions(useUserStore, ['save'])
+    ...mapActions(useUserStore, ['getToken'])
   },
   async created() {
     let code = this.$route.query.code
     if (code) {
-      this.save(await this.getToken(code))
+      await this.getToken(code)
       this.$router.push({ name: 'Dashboard' })
     }
   }
@@ -92,7 +71,7 @@ export default {
 <style lang="scss" scoped>
 .login-container {
   height: 100vh;
-  background: linear-gradient($bg-input-hover-color, $bg-main-color);
+  background: linear-gradient($color-bg-5, $color-bg-1);
   padding: 3.2rem;
   display: flex;
   justify-content: center;
@@ -101,18 +80,18 @@ export default {
   &__box {
     width: 100%;
     max-width: 73.4rem;
-    background-color: $bg-main-color-light;
+    background-color: $color-bg-2;
     border-radius: $gutter;
 
     &__logo-wrapper {
       display: flex;
       justify-content: center;
-      padding: 32px 0 8px;
+      padding: 3.2rem 0 0.8rem;
 
       &__logo {
         height: 3.6rem;
         width: 3.6rem;
-        fill: $font-color;
+        fill: $color-font-primary;
       }
     }
 
@@ -132,13 +111,15 @@ export default {
 
       &__login-btn {
         margin: 3rem 0;
-        background-color: $font-color-active;
+        background-color: $color-brand;
         padding: 0.8rem 3.2rem;
-        color: $bg-main-color;
+        color: $color-bg-1;
         text-align: center;
         font-size: 1.6rem;
         border-radius: 3.2rem;
         font-weight: bold;
+
+        @include clickAnimation;
       }
     }
   }

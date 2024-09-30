@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import settings from '@/settings'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -10,7 +11,27 @@ export const useUserStore = defineStore('user', {
     avatar: ''
   }),
   actions: {
-    save(response) {
+    async getToken(code) {
+      const { clientId, redirectUrl, tokenEndpoint } = settings
+      const code_verifier = localStorage.getItem('code_verifier')
+
+      let response = await fetch(tokenEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          client_id: clientId,
+          grant_type: 'authorization_code',
+          code: code,
+          redirect_uri: redirectUrl,
+          // Prove the client identity via code_verifier
+          code_verifier: code_verifier
+        })
+      })
+
+      response = await response.json()
+
       const { access_token, refresh_token, expires_in } = response
 
       localStorage.setItem('access_token', access_token)

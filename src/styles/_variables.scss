@@ -1,23 +1,25 @@
 // SCSS variables
 
 // COLOR
-$font-color: #fff;
-$font-color-light: #b3b3b3;
-$font-color-active: #1db954;
-$bg-main-color: #000;
-$bg-main-color-light: #121212;
-$bg-nav-color: #1f1f1f;
-$bg-input-hover-color: #2a2a2a;
+$color-font-primary: #ffffff;
+$color-font-secondary: #b3b3b3;
+$color-brand: #1db954;
+$color-bg-1: #000000;
+$color-bg-2: #121212;
+$color-bg-3: #1f1f1f;
+$color-bg-4: #282828;
+$color-bg-5: #2a2a2a;
+$color-bg-6: #3e3e3e;
 
 // FONT
 $default-font-size: 1.6rem;
 
 // HEIGHT
-$player-height: 7.2rem;
-$nav-height: 4.8rem;
+$height-player: 7.2rem;
+$height-nav: 4.8rem;
 
 // PADDING OR MARGIN
 $gutter: 8px;
 
 // BORDER
-$panel-border-radius: 0.8rem;
+$border-radius: 0.8rem;

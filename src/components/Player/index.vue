@@ -121,7 +121,7 @@ import IconFullScreen from '@/components/Icons/IconFullScreen.vue'
 import IconInLikeSong from '@/components/Icons/IconInLikeSong.vue'
 
 export default {
-  name: 'PlayerBar',
+  name: 'Player',
   components: {
     IconPlay,
     IconPause,
@@ -175,7 +175,7 @@ $msg-title-font-size: 1.4rem;
 $msg-artist-font-size: 1.2rem;
 
 .btn-active:nth-child(n) {
-  fill: $font-color-active;
+  fill: $color-brand;
   position: relative;
 
   &::after {
@@ -184,7 +184,7 @@ $msg-artist-font-size: 1.2rem;
     height: 0.4rem;
     width: 0.4rem;
     border-radius: 50%;
-    background-color: $font-color-active;
+    background-color: $color-brand;
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -192,28 +192,30 @@ $msg-artist-font-size: 1.2rem;
   }
 
   &:hover {
-    fill: $font-color-active;
+    fill: $color-brand;
   }
 }
 
 .icon-wrapper {
   display: inline-block;
-  fill: $font-color-light;
+  fill: $color-font-secondary;
   height: 3.2rem;
   width: 3.2rem;
   padding: $gutter;
 
   &:hover {
-    fill: $font-color;
+    fill: $color-font-primary;
   }
 
   &:active {
-    fill: $font-color;
+    fill: $color-font-primary;
   }
+
+  @include clickAnimation;
 }
 
 .player-bar {
-  height: $player-height;
+  height: $height-player;
   margin-top: $gutter;
   display: flex;
 
@@ -237,12 +239,12 @@ $msg-artist-font-size: 1.2rem;
 
       &__artist {
         font-size: $msg-artist-font-size;
-        color: $font-color-light;
+        color: $color-font-secondary;
         cursor: pointer;
 
         &:hover {
           text-decoration: underline;
-          color: $font-color;
+          color: $color-font-primary;
         }
       }
     }
@@ -275,15 +277,17 @@ $msg-artist-font-size: 1.2rem;
         height: 3.2rem;
         width: 3.2rem;
         border-radius: 50%;
-        background-color: $font-color;
+        background-color: $color-font-primary;
         display: flex;
         justify-content: center;
         align-items: center;
         margin: 0 $gutter;
 
+        @include clickAnimation;
+
         .icon-wrapper-round {
           display: inline-block;
-          fill: $bg-main-color;
+          fill: $color-bg-1;
           height: 1.6rem;
           width: 1.6rem;
         }
@@ -294,7 +298,7 @@ $msg-artist-font-size: 1.2rem;
       display: flex;
       gap: $gutter;
       font-size: 1.2rem;
-      color: $font-color-light;
+      color: $color-font-secondary;
 
       &__seek {
         min-width: 4rem;

@@ -1,17 +1,16 @@
 // SCSS mixins
 
-@mixin clearfix {
-  &::before,
-  &::after {
-    content: '';
-    display: table;
-    clear: both;
+@mixin clickAnimation {
+  &:hover {
+    transform: scale(1.04);
+  }
+
+  &:active {
+    transform: scale(1);
+    opacity: 0.8;
   }
 }
 
-@mixin absCenter {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+@mixin transition {
+  transition: all 0.22s ease-in;
 }

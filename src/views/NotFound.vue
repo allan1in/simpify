@@ -21,9 +21,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-$font-color-lighter: #a7a7a7;
+$color-font-primary-lighter: #a7a7a7;
 .not-found-container {
-  background-color: $bg-main-color-light;
+  background-color: $color-bg-2;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -37,7 +37,7 @@ $font-color-lighter: #a7a7a7;
     &__icon-wrapper {
       height: 6rem;
       width: 6rem;
-      fill: $font-color-active;
+      fill: $color-brand;
       margin-bottom: 4rem;
     }
 
@@ -48,21 +48,19 @@ $font-color-lighter: #a7a7a7;
 
     &__describe {
       margin-bottom: 4rem;
-      color: $font-color-lighter;
+      color: $color-font-primary-lighter;
       font-size: 1.6rem;
     }
 
     &__home {
-      background-color: $font-color;
-      color: $bg-main-color;
+      background-color: $color-font-primary;
+      color: $color-bg-1;
       font-size: 1.6rem;
       padding: 1.4rem 3.2rem;
       font-weight: bold;
       border-radius: 3rem;
 
-      &:hover {
-        transform: scale(1.04);
-      }
+      @include clickAnimation;
     }
   }
 }

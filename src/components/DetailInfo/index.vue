@@ -10,8 +10,8 @@ export default {
 
 <style lang="scss" scoped>
 .detail-info {
-  background-color: $bg-main-color-light;
-  border-radius: $panel-border-radius;
+  background-color: $color-bg-2;
+  border-radius: $border-radius;
   flex: 1;
 }
 </style>

@@ -2,8 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '@/layout/Layout.vue'
 import NotFound from '@/views/NotFound.vue'
 import Dashboard from '@/views/Dashboard/index.vue'
-import LoginUser from '@/views/LoginUser.vue'
+import LoginUser from '@/views/Login/index.vue'
 import { useUserStore } from '@/stores/user'
+import Search from '@/views/Search/index.vue'
+import GetAll from '@/views/Search/views/GetAll.vue'
+import GetTracks from '@/views/Search/views/GetTracks.vue'
+import GetAlbums from '@/views/Search/views/GetAlbums.vue'
+import GetArtists from '@/views/Search/views/GetArtists.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,6 +21,33 @@ const router = createRouter({
           path: '',
           name: 'Dashboard',
           component: Dashboard
+        },
+        {
+          path: 'search',
+          component: Search,
+          name: 'Search',
+          children: [
+            {
+              path: '',
+              name: 'GetAll',
+              component: GetAll
+            },
+            {
+              path: 'tracks',
+              name: 'GetTracks',
+              component: GetTracks
+            },
+            {
+              path: 'albums',
+              name: 'GetAlbums',
+              component: GetAlbums
+            },
+            {
+              path: 'artists',
+              name: 'GetArtists',
+              component: GetArtists
+            }
+          ]
         }
       ]
     },
