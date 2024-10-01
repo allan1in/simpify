@@ -8,10 +8,10 @@
         <div class="player-bar__left__msg-wrapper__title">{{ song.title }}</div>
         <div class="player-bar__left__msg-wrapper__artist">{{ song.artist }}</div>
       </div>
-      <button class="icon-wrapper" @click="song.isLike = !song.isLike">
+      <!-- <button class="icon-wrapper" @click="song.isLike = !song.isLike">
         <IconInLikeSong v-if="song.isLike" />
         <IconAddToLikeSong v-else />
-      </button>
+      </button> -->
     </div>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
@@ -49,13 +49,13 @@
       </div>
     </div>
     <div class="player-bar__right">
-      <button
+      <!-- <button
         class="icon-wrapper"
         :class="{ 'btn-active': isNowPlayingView }"
         @click="isNowPlayingView = !isNowPlayingView"
       >
         <IconNowPlayingView />
-      </button>
+      </button> -->
       <button
         class="icon-wrapper"
         :class="{ 'btn-active': isLyrics }"
@@ -63,7 +63,7 @@
       >
         <IconLyrics />
       </button>
-      <button class="icon-wrapper" :class="{ 'btn-active': isQueen }" @click="isQueen = !isQueen">
+      <!-- <button class="icon-wrapper" :class="{ 'btn-active': isQueen }" @click="isQueen = !isQueen">
         <IconQueen />
       </button>
       <button
@@ -72,7 +72,7 @@
         @click="isConnectToDevice = !isConnectToDevice"
       >
         <IconConnectToDevice />
-      </button>
+      </button> -->
       <div class="player-bar__right__volume">
         <button class="icon-wrapper" @click="isMute = !isMute">
           <IconVolumeMuted v-if="isMute || volume == 0" />

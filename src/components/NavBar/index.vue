@@ -19,6 +19,7 @@
             type="text"
             placeholder="What do you want to play?"
             @click="toSearch"
+            v-model="inputContent"
           />
           <div class="nav-bar__mid__search__icon-wrapper">
             <IconSearch />
@@ -73,7 +74,8 @@ export default {
   data() {
     return {
       isHome: true,
-      isSearch: false
+      isSearch: false,
+      inputContent: ''
     }
   },
   methods: {
@@ -97,6 +99,13 @@ export default {
         }
       },
       immediate: true
+    },
+    inputContent(newVal, oldVal) {
+      if (newVal.length === 0) {
+        this.$router.push({ name: 'Search' })
+      } else {
+        this.$router.push({ name: 'SearchResult', params: { content: newVal } })
+      }
     }
   }
 }
@@ -168,6 +177,7 @@ export default {
 
       &:hover &__input {
         background-color: $color-bg-5;
+        box-shadow: inset 0 0 0 1px $color-bg-6;
 
         @include transition;
       }
@@ -192,7 +202,8 @@ export default {
           color: $color-font-secondary;
         }
 
-        &:focus {
+        &:nth-child(n):focus {
+          background-color: $color-bg-3;
           box-shadow: inset 0 0 0 2px $color-font-primary;
           cursor: text;
         }
