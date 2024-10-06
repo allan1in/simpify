@@ -45,6 +45,7 @@ export default {
       border-radius: $border-radius;
       flex: 4;
       height: inherit;
+      overflow: hidden;
     }
   }
 }

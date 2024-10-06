@@ -1,22 +1,41 @@
 <template>
-  <main class="search-container">
+  <OverlayScrollbarsComponent
+    element="div"
+    :options="{
+      scrollbars: {
+        theme: 'os-theme-custom',
+        autoHide: 'leave',
+        clickScroll: true
+      }
+    }"
+    defer
+    class="search-container"
+  >
     <div class="search-container__title-wrapper">
       <h1 class="search-container__title-wrapper__title">Browse All</h1>
     </div>
     <div class="search-container__cards-wrapper">
       <div class="search-container__cards-wrapper__card" v-for="i in 21" :key="i">
-        <h2 class="search-container__cards-wrapper__card__name">
-          {{ i }}{{ i }}{{ i }}{{ i }}{{ i }}{{ i }}{{ i }}{{ i }}
-        </h2>
-        <div class="search-container__cards-wrapper__card__img"></div>
+        <h2 class="search-container__cards-wrapper__card__name">Genre {{ i }}</h2>
+        <img
+          class="search-container__cards-wrapper__card__img"
+          src="../../assets/search-album-test.jfif"
+          alt=""
+        />
       </div>
     </div>
-  </main>
+  </OverlayScrollbarsComponent>
 </template>
 
 <script>
+// https://github.com/KingSora/OverlayScrollbars/blob/master/packages/overlayscrollbars-vue/README.md#properties
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue'
+
 export default {
-  name: 'Search'
+  name: 'Search',
+  components: {
+    OverlayScrollbarsComponent
+  }
 }
 </script>
 
@@ -24,7 +43,6 @@ export default {
 .search-container {
   padding: 2.4rem;
   height: inherit;
-  overflow: auto;
 
   &__title-wrapper {
     padding: 0.8rem 0;
@@ -43,10 +61,11 @@ export default {
 
     &__card {
       background-color: #dc148c;
-      height: 20rem;
+      aspect-ratio: 7 / 4;
       border-radius: $gutter;
       position: relative;
       overflow: hidden;
+      cursor: pointer;
 
       &__name {
         font-size: 2.4rem;
@@ -55,13 +74,16 @@ export default {
       }
 
       &__img {
+        display: block;
         position: absolute;
         right: 0;
         bottom: 0;
-        height: 15rem;
-        width: 15rem;
+        width: 45%;
+        aspect-ratio: 1 / 1;
         background-color: #006450;
         transform: rotate(25deg) translate(18%, -2%);
+        border-radius: calc($gutter / 2);
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
       }
     }
   }
