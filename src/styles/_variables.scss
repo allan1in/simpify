@@ -12,14 +12,15 @@ $color-bg-5: #2a2a2a;
 $color-bg-6: #3e3e3e;
 
 // FONT
-$default-font-size: 1.6rem;
+$font-family-title: 'SpotifyMixUITitle', sans-serif;
+$font-family-text: 'SpotifyMixUI', sans-serif;
 
 // HEIGHT
 $height-player: 7.2rem;
 $height-nav: 4.8rem;
 
 // PADDING OR MARGIN
-$gutter: 8px;
+$gutter: 0.8rem;
 
 // BORDER
-$border-radius: 0.8rem;
+$border-radius-default: 0.8rem;

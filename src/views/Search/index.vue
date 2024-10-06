@@ -1,16 +1,5 @@
 <template>
-  <OverlayScrollbarsComponent
-    element="div"
-    :options="{
-      scrollbars: {
-        theme: 'os-theme-custom',
-        autoHide: 'leave',
-        clickScroll: true
-      }
-    }"
-    defer
-    class="search-container"
-  >
+  <MyOverlayScrollbars os-element="main" os-class="search-container">
     <div class="search-container__title-wrapper">
       <h1 class="search-container__title-wrapper__title">Browse All</h1>
     </div>
@@ -24,17 +13,16 @@
         />
       </div>
     </div>
-  </OverlayScrollbarsComponent>
+  </MyOverlayScrollbars>
 </template>
 
 <script>
-// https://github.com/KingSora/OverlayScrollbars/blob/master/packages/overlayscrollbars-vue/README.md#properties
-import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue'
+import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 
 export default {
   name: 'Search',
   components: {
-    OverlayScrollbarsComponent
+    MyOverlayScrollbars
   }
 }
 </script>
@@ -49,7 +37,7 @@ export default {
 
     &__title {
       font-size: 2.4rem;
-      font-family: 'SpotifyMixUITitle', sans-serif;
+      font-family: $font-family-title;
     }
   }
 
@@ -62,14 +50,14 @@ export default {
     &__card {
       background-color: #dc148c;
       aspect-ratio: 7 / 4;
-      border-radius: $gutter;
+      border-radius: $border-radius-default;
       position: relative;
       overflow: hidden;
       cursor: pointer;
 
       &__name {
         font-size: 2.4rem;
-        font-family: 'SpotifyMixUITitle', sans-serif;
+        font-family: $font-family-title;
         padding: 1.6rem;
       }
 

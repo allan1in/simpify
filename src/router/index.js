@@ -33,12 +33,11 @@ const router = createRouter({
             },
             {
               path: ':content',
-              name: 'SearchResult',
               component: SearchResult,
               children: [
                 {
                   path: '',
-                  name: 'GetAll',
+                  name: 'SearchResult',
                   component: GetAll
                 },
                 {

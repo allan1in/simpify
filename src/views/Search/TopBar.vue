@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     getAll() {
-      this.$router.push({ name: 'GetAll' })
+      this.$router.push({ name: 'SearchResult' })
     },
     getArtists() {
       this.$router.push({ name: 'GetArtists' })
@@ -75,8 +75,10 @@ export default {
 }
 
 .top-bar-container {
+  position: sticky;
+  top: 0;
   padding: 1.2rem 0;
-  background-color: $color-font-secondary;
+  background-color: $color-bg-2;
   border-top-left-radius: $gutter;
   border-top-right-radius: $gutter;
 

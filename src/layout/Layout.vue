@@ -42,7 +42,7 @@ export default {
 
     .main-view {
       background-color: $color-bg-2;
-      border-radius: $border-radius;
+      border-radius: $border-radius-default;
       flex: 4;
       height: inherit;
       overflow: hidden;

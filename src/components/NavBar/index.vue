@@ -80,10 +80,13 @@ export default {
   },
   methods: {
     toHome() {
+      this.inputContent = ''
       this.$router.push({ name: 'Dashboard' })
     },
     toSearch() {
-      this.$router.push({ name: 'Search' })
+      if (this.inputContent.length === 0) {
+        this.$router.push({ name: 'Search' })
+      }
     }
   },
   watch: {

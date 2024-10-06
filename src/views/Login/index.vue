@@ -81,7 +81,7 @@ export default {
     width: 100%;
     max-width: 73.4rem;
     background-color: $color-bg-2;
-    border-radius: $gutter;
+    border-radius: $border-radius-default;
 
     &__logo-wrapper {
       display: flex;
@@ -101,7 +101,7 @@ export default {
 
       &__title {
         font-size: 3.2rem;
-        font-family: 'SpotifyMixUITitle', sans-serif;
+        font-family: $font-family-title;
       }
     }
 
