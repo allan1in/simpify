@@ -26,7 +26,6 @@ export default {
 
   &__search-content {
     padding: 2.4rem;
-    height: calc(100% - 5.6rem);
   }
 }
 </style>

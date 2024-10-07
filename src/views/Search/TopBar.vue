@@ -9,17 +9,17 @@
     </button>
     <button
       class="top-bar-container__btn"
-      :class="{ 'btn-active': isActive === 'artists' }"
-      @click="getArtists"
-    >
-      Artists
-    </button>
-    <button
-      class="top-bar-container__btn"
       :class="{ 'btn-active': isActive === 'tracks' }"
       @click="getSongs"
     >
       Songs
+    </button>
+    <button
+      class="top-bar-container__btn"
+      :class="{ 'btn-active': isActive === 'artists' }"
+      @click="getArtists"
+    >
+      Artists
     </button>
     <button
       class="top-bar-container__btn"
