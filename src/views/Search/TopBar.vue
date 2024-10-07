@@ -56,7 +56,7 @@ export default {
   watch: {
     $route: {
       handler(to, from) {
-        this.isActive = to.path.substr(to.path.lastIndexOf('/') + 1)
+        this.isActive = decodeURIComponent(to.path.substr(to.path.lastIndexOf('/') + 1))
       },
       immediate: true
     }

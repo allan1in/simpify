@@ -1,5 +1,10 @@
 <template>
-  <h1 v-for="i in 5" :key="i">All</h1>
+  <section class="all-container">
+    <div class="all-container__songs">
+      <h1 class="all-container__songs__title">Songs</h1>
+      <div class="all-container__songs__results"></div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -8,4 +13,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.all-container {
+  &__songs {
+    &__title {
+      font-family: $font-family-title;
+      font-size: 2.4rem;
+      margin: 0;
+    }
+  }
+}
+</style>

@@ -79,9 +79,10 @@ export default {
     }
   },
   methods: {
-    toHome() {
+    async toHome() {
+      // Use await to prevent inputCount watcher from working before navigation
+      await this.$router.push({ name: 'Dashboard' })
       this.inputContent = ''
-      this.$router.push({ name: 'Dashboard' })
     },
     toSearch() {
       if (this.inputContent.length === 0) {
@@ -90,20 +91,30 @@ export default {
     }
   },
   watch: {
+    // Set data values by route
     $route: {
       handler(to, from) {
-        let path = to.path.split('/')[1]
-        if (path === '') {
+        let path = to.path.split('/')
+        if (path[1] === '') {
           this.isHome = true
           this.isSearch = false
-        } else if (path === 'search') {
+        } else if (path[1] === 'search') {
           this.isHome = false
           this.isSearch = true
+          if (path[2] !== undefined && path.length == 3) {
+            // Decode URI to prevent infinite calls between watcher $router and watcher inputContent
+            this.inputContent = decodeURIComponent(path[2])
+          }
         }
       },
       immediate: true
     },
+    // Show different pages by input content
     inputContent(newVal, oldVal) {
+      // Only works when the path is '/search/*'
+      if (this.$route.path.split('/')[1] !== 'search') {
+        return
+      }
       if (newVal.length === 0) {
         this.$router.push({ name: 'Search' })
       } else {

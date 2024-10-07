@@ -230,22 +230,22 @@ $msg-artist-font-size: 1.2rem;
 
       &__title {
         font-size: $msg-title-font-size;
-        cursor: pointer;
+        // cursor: pointer;
 
-        &:hover {
-          text-decoration: underline;
-        }
+        // &:hover {
+        //   text-decoration: underline;
+        // }
       }
 
       &__artist {
         font-size: $msg-artist-font-size;
         color: $color-font-secondary;
-        cursor: pointer;
+        // cursor: pointer;
 
-        &:hover {
-          text-decoration: underline;
-          color: $color-font-primary;
-        }
+        // &:hover {
+        //   text-decoration: underline;
+        //   color: $color-font-primary;
+        // }
       }
     }
 
