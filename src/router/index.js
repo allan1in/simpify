@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Layout from '@/layout/Layout.vue'
+import Layout from '@/layout/index.vue'
 import NotFound from '@/views/NotFound.vue'
 import Dashboard from '@/views/Dashboard/index.vue'
 import LoginUser from '@/views/Login/index.vue'

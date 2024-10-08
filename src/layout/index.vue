@@ -13,10 +13,10 @@
 </template>
 
 <script>
-import DetailInfo from '../components/DetailInfo/index.vue'
-import MyLibrary from '../components/MyLibrary/index.vue'
-import NavBar from '../components/NavBar/index.vue'
-import PlayerBar from '../components/Player/index.vue'
+import DetailInfo from './DetailInfo/index.vue'
+import MyLibrary from './MyLibrary/index.vue'
+import NavBar from './NavBar/index.vue'
+import PlayerBar from './Player/index.vue'
 
 export default {
   name: 'Layout',
