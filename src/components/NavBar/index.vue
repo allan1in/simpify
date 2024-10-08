@@ -19,6 +19,7 @@
             type="text"
             placeholder="What do you want to play?"
             @click="toSearch"
+            @focus="toSearch"
             v-model="inputContent"
           />
           <div class="nav-bar__mid__search__icon-wrapper">

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import TopBar from '../TopBar.vue'
+import TopBar from '../TopBar/index.vue'
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 
 export default {
