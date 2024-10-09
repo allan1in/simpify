@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="artist-card__name-wrapper">
-      <span class="artist-card__name-wrapper__name">{{ item.name }}</span>
+      <div class="artist-card__name-wrapper__name">{{ item.name }}</div>
     </div>
   </div>
 </template>
@@ -77,6 +77,8 @@ export default {
 
     &__name {
       font-size: 1.6rem;
+
+      @include oneLineEllipsis;
     }
   }
 }

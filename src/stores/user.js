@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import settings from '@/settings'
+import { getUserProfile } from '@/api/user'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -34,6 +35,7 @@ export const useUserStore = defineStore('user', {
 
       const { access_token, refresh_token, expires_in } = response
 
+      // Save to localStorage
       localStorage.setItem('access_token', access_token)
       localStorage.setItem('refresh_token', refresh_token)
       localStorage.setItem('expires_in', expires_in)
@@ -41,18 +43,14 @@ export const useUserStore = defineStore('user', {
       const expiry = new Date(now.getTime() + expires_in * 1000)
       localStorage.setItem('expires', expiry)
 
+      // Save to userStore
       this.access_token = access_token
       this.refresh_token = refresh_token
       this.refresh_in = expires_in
       this.expires = expiry
     },
     async getUserData() {
-      const response = await fetch('https://api.spotify.com/v1/me', {
-        method: 'GET',
-        headers: { Authorization: 'Bearer ' + this.access_token }
-      })
-
-      let res = await response.json()
+      const res = (await getUserProfile()).data
 
       this.avatar = res.images[0].url
       this.display_name = res.display_name

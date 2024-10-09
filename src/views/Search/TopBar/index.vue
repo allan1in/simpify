@@ -2,7 +2,7 @@
   <section class="top-bar-container">
     <button
       class="top-bar-container__btn"
-      :class="{ 'btn-active': isActive === $route.params.content }"
+      :class="{ 'btn-active': isActive === $route.params.inputContent }"
       @click="getAll"
     >
       All

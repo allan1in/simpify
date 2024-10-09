@@ -7,21 +7,40 @@
       <AlbumCard v-for="item in albums.items" :key="item.id" :item="item" />
     </div>
   </main>
+  <Loading :loading="loading" />
 </template>
 
 <script>
+import { searchAlbums } from '@/api/search'
 import AlbumCard from './AlbumCard.vue'
-import albums from './albums.json'
+import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'GetAlbums',
   data() {
     return {
-      albums
+      albums: {},
+      loading: true
     }
   },
   components: {
-    AlbumCard
+    AlbumCard,
+    Loading
+  },
+  methods: {
+    async getAlbums() {
+      const params = {
+        q: this.$route.params.inputContent,
+        limit: 30,
+        offset: 0
+      }
+      const res = (await searchAlbums(params)).data.albums
+      this.albums = res
+      this.loading = false
+    }
+  },
+  mounted() {
+    this.getAlbums()
   }
 }
 </script>

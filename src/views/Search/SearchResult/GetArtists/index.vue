@@ -7,21 +7,40 @@
       <ArtistCard v-for="item in artists.items" :key="item.id" :item="item" />
     </div>
   </main>
+  <Loading :loading="loading" />
 </template>
 
 <script>
-import artists from './artists.json'
 import ArtistCard from './ArtistCard.vue'
+import Loading from '@/components/Loading/index.vue'
+import { searchArtists } from '@/api/search'
 
 export default {
   name: 'GetArtists',
   components: {
-    ArtistCard
+    ArtistCard,
+    Loading
   },
   data() {
     return {
-      artists
+      artists: {},
+      loading: true
     }
+  },
+  methods: {
+    async getArtists() {
+      const params = {
+        q: this.$route.params.inputContent,
+        limit: 30,
+        offset: 0
+      }
+      const res = (await searchArtists(params)).data.artists
+      this.artists = res
+      this.loading = false
+    }
+  },
+  mounted() {
+    this.getArtists()
   }
 }
 </script>

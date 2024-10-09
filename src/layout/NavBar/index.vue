@@ -96,15 +96,19 @@ export default {
     $route: {
       handler(to, from) {
         let path = to.path.split('/')
-        if (path[1] === '') {
+
+        if (to.name === 'Dashboard') {
+          // Home
           this.isHome = true
           this.isSearch = false
         } else if (path[1] === 'search') {
+          // Path: /search/*
           this.isHome = false
           this.isSearch = true
-          if (path[2] !== undefined && path.length == 3) {
+
+          if (to.params.inputContent !== undefined && path[2] === to.params.inputContent) {
             // Decode URI to prevent infinite calls between watcher $router and watcher inputContent
-            this.inputContent = decodeURIComponent(path[2])
+            this.inputContent = decodeURIComponent(to.params.inputContent)
           }
         }
       },
@@ -119,7 +123,7 @@ export default {
       if (newVal.length === 0) {
         this.$router.push({ name: 'Search' })
       } else {
-        this.$router.push({ name: 'SearchResult', params: { content: newVal } })
+        this.$router.push({ name: 'SearchResult', params: { inputContent: newVal } })
       }
     }
   }

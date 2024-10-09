@@ -1,6 +1,6 @@
 <template>
   <main class="login-container">
-    <div class="login-container__box">
+    <div v-if="!loading" class="login-container__box">
       <div class="login-container__box__logo-wrapper">
         <IconPrimaryLogo class="login-container__box__logo-wrapper__logo" />
       </div>
@@ -15,6 +15,9 @@
           登录
         </button>
       </div>
+    </div>
+    <div v-else class="login-container__loading-wrapper">
+      <h1 class="login-container__loading-wrapper__loading">Loading...</h1>
     </div>
   </main>
 </template>
@@ -32,17 +35,21 @@ export default {
   components: {
     IconPrimaryLogo
   },
+  data() {
+    return {
+      loading: false
+    }
+  },
   methods: {
     async redirectToSpotifyAuthorize() {
       const { clientId, scope, redirectUrl, authorizationEndpoint } = settings
 
       // https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
       const code_verifier = getCodeVerifier()
-
       const code_challenge_base64 = await getCodeChanllenge(code_verifier)
-
       window.localStorage.setItem('code_verifier', code_verifier)
 
+      // Constructing URL
       const authUrl = new URL(authorizationEndpoint)
       const params = {
         response_type: 'code',
@@ -52,15 +59,18 @@ export default {
         code_challenge: code_challenge_base64,
         redirect_uri: redirectUrl
       }
-
       authUrl.search = new URLSearchParams(params).toString()
-      window.location.href = authUrl.toString() // Redirect the user to the authorization server for login
+
+      // Redirect the user to the authorization server for login
+      window.location.href = authUrl.toString()
     },
     ...mapActions(useUserStore, ['getToken'])
   },
   async created() {
+    // Check if authorization server response param exists
     let code = this.$route.query.code
     if (code) {
+      this.loading = true
       await this.getToken(code)
       this.$router.push({ name: 'Dashboard' })
     }
@@ -121,6 +131,14 @@ export default {
 
         @include clickAnimation;
       }
+    }
+  }
+
+  &__loading-wrapper {
+    padding: 2.4rem;
+
+    &__loading {
+      font-size: 3.2rem;
     }
   }
 }

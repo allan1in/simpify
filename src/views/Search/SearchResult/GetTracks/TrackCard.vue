@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class="track-card__album-wrapper">
-      <span>{{ item.album.name }}</span>
+      <div class="track-card__album-wrapper__album">{{ item.album.name }}</div>
     </div>
     <div class="track-card__duration-wrapper">
       <span>{{ timeFormat(item.duration_ms) }}</span>
@@ -129,6 +129,7 @@ export default {
       overflow: hidden;
       border-radius: $border-radius-small;
       margin-right: 1.2rem;
+      flex-shrink: 0;
 
       &__cover {
         max-height: 100%;
@@ -137,6 +138,7 @@ export default {
     }
 
     &__msg-wrapper {
+      flex-shrink: 1;
       display: flex;
       flex-direction: column;
       align-items: start;
@@ -147,6 +149,12 @@ export default {
       &__name {
         font-size: 1.6rem;
         color: $color-font-primary;
+
+        @include oneLineEllipsis;
+      }
+
+      &__artists {
+        @include oneLineEllipsis;
       }
     }
   }
@@ -156,6 +164,10 @@ export default {
     display: flex;
     align-items: center;
     height: 100%;
+
+    &__album {
+      @include oneLineEllipsis;
+    }
   }
 
   &__duration-wrapper {

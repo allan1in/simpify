@@ -26,6 +26,7 @@ export default {
 
   &__search-content {
     padding: 2.4rem;
+    height: inherit;
   }
 }
 </style>

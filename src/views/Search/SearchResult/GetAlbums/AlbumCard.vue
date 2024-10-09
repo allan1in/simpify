@@ -4,17 +4,19 @@
       <img :src="item.images[1].url" alt="Album Cover" class="album-card__img-wrapper__img" />
     </div>
     <div class="album-card__name-wrapper">
-      <span class="album-card__name-wrapper__name">{{ item.name }}</span>
+      <div class="album-card__name-wrapper__name">{{ item.name }}</div>
     </div>
     <div class="album-card__info-wrapper">
-      <span class="album-card__info-wrapper__info">{{
-        item.release_date.split('-')[0] +
-        ' • ' +
-        item.albums.reduce(
-          (acc, album, index) => (index !== 0 ? acc + ', ' + album.name : item.albums[0].name),
-          ''
-        )
-      }}</span>
+      <div class="album-card__info-wrapper__info">
+        {{
+          item.release_date.split('-')[0] +
+          ' • ' +
+          item.artists.reduce(
+            (acc, artist, index) => (index !== 0 ? acc + ', ' + artist.name : item.artists[0].name),
+            ''
+          )
+        }}
+      </div>
     </div>
   </div>
 </template>
@@ -67,6 +69,8 @@ export default {
 
     &__name {
       font-size: 1.6rem;
+
+      @include twoLineEllipsis;
     }
   }
 
@@ -77,6 +81,8 @@ export default {
     &__info {
       font-size: 1.4rem;
       color: $color-font-secondary;
+
+      @include oneLineEllipsis;
     }
   }
 }

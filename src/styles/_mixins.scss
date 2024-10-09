@@ -14,3 +14,17 @@
 @mixin transition {
   transition: all 0.22s ease-in;
 }
+
+@mixin oneLineEllipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@mixin twoLineEllipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

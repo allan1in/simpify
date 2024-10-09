@@ -1,51 +1,49 @@
 <template>
-  <section class="all-container">
-    <div class="all-container__songs">
-      <h1 class="all-container__songs__title">
-        <router-link :to="{ name: 'GetTracks' }">Songs</router-link>
-      </h1>
-      <div class="all-container__songs__results">
-        <TrackListHeader />
-        <TrackCard
-          v-for="(item, index) in all.tracks.items"
-          :key="index"
-          :item="item"
-          :index="index"
-        />
+  <main class="all-container">
+    <div v-if="!loading" class="all-container__content">
+      <div class="all-container__content__songs">
+        <h1 class="all-container__content__songs__title">
+          <router-link :to="{ name: 'GetTracks' }">Songs</router-link>
+        </h1>
+        <div class="all-container__content__songs__results">
+          <TrackListHeader />
+          <TrackCard
+            v-for="(item, index) in tracks.items"
+            :key="index"
+            :item="item"
+            :index="index"
+          />
+        </div>
+      </div>
+      <div class="all-container__content__artists">
+        <h1 class="all-container__content__artists__title">
+          <router-link :to="{ name: 'GetArtists' }">Artists</router-link>
+        </h1>
+        <div class="all-container__content__artists__results">
+          <ArtistCard
+            v-for="(item, index) in artists.items"
+            :key="index"
+            :item="item"
+            :index="index"
+          />
+        </div>
+      </div>
+      <div class="all-container__content__albums">
+        <h1 class="all-container__content__albums__title">
+          <router-link :to="{ name: 'GetAlbums' }">Albums</router-link>
+        </h1>
+        <div class="all-container__content__albums__results">
+          <AlbumCard
+            v-for="(item, index) in albums.items"
+            :key="index"
+            :item="item"
+            :index="index"
+          />
+        </div>
       </div>
     </div>
-    <div class="all-container__artists">
-      <h1 class="all-container__artists__title">
-        <router-link :to="{ name: 'GetArtists' }">Artists</router-link>
-      </h1>
-      <div class="all-container__artists__results">
-        <ArtistCard
-          v-for="(item, index) in all.artists.items"
-          :key="index"
-          :item="item"
-          :index="index"
-        />
-      </div>
-    </div>
-    <div class="all-container__albums">
-      <h1 class="all-container__albums__title">
-        <router-link :to="{ name: 'GetAlbums' }">Albums</router-link>
-      </h1>
-      <div class="all-container__albums__results">
-        <AlbumCard
-          v-for="(item, index) in all.albums.items"
-          :key="index"
-          :item="{
-            images: item.images,
-            name: item.name,
-            release_date: item.release_date,
-            albums: item.artists
-          }"
-          :index="index"
-        />
-      </div>
-    </div>
-  </section>
+    <Loading :loading="loading" />
+  </main>
 </template>
 
 <script>
@@ -53,7 +51,10 @@ import AlbumCard from '../GetAlbums/AlbumCard.vue'
 import ArtistCard from '../GetArtists/ArtistCard.vue'
 import TrackCard from '../GetTracks/TrackCard.vue'
 import TrackListHeader from '../GetTracks/TrackListHeader.vue'
-import all from './all.json'
+import Loading from '@/components/Loading/index.vue'
+import { searchAlbums } from '@/api/search'
+import { searchArtists } from '@/api/search'
+import { searchTracks } from '@/api/search'
 
 export default {
   name: 'GetAll',
@@ -61,53 +62,101 @@ export default {
     TrackCard,
     ArtistCard,
     AlbumCard,
-    TrackListHeader
+    TrackListHeader,
+    Loading
   },
   data() {
     return {
-      all
+      tracks: {},
+      artists: {},
+      albums: {},
+      loading: true
     }
+  },
+  methods: {
+    getAll() {
+      this.getTracks()
+      this.getArtists()
+      this.getAlbums()
+    },
+    async getTracks() {
+      const params = {
+        q: this.$route.params.inputContent,
+        limit: 4,
+        offset: 0
+      }
+      const res = (await searchTracks(params)).data.tracks
+      this.tracks = res
+      this.loading = false
+    },
+    async getArtists() {
+      const params = {
+        q: this.$route.params.inputContent,
+        limit: 7,
+        offset: 0
+      }
+      const res = (await searchArtists(params)).data.artists
+      this.artists = res
+      this.loading = false
+    },
+    async getAlbums() {
+      const params = {
+        q: this.$route.params.inputContent,
+        limit: 7,
+        offset: 0
+      }
+      const res = (await searchAlbums(params)).data.albums
+      this.albums = res
+      this.loading = false
+    }
+  },
+  mounted() {
+    this.getAll()
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .all-container {
-  &__songs {
-    &__title {
-      font-family: $font-family-title;
-      font-size: 2.4rem;
-      padding-bottom: 2.4rem;
-    }
-  }
+  height: inherit;
 
-  &__artists {
-    padding-top: 2.4rem;
-
-    &__title {
-      font-family: $font-family-title;
-      font-size: 2.4rem;
-      padding-bottom: 2.4rem;
+  &__content {
+    &__songs {
+      &__title {
+        font-family: $font-family-title;
+        font-size: 2.4rem;
+        padding-bottom: 2.4rem;
+      }
     }
 
-    &__results {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
+    &__artists {
+      padding-top: 2.4rem;
+
+      &__title {
+        font-family: $font-family-title;
+        font-size: 2.4rem;
+        padding-bottom: 2.4rem;
+      }
+
+      &__results {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+      }
     }
-  }
 
-  &__albums {
-    padding-top: 2.4rem;
+    &__albums {
+      padding-top: 2.4rem;
 
-    &__title {
-      font-family: $font-family-title;
-      font-size: 2.4rem;
-      padding-bottom: 2.4rem;
-    }
+      &__title {
+        font-family: $font-family-title;
+        font-size: 2.4rem;
+        padding-bottom: 2.4rem;
+      }
 
-    &__results {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      &__results {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+      }
     }
   }
 }
