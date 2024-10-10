@@ -1,5 +1,5 @@
 <template>
-  <main class="album-container">
+  <main v-if="!loading" class="album-container">
     <div class="album-container__msg">
       <h1 class="album-container__msg__total">{{ albums.total }} Albums</h1>
     </div>
@@ -17,6 +17,7 @@ import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'GetAlbums',
+  props: ['showTypes'],
   data() {
     return {
       albums: {},

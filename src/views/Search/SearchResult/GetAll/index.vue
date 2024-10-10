@@ -1,7 +1,7 @@
 <template>
   <main class="all-container">
     <div v-if="!loading" class="all-container__content">
-      <div class="all-container__content__songs">
+      <div v-if="showTypes.track" class="all-container__content__songs">
         <h1 class="all-container__content__songs__title">
           <router-link :to="{ name: 'GetTracks' }">Songs</router-link>
         </h1>
@@ -15,7 +15,7 @@
           />
         </div>
       </div>
-      <div class="all-container__content__artists">
+      <div v-if="showTypes.artist" class="all-container__content__artists">
         <h1 class="all-container__content__artists__title">
           <router-link :to="{ name: 'GetArtists' }">Artists</router-link>
         </h1>
@@ -28,7 +28,7 @@
           />
         </div>
       </div>
-      <div class="all-container__content__albums">
+      <div v-if="showTypes.album" class="all-container__content__albums">
         <h1 class="all-container__content__albums__title">
           <router-link :to="{ name: 'GetAlbums' }">Albums</router-link>
         </h1>
@@ -74,11 +74,11 @@ export default {
       loading: true
     }
   },
+  props: ['showTypes'],
   methods: {
-    getAll: debounce(function () {
-      this.getTracks()
-      this.getArtists()
-      this.getAlbums()
+    getAll: debounce(async function () {
+      await Promise.all([this.getTracks(), this.getArtists(), this.getAlbums()])
+      this.loading = false
     }),
     async getTracks() {
       const params = {
@@ -88,7 +88,6 @@ export default {
       }
       const res = (await searchTracks(params)).data.tracks
       this.tracks = res
-      this.loading = false
     },
     async getArtists() {
       const params = {
@@ -98,7 +97,6 @@ export default {
       }
       const res = (await searchArtists(params)).data.artists
       this.artists = res
-      this.loading = false
     },
     async getAlbums() {
       const params = {
@@ -108,7 +106,6 @@ export default {
       }
       const res = (await searchAlbums(params)).data.albums
       this.albums = res
-      this.loading = false
     }
   },
   mounted() {

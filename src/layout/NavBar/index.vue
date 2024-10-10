@@ -18,8 +18,9 @@
             class="nav-bar__mid__search__input"
             type="text"
             placeholder="What do you want to play?"
-            @click="toSearch"
-            @focus="toSearch"
+            @click="toSearchPage"
+            @focus="toSearchPage"
+            @input="getSearchResult"
             v-model="inputContent"
           />
           <div class="nav-bar__mid__search__icon-wrapper">
@@ -29,7 +30,7 @@
             v-if="inputContent.length === 0"
             class="nav-bar__mid__search__btn-wrapper"
             :class="{ 'btn-active': isSearch }"
-            @click="toSearch"
+            @click="toSearchPage"
           >
             <IconBrowseActive v-if="isSearch" />
             <IconBrowse v-else />
@@ -95,9 +96,19 @@ export default {
       await this.$router.push({ name: 'Dashboard' })
       this.inputContent = ''
     },
-    toSearch() {
+    toSearchPage() {
       if (this.$route.name === 'Dashboard') {
         this.$router.push({ name: 'Search' })
+      }
+    },
+    getSearchResult() {
+      if (this.inputContent.length === 0) {
+        this.$router.push({ name: 'Search' })
+      } else {
+        this.$router.push({
+          name: 'SearchResult',
+          params: { inputContent: this.inputContent }
+        })
       }
     }
   },
@@ -108,31 +119,24 @@ export default {
         let path = to.path.split('/')
 
         if (to.name === 'Dashboard') {
-          // Home
+          // Path: '/'
           this.isHome = true
           this.isSearch = false
         } else if (path[1] === 'search') {
-          // Path: /search/*
+          // Path: '/search/*'
           this.isHome = false
           this.isSearch = true
 
-          if (to.params.inputContent !== undefined && path[2] === to.params.inputContent) {
+          if (
+            to.params.inputContent !== undefined &&
+            decodeURIComponent(path[2]) === to.params.inputContent
+          ) {
             // Decode URI to prevent infinite calls between watcher $router and watcher inputContent
-            this.inputContent = decodeURIComponent(to.params.inputContent)
+            this.inputContent = to.params.inputContent
           }
         }
       },
       immediate: true
-    },
-    // Show different pages by input content
-    inputContent(newVal, oldVal) {
-      // Only works when the path is '/search/*'
-      if (this.$route.path.split('/')[1] !== 'search') {
-        return
-      }
-      if (newVal.length !== 0 && newVal !== this.$route.params.inputContent) {
-        this.$router.push({ name: 'SearchResult', params: { inputContent: newVal } })
-      }
     }
   }
 }

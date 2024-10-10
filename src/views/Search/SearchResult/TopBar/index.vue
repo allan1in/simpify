@@ -1,5 +1,5 @@
 <template>
-  <section class="top-bar-container">
+  <section v-if="showTags.track || showTags.artist || showTags.album" class="top-bar-container">
     <button
       class="top-bar-container__btn"
       :class="{ 'btn-active': isActive === $route.params.inputContent }"
@@ -8,6 +8,7 @@
       All
     </button>
     <button
+      v-if="showTags.track"
       class="top-bar-container__btn"
       :class="{ 'btn-active': isActive === 'tracks' }"
       @click="getSongs"
@@ -15,6 +16,7 @@
       Songs
     </button>
     <button
+      v-if="showTags.artist"
       class="top-bar-container__btn"
       :class="{ 'btn-active': isActive === 'artists' }"
       @click="getArtists"
@@ -22,6 +24,7 @@
       Artists
     </button>
     <button
+      v-if="showTags.album"
       class="top-bar-container__btn"
       :class="{ 'btn-active': isActive === 'albums' }"
       @click="getAlbums"
@@ -37,6 +40,12 @@ export default {
   data() {
     return {
       isActive: ''
+    }
+  },
+  props: {
+    showTags: {
+      type: Object,
+      require: true
     }
   },
   methods: {

@@ -1,5 +1,13 @@
 import request from '@/api/request'
 
+export function search(params) {
+  return request({
+    url: '/search',
+    method: 'get',
+    params
+  })
+}
+
 export function searchTracks(params) {
   return request({
     url: '/search',

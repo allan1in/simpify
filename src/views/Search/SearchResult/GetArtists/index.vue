@@ -1,5 +1,5 @@
 <template>
-  <main class="artist-container">
+  <main v-if="!loading" class="artist-container">
     <div class="artist-container__msg">
       <h1 class="artist-container__msg__total">{{ artists.total }} Artists</h1>
     </div>
@@ -17,6 +17,7 @@ import { searchArtists } from '@/api/search'
 
 export default {
   name: 'GetArtists',
+  props: ['showTypes'],
   components: {
     ArtistCard,
     Loading

@@ -17,6 +17,7 @@ import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'GetTracks',
+  props: ['showTypes'],
   components: {
     TrackCard,
     TrackListHeader,
