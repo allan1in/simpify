@@ -26,12 +26,20 @@
             <IconSearch />
           </div>
           <button
+            v-if="inputContent.length === 0"
             class="nav-bar__mid__search__btn-wrapper"
             :class="{ 'btn-active': isSearch }"
             @click="toSearch"
           >
             <IconBrowseActive v-if="isSearch" />
             <IconBrowse v-else />
+          </button>
+          <button
+            v-else
+            class="nav-bar__mid__search__btn-wrapper nav-bar__mid__search__btn-wrapper__clear-border"
+            @click="inputContent = ''"
+          >
+            <IconClose />
           </button>
         </div>
       </div>
@@ -52,6 +60,7 @@
 <script>
 import IconBrowse from '@/components/Icons/IconBrowse.vue'
 import IconBrowseActive from '@/components/Icons/IconBrowseActive.vue'
+import IconClose from '@/components/Icons/IconClose.vue'
 import IconHome from '@/components/Icons/IconHome.vue'
 import IconHomeActive from '@/components/Icons/IconHomeActive.vue'
 import IconPrimaryLogo from '@/components/Icons/IconPrimaryLogo.vue'
@@ -67,7 +76,8 @@ export default {
     IconHomeActive,
     IconSearch,
     IconBrowse,
-    IconBrowseActive
+    IconBrowseActive,
+    IconClose
   },
   computed: {
     ...mapState(useUserStore, ['avatar', 'display_name'])
@@ -86,7 +96,7 @@ export default {
       this.inputContent = ''
     },
     toSearch() {
-      if (this.inputContent.length === 0) {
+      if (this.$route.name === 'Dashboard') {
         this.$router.push({ name: 'Search' })
       }
     }
@@ -120,9 +130,7 @@ export default {
       if (this.$route.path.split('/')[1] !== 'search') {
         return
       }
-      if (newVal.length === 0) {
-        this.$router.push({ name: 'Search' })
-      } else {
+      if (newVal.length !== 0 && newVal !== this.$route.params.inputContent) {
         this.$router.push({ name: 'SearchResult', params: { inputContent: newVal } })
       }
     }
@@ -260,6 +268,10 @@ export default {
           & svg {
             @include clickAnimation;
           }
+        }
+
+        &__clear-border {
+          border: none;
         }
       }
     }
