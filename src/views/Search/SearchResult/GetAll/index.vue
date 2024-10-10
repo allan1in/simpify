@@ -55,6 +55,7 @@ import Loading from '@/components/Loading/index.vue'
 import { searchAlbums } from '@/api/search'
 import { searchArtists } from '@/api/search'
 import { searchTracks } from '@/api/search'
+import { debounce } from '@/utils/debounce'
 
 export default {
   name: 'GetAll',
@@ -74,11 +75,11 @@ export default {
     }
   },
   methods: {
-    getAll() {
+    getAll: debounce(function () {
       this.getTracks()
       this.getArtists()
       this.getAlbums()
-    },
+    }),
     async getTracks() {
       const params = {
         q: this.$route.params.inputContent,
@@ -112,6 +113,11 @@ export default {
   },
   mounted() {
     this.getAll()
+  },
+  watch: {
+    $route(to, from) {
+      this.getAll()
+    }
   }
 }
 </script>
