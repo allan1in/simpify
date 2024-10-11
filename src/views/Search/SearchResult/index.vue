@@ -31,16 +31,18 @@ export default {
   methods: {
     // If there is no data of this type, hide the tag
     checkHasResults: debounce(async function () {
-      const params = {
-        q: this.$route.params.inputContent,
-        type: 'album,artist,track',
-        limit: 1,
-        offset: 0
+      if (this.$route.params.inputContent) {
+        const params = {
+          q: this.$route.params.inputContent,
+          type: 'album,artist,track',
+          limit: 1,
+          offset: 0
+        }
+        const res = (await search(params)).data
+        this.showTags.album = res.albums.total === 0 ? false : true
+        this.showTags.artist = res.artists.total === 0 ? false : true
+        this.showTags.track = res.tracks.total === 0 ? false : true
       }
-      const res = (await search(params)).data
-      this.showTags.album = res.albums.total === 0 ? false : true
-      this.showTags.artist = res.artists.total === 0 ? false : true
-      this.showTags.track = res.tracks.total === 0 ? false : true
     })
   },
   watch: {

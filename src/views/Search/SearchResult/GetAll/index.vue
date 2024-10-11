@@ -77,8 +77,10 @@ export default {
   props: ['showTypes'],
   methods: {
     getAll: debounce(async function () {
-      await Promise.all([this.getTracks(), this.getArtists(), this.getAlbums()])
-      this.loading = false
+      if (this.$route.params.inputContent) {
+        await Promise.all([this.getTracks(), this.getArtists(), this.getAlbums()])
+        this.loading = false
+      }
     }),
     async getTracks() {
       const params = {
