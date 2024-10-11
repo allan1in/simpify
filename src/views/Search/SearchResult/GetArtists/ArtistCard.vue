@@ -1,5 +1,5 @@
 <template>
-  <div class="artist-card">
+  <div class="artist-card" @click="$router.push({ name: 'Artist', params: { artistId: item.id } })">
     <div class="artist-card__img-wrapper">
       <img
         v-if="item.images[1]"

@@ -1,5 +1,5 @@
 <template>
-  <div class="album-card">
+  <div class="album-card" @click="$router.push({ name: 'Album', params: { albumId: item.id } })">
     <div class="album-card__img-wrapper">
       <img :src="item.images[1].url" alt="Album Cover" class="album-card__img-wrapper__img" />
     </div>
