@@ -97,7 +97,7 @@ export default {
       this.inputContent = ''
     },
     toSearchPage() {
-      if (this.$route.name === 'Dashboard') {
+      if (this.$route.path.split('/')[1] !== 'search') {
         this.$router.push({ name: 'Search' })
       }
     },
@@ -134,6 +134,11 @@ export default {
             // Decode URI to prevent infinite calls between watcher $router and watcher inputContent
             this.inputContent = to.params.inputContent
           }
+        } else {
+          // Path: other paths
+          this.isHome = false
+          this.isSearch = false
+          this.inputContent = ''
         }
       },
       immediate: true

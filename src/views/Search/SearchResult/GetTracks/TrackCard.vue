@@ -15,27 +15,34 @@
       <div class="track-card__title__cover-wrapper">
         <img
           class="track-card__title__cover-wrapper__cover"
-          :src="item.album.images[1].url"
+          :src="item.album.images[2].url"
           alt="Album Cover"
         />
       </div>
       <div class="track-card__title__msg-wrapper">
-        <div class="track-card__title__msg-wrapper__name">
+        <router-link
+          :to="{ name: 'Track', params: { trackId: item.id } }"
+          class="track-card__title__msg-wrapper__name"
+        >
           {{ item.name }}
-        </div>
+        </router-link>
         <div class="track-card__title__msg-wrapper__artists">
-          {{
-            item.artists.reduce(
-              (acc, artist, index) =>
-                index !== 0 ? acc + ', ' + artist.name : item.artists[0].name,
-              ''
-            )
-          }}
+          <router-link
+            v-for="(artist, index) in item.artists"
+            :key="artist.id"
+            :to="{ name: 'Artist', params: { artistId: artist.id } }"
+          >
+            {{ (index === 0 ? '' : ', ') + artist.name }}
+          </router-link>
         </div>
       </div>
     </div>
     <div class="track-card__album-wrapper">
-      <div class="track-card__album-wrapper__album">{{ item.album.name }}</div>
+      <router-link
+        :to="{ name: 'Album', params: { albumId: item.album.id } }"
+        class="track-card__album-wrapper__album"
+        >{{ item.album.name }}</router-link
+      >
     </div>
     <div class="track-card__duration-wrapper">
       <span>{{ timeFormat(item.duration_ms) }}</span>
@@ -91,6 +98,14 @@ export default {
     display: flex;
   }
 
+  &:hover &__title__msg-wrapper__artists {
+    color: $color-font-primary;
+  }
+
+  &:hover &__album-wrapper__album {
+    color: $color-font-primary;
+  }
+
   &__left {
     flex-basis: 3.6rem;
 
@@ -132,8 +147,9 @@ export default {
       flex-shrink: 0;
 
       &__cover {
-        max-height: 100%;
-        object-fit: contain;
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
       }
     }
 

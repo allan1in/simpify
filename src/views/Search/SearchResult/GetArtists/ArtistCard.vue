@@ -12,7 +12,11 @@
       </div>
     </div>
     <div class="artist-card__name-wrapper">
-      <div class="artist-card__name-wrapper__name">{{ item.name }}</div>
+      <router-link
+        :to="{ name: 'Artist', params: { artistId: item.id } }"
+        class="artist-card__name-wrapper__name"
+        >{{ item.name }}</router-link
+      >
     </div>
   </div>
 </template>
@@ -60,7 +64,8 @@ export default {
 
     &__img {
       width: 100%;
-      object-fit: contain;
+      height: 100%;
+      object-fit: cover;
     }
 
     &__icon-wrapper {

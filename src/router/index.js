@@ -10,6 +10,9 @@ import GetTracks from '@/views/Search/SearchResult/GetTracks/index.vue'
 import GetAlbums from '@/views/Search/SearchResult/GetAlbums/index.vue'
 import GetArtists from '@/views/Search/SearchResult/GetArtists/index.vue'
 import SearchResult from '@/views/Search/SearchResult/index.vue'
+import Track from '@/views/Track/index.vue'
+import Album from '@/views/Album/index.vue'
+import Artist from '@/views/Artist/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,6 +61,21 @@ const router = createRouter({
               ]
             }
           ]
+        },
+        {
+          path: 'track/:trackId',
+          name: 'Track',
+          component: Track
+        },
+        {
+          path: 'album/:albumId',
+          name: 'Album',
+          component: Album
+        },
+        {
+          path: 'artist/:artistId',
+          name: 'Artist',
+          component: Artist
         }
       ]
     },
@@ -85,6 +103,7 @@ router.beforeEach(async (to, from, next) => {
   } else {
     // Has token
     if (to.path === '/login') {
+      // White list pages
       next('/')
     } else {
       let userStore = useUserStore()

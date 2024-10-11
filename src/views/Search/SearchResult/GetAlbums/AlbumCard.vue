@@ -4,18 +4,22 @@
       <img :src="item.images[1].url" alt="Album Cover" class="album-card__img-wrapper__img" />
     </div>
     <div class="album-card__name-wrapper">
-      <div class="album-card__name-wrapper__name">{{ item.name }}</div>
+      <router-link
+        :to="{ name: 'Album', params: { albumId: item.id } }"
+        class="album-card__name-wrapper__name"
+        >{{ item.name }}</router-link
+      >
     </div>
     <div class="album-card__info-wrapper">
       <div class="album-card__info-wrapper__info">
-        {{
-          item.release_date.split('-')[0] +
-          ' • ' +
-          item.artists.reduce(
-            (acc, artist, index) => (index !== 0 ? acc + ', ' + artist.name : item.artists[0].name),
-            ''
-          )
-        }}
+        {{ item.release_date.split('-')[0] + ' • ' }}
+        <router-link
+          :to="{ name: 'Artist', params: { artistId: artist.id } }"
+          v-for="(artist, index) in item.artists"
+          class="album-card__info-wrapper__info__artists"
+        >
+          {{ (index === 0 ? '' : ', ') + artist.name }}
+        </router-link>
       </div>
     </div>
   </div>
@@ -58,8 +62,9 @@ export default {
     box-shadow: 0 0 15px 12px rgba(0, 0, 0, 0.2);
 
     &__img {
-      max-width: 100%;
-      object-fit: contain;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
     }
   }
 
@@ -82,7 +87,7 @@ export default {
       font-size: 1.4rem;
       color: $color-font-secondary;
 
-      @include oneLineEllipsis;
+      @include twoLineEllipsis;
     }
   }
 }
