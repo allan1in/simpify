@@ -12,14 +12,21 @@
     </div>
     <div class="album-card__info-wrapper">
       <div class="album-card__info-wrapper__info">
-        {{ item.release_date.split('-')[0] + ' • ' }}
-        <router-link
-          :to="{ name: 'Artist', params: { artistId: artist.id } }"
-          v-for="(artist, index) in item.artists"
-          class="album-card__info-wrapper__info__artists"
-        >
-          {{ (index === 0 ? '' : ', ') + artist.name }}
-        </router-link>
+        <span>{{ item.release_date.split('-')[0] }}</span>
+        <span v-if="showAlbumType">{{
+          ` • ${item.album_type.charAt(0).toUpperCase()}${item.album_type.slice(1)}`
+        }}</span>
+
+        <span v-if="showArtists">
+          <span> • </span>
+          <!-- Use native a tag because router-link tag can't handle event bubbling easily -->
+          <a
+            @click.stop="$router.push({ name: 'Artist', params: { artistId: artist.id } })"
+            v-for="(artist, index) in item.artists"
+          >
+            {{ (index === 0 ? '' : ', ') + artist.name }}
+          </a>
+        </span>
       </div>
     </div>
   </div>
@@ -32,6 +39,16 @@ export default {
     item: {
       type: Object,
       require: true
+    },
+    showArtists: {
+      type: Boolean,
+      require: false,
+      default: true
+    },
+    showAlbumType: {
+      type: Boolean,
+      require: false,
+      default: false
     }
   }
 }

@@ -7,20 +7,17 @@
       <ArtistCard v-for="item in artists.items" :key="item.id" :item="item" />
     </div>
   </main>
-  <Loading :loading="loading" />
 </template>
 
 <script>
-import ArtistCard from './ArtistCard.vue'
-import Loading from '@/components/Loading/index.vue'
+import ArtistCard from '../../../../components/ArtistCard/index.vue'
 import { searchArtists } from '@/api/search'
 
 export default {
   name: 'GetArtists',
   props: ['showTypes'],
   components: {
-    ArtistCard,
-    Loading
+    ArtistCard
   },
   data() {
     return {
@@ -52,8 +49,7 @@ export default {
     padding-bottom: 1.6rem;
 
     &__total {
-      font-family: $font-family-title;
-      font-size: 2.4rem;
+      @include titleStyles;
     }
   }
 

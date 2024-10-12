@@ -28,3 +28,10 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+@mixin titleStyles {
+  font-size: 2.4rem;
+  color: $color-font-primary;
+  font-family: $font-family-title;
+  font-weight: 700;
+}

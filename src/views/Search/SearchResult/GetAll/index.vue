@@ -42,16 +42,14 @@
         </div>
       </div>
     </div>
-    <Loading :loading="loading" />
   </main>
 </template>
 
 <script>
-import AlbumCard from '../GetAlbums/AlbumCard.vue'
-import ArtistCard from '../GetArtists/ArtistCard.vue'
-import TrackCard from '../GetTracks/TrackCard.vue'
-import TrackListHeader from '../GetTracks/TrackListHeader.vue'
-import Loading from '@/components/Loading/index.vue'
+import AlbumCard from '../../../../components/AlbumCard/index.vue'
+import ArtistCard from '../../../../components/ArtistCard/index.vue'
+import TrackCard from '@/components/TrackCard/index.vue'
+import TrackListHeader from '@/components/TrackListHeader/index.vue'
 import { searchAlbums } from '@/api/search'
 import { searchArtists } from '@/api/search'
 import { searchTracks } from '@/api/search'
@@ -63,8 +61,7 @@ export default {
     TrackCard,
     ArtistCard,
     AlbumCard,
-    TrackListHeader,
-    Loading
+    TrackListHeader
   },
   data() {
     return {
@@ -128,9 +125,9 @@ export default {
   &__content {
     &__songs {
       &__title {
-        font-family: $font-family-title;
-        font-size: 2.4rem;
         padding-bottom: 2.4rem;
+
+        @include titleStyles;
       }
     }
 
@@ -138,9 +135,9 @@ export default {
       padding-top: 2.4rem;
 
       &__title {
-        font-family: $font-family-title;
-        font-size: 2.4rem;
         padding-bottom: 2.4rem;
+
+        @include titleStyles;
       }
 
       &__results {
@@ -153,9 +150,9 @@ export default {
       padding-top: 2.4rem;
 
       &__title {
-        font-family: $font-family-title;
-        font-size: 2.4rem;
         padding-bottom: 2.4rem;
+
+        @include titleStyles;
       }
 
       &__results {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>access_token: {{ access_token }}</p>
+    {{ access_token }}
   </div>
 </template>
 

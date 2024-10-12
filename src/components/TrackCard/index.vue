@@ -26,7 +26,7 @@
         >
           {{ item.name }}
         </router-link>
-        <div class="track-card__title__msg-wrapper__artists">
+        <div v-if="showArtists" class="track-card__title__msg-wrapper__artists">
           <router-link
             v-for="(artist, index) in item.artists"
             :key="artist.id"
@@ -65,6 +65,11 @@ export default {
     index: {
       type: Number,
       require: true
+    },
+    showArtists: {
+      type: Boolean,
+      require: false,
+      default: true
     }
   },
   methods: {
@@ -158,7 +163,7 @@ export default {
       display: flex;
       flex-direction: column;
       align-items: start;
-      justify-content: space-between;
+      justify-content: center;
       line-height: initial;
       height: 80%;
 

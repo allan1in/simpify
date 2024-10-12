@@ -17,6 +17,9 @@
         class="artist-card__name-wrapper__name"
         >{{ item.name }}</router-link
       >
+      <div class="artist-card__name-wrapper__type">
+        {{ `${item.type.charAt(0).toUpperCase()}${item.type.slice(1)}` }}
+      </div>
     </div>
   </div>
 </template>
@@ -77,11 +80,18 @@ export default {
 
   &__name-wrapper {
     width: 85%;
-    text-align: center;
     padding-top: 1.2rem;
 
     &__name {
       font-size: 1.6rem;
+
+      @include oneLineEllipsis;
+    }
+
+    &__type {
+      font-size: 1.4rem;
+      color: $color-font-secondary;
+      margin-top: 0.2rem;
 
       @include oneLineEllipsis;
     }

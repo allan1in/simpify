@@ -6,22 +6,19 @@
     <TrackListHeader />
     <TrackCard v-for="(item, index) in tracks.items" :key="index" :item="item" :index="index" />
   </main>
-  <Loading :loading="loading" />
 </template>
 
 <script>
-import TrackCard from './TrackCard.vue'
-import TrackListHeader from './TrackListHeader.vue'
+import TrackCard from '@/components/TrackCard/index.vue'
+import TrackListHeader from '@/components/TrackListHeader/index.vue'
 import { searchTracks } from '@/api/search'
-import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'GetTracks',
   props: ['showTypes'],
   components: {
     TrackCard,
-    TrackListHeader,
-    Loading
+    TrackListHeader
   },
   data() {
     return {
@@ -53,8 +50,7 @@ export default {
     padding-bottom: 2.4rem;
 
     &__total {
-      font-family: $font-family-title;
-      font-size: 2.4rem;
+      @include titleStyles;
     }
   }
 }

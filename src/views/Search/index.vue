@@ -36,8 +36,7 @@ export default {
     padding: 0.8rem 0;
 
     &__title {
-      font-size: 2.4rem;
-      font-family: $font-family-title;
+      @include titleStyles;
     }
   }
 
@@ -56,9 +55,9 @@ export default {
       cursor: pointer;
 
       &__name {
-        font-size: 2.4rem;
-        font-family: $font-family-title;
         padding: 1.6rem;
+
+        @include titleStyles;
       }
 
       &__img {
