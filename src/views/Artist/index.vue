@@ -16,7 +16,7 @@
     </div>
     <div class="artist-container__content">
       <div v-if="tracks.length !== 0" class="artist-container__content__popular">
-        <div class="artist-container__content__popular__title">Popular</div>
+        <TitleSimple :title="'Popular'" />
         <div class="artist-container__content__popular__content">
           <TrackListHeader />
           <TrackCard
@@ -28,54 +28,27 @@
           />
         </div>
       </div>
-      <div v-if="albums.length !== 0" class="artist-container__content__albums">
-        <a class="artist-container__content__albums__title">Albums</a>
-        <div class="artist-container__content__albums__content">
-          <AlbumCard
-            v-for="item in albums"
-            :key="item.id"
-            :item="item"
-            :show-album-type="true"
-            :show-artists="false"
-          />
-        </div>
-      </div>
-      <div v-if="singles.length !== 0" class="artist-container__content__singles">
-        <a class="artist-container__content__singles__title">Singles</a>
-        <div class="artist-container__content__singles__content">
-          <AlbumCard
-            v-for="item in singles"
-            :key="item.id"
-            :item="item"
-            :show-album-type="true"
-            :show-artists="false"
-          />
-        </div>
-      </div>
-      <div v-if="appearsOn.length !== 0" class="artist-container__content__appears-on">
-        <a class="artist-container__content__appears-on__title">Appears On</a>
-        <div class="artist-container__content__appears-on__content">
-          <AlbumCard
-            v-for="item in appearsOn"
-            :key="item.id"
-            :item="item"
-            :show-album-type="true"
-            :show-artists="false"
-          />
-        </div>
-      </div>
-      <div v-if="compilations.length !== 0" class="artist-container__content__compilations">
-        <a class="artist-container__content__compilations__title">Compilations</a>
-        <div class="artist-container__content__compilations__content">
-          <AlbumCard
-            v-for="item in compilations"
-            :key="item.id"
-            :item="item"
-            :show-album-type="true"
-            :show-artists="false"
-          />
-        </div>
-      </div>
+      <TitleWithPartialItems
+        v-if="albums.length !== 0"
+        :router-name="'ArtistAllAlbums'"
+        :title="'Albums'"
+        :card-type="'AlbumCard'"
+        :items="albums"
+      />
+      <TitleWithPartialItems
+        v-if="singles.length !== 0"
+        :router-name="'ArtistAllSingles'"
+        :title="'Singles'"
+        :card-type="'AlbumCard'"
+        :items="singles"
+      />
+      <TitleWithPartialItems
+        v-if="appearsOn.length !== 0"
+        :router-name="'ArtistAllAppearsOn'"
+        :title="'Appears On'"
+        :card-type="'AlbumCard'"
+        :items="appearsOn"
+      />
     </div>
   </MyOverlayScrollbars>
 </template>
@@ -83,23 +56,17 @@
 <script>
 import TrackCard from '@/components/TrackCard/index.vue'
 import TrackListHeader from '@/components/TrackListHeader/index.vue'
-import artist from './artist.json'
-import tracks from './tracks.json'
-import albums from './albums.json'
-import singles from './singles.json'
-import appearsOn from './appearsOn.json'
-import compilations from './compilations'
+import artist from './data/artist.json'
+import tracks from './data/tracks.json'
+import albums from './data/albums.json'
+import singles from './data/singles.json'
+import appearsOn from './data/appearsOn.json'
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
-import {
-  getAlbums,
-  getAppearsOn,
-  getArtist,
-  getCompilations,
-  getSingles,
-  getTopTracks
-} from '@/api/artists'
+import { getAlbums, getAppearsOn, getArtist, getSingles, getTopTracks } from '@/api/artists'
 import AlbumCard from '@/components/AlbumCard/index.vue'
 import ArtistCard from '@/components/ArtistCard/index.vue'
+import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
+import TitleSimple from '@/components/TitleSimple/index.vue'
 
 export default {
   name: 'Artist',
@@ -108,7 +75,9 @@ export default {
     TrackListHeader,
     TrackCard,
     AlbumCard,
-    ArtistCard
+    ArtistCard,
+    TitleWithPartialItems,
+    TitleSimple
   },
   data() {
     return {
@@ -129,7 +98,6 @@ export default {
       await this.getAlbums()
       await this.getSingles()
       await this.getAppearsOn()
-      await this.getCompilations()
       this.loading = false
     },
     async getArtist() {
@@ -154,7 +122,6 @@ export default {
         offset: 0
       }
       const res = (await getSingles(this.id, params)).data.items
-      console.log(res)
       this.singles = res
     },
     async getAppearsOn() {
@@ -164,14 +131,6 @@ export default {
       }
       const res = (await getAppearsOn(this.id, params)).data.items
       this.appearsOn = res
-    },
-    async getCompilations() {
-      const params = {
-        limit: 7,
-        offset: 0
-      }
-      const res = (await getCompilations(this.id, params)).data.items
-      this.compilations = res
     }
   },
   created() {
@@ -213,29 +172,6 @@ export default {
     padding: 2.4rem;
     &__popular {
       padding: 2.4rem 0;
-      &__title {
-        margin-bottom: 1.6rem;
-
-        @include titleStyles;
-      }
-    }
-
-    &__albums,
-    &__singles,
-    &__appears-on,
-    &__compilations {
-      padding: 2.4rem 0;
-      &__title {
-        display: inline-block;
-        margin: 1.6rem 0;
-
-        @include titleStyles;
-      }
-
-      &__content {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-      }
     }
   }
 }

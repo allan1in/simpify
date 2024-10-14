@@ -1,7 +1,7 @@
 <template>
   <main class="all-container">
     <div v-if="!loading" class="all-container__content">
-      <div v-if="showTypes.track" class="all-container__content__songs">
+      <div v-if="tracks.total" class="all-container__content__songs">
         <TitleShowAll :router-name="'GetTracks'" :title="'Songs'" />
         <div class="all-container__content__songs__results">
           <TrackListHeader />
@@ -14,14 +14,14 @@
         </div>
       </div>
       <TitleWithPartialItems
-        v-if="showTypes.artist"
+        v-if="artists.total"
         :router-name="'GetArtists'"
         :title="'Artists'"
         :card-type="'ArtistCard'"
         :items="artists.items"
       />
       <TitleWithPartialItems
-        v-if="showTypes.album"
+        v-if="albums.total"
         :router-name="'GetAlbums'"
         :title="'Albums'"
         :card-type="'AlbumCard'"
@@ -61,7 +61,6 @@ export default {
       loading: true
     }
   },
-  props: ['showTypes'],
   methods: {
     getAll: debounce(async function () {
       if (this.$route.params.inputContent) {

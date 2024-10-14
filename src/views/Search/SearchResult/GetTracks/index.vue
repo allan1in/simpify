@@ -1,8 +1,8 @@
 <template>
   <main v-if="!loading" class="track-container">
-    <div class="track-container__msg">
-      <h1 class="track-container__msg__total">{{ tracks.total + ' Songs' }}</h1>
-    </div>
+    <TitleSimple :title="'Tracks'">
+      <template #before-title>{{ tracks.total + ' ' }}</template>
+    </TitleSimple>
     <TrackListHeader />
     <TrackCard v-for="(item, index) in tracks.items" :key="index" :item="item" :index="index" />
   </main>
@@ -12,13 +12,14 @@
 import TrackCard from '@/components/TrackCard/index.vue'
 import TrackListHeader from '@/components/TrackListHeader/index.vue'
 import { searchTracks } from '@/api/search'
+import TitleSimple from '@/components/TitleSimple/index.vue'
 
 export default {
   name: 'GetTracks',
-  props: ['showTypes'],
   components: {
     TrackCard,
-    TrackListHeader
+    TrackListHeader,
+    TitleSimple
   },
   data() {
     return {

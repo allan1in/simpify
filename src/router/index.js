@@ -13,10 +13,18 @@ import SearchResult from '@/views/Search/SearchResult/index.vue'
 import Track from '@/views/Track/index.vue'
 import Album from '@/views/Album/index.vue'
 import Artist from '@/views/Artist/index.vue'
+import ArtistAllAlbums from '@/views/Artist/Albums/index.vue'
+import ArtistAllSingles from '@/views/Artist/Singles/index.vue'
+import ArtistAllAppearsOn from '@/views/Artist/AppearsOn/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/login',
+      name: 'LoginUser',
+      component: LoginUser
+    },
     {
       path: '/',
       component: Layout,
@@ -25,64 +33,93 @@ const router = createRouter({
           path: '',
           name: 'Dashboard',
           component: Dashboard
-        },
-        {
-          path: 'search',
-          children: [
-            {
-              path: '',
-              name: 'Search',
-              component: Search
-            },
-            {
-              path: ':inputContent',
-              component: SearchResult,
-              children: [
-                {
-                  path: '',
-                  name: 'SearchResult',
-                  component: GetAll
-                },
-                {
-                  path: 'tracks',
-                  name: 'GetTracks',
-                  component: GetTracks
-                },
-                {
-                  path: 'albums',
-                  name: 'GetAlbums',
-                  component: GetAlbums
-                },
-                {
-                  path: 'artists',
-                  name: 'GetArtists',
-                  component: GetArtists
-                }
-              ]
-            }
-          ]
-        },
-        {
-          path: 'track/:trackId',
-          name: 'Track',
-          component: Track
-        },
-        {
-          path: 'album/:albumId',
-          name: 'Album',
-          component: Album
-        },
-        {
-          path: 'artist/:artistId',
-          name: 'Artist',
-          component: Artist
         }
       ]
     },
     {
-      path: '/login',
-      name: 'LoginUser',
-      component: LoginUser
+      path: '/search',
+      component: Layout,
+      children: [
+        {
+          path: '',
+          name: 'Search',
+          component: Search
+        },
+        {
+          path: ':inputContent',
+          component: SearchResult,
+          children: [
+            {
+              path: '',
+              name: 'SearchResult',
+              component: GetAll
+            },
+            {
+              path: 'tracks',
+              name: 'GetTracks',
+              component: GetTracks
+            },
+            {
+              path: 'albums',
+              name: 'GetAlbums',
+              component: GetAlbums
+            },
+            {
+              path: 'artists',
+              name: 'GetArtists',
+              component: GetArtists
+            }
+          ]
+        }
+      ]
+    },
+    {
+      path: '/artist/:artistId',
+      component: Layout,
+      children: [
+        {
+          path: '',
+          name: 'Artist',
+          component: Artist
+        },
+        {
+          path: 'albums',
+          name: 'ArtistAllAlbums',
+          component: ArtistAllAlbums
+        },
+        {
+          path: 'singles',
+          name: 'ArtistAllSingles',
+          component: ArtistAllSingles
+        },
+        {
+          path: 'appears-on',
+          name: 'ArtistAllAppearsOn',
+          component: ArtistAllAppearsOn
+        }
+      ]
+    },
+    {
+      path: '/track/:trackId',
+      component: Layout,
+      children: [
+        {
+          path: '',
+          name: 'Track',
+          component: Track
+        }
+      ]
+    },
+    {
+      path: '/album/:albumId',
+      component: Layout,
+      children: [
+        {
+          path: '',
+          name: 'Album',
+          component: Album
+        }
+      ]
     },
     {
       path: '/:pathMatch(.*)*',

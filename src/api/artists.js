@@ -49,15 +49,3 @@ export function getAppearsOn(id, params) {
     }
   })
 }
-
-export function getCompilations(id, params) {
-  return request({
-    url: `/artists/${id}/albums`,
-    method: 'get',
-    params: {
-      include_groups: 'compilations',
-      limit: params.limit,
-      offset: params.offset
-    }
-  })
-}

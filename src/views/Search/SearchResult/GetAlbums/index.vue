@@ -1,8 +1,8 @@
 <template>
   <main v-if="!loading" class="album-container">
-    <div class="album-container__msg">
-      <h1 class="album-container__msg__total">{{ albums.total }} Albums</h1>
-    </div>
+    <TitleSimple :title="'Albums'">
+      <template #before-title>{{ albums.total + ' ' }}</template>
+    </TitleSimple>
     <div class="album-container__results">
       <AlbumCard v-for="item in albums.items" :key="item.id" :item="item" />
     </div>
@@ -12,10 +12,10 @@
 <script>
 import { searchAlbums } from '@/api/search'
 import AlbumCard from '../../../../components/AlbumCard/index.vue'
+import TitleSimple from '@/components/TitleSimple/index.vue'
 
 export default {
   name: 'GetAlbums',
-  props: ['showTypes'],
   data() {
     return {
       albums: {},
@@ -23,7 +23,8 @@ export default {
     }
   },
   components: {
-    AlbumCard
+    AlbumCard,
+    TitleSimple
   },
   methods: {
     async getAlbums() {
@@ -47,10 +48,6 @@ export default {
 .album-container {
   &__msg {
     padding-bottom: 1.6rem;
-
-    &__total {
-      @include titleStyles;
-    }
   }
 
   &__results {

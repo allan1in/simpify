@@ -1,8 +1,8 @@
 <template>
   <main v-if="!loading" class="artist-container">
-    <div class="artist-container__msg">
-      <h1 class="artist-container__msg__total">{{ artists.total }} Artists</h1>
-    </div>
+    <TitleSimple :title="'Artists'">
+      <template #before-title>{{ artists.total + ' ' }}</template>
+    </TitleSimple>
     <div class="artist-container__results">
       <ArtistCard v-for="item in artists.items" :key="item.id" :item="item" />
     </div>
@@ -11,13 +11,14 @@
 
 <script>
 import ArtistCard from '../../../../components/ArtistCard/index.vue'
+import TitleSimple from '@/components/TitleSimple/index.vue'
 import { searchArtists } from '@/api/search'
 
 export default {
   name: 'GetArtists',
-  props: ['showTypes'],
   components: {
-    ArtistCard
+    ArtistCard,
+    TitleSimple
   },
   data() {
     return {
@@ -47,10 +48,6 @@ export default {
 .artist-container {
   &__msg {
     padding-bottom: 1.6rem;
-
-    &__total {
-      @include titleStyles;
-    }
   }
 
   &__results {
