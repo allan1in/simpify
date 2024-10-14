@@ -2,9 +2,7 @@
   <main class="all-container">
     <div v-if="!loading" class="all-container__content">
       <div v-if="showTypes.track" class="all-container__content__songs">
-        <h1 class="all-container__content__songs__title">
-          <router-link :to="{ name: 'GetTracks' }">Songs</router-link>
-        </h1>
+        <TitleShowAll :router-name="'GetTracks'" :title="'Songs'" />
         <div class="all-container__content__songs__results">
           <TrackListHeader />
           <TrackCard
@@ -15,32 +13,20 @@
           />
         </div>
       </div>
-      <div v-if="showTypes.artist" class="all-container__content__artists">
-        <h1 class="all-container__content__artists__title">
-          <router-link :to="{ name: 'GetArtists' }">Artists</router-link>
-        </h1>
-        <div class="all-container__content__artists__results">
-          <ArtistCard
-            v-for="(item, index) in artists.items"
-            :key="index"
-            :item="item"
-            :index="index"
-          />
-        </div>
-      </div>
-      <div v-if="showTypes.album" class="all-container__content__albums">
-        <h1 class="all-container__content__albums__title">
-          <router-link :to="{ name: 'GetAlbums' }">Albums</router-link>
-        </h1>
-        <div class="all-container__content__albums__results">
-          <AlbumCard
-            v-for="(item, index) in albums.items"
-            :key="index"
-            :item="item"
-            :index="index"
-          />
-        </div>
-      </div>
+      <TitleWithPartialItems
+        v-if="showTypes.artist"
+        :router-name="'GetArtists'"
+        :title="'Artists'"
+        :card-type="'ArtistCard'"
+        :items="artists.items"
+      />
+      <TitleWithPartialItems
+        v-if="showTypes.album"
+        :router-name="'GetAlbums'"
+        :title="'Albums'"
+        :card-type="'AlbumCard'"
+        :items="albums.items"
+      />
     </div>
   </main>
 </template>
@@ -54,6 +40,8 @@ import { searchAlbums } from '@/api/search'
 import { searchArtists } from '@/api/search'
 import { searchTracks } from '@/api/search'
 import { debounce } from '@/utils/debounce'
+import TitleShowAll from '@/components/TitleShowAll/index.vue'
+import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
 
 export default {
   name: 'GetAll',
@@ -61,7 +49,9 @@ export default {
     TrackCard,
     ArtistCard,
     AlbumCard,
-    TrackListHeader
+    TrackListHeader,
+    TitleShowAll,
+    TitleWithPartialItems
   },
   data() {
     return {
@@ -128,36 +118,6 @@ export default {
         padding-bottom: 2.4rem;
 
         @include titleStyles;
-      }
-    }
-
-    &__artists {
-      padding-top: 2.4rem;
-
-      &__title {
-        padding-bottom: 2.4rem;
-
-        @include titleStyles;
-      }
-
-      &__results {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-      }
-    }
-
-    &__albums {
-      padding-top: 2.4rem;
-
-      &__title {
-        padding-bottom: 2.4rem;
-
-        @include titleStyles;
-      }
-
-      &__results {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
       }
     }
   }

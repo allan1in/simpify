@@ -56,13 +56,13 @@
       >
         <IconNowPlayingView />
       </button> -->
-      <button
+      <!-- <button
         class="icon-wrapper"
         :class="{ 'btn-active': isLyrics }"
         @click="isLyrics = !isLyrics"
       >
         <IconLyrics />
-      </button>
+      </button> -->
       <!-- <button class="icon-wrapper" :class="{ 'btn-active': isQueen }" @click="isQueen = !isQueen">
         <IconQueen />
       </button>

@@ -1,6 +1,6 @@
 <template>
   <MyOverlayScrollbars os-element="main" os-class="search-container">
-    <div class="search-container__title-wrapper">
+    <!-- <div class="search-container__title-wrapper">
       <h1 class="search-container__title-wrapper__title">Browse All</h1>
     </div>
     <div class="search-container__cards-wrapper">
@@ -12,7 +12,7 @@
           alt=""
         />
       </div>
-    </div>
+    </div> -->
   </MyOverlayScrollbars>
 </template>
 
