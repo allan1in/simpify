@@ -87,7 +87,6 @@ export default {
       albums: {},
       singles: {},
       appearsOn: {},
-      compilations: {},
       loading: true
     }
   },
@@ -133,8 +132,15 @@ export default {
       this.appearsOn = res
     }
   },
-  created() {
-    this.getAll()
+  watch: {
+    $route: {
+      async handler(to, from) {
+        this.loading = true
+        this.id = to.params.artistId
+        await this.getAll()
+      },
+      immediate: true
+    }
   }
 }
 </script>
