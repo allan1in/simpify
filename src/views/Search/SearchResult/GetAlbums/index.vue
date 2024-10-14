@@ -16,6 +16,7 @@ import TitleSimple from '@/components/TitleSimple/index.vue'
 
 export default {
   name: 'GetAlbums',
+  props: ['showTypes'],
   data() {
     return {
       albums: {},

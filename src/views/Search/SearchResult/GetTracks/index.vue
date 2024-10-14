@@ -16,6 +16,7 @@ import TitleSimple from '@/components/TitleSimple/index.vue'
 
 export default {
   name: 'GetTracks',
+  props: ['showTypes'],
   components: {
     TrackCard,
     TrackListHeader,

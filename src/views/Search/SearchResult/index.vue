@@ -1,8 +1,8 @@
 <template>
   <MyOverlayScrollbars os-class="search-container" os-element="main">
-    <TopBar />
+    <TopBar :showTags="showTags" />
     <section class="search-container__search-content">
-      <RouterView />
+      <RouterView :showTypes="showTags" />
     </section>
   </MyOverlayScrollbars>
 </template>
@@ -12,8 +12,6 @@ import { search } from '@/api/search'
 import TopBar from './TopBar/index.vue'
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import { debounce } from '@/utils/debounce'
-import { mapWritableState } from 'pinia'
-import { useSearchStore } from '@/stores/search'
 
 export default {
   name: 'SearchResult',
@@ -30,25 +28,19 @@ export default {
     TopBar,
     MyOverlayScrollbars
   },
-  computed: {
-    ...mapWritableState(useSearchStore, ['showAlbums', 'showArtists', 'showTracks', 'checkLoading'])
-  },
   methods: {
     // If there is no data of this type, hide the tag
     checkHasResults: debounce(async function () {
-      if (this.$route.params.inputContent) {
-        const params = {
-          q: this.$route.params.inputContent,
-          type: 'album,artist,track',
-          limit: 1,
-          offset: 0
-        }
-        const res = (await search(params)).data
-        this.showAlbums = res.albums.total === 0 ? false : true
-        this.showArtists = res.artists.total === 0 ? false : true
-        this.showTracks = res.tracks.total === 0 ? false : true
-        this.checkLoading = false
+      const params = {
+        q: this.$route.params.inputContent,
+        type: 'album,artist,track',
+        limit: 1,
+        offset: 0
       }
+      const res = (await search(params)).data
+      this.showTags.album = res.albums.total === 0 ? false : true
+      this.showTags.artist = res.artists.total === 0 ? false : true
+      this.showTags.track = res.tracks.total === 0 ? false : true
     })
   },
   watch: {

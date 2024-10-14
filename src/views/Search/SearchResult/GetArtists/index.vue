@@ -16,6 +16,7 @@ import { searchArtists } from '@/api/search'
 
 export default {
   name: 'GetArtists',
+  props: ['showTypes'],
   components: {
     ArtistCard,
     TitleSimple

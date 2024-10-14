@@ -1,50 +1,40 @@
 <template>
-  <KeepAlive>
-    <section class="top-bar-container">
-      <div
-        class="top-bar-container__btn-wrapper"
-        v-if="!checkLoading && (showTracks || showArtists || showAlbums)"
-      >
-        <button
-          class="top-bar-container__btn-wrapper__btn"
-          :class="{ 'btn-active': isActive === $route.params.inputContent }"
-          @click="getAll"
-        >
-          All
-        </button>
-        <button
-          v-if="showTracks"
-          class="top-bar-container__btn-wrapper__btn"
-          :class="{ 'btn-active': isActive === 'tracks' }"
-          @click="getSongs"
-        >
-          Songs
-        </button>
-        <button
-          v-if="showArtists"
-          class="top-bar-container__btn-wrapper__btn"
-          :class="{ 'btn-active': isActive === 'artists' }"
-          @click="getArtists"
-        >
-          Artists
-        </button>
-        <button
-          v-if="showAlbums"
-          class="top-bar-container__btn-wrapper__btn"
-          :class="{ 'btn-active': isActive === 'albums' }"
-          @click="getAlbums"
-        >
-          Albums
-        </button>
-      </div>
-    </section>
-  </KeepAlive>
+  <section v-if="showTags.track || showTags.artist || showTags.album" class="top-bar-container">
+    <button
+      class="top-bar-container__btn"
+      :class="{ 'btn-active': isActive === $route.params.inputContent }"
+      @click="getAll"
+    >
+      All
+    </button>
+    <button
+      v-if="showTags.track"
+      class="top-bar-container__btn"
+      :class="{ 'btn-active': isActive === 'tracks' }"
+      @click="getSongs"
+    >
+      Songs
+    </button>
+    <button
+      v-if="showTags.artist"
+      class="top-bar-container__btn"
+      :class="{ 'btn-active': isActive === 'artists' }"
+      @click="getArtists"
+    >
+      Artists
+    </button>
+    <button
+      v-if="showTags.album"
+      class="top-bar-container__btn"
+      :class="{ 'btn-active': isActive === 'albums' }"
+      @click="getAlbums"
+    >
+      Albums
+    </button>
+  </section>
 </template>
 
 <script>
-import { mapWritableState } from 'pinia'
-import { useSearchStore } from '@/stores/search'
-
 export default {
   name: 'TopBar',
   data() {
@@ -57,9 +47,6 @@ export default {
       type: Object,
       require: true
     }
-  },
-  computed: {
-    ...mapWritableState(useSearchStore, ['showAlbums', 'showArtists', 'showTracks', 'checkLoading'])
   },
   methods: {
     getAll() {
@@ -99,30 +86,25 @@ export default {
 .top-bar-container {
   position: sticky;
   top: 0;
-  height: 6rem;
   padding: 1.2rem 0;
-  padding-left: 2.4rem;
   background-color: $color-bg-2;
   border-top-left-radius: $gutter;
   border-top-right-radius: $gutter;
 
-  &__btn-wrapper {
-    display: flex;
-    gap: 1.2rem;
-    justify-content: start;
-    align-items: center;
-    height: 100%;
+  &__btn {
+    background-color: $color-bg-5;
+    color: $color-font-primary;
+    padding: 0.4rem 1.2rem;
+    height: 3.2rem;
+    border-radius: 3.2rem;
+    margin-left: 1.2rem;
 
-    &__btn {
-      background-color: $color-bg-5;
-      color: $color-font-primary;
-      padding: 0.4rem 1.2rem;
-      height: 90%;
-      border-radius: 3.2rem;
+    &:nth-child(1) {
+      margin-left: 2.4rem;
+    }
 
-      &:hover {
-        background-color: $color-bg-6;
-      }
+    &:hover {
+      background-color: $color-bg-6;
     }
   }
 }
