@@ -32,7 +32,7 @@ export default {
     async getTracks() {
       const params = {
         q: this.$route.params.inputContent,
-        limit: 30,
+        limit: 28,
         offset: 0
       }
       const res = (await searchTracks(params)).data.tracks

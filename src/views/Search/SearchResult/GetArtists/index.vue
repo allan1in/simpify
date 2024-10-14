@@ -31,7 +31,7 @@ export default {
     async getArtists() {
       const params = {
         q: this.$route.params.inputContent,
-        limit: 30,
+        limit: 28,
         offset: 0
       }
       const res = (await searchArtists(params)).data.artists
