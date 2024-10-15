@@ -16,9 +16,7 @@
         </button>
       </div>
     </div>
-    <div v-else class="login-container__loading-wrapper">
-      <h1 class="login-container__loading-wrapper__loading">Loading...</h1>
-    </div>
+    <Loading :loading />
   </main>
 </template>
 
@@ -29,11 +27,13 @@ import { getCodeVerifier } from '@/utils/code_verifier'
 import settings from '@/settings'
 import { mapActions } from 'pinia'
 import { useUserStore } from '@/stores/user'
+import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'Login',
   components: {
-    IconPrimaryLogo
+    IconPrimaryLogo,
+    Loading
   },
   data() {
     return {

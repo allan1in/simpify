@@ -1,5 +1,5 @@
 <template>
-  <MyOverlayScrollbars os-element="main" os-class="search-container">
+  <MyOverlayScrollbars :os-element="'main'" :os-class="'search-container'">
     <!-- <div class="search-container__title-wrapper">
       <h1 class="search-container__title-wrapper__title">Browse All</h1>
     </div>
@@ -13,24 +13,32 @@
         />
       </div>
     </div> -->
+    <Loading :loading="loading" />
   </MyOverlayScrollbars>
 </template>
 
 <script>
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
+import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'Search',
   components: {
-    MyOverlayScrollbars
+    MyOverlayScrollbars,
+    Loading
+  },
+  data() {
+    return {
+      loading: true
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .search-container {
-  padding: 2.4rem;
-  height: inherit;
+  min-height: calc($height-content);
+  height: 100%;
 
   &__title-wrapper {
     padding: 0.8rem 0;

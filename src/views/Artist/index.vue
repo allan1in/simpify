@@ -1,55 +1,58 @@
 <template>
-  <MyOverlayScrollbars v-if="!loading" :os-class="'artist-container'" :os-element="'main'">
-    <div
-      class="artist-container__cover"
-      :style="{
-        'background-image': `url(${artist.images.length !== 0 ? artist.images[0].url : ''})`
-      }"
-    >
-      <div class="artist-container__cover__title">{{ artist.name }}</div>
-      <div class="artist-container__cover__followers">
-        {{
-          Intl.NumberFormat().format(artist.followers.total) +
-          (artist.followers.total === '1' ? ' follower' : ' followers')
-        }}
-      </div>
-    </div>
-    <div class="artist-container__content">
-      <div v-if="tracks.length !== 0" class="artist-container__content__popular">
-        <TitleSimple :title="'Popular'" />
-        <div class="artist-container__content__popular__content">
-          <TrackListHeader />
-          <TrackCard
-            v-for="(track, index) in tracks"
-            :key="track.id"
-            :index="index"
-            :showArtists="false"
-            :item="track"
-          />
+  <MyOverlayScrollbars :os-class="'artist-container'" :os-element="'main'">
+    <div v-if="!loading">
+      <div
+        class="artist-container__cover"
+        :style="{
+          'background-image': `url(${artist.images.length !== 0 ? artist.images[0].url : ''})`
+        }"
+      >
+        <div class="artist-container__cover__title">{{ artist.name }}</div>
+        <div class="artist-container__cover__followers">
+          {{
+            Intl.NumberFormat().format(artist.followers.total) +
+            (artist.followers.total === '1' ? ' follower' : ' followers')
+          }}
         </div>
       </div>
-      <TitleWithPartialItems
-        v-if="albums.length !== 0"
-        :router-name="'ArtistAllAlbums'"
-        :title="'Albums'"
-        :card-type="'AlbumCard'"
-        :items="albums"
-      />
-      <TitleWithPartialItems
-        v-if="singles.length !== 0"
-        :router-name="'ArtistAllSingles'"
-        :title="'Singles'"
-        :card-type="'AlbumCard'"
-        :items="singles"
-      />
-      <TitleWithPartialItems
-        v-if="appearsOn.length !== 0"
-        :router-name="'ArtistAllAppearsOn'"
-        :title="'Appears On'"
-        :card-type="'AlbumCard'"
-        :items="appearsOn"
-      />
+      <div class="artist-container__content">
+        <div v-if="tracks.length !== 0" class="artist-container__content__popular">
+          <TitleSimple :title="'Popular'" />
+          <div class="artist-container__content__popular__content">
+            <TrackListHeader />
+            <TrackCard
+              v-for="(track, index) in tracks"
+              :key="track.id"
+              :index="index"
+              :showArtists="false"
+              :item="track"
+            />
+          </div>
+        </div>
+        <TitleWithPartialItems
+          v-if="albums.length !== 0"
+          :router-name="'ArtistAllAlbums'"
+          :title="'Albums'"
+          :card-type="'AlbumCard'"
+          :items="albums"
+        />
+        <TitleWithPartialItems
+          v-if="singles.length !== 0"
+          :router-name="'ArtistAllSingles'"
+          :title="'Singles'"
+          :card-type="'AlbumCard'"
+          :items="singles"
+        />
+        <TitleWithPartialItems
+          v-if="appearsOn.length !== 0"
+          :router-name="'ArtistAllAppearsOn'"
+          :title="'Appears On'"
+          :card-type="'AlbumCard'"
+          :items="appearsOn"
+        />
+      </div>
     </div>
+    <Loading :loading="loading" />
   </MyOverlayScrollbars>
 </template>
 
@@ -67,6 +70,7 @@ import AlbumCard from '@/components/AlbumCard/index.vue'
 import ArtistCard from '@/components/ArtistCard/index.vue'
 import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
+import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'Artist',
@@ -77,7 +81,8 @@ export default {
     AlbumCard,
     ArtistCard,
     TitleWithPartialItems,
-    TitleSimple
+    TitleSimple,
+    Loading
   },
   data() {
     return {
@@ -147,6 +152,7 @@ export default {
 
 <style lang="scss" scoped>
 .artist-container {
+  min-height: $height-content;
   height: inherit;
 
   &__cover {

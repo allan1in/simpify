@@ -6,6 +6,7 @@
     <TrackListHeader />
     <TrackCard v-for="(item, index) in tracks.items" :key="index" :item="item" :index="index" />
   </main>
+  <Loading :loading />
 </template>
 
 <script>
@@ -13,6 +14,7 @@ import TrackCard from '@/components/TrackCard/index.vue'
 import TrackListHeader from '@/components/TrackListHeader/index.vue'
 import { searchTracks } from '@/api/search'
 import TitleSimple from '@/components/TitleSimple/index.vue'
+import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'GetTracks',
@@ -20,7 +22,8 @@ export default {
   components: {
     TrackCard,
     TrackListHeader,
-    TitleSimple
+    TitleSimple,
+    Loading
   },
   data() {
     return {
@@ -48,6 +51,10 @@ export default {
 
 <style lang="scss" scoped>
 .track-container {
+  min-height: 100%;
+  height: 100%;
+  padding: 2.4rem;
+
   &__msg {
     padding-bottom: 2.4rem;
 

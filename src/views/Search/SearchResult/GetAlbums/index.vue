@@ -7,12 +7,14 @@
       <AlbumCard v-for="item in albums.items" :key="item.id" :item="item" />
     </div>
   </main>
+  <Loading :loading />
 </template>
 
 <script>
 import { searchAlbums } from '@/api/search'
 import AlbumCard from '../../../../components/AlbumCard/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
+import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'GetAlbums',
@@ -25,7 +27,8 @@ export default {
   },
   components: {
     AlbumCard,
-    TitleSimple
+    TitleSimple,
+    Loading
   },
   methods: {
     async getAlbums() {
@@ -47,6 +50,10 @@ export default {
 
 <style lang="scss" scoped>
 .album-container {
+  min-height: 100%;
+  height: 100%;
+  padding: 2.4rem;
+
   &__msg {
     padding-bottom: 1.6rem;
   }

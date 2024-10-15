@@ -28,6 +28,7 @@
         :items="albums.items"
       />
     </div>
+    <Loading :loading="loading" />
   </main>
 </template>
 
@@ -42,6 +43,7 @@ import { searchTracks } from '@/api/search'
 import { debounce } from '@/utils/debounce'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
+import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'GetAll',
@@ -51,7 +53,8 @@ export default {
     AlbumCard,
     TrackListHeader,
     TitleShowAll,
-    TitleWithPartialItems
+    TitleWithPartialItems,
+    Loading
   },
   data() {
     return {
@@ -102,6 +105,7 @@ export default {
   },
   watch: {
     $route(to, from) {
+      this.loading = true
       this.getAll()
     }
   }
@@ -110,7 +114,9 @@ export default {
 
 <style lang="scss" scoped>
 .all-container {
-  height: inherit;
+  min-height: 100%;
+  height: 100%;
+  padding: 2.4rem;
 
   &__content {
     &__songs {

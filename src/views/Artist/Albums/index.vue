@@ -1,9 +1,12 @@
 <template>
-  <MyOverlayScrollbars v-if="!loading" :os-class="'artist-all-albums'" :os-element="'main'">
-    <TitleSimple :title="'Albums'" />
-    <div class="artist-all-albums__results">
-      <AlbumCard v-for="item in albums" :key="item.id" :item="item" />
+  <MyOverlayScrollbars :os-class="'artist-all-albums'" :os-element="'main'">
+    <div v-if="!loading">
+      <TitleSimple :title="'Albums'" />
+      <div class="artist-all-albums__results">
+        <AlbumCard v-for="item in albums" :key="item.id" :item="item" />
+      </div>
     </div>
+    <Loading :loading />
   </MyOverlayScrollbars>
 </template>
 
@@ -12,6 +15,7 @@ import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import AlbumCard from '@/components/AlbumCard/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import { getAlbums } from '@/api/artists'
+import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'ArtistAllAlbums',
@@ -19,7 +23,8 @@ export default {
     MyOverlayScrollbars,
     AlbumCard,
     TitleSimple,
-    AlbumCard
+    AlbumCard,
+    Loading
   },
   data() {
     return {

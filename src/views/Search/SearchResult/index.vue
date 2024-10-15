@@ -56,11 +56,11 @@ export default {
 
 <style lang="scss" scoped>
 .search-container {
-  height: inherit;
+  min-height: 100%;
+  height: 100%;
 
   &__search-content {
-    padding: 2.4rem;
-    height: inherit;
+    height: calc($height-content - $height-nav-secondary);
   }
 }
 </style>

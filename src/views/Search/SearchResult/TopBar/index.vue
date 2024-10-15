@@ -1,6 +1,7 @@
 <template>
-  <section v-if="showTags.track || showTags.artist || showTags.album" class="top-bar-container">
+  <section class="top-bar-container">
     <button
+      v-if="showTags.track || showTags.artist || showTags.album"
       class="top-bar-container__btn"
       :class="{ 'btn-active': isActive === $route.params.inputContent }"
       @click="getAll"
@@ -86,22 +87,23 @@ export default {
 .top-bar-container {
   position: sticky;
   top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 1.2rem;
   padding: 1.2rem 0;
+  padding-left: 2.4rem;
   background-color: $color-bg-2;
   border-top-left-radius: $gutter;
   border-top-right-radius: $gutter;
+  height: $height-nav-secondary;
 
   &__btn {
     background-color: $color-bg-5;
     color: $color-font-primary;
     padding: 0.4rem 1.2rem;
-    height: 3.2rem;
+    height: 100%;
     border-radius: 3.2rem;
-    margin-left: 1.2rem;
-
-    &:nth-child(1) {
-      margin-left: 2.4rem;
-    }
 
     &:hover {
       background-color: $color-bg-6;
