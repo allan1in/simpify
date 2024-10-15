@@ -14,7 +14,7 @@
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import AlbumCard from '@/components/AlbumCard/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
-import { getAlbums } from '@/api/artists'
+import { getAlbums } from '@/api/artist'
 import Loading from '@/components/Loading/index.vue'
 
 export default {

@@ -17,15 +17,13 @@
         v-if="showTypes.artist"
         :router-name="'GetArtists'"
         :title="'Artists'"
-        :card-type="'ArtistCard'"
-        :items="artists.items"
+        :artist-card-props="{ items: artists.items }"
       />
       <TitleWithPartialItems
         v-if="showTypes.album"
         :router-name="'GetAlbums'"
         :title="'Albums'"
-        :card-type="'AlbumCard'"
-        :items="albums.items"
+        :album-card-props="{ items: albums.items }"
       />
     </div>
     <Loading :loading="loading" />

@@ -2,14 +2,21 @@
   <div class="list-header">
     <span class="list-header__num">#</span>
     <span class="list-header__title">Title</span>
-    <span class="list-header__album">Album</span>
+    <span v-if="showAlbum" class="list-header__album">Album</span>
     <span class="list-header__duration">Duration</span>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'TrackListHeader'
+  name: 'TrackListHeader',
+  props: {
+    showAlbum: {
+      type: Boolean,
+      require: false,
+      default: true
+    }
+  }
 }
 </script>
 
@@ -22,7 +29,7 @@ export default {
   font-size: 1.4rem;
   color: $color-font-secondary;
   border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
-  margin-bottom: 1.6rem;
+  margin: 1.6rem 0;
 
   &__num {
     flex-basis: 3.6rem;
@@ -37,7 +44,7 @@ export default {
   }
 
   &__duration {
-    flex: 1;
+    flex-basis: 7.2rem;
   }
 }
 </style>

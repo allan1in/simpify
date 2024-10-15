@@ -3,18 +3,20 @@
     <TitleShowAll :router-name="routerName" :title="title" />
     <div class="title-with-partial-items__content">
       <ArtistCard
-        v-if="cardType === 'ArtistCard'"
-        v-for="(item, index) in items"
+        v-if="artistCardProps"
+        v-for="(item, index) in artistCardProps.items"
         :key="index"
         :item="item"
         :index="index"
       />
       <AlbumCard
-        v-else-if="cardType === 'AlbumCard'"
-        v-for="(item, index) in items"
+        v-else-if="albumCardProps"
+        v-for="(item, index) in albumCardProps.items"
         :key="item.id"
         :item="item"
         :index="index"
+        :show-artists="albumCardProps.showArtists"
+        :show-album-type="albumCardProps.showAlbumType"
       />
     </div>
   </section>
@@ -41,13 +43,15 @@ export default {
       type: String,
       require: true
     },
-    cardType: {
-      type: String,
-      require: true
-    },
-    items: {
+    albumCardProps: {
       type: Object,
-      require: true
+      require: false,
+      default: undefined
+    },
+    artistCardProps: {
+      type: Object,
+      require: false,
+      default: undefined
     }
   }
 }

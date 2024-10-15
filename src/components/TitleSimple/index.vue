@@ -21,7 +21,7 @@ export default {
 <style lang="scss" scoped>
 .title-simple {
   display: block;
-  margin: 1.6rem 0;
+  padding: 1.6rem 0;
 
   @include titleStyles;
 }

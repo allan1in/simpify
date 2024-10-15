@@ -91,7 +91,7 @@ export default {
     &__type {
       font-size: 1.4rem;
       color: $color-font-secondary;
-      margin-top: 0.2rem;
+      margin-top: 0.8rem;
 
       @include oneLineEllipsis;
     }

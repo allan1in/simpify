@@ -33,22 +33,19 @@
           v-if="albums.length !== 0"
           :router-name="'ArtistAllAlbums'"
           :title="'Albums'"
-          :card-type="'AlbumCard'"
-          :items="albums"
+          :album-card-props="{ items: albums, showAlbumType: true, showArtists: false }"
         />
         <TitleWithPartialItems
           v-if="singles.length !== 0"
           :router-name="'ArtistAllSingles'"
           :title="'Singles'"
-          :card-type="'AlbumCard'"
-          :items="singles"
+          :album-card-props="{ items: singles, showAlbumType: true, showArtists: false }"
         />
         <TitleWithPartialItems
           v-if="appearsOn.length !== 0"
           :router-name="'ArtistAllAppearsOn'"
           :title="'Appears On'"
-          :card-type="'AlbumCard'"
-          :items="appearsOn"
+          :album-card-props="{ items: appearsOn, showAlbumType: true, showArtists: false }"
         />
       </div>
     </div>
@@ -65,7 +62,7 @@ import albums from './data/albums.json'
 import singles from './data/singles.json'
 import appearsOn from './data/appearsOn.json'
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
-import { getAlbums, getAppearsOn, getArtist, getSingles, getTopTracks } from '@/api/artists'
+import { getAlbums, getAppearsOn, getArtist, getSingles, getTopTracks } from '@/api/artist'
 import AlbumCard from '@/components/AlbumCard/index.vue'
 import ArtistCard from '@/components/ArtistCard/index.vue'
 import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'

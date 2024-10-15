@@ -12,7 +12,7 @@
     </div>
 
     <div class="track-card__title">
-      <div class="track-card__title__cover-wrapper">
+      <div v-if="showImage" class="track-card__title__cover-wrapper">
         <img
           class="track-card__title__cover-wrapper__cover"
           :src="item.album.images[2].url"
@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-    <div class="track-card__album-wrapper">
+    <div v-if="showAlbum" class="track-card__album-wrapper">
       <router-link
         :to="{ name: 'Album', params: { albumId: item.album.id } }"
         class="track-card__album-wrapper__album"
@@ -67,6 +67,16 @@ export default {
       require: true
     },
     showArtists: {
+      type: Boolean,
+      require: false,
+      default: true
+    },
+    showImage: {
+      type: Boolean,
+      require: false,
+      default: true
+    },
+    showAlbum: {
       type: Boolean,
       require: false,
       default: true
@@ -162,6 +172,7 @@ export default {
       flex-shrink: 1;
       display: flex;
       flex-direction: column;
+      gap: 0.8rem;
       align-items: start;
       justify-content: center;
       line-height: initial;
@@ -192,7 +203,7 @@ export default {
   }
 
   &__duration-wrapper {
-    flex: 1;
+    flex-basis: 7.2rem;
     display: flex;
     align-items: center;
     height: 100%;
