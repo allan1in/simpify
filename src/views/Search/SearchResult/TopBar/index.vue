@@ -32,6 +32,14 @@
     >
       Albums
     </button>
+    <button
+      v-if="showTags.playlist"
+      class="top-bar-container__btn"
+      :class="{ 'btn-active': isActive === 'playlists' }"
+      @click="getPlaylists"
+    >
+      Playlists
+    </button>
   </section>
 </template>
 
@@ -61,6 +69,9 @@ export default {
     },
     getAlbums() {
       this.$router.push({ name: 'GetAlbums' })
+    },
+    getPlaylists() {
+      this.$router.push({ name: 'GetPlaylists' })
     }
   },
   watch: {

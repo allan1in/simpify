@@ -1,18 +1,25 @@
 <template>
   <MyOverlayScrollbars :os-element="'main'" :os-class="'search-container'">
-    <!-- <div class="search-container__title-wrapper">
-      <h1 class="search-container__title-wrapper__title">Browse All</h1>
-    </div>
-    <div class="search-container__cards-wrapper">
-      <div class="search-container__cards-wrapper__card" v-for="i in 21" :key="i">
-        <h2 class="search-container__cards-wrapper__card__name">Genre {{ i }}</h2>
-        <img
-          class="search-container__cards-wrapper__card__img"
-          src="../../assets/search-album-test.jfif"
-          alt=""
-        />
+    <div v-if="!loading">
+      <div class="search-container__title-wrapper">
+        <h1 class="search-container__title-wrapper__title">Browse All</h1>
       </div>
-    </div> -->
+      <div class="search-container__cards-wrapper">
+        <div
+          class="search-container__cards-wrapper__card"
+          :style="{ backgroundColor: 'hsl(' + Math.random() * 360 + ', 60%, 50%)' }"
+          v-for="item in categories"
+          :key="item.id"
+        >
+          <h2 class="search-container__cards-wrapper__card__name">{{ item.name }}</h2>
+          <img
+            class="search-container__cards-wrapper__card__img"
+            :src="item.icons[0].url"
+            :alt="item.name"
+          />
+        </div>
+      </div>
+    </div>
     <Loading :loading="loading" />
   </MyOverlayScrollbars>
 </template>
@@ -20,6 +27,7 @@
 <script>
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import Loading from '@/components/Loading/index.vue'
+import categories from './categories.json'
 
 export default {
   name: 'Search',
@@ -29,7 +37,8 @@ export default {
   },
   data() {
     return {
-      loading: true
+      loading: false,
+      categories: categories.categories.items
     }
   }
 }
@@ -39,6 +48,7 @@ export default {
 .search-container {
   min-height: calc($height-content);
   height: 100%;
+  padding: 2.4rem;
 
   &__title-wrapper {
     padding: 0.8rem 0;
@@ -55,7 +65,6 @@ export default {
     padding: 2.4rem 0;
 
     &__card {
-      background-color: #dc148c;
       aspect-ratio: 7 / 4;
       border-radius: $border-radius-default;
       position: relative;

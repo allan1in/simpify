@@ -9,10 +9,13 @@ import GetAll from '@/views/Search/SearchResult/GetAll/index.vue'
 import GetTracks from '@/views/Search/SearchResult/GetTracks/index.vue'
 import GetAlbums from '@/views/Search/SearchResult/GetAlbums/index.vue'
 import GetArtists from '@/views/Search/SearchResult/GetArtists/index.vue'
+import GetPlaylists from '@/views/Search/SearchResult/GetPlaylists/index.vue'
 import SearchResult from '@/views/Search/SearchResult/index.vue'
 import Track from '@/views/Track/index.vue'
 import Album from '@/views/Album/index.vue'
 import Artist from '@/views/Artist/index.vue'
+import Playlist from '@/views/Playlist/index.vue'
+import User from '@/views/User/index.vue'
 import ArtistAllAlbums from '@/views/Artist/Albums/index.vue'
 import ArtistAllSingles from '@/views/Artist/Singles/index.vue'
 import ArtistAllAppearsOn from '@/views/Artist/AppearsOn/index.vue'
@@ -68,6 +71,11 @@ const router = createRouter({
               path: 'artists',
               name: 'GetArtists',
               component: GetArtists
+            },
+            {
+              path: 'playlists',
+              name: 'GetPlaylists',
+              component: GetPlaylists
             }
           ]
         }
@@ -118,6 +126,28 @@ const router = createRouter({
           path: '',
           name: 'Album',
           component: Album
+        }
+      ]
+    },
+    {
+      path: '/playlist/:playlistId',
+      component: Layout,
+      children: [
+        {
+          path: '',
+          name: 'Playlist',
+          component: Playlist
+        }
+      ]
+    },
+    {
+      path: '/user/:userId',
+      component: Layout,
+      children: [
+        {
+          path: '',
+          name: 'User',
+          component: User
         }
       ]
     },

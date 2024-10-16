@@ -123,12 +123,16 @@ export default {
 
   &__left {
     flex-basis: 3.6rem;
+    position: relative;
 
     &__num-wrapper {
       font-size: 1.6rem;
+      position: absolute;
+      top: 0;
+      right: 2.4rem;
+      height: 100%;
       display: flex;
       align-items: center;
-      height: 100%;
     }
 
     &__icon-wrapper {
@@ -172,7 +176,6 @@ export default {
       flex-shrink: 1;
       display: flex;
       flex-direction: column;
-      gap: 0.8rem;
       align-items: start;
       justify-content: center;
       line-height: initial;

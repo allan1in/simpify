@@ -1,37 +1,36 @@
 <template>
-  <MyOverlayScrollbars :os-class="'album-container'" :os-element="'main'">
+  <MyOverlayScrollbars :os-class="'playlist-container'" :os-element="'main'">
     <div v-if="!loading">
-      <div class="album-container__cover">
-        <div class="album-container__cover__img-wrapper">
+      <div class="playlist-container__cover">
+        <div class="playlist-container__cover__img-wrapper">
           <img
-            class="album-container__cover__img-wrapper__img"
-            :src="album.images[1].url"
-            :alt="album.name"
+            class="playlist-container__cover__img-wrapper__img"
+            :src="playlist.images[1].url"
+            :alt="playlist.owner.display_name"
           />
         </div>
-        <div class="album-container__cover__info">
-          <span class="album-container__cover__info__type">{{
-            `${album.type.charAt(0).toUpperCase()}${album.type.slice(1)}`
+        <div class="playlist-container__cover__info">
+          <span class="playlist-container__cover__info__type">{{
+            `${playlist.type.charAt(0).toUpperCase()}${playlist.type.slice(1)}`
           }}</span>
-          <h1 class="album-container__cover__info__title">{{ album.name }}</h1>
-          <div class="album-container__cover__info__details">
+          <h1 class="playlist-container__cover__info__title">{{ playlist.name }}</h1>
+          <div class="playlist-container__cover__info__details">
             <router-link
-              class="album-container__cover__info__details__artist"
-              v-for="(artist, index) in album.artists"
-              :to="{ name: 'Artist', params: { artistId: artist.id } }"
-              >{{ index === 0 ? artist.name : ` • ${artist.name}` }}</router-link
+              class="playlist-container__cover__info__details__owner"
+              :to="{ name: 'User', params: { userId: playlist.owner.id } }"
+              >{{ playlist.owner.display_name }}</router-link
             >
-            <span class="album-container__cover__info__details__release-year">
-              {{ ` • ${album.release_date.split('-')[0]}` }}
+            <span class="playlist-container__cover__info__details__release-year">
+              {{ ` • ${playlist.followers.total}` }}
             </span>
-            <span class="album-container__cover__info__details__total-tracks">
-              {{ ` • ${album.total_tracks} songs` }}
+            <span class="playlist-container__cover__info__details__total-playlist.tracks">
+              {{ ` • ${playlist.tracks.total} songs` }}
             </span>
-            <span class="album-container__cover__info__details__duration">
+            <span class="playlist-container__cover__info__details__duration">
               {{
                 ` • ${getFormatTime(
-                  tracks.reduce((acc, track) => {
-                    return acc + track.duration_ms
+                  playlist.tracks.items.reduce((acc, item) => {
+                    return acc + item.track.duration_ms
                   }, 0)
                 )}`
               }}
@@ -39,13 +38,13 @@
           </div>
         </div>
       </div>
-      <div class="album-container__content">
-        <TrackListHeader :showAlbum="false" />
+      <div class="playlist-container__content">
+        <TrackListHeader />
         <TrackCard
-          v-for="(item, index) in tracks"
-          :item="item"
+          v-for="(item, index) in playlist.tracks.items"
+          :item="item.track"
           :index="index"
-          :show-album="false"
+          :show-playlist="false"
           :show-image="false"
         />
       </div>
@@ -60,11 +59,11 @@ import Loading from '@/components/Loading/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import TrackListHeader from '@/components/TrackListHeader/index.vue'
 import TrackCard from '@/components/TrackCard/index.vue'
-import { getAlbum, getTracks } from '@/api/album'
+import { getPlaylist } from '@/api/playlist'
 import { timeFormatAlbum } from '@/utils/time_format'
 
 export default {
-  name: 'Album',
+  name: 'Playlist',
   components: {
     MyOverlayScrollbars,
     Loading,
@@ -74,9 +73,8 @@ export default {
   },
   data() {
     return {
-      id: this.$route.params.albumId,
-      album: {},
-      tracks: {},
+      id: this.$route.params.playlistId,
+      playlist: {},
       loading: false
     }
   },
@@ -84,29 +82,17 @@ export default {
     getFormatTime(time) {
       return timeFormatAlbum(time)
     },
-    async getAll() {
-      await this.getAlbum()
-      await this.getTracks()
+    async getPlaylist() {
+      const res = (await getPlaylist(this.id)).data
+      this.playlist = res
       this.loading = false
-    },
-    async getAlbum() {
-      const res = (await getAlbum(this.id)).data
-      this.album = res
-    },
-    async getTracks() {
-      const params = {
-        limit: 50,
-        offset: 0
-      }
-      const res = (await getTracks(this.id, params)).data.items
-      this.tracks = res
     }
   },
   watch: {
     $route: {
       async handler(to, from) {
         this.loading = true
-        await this.getAll()
+        await this.getPlaylist()
       },
       immediate: true
     }
@@ -115,7 +101,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.album-container {
+.playlist-container {
   height: inherit;
 
   &__cover {
@@ -156,7 +142,7 @@ export default {
         font-size: 1.4rem;
         color: $color-font-secondary;
 
-        &__artist {
+        &__owner {
           font-weight: 700;
           color: $color-font-primary;
           vertical-align: bottom;

@@ -20,7 +20,8 @@ export default {
       showTags: {
         track: undefined,
         album: undefined,
-        artist: undefined
+        artist: undefined,
+        playlist: undefined
       }
     }
   },
@@ -33,7 +34,7 @@ export default {
     checkHasResults: debounce(async function () {
       const params = {
         q: this.$route.params.inputContent,
-        type: 'album,artist,track',
+        type: 'album,artist,track,playlist',
         limit: 1,
         offset: 0
       }
@@ -41,6 +42,7 @@ export default {
       this.showTags.album = res.albums.total === 0 ? false : true
       this.showTags.artist = res.artists.total === 0 ? false : true
       this.showTags.track = res.tracks.total === 0 ? false : true
+      this.showTags.playlist = res.playlists.total === 0 ? false : true
     })
   },
   watch: {

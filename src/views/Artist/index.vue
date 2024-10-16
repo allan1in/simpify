@@ -7,7 +7,7 @@
           'background-image': `url(${artist.images.length !== 0 ? artist.images[0].url : ''})`
         }"
       >
-        <div class="artist-container__cover__title">{{ artist.name }}</div>
+        <h1 class="artist-container__cover__title">{{ artist.name }}</h1>
         <div class="artist-container__cover__followers">
           {{
             Intl.NumberFormat().format(artist.followers.total) +
@@ -56,11 +56,6 @@
 <script>
 import TrackCard from '@/components/TrackCard/index.vue'
 import TrackListHeader from '@/components/TrackListHeader/index.vue'
-import artist from './data/artist.json'
-import tracks from './data/tracks.json'
-import albums from './data/albums.json'
-import singles from './data/singles.json'
-import appearsOn from './data/appearsOn.json'
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import { getAlbums, getAppearsOn, getArtist, getSingles, getTopTracks } from '@/api/artist'
 import AlbumCard from '@/components/AlbumCard/index.vue'
@@ -167,6 +162,9 @@ export default {
       font-family: $font-family-title;
       font-weight: 800;
       text-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      // Prevent shadows from being hidden due to 'overflow:hidden'
+      margin: -2rem;
+      padding: 2rem;
 
       @include oneLineEllipsis;
     }

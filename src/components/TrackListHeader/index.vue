@@ -1,6 +1,6 @@
 <template>
   <div class="list-header">
-    <span class="list-header__num">#</span>
+    <div class="list-header__num-wrapper"><span class="list-header__num-wrapper__num">#</span></div>
     <span class="list-header__title">Title</span>
     <span v-if="showAlbum" class="list-header__album">Album</span>
     <span class="list-header__duration">Duration</span>
@@ -31,8 +31,16 @@ export default {
   border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
   margin: 1.6rem 0;
 
-  &__num {
+  &__num-wrapper {
     flex-basis: 3.6rem;
+    position: relative;
+
+    &__num {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 2.4rem;
+    }
   }
 
   &__title {

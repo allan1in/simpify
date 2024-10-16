@@ -8,7 +8,6 @@
   // Inherit 'box-sizing: border-box;'
   box-sizing: inherit;
   font-family: inherit;
-  line-height: 1;
 }
 
 html {
@@ -46,4 +45,8 @@ a {
   &:visited {
     color: inherit;
   }
+}
+
+h1 {
+  line-height: 1.2;
 }

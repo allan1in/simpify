@@ -46,3 +46,16 @@ export function searchAlbums(params) {
     }
   })
 }
+
+export function searchPlaylists(params) {
+  return request({
+    url: '/search',
+    method: 'get',
+    params: {
+      q: params.q,
+      type: 'playlist',
+      limit: params.limit,
+      offset: params.offset
+    }
+  })
+}

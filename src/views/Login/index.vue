@@ -1,6 +1,6 @@
 <template>
   <main class="login-container">
-    <div v-if="!loading" class="login-container__box">
+    <!-- <div v-if="!loading" class="login-container__box">
       <div class="login-container__box__logo-wrapper">
         <IconPrimaryLogo class="login-container__box__logo-wrapper__logo" />
       </div>
@@ -15,7 +15,7 @@
           登录
         </button>
       </div>
-    </div>
+    </div> -->
     <Loading :loading />
   </main>
 </template>
@@ -73,6 +73,8 @@ export default {
       this.loading = true
       await this.getToken(code)
       this.$router.push({ name: 'Dashboard' })
+    } else {
+      this.redirectToSpotifyAuthorize()
     }
   }
 }
