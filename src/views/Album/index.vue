@@ -27,11 +27,19 @@
             <span class="album-container__cover__info__details__total-tracks">
               {{ ` • ${album.total_tracks} songs` }}
             </span>
+            <span class="album-container__cover__info__details__duration">
+              {{
+                ` • ${getFormatTime(
+                  tracks.reduce((acc, track) => {
+                    return acc + track.duration_ms
+                  }, 0)
+                )}`
+              }}
+            </span>
           </div>
         </div>
       </div>
       <div class="album-container__content">
-        <TitleSimple :title="'Songs'" />
         <TrackListHeader :showAlbum="false" />
         <TrackCard
           v-for="(item, index) in tracks"
@@ -55,6 +63,7 @@ import TitleSimple from '@/components/TitleSimple/index.vue'
 import TrackListHeader from '@/components/TrackListHeader/index.vue'
 import TrackCard from '@/components/TrackCard/index.vue'
 import { getAlbum, getTracks } from '@/api/album'
+import { timeFormatAlbum } from '@/utils/time_format'
 
 export default {
   name: 'Album',
@@ -74,6 +83,9 @@ export default {
     }
   },
   methods: {
+    getFormatTime(time) {
+      return timeFormatAlbum(time)
+    },
     async getAll() {
       await this.getAlbum()
       await this.getTracks()

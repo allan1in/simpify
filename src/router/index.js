@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '@/layout/index.vue'
 import NotFound from '@/views/NotFound.vue'
 import Dashboard from '@/views/Dashboard/index.vue'
-import LoginUser from '@/views/Login/index.vue'
+import Login from '@/views/Login/index.vue'
 import { useUserStore } from '@/stores/user'
 import Search from '@/views/Search/index.vue'
 import GetAll from '@/views/Search/SearchResult/GetAll/index.vue'
@@ -22,8 +22,8 @@ const router = createRouter({
   routes: [
     {
       path: '/login',
-      name: 'LoginUser',
-      component: LoginUser
+      name: 'Login',
+      component: Login
     },
     {
       path: '/',

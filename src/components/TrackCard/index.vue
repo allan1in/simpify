@@ -45,13 +45,15 @@
       >
     </div>
     <div class="track-card__duration-wrapper">
-      <span>{{ timeFormat(item.duration_ms) }}</span>
+      <span>{{ getFormatTime(item.duration_ms) }}</span>
     </div>
   </div>
 </template>
 
 <script>
 import IconPlay from '@/components/Icons/IconPlay.vue'
+import { timeFormatTrack } from '@/utils/time_format'
+
 export default {
   name: 'TrackCard',
   components: {
@@ -83,10 +85,8 @@ export default {
     }
   },
   methods: {
-    timeFormat(time) {
-      let min = Math.floor(time / 1000 / 60)
-      let sec = Math.floor((time / 1000) % 60)
-      return `${min > 59 ? '59' : (min + '').length === 1 ? '0' + min : min}:${(sec + '').length === 1 ? '0' + sec : sec}`
+    getFormatTime(time) {
+      return timeFormatTrack(time)
     }
   }
 }

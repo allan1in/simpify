@@ -59,7 +59,7 @@ export default {
 
 <style lang="scss" scoped>
 .title-with-partial-items {
-  padding-top: 2.4rem;
+  padding: 2.4rem 0;
 
   &__content {
     display: grid;
