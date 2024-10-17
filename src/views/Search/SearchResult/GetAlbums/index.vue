@@ -1,10 +1,12 @@
 <template>
   <main v-if="!loading" class="album-container">
-    <TitleSimple :title="'Albums'">
-      <template #before-title>{{ albums.total + ' ' }}</template>
-    </TitleSimple>
-    <div class="album-container__results">
-      <AlbumCard v-for="item in albums.items" :key="item.id" :item="item" />
+    <div class="album-container__content">
+      <TitleSimple :title="'Albums'">
+        <template #before-title>{{ albums.total + ' ' }}</template>
+      </TitleSimple>
+      <div class="album-container__content__results">
+        <AlbumCard v-for="item in albums.items" :key="item.id" :item="item" />
+      </div>
     </div>
   </main>
   <Loading :loading />
@@ -50,17 +52,19 @@ export default {
 
 <style lang="scss" scoped>
 .album-container {
-  min-height: 100%;
-  height: 100%;
-  padding: 2.4rem;
+  min-height: inherit;
 
-  &__msg {
-    padding-bottom: 1.6rem;
-  }
+  &__content {
+    padding: 2.4rem;
 
-  &__results {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    &__msg {
+      padding-bottom: 1.6rem;
+    }
+
+    &__results {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
   }
 }
 </style>

@@ -5,18 +5,24 @@
       <ArtistCard
         v-if="artistCardProps"
         v-for="(item, index) in artistCardProps.items"
-        :key="index"
+        :key="'artist' + item.id"
         :item="item"
         :index="index"
       />
       <AlbumCard
         v-else-if="albumCardProps"
         v-for="(item, index) in albumCardProps.items"
-        :key="item.id"
+        :key="'album' + item.id"
         :item="item"
         :index="index"
         :show-artists="albumCardProps.showArtists"
         :show-album-type="albumCardProps.showAlbumType"
+      />
+      <PlaylistCard
+        v-else-if="playlistCardProps"
+        v-for="(item, index) in playlistCardProps.items"
+        :key="'playlist' + item.id"
+        :item="item"
       />
     </div>
   </section>
@@ -26,13 +32,15 @@
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import ArtistCard from '@/components/ArtistCard/index.vue'
 import AlbumCard from '@/components/AlbumCard/index.vue'
+import PlaylistCard from '@/components/PlaylistCard/index.vue'
 
 export default {
   name: 'TitleWithPartialItems',
   components: {
     TitleShowAll,
     ArtistCard,
-    AlbumCard
+    AlbumCard,
+    PlaylistCard
   },
   props: {
     routerName: {
@@ -52,6 +60,11 @@ export default {
       type: Object,
       require: false,
       default: undefined
+    },
+    playlistCardProps: {
+      type: Object,
+      require: false,
+      default: undefined
     }
   }
 }
@@ -59,7 +72,7 @@ export default {
 
 <style lang="scss" scoped>
 .title-with-partial-items {
-  padding: 2.4rem 0;
+  padding-top: 2.4rem;
 
   &__content {
     display: grid;

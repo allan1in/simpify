@@ -36,7 +36,7 @@ export default {
   padding: $gutter;
 
   .mid-wrapper {
-    height: calc(100vh - $height-nav - $height-player - (4 * $gutter));
+    height: $height-content;
     display: flex;
     gap: $gutter;
 

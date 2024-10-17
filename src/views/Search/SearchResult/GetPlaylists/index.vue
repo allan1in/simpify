@@ -1,10 +1,14 @@
 <template>
   <main v-if="!loading" class="album-container">
-    <TitleSimple :title="'Playlists'">
-      <template #before-title>{{ playlists.total + ' ' }}</template>
-    </TitleSimple>
-    <div class="album-container__results">
-      <PlaylistCard v-for="item in playlists.items" :key="item.id" :item="item" />
+    <div class="album-container__content">
+      <TitleSimple :title="'Playlists'">
+        <template #before-title>{{
+          playlists.total === 1000 ? '999+' : playlists.total + ' '
+        }}</template>
+      </TitleSimple>
+      <div class="album-container__content__results">
+        <PlaylistCard v-for="item in playlists.items" :key="item.id" :item="item" />
+      </div>
     </div>
   </main>
   <Loading :loading />
@@ -50,17 +54,19 @@ export default {
 
 <style lang="scss" scoped>
 .album-container {
-  min-height: 100%;
-  height: 100%;
-  padding: 2.4rem;
+  min-height: inherit;
 
-  &__msg {
-    padding-bottom: 1.6rem;
-  }
+  &__content {
+    padding: 2.4rem;
 
-  &__results {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    &__msg {
+      padding-bottom: 1.6rem;
+    }
+
+    &__results {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
   }
 }
 </style>

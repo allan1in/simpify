@@ -1,9 +1,11 @@
 <template>
-  <MyOverlayScrollbars os-class="search-container" os-element="main">
-    <TopBar :showTags="showTags" />
-    <section class="search-container__search-content">
-      <RouterView :showTypes="showTags" />
-    </section>
+  <MyOverlayScrollbars os-element="main">
+    <div class="search-container">
+      <TopBar :showTags="showTags" />
+      <section class="search-container__search-content">
+        <RouterView :showTypes="showTags" />
+      </section>
+    </div>
   </MyOverlayScrollbars>
 </template>
 
@@ -62,7 +64,7 @@ export default {
   height: 100%;
 
   &__search-content {
-    height: calc($height-content - $height-nav-secondary);
+    min-height: calc($height-content - $height-nav-secondary);
   }
 }
 </style>

@@ -1,12 +1,14 @@
 <template>
-  <MyOverlayScrollbars :os-class="'artist-all-albums'" :os-element="'main'">
-    <div v-if="!loading">
-      <TitleSimple :title="'Albums'" />
-      <div class="artist-all-albums__results">
-        <AlbumCard v-for="item in albums" :key="item.id" :item="item" />
+  <MyOverlayScrollbars os-element="main">
+    <div class="artist-all-albums">
+      <div class="artist-all-albums__content" v-if="!loading">
+        <TitleSimple :title="'Albums'" />
+        <div class="artist-all-albums__content__results">
+          <AlbumCard v-for="item in albums" :key="item.id" :item="item" />
+        </div>
       </div>
+      <Loading :loading />
     </div>
-    <Loading :loading />
   </MyOverlayScrollbars>
 </template>
 
@@ -51,12 +53,16 @@ export default {
 
 <style lang="scss" scoped>
 .artist-all-albums {
-  height: inherit;
-  padding: 2.4rem;
+  min-height: $height-content;
+  height: $height-content;
 
-  &__results {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
+  &__content {
+    padding: 2.4rem;
+
+    &__results {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
   }
 }
 </style>

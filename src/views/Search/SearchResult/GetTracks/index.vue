@@ -1,10 +1,12 @@
 <template>
   <main v-if="!loading" class="track-container">
-    <TitleSimple :title="'Tracks'">
-      <template #before-title>{{ tracks.total + ' ' }}</template>
-    </TitleSimple>
-    <TrackListHeader />
-    <TrackCard v-for="(item, index) in tracks.items" :key="index" :item="item" :index="index" />
+    <div class="track-container__content">
+      <TitleSimple :title="'Tracks'">
+        <template #before-title>{{ tracks.total + ' ' }}</template>
+      </TitleSimple>
+      <TrackListHeader />
+      <TrackCard v-for="(item, index) in tracks.items" :key="index" :item="item" :index="index" />
+    </div>
   </main>
   <Loading :loading />
 </template>
@@ -51,15 +53,17 @@ export default {
 
 <style lang="scss" scoped>
 .track-container {
-  min-height: 100%;
-  height: 100%;
-  padding: 2.4rem;
+  min-height: inherit;
 
-  &__msg {
-    padding-bottom: 2.4rem;
+  &__content {
+    padding: 2.4rem;
 
-    &__total {
-      @include titleStyles;
+    &__msg {
+      padding-bottom: 2.4rem;
+
+      &__total {
+        @include titleStyles;
+      }
     }
   }
 }

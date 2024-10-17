@@ -9,7 +9,7 @@
       }
     }"
     defer
-    :class="osClass"
+    class="my-overlay-scroll-bar"
   >
     <slot></slot>
   </OverlayScrollbarsComponent>
@@ -25,10 +25,6 @@ export default {
     OverlayScrollbarsComponent
   },
   props: {
-    osClass: {
-      type: String,
-      required: false
-    },
     osElement: {
       type: String,
       required: true
@@ -36,3 +32,8 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.my-overlay-scroll-bar {
+  height: inherit;
+}
+</style>

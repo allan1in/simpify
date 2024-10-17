@@ -1,12 +1,14 @@
 <template>
-  <MyOverlayScrollbars :os-class="'artist-all-appears-on'" :os-element="'main'">
-    <div v-if="!loading">
-      <TitleSimple :title="'Appears On'" />
-      <div class="artist-all-appears-on__results">
-        <AlbumCard v-for="item in appearsOn" :key="item.id" :item="item" />
+  <MyOverlayScrollbars os-element="main">
+    <div class="artist-all-appears-on">
+      <div class="artist-all-appears-on__content" v-if="!loading">
+        <TitleSimple :title="'Appears On'" />
+        <div class="artist-all-appears-on__content__results">
+          <AlbumCard v-for="item in appearsOn" :key="item.id" :item="item" />
+        </div>
       </div>
+      <Loading :loading />
     </div>
-    <Loading :loading />
   </MyOverlayScrollbars>
 </template>
 
@@ -51,12 +53,16 @@ export default {
 
 <style lang="scss" scoped>
 .artist-all-appears-on {
-  height: inherit;
-  padding: 2.4rem;
+  min-height: $height-content;
+  height: $height-content;
 
-  &__results {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
+  &__content {
+    padding: 2.4rem;
+
+    &__results {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
   }
 }
 </style>

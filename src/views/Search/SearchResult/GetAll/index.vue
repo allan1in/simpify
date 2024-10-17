@@ -25,6 +25,12 @@
         :title="'Albums'"
         :album-card-props="{ items: albums.items }"
       />
+      <TitleWithPartialItems
+        v-if="showTypes.playlist"
+        :router-name="'GetPlaylists'"
+        :title="'Playlists'"
+        :playlist-card-props="{ items: playlists.items }"
+      />
     </div>
     <Loading :loading="loading" />
   </main>
@@ -35,7 +41,7 @@ import AlbumCard from '../../../../components/AlbumCard/index.vue'
 import ArtistCard from '../../../../components/ArtistCard/index.vue'
 import TrackCard from '@/components/TrackCard/index.vue'
 import TrackListHeader from '@/components/TrackListHeader/index.vue'
-import { searchAlbums } from '@/api/search'
+import { searchAlbums, searchPlaylists } from '@/api/search'
 import { searchArtists } from '@/api/search'
 import { searchTracks } from '@/api/search'
 import { debounce } from '@/utils/debounce'
@@ -59,6 +65,7 @@ export default {
       tracks: {},
       artists: {},
       albums: {},
+      playlists: {},
       loading: true
     }
   },
@@ -66,7 +73,10 @@ export default {
   methods: {
     getAll: debounce(async function () {
       if (this.$route.params.inputContent) {
-        await Promise.all([this.getTracks(), this.getArtists(), this.getAlbums()])
+        await this.getTracks()
+        await this.getArtists()
+        await this.getAlbums()
+        await this.getPlaylists()
         this.loading = false
       }
     }),
@@ -96,6 +106,15 @@ export default {
       }
       const res = (await searchAlbums(params)).data.albums
       this.albums = res
+    },
+    async getPlaylists() {
+      const params = {
+        q: this.$route.params.inputContent,
+        limit: 7,
+        offset: 0
+      }
+      const res = (await searchPlaylists(params)).data.playlists
+      this.playlists = res
     }
   },
   mounted() {
@@ -112,11 +131,11 @@ export default {
 
 <style lang="scss" scoped>
 .all-container {
-  min-height: 100%;
-  height: 100%;
-  padding: 2.4rem;
+  min-height: inherit;
 
   &__content {
+    padding: 2.4rem;
+
     &__songs {
       &__title {
         padding-bottom: 2.4rem;

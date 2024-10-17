@@ -1,55 +1,57 @@
 <template>
-  <MyOverlayScrollbars :os-class="'playlist-container'" :os-element="'main'">
-    <div v-if="!loading">
-      <div class="playlist-container__cover">
-        <div class="playlist-container__cover__img-wrapper">
-          <img
-            class="playlist-container__cover__img-wrapper__img"
-            :src="playlist.images[1].url"
-            :alt="playlist.owner.display_name"
-          />
-        </div>
-        <div class="playlist-container__cover__info">
-          <span class="playlist-container__cover__info__type">{{
-            `${playlist.type.charAt(0).toUpperCase()}${playlist.type.slice(1)}`
-          }}</span>
-          <h1 class="playlist-container__cover__info__title">{{ playlist.name }}</h1>
-          <div class="playlist-container__cover__info__details">
-            <router-link
-              class="playlist-container__cover__info__details__owner"
-              :to="{ name: 'User', params: { userId: playlist.owner.id } }"
-              >{{ playlist.owner.display_name }}</router-link
-            >
-            <span class="playlist-container__cover__info__details__release-year">
-              {{ ` • ${playlist.followers.total}` }}
-            </span>
-            <span class="playlist-container__cover__info__details__total-playlist.tracks">
-              {{ ` • ${playlist.tracks.total} songs` }}
-            </span>
-            <span class="playlist-container__cover__info__details__duration">
-              {{
-                ` • ${getFormatTime(
-                  playlist.tracks.items.reduce((acc, item) => {
-                    return acc + item.track.duration_ms
-                  }, 0)
-                )}`
-              }}
-            </span>
+  <MyOverlayScrollbars :os-element="'main'">
+    <div class="playlist-container">
+      <div v-if="!loading">
+        <div class="playlist-container__cover">
+          <div class="playlist-container__cover__img-wrapper">
+            <img
+              class="playlist-container__cover__img-wrapper__img"
+              :src="playlist.images[0].url"
+              :alt="playlist.owner.display_name"
+            />
+          </div>
+          <div class="playlist-container__cover__info">
+            <span class="playlist-container__cover__info__type">{{
+              `${playlist.type.charAt(0).toUpperCase()}${playlist.type.slice(1)}`
+            }}</span>
+            <h1 class="playlist-container__cover__info__title">{{ playlist.name }}</h1>
+            <div class="playlist-container__cover__info__details">
+              <router-link
+                class="playlist-container__cover__info__details__owner"
+                :to="{ name: 'User', params: { userId: playlist.owner.id } }"
+                >{{ playlist.owner.display_name }}</router-link
+              >
+              <span class="playlist-container__cover__info__details__release-year">
+                {{ ` • ${playlist.followers.total}` }}
+              </span>
+              <span class="playlist-container__cover__info__details__total-playlist.tracks">
+                {{ ` • ${playlist.tracks.total} songs` }}
+              </span>
+              <span class="playlist-container__cover__info__details__duration">
+                {{
+                  ` • ${getFormatTime(
+                    playlist.tracks.items.reduce((acc, item) => {
+                      return acc + item.track.duration_ms
+                    }, 0)
+                  )}`
+                }}
+              </span>
+            </div>
           </div>
         </div>
+        <div class="playlist-container__content">
+          <TrackListHeader />
+          <TrackCard
+            v-for="(item, index) in playlist.tracks.items"
+            :item="item.track"
+            :index="index"
+            :show-playlist="false"
+            :show-image="false"
+          />
+        </div>
       </div>
-      <div class="playlist-container__content">
-        <TrackListHeader />
-        <TrackCard
-          v-for="(item, index) in playlist.tracks.items"
-          :item="item.track"
-          :index="index"
-          :show-playlist="false"
-          :show-image="false"
-        />
-      </div>
+      <Loading :loading />
     </div>
-    <Loading :loading />
   </MyOverlayScrollbars>
 </template>
 
@@ -102,7 +104,7 @@ export default {
 
 <style lang="scss" scoped>
 .playlist-container {
-  height: inherit;
+  min-height: $height-content;
 
   &__cover {
     padding: 2rem;

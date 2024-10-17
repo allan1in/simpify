@@ -1,56 +1,58 @@
 <template>
-  <MyOverlayScrollbars :os-class="'album-container'" :os-element="'main'">
-    <div v-if="!loading">
-      <div class="album-container__cover">
-        <div class="album-container__cover__img-wrapper">
-          <img
-            class="album-container__cover__img-wrapper__img"
-            :src="album.images[1].url"
-            :alt="album.name"
-          />
-        </div>
-        <div class="album-container__cover__info">
-          <span class="album-container__cover__info__type">{{
-            `${album.type.charAt(0).toUpperCase()}${album.type.slice(1)}`
-          }}</span>
-          <h1 class="album-container__cover__info__title">{{ album.name }}</h1>
-          <div class="album-container__cover__info__details">
-            <router-link
-              class="album-container__cover__info__details__artist"
-              v-for="(artist, index) in album.artists"
-              :to="{ name: 'Artist', params: { artistId: artist.id } }"
-              >{{ index === 0 ? artist.name : ` • ${artist.name}` }}</router-link
-            >
-            <span class="album-container__cover__info__details__release-year">
-              {{ ` • ${album.release_date.split('-')[0]}` }}
-            </span>
-            <span class="album-container__cover__info__details__total-tracks">
-              {{ ` • ${album.total_tracks} songs` }}
-            </span>
-            <span class="album-container__cover__info__details__duration">
-              {{
-                ` • ${getFormatTime(
-                  tracks.reduce((acc, track) => {
-                    return acc + track.duration_ms
-                  }, 0)
-                )}`
-              }}
-            </span>
+  <MyOverlayScrollbars os-element="main">
+    <div class="album-container">
+      <div v-if="!loading">
+        <div class="album-container__cover">
+          <div class="album-container__cover__img-wrapper">
+            <img
+              class="album-container__cover__img-wrapper__img"
+              :src="album.images[1].url"
+              :alt="album.name"
+            />
+          </div>
+          <div class="album-container__cover__info">
+            <span class="album-container__cover__info__type">{{
+              `${album.type.charAt(0).toUpperCase()}${album.type.slice(1)}`
+            }}</span>
+            <h1 class="album-container__cover__info__title">{{ album.name }}</h1>
+            <div class="album-container__cover__info__details">
+              <router-link
+                class="album-container__cover__info__details__artist"
+                v-for="(artist, index) in album.artists"
+                :to="{ name: 'Artist', params: { artistId: artist.id } }"
+                >{{ index === 0 ? artist.name : ` • ${artist.name}` }}</router-link
+              >
+              <span class="album-container__cover__info__details__release-year">
+                {{ ` • ${album.release_date.split('-')[0]}` }}
+              </span>
+              <span class="album-container__cover__info__details__total-tracks">
+                {{ ` • ${album.total_tracks} songs` }}
+              </span>
+              <span class="album-container__cover__info__details__duration">
+                {{
+                  ` • ${getFormatTime(
+                    tracks.reduce((acc, track) => {
+                      return acc + track.duration_ms
+                    }, 0)
+                  )}`
+                }}
+              </span>
+            </div>
           </div>
         </div>
+        <div class="album-container__content">
+          <TrackListHeader :showAlbum="false" />
+          <TrackCard
+            v-for="(item, index) in tracks"
+            :item="item"
+            :index="index"
+            :show-album="false"
+            :show-image="false"
+          />
+        </div>
       </div>
-      <div class="album-container__content">
-        <TrackListHeader :showAlbum="false" />
-        <TrackCard
-          v-for="(item, index) in tracks"
-          :item="item"
-          :index="index"
-          :show-album="false"
-          :show-image="false"
-        />
-      </div>
+      <Loading :loading />
     </div>
-    <Loading :loading />
   </MyOverlayScrollbars>
 </template>
 
@@ -116,7 +118,8 @@ export default {
 
 <style lang="scss" scoped>
 .album-container {
-  height: inherit;
+  height: $height-content;
+  min-height: $height-content;
 
   &__cover {
     padding: 2rem;

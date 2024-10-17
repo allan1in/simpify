@@ -1,21 +1,5 @@
 <template>
   <main class="login-container">
-    <!-- <div v-if="!loading" class="login-container__box">
-      <div class="login-container__box__logo-wrapper">
-        <IconPrimaryLogo class="login-container__box__logo-wrapper__logo" />
-      </div>
-      <div class="login-container__box__title-wrapper">
-        <h1 class="login-container__box__title-wrapper__title">登录到 Spotify</h1>
-      </div>
-      <div class="login-container__box__btn-wrapper">
-        <button
-          class="login-container__box__btn-wrapper__login-btn"
-          @click="redirectToSpotifyAuthorize"
-        >
-          登录
-        </button>
-      </div>
-    </div> -->
     <Loading :loading />
   </main>
 </template>
@@ -37,7 +21,7 @@ export default {
   },
   data() {
     return {
-      loading: false
+      loading: true
     }
   },
   methods: {
@@ -70,7 +54,6 @@ export default {
     // Check if authorization server response param exists
     let code = this.$route.query.code
     if (code) {
-      this.loading = true
       await this.getToken(code)
       this.$router.push({ name: 'Dashboard' })
     } else {

@@ -98,7 +98,6 @@ export default {
 
   &__info-wrapper {
     width: 85%;
-    padding-top: 0.8rem;
 
     &__info {
       font-size: 1.4rem;

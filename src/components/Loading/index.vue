@@ -23,7 +23,7 @@ export default {
 
 <style lang="scss" scoped>
 .loading-wrapper {
-  height: 100%;
+  min-height: inherit;
   display: flex;
   align-items: center;
   justify-content: center;

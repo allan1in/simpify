@@ -1,26 +1,28 @@
 <template>
-  <MyOverlayScrollbars :os-element="'main'" :os-class="'search-container'">
-    <div v-if="!loading">
-      <div class="search-container__title-wrapper">
-        <h1 class="search-container__title-wrapper__title">Browse All</h1>
-      </div>
-      <div class="search-container__cards-wrapper">
-        <div
-          class="search-container__cards-wrapper__card"
-          :style="{ backgroundColor: 'hsl(' + Math.random() * 360 + ', 60%, 50%)' }"
-          v-for="item in categories"
-          :key="item.id"
-        >
-          <h2 class="search-container__cards-wrapper__card__name">{{ item.name }}</h2>
-          <img
-            class="search-container__cards-wrapper__card__img"
-            :src="item.icons[0].url"
-            :alt="item.name"
-          />
+  <MyOverlayScrollbars os-element="main">
+    <div class="search-container">
+      <div v-if="!loading">
+        <div class="search-container__title-wrapper">
+          <h1 class="search-container__title-wrapper__title">Browse All</h1>
+        </div>
+        <div class="search-container__cards-wrapper">
+          <div
+            class="search-container__cards-wrapper__card"
+            :style="{ backgroundColor: 'hsl(' + Math.random() * 360 + ', 60%, 50%)' }"
+            v-for="item in categories"
+            :key="item.id"
+          >
+            <h2 class="search-container__cards-wrapper__card__name">{{ item.name }}</h2>
+            <img
+              class="search-container__cards-wrapper__card__img"
+              :src="item.icons[0].url"
+              :alt="item.name"
+            />
+          </div>
         </div>
       </div>
+      <Loading :loading="loading" />
     </div>
-    <Loading :loading="loading" />
   </MyOverlayScrollbars>
 </template>
 
@@ -46,8 +48,7 @@ export default {
 
 <style lang="scss" scoped>
 .search-container {
-  min-height: calc($height-content);
-  height: 100%;
+  min-height: $height-content;
   padding: 2.4rem;
 
   &__title-wrapper {
