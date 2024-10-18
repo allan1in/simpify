@@ -15,7 +15,7 @@
             <h2 class="search-container__content__cards-wrapper__card__name">{{ item.name }}</h2>
             <img
               class="search-container__content__cards-wrapper__card__img"
-              :src="this.covers[index]"
+              :src="item.cover"
               :alt="item.name"
             />
           </router-link>
@@ -40,9 +40,7 @@ export default {
   data() {
     return {
       loading: true,
-      categories: {},
-      covers: [],
-      limit: 28
+      categories: {}
     }
   },
   methods: {
@@ -53,26 +51,20 @@ export default {
     },
     async getSeveralCategories() {
       const params = {
-        limit: this.limit,
+        limit: 28,
         offset: 0
       }
       const res = (await getSeveralCategories(params)).data.categories.items
       this.categories = res
     },
     async getCategoriesCovers() {
-      const params = {
-        locale: 'en_AM',
-        limit: this.limit,
-        offset: 0
-      }
-      const categories = (await getSeveralCategories(params)).data.categories.items
-      categories.forEach(async (item) => {
+      this.categories.forEach(async (item) => {
         const params = {
           limit: 1,
           offset: 0
         }
         const res = (await getCategoryPlaylists(item.id, params)).data.playlists.items
-        this.covers.push(res[0].images[0].url)
+        item.cover = res[0].images[0].url
       })
     }
   },

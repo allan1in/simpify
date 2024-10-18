@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import settings from '@/settings'
-import { getUserProfile } from '@/api/user'
+import { getCurrentUserProfile } from '@/api/user'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -50,7 +50,7 @@ export const useUserStore = defineStore('user', {
       this.expires = expiry
     },
     async getUserData() {
-      const res = (await getUserProfile()).data
+      const res = (await getCurrentUserProfile()).data
 
       this.avatar = res.images[0].url
       this.display_name = res.display_name
