@@ -15,3 +15,11 @@ export function getCategory(id, params) {
     params
   })
 }
+
+export function getCategoryPlaylists(id, params) {
+  return request({
+    url: `/browse/categories/${id}/playlists`,
+    method: 'get',
+    params
+  })
+}

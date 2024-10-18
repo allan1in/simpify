@@ -18,8 +18,7 @@
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import Loading from '@/components/Loading/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
-import { getCategory } from '@/api/categories.js'
-import { searchPlaylists } from '@/api/search.js'
+import { getCategory, getCategoryPlaylists } from '@/api/categories.js'
 import PlaylistCard from '@/components/PlaylistCard/index.vue'
 
 export default {
@@ -48,17 +47,12 @@ export default {
       this.category = res
     },
     async getPlaylists() {
-      const category = (
-        await getCategory(this.$route.params.categoryId, {
-          locale: 'en_AM'
-        })
-      ).data
       const params = {
-        q: category.name,
         limit: 28,
         offset: 0
       }
-      const res = (await searchPlaylists(params)).data.playlists.items
+      const res = (await getCategoryPlaylists(this.$route.params.categoryId, params)).data.playlists
+        .items
       this.playlists = res
     }
   },

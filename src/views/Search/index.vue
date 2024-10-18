@@ -29,8 +29,7 @@
 <script>
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import Loading from '@/components/Loading/index.vue'
-import { getSeveralCategories } from '@/api/categories'
-import { searchPlaylists } from '@/api/search'
+import { getSeveralCategories, getCategoryPlaylists } from '@/api/categories'
 
 export default {
   name: 'Search',
@@ -69,11 +68,10 @@ export default {
       const categories = (await getSeveralCategories(params)).data.categories.items
       categories.forEach(async (item) => {
         const params = {
-          q: item.name,
           limit: 1,
           offset: 0
         }
-        const res = (await searchPlaylists(params)).data.playlists.items
+        const res = (await getCategoryPlaylists(item.id, params)).data.playlists.items
         this.covers.push(res[0].images[0].url)
       })
     }
