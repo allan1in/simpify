@@ -1,5 +1,5 @@
 <template>
-  <div class="track-card">
+  <div v-if="item !== null" class="track-card">
     <div class="track-card__left">
       <div class="track-card__left__num-wrapper">
         <span>{{ index + 1 }}</span>
@@ -180,6 +180,7 @@ export default {
       justify-content: center;
       line-height: initial;
       height: 80%;
+      padding-right: 1rem;
 
       &__name {
         font-size: 1.6rem;
@@ -199,6 +200,7 @@ export default {
     display: flex;
     align-items: center;
     height: 100%;
+    padding-right: 1rem;
 
     &__album {
       @include oneLineEllipsis;

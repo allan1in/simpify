@@ -14,6 +14,7 @@
           >
             <h2 class="search-container__content__cards-wrapper__card__name">{{ item.name }}</h2>
             <img
+              v-if="item.cover"
               class="search-container__content__cards-wrapper__card__img"
               :src="item.cover"
               :alt="item.name"

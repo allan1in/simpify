@@ -13,3 +13,11 @@ export function getUserProfile(id) {
     method: 'get'
   })
 }
+
+export function getUserPlaylists(id, params) {
+  return request({
+    url: `/users/${id}/playlists`,
+    method: 'get',
+    params
+  })
+}

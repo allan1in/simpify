@@ -69,14 +69,14 @@ $color-bg-cover: hsl(random(360), 40%, 50%);
   height: $height-content;
   min-height: $height-content;
   &__cover {
-    background: linear-gradient(to bottom, $color-bg-5, $color-bg-3);
+    background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
     padding: 4.8rem 2.4rem;
 
     &__title {
       font-size: 8rem;
       font-weight: 800;
       font-family: $font-family-title;
-      text-shadow: 0 0 8px rgba($color-bg-1, 0.3);
+      text-shadow: 0 0 20px rgba($color-bg-1, 1);
     }
   }
 

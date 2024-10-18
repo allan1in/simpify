@@ -22,7 +22,7 @@
                 >{{ playlist.owner.display_name }}</router-link
               >
               <span class="playlist-container__cover__info__details__release-year">
-                {{ ` • ${playlist.followers.total}` }}
+                {{ ` • ${Intl.NumberFormat().format(playlist.followers.total)} followers` }}
               </span>
               <span class="playlist-container__cover__info__details__total-playlist.tracks">
                 {{ ` • ${playlist.tracks.total} songs` }}
@@ -31,7 +31,7 @@
                 {{
                   ` • ${getFormatTime(
                     playlist.tracks.items.reduce((acc, item) => {
-                      return acc + item.track.duration_ms
+                      return acc + (item.track !== null ? item.track.duration_ms : 0)
                     }, 0)
                   )}`
                 }}
@@ -108,7 +108,7 @@ export default {
 
   &__cover {
     padding: 2rem;
-    background: linear-gradient(to bottom, $color-bg-6, $color-bg-3);
+    background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
     display: flex;
     align-items: end;
     justify-content: start;
