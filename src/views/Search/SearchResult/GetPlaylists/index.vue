@@ -22,7 +22,6 @@ import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'GetPlaylists',
-  props: ['showTypes'],
   data() {
     return {
       playlists: {},

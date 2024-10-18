@@ -9,6 +9,9 @@ import GetAll from '@/views/Search/SearchResult/GetAll/index.vue'
 import GetTracks from '@/views/Search/SearchResult/GetTracks/index.vue'
 import GetAlbums from '@/views/Search/SearchResult/GetAlbums/index.vue'
 import GetArtists from '@/views/Search/SearchResult/GetArtists/index.vue'
+import ArtistAllAlbums from '@/views/Artist/Albums/index.vue'
+import ArtistAllSingles from '@/views/Artist/Singles/index.vue'
+import ArtistAllAppearsOn from '@/views/Artist/AppearsOn/index.vue'
 import GetPlaylists from '@/views/Search/SearchResult/GetPlaylists/index.vue'
 import SearchResult from '@/views/Search/SearchResult/index.vue'
 import Track from '@/views/Track/index.vue'
@@ -16,9 +19,7 @@ import Album from '@/views/Album/index.vue'
 import Artist from '@/views/Artist/index.vue'
 import Playlist from '@/views/Playlist/index.vue'
 import User from '@/views/User/index.vue'
-import ArtistAllAlbums from '@/views/Artist/Albums/index.vue'
-import ArtistAllSingles from '@/views/Artist/Singles/index.vue'
-import ArtistAllAppearsOn from '@/views/Artist/AppearsOn/index.vue'
+import Browse from '@/views/Browse/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -152,6 +153,17 @@ const router = createRouter({
       ]
     },
     {
+      path: '/browse/:categoryId',
+      component: Layout,
+      children: [
+        {
+          path: '',
+          name: 'Browse',
+          component: Browse
+        }
+      ]
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: NotFound
@@ -184,8 +196,6 @@ router.beforeEach(async (to, from, next) => {
           next()
         } catch (error) {
           // Bad or expired token
-          alert('Bad or expired token, please login again')
-
           window.localStorage.clear()
           next('/login')
         }

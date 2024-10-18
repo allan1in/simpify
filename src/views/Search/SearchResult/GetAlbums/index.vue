@@ -20,7 +20,6 @@ import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'GetAlbums',
-  props: ['showTypes'],
   data() {
     return {
       albums: {},

@@ -44,17 +44,15 @@
 </template>
 
 <script>
+import { search } from '@/api/search'
+import { debounce } from '@/utils/debounce'
+
 export default {
   name: 'TopBar',
   data() {
     return {
-      isActive: ''
-    }
-  },
-  props: {
-    showTags: {
-      type: Object,
-      require: true
+      isActive: '',
+      showTags: {}
     }
   },
   methods: {
@@ -72,11 +70,28 @@ export default {
     },
     getPlaylists() {
       this.$router.push({ name: 'GetPlaylists' })
-    }
+    },
+    // If there is no data of this type, hide the tag
+    checkHasResults: debounce(async function () {
+      if (this.$route.params.inputContent) {
+        const params = {
+          q: this.$route.params.inputContent,
+          type: 'album,artist,track,playlist',
+          limit: 1,
+          offset: 0
+        }
+        const res = (await search(params)).data
+        this.showTags.album = res.albums.total === 0 ? false : true
+        this.showTags.artist = res.artists.total === 0 ? false : true
+        this.showTags.track = res.tracks.total === 0 ? false : true
+        this.showTags.playlist = res.playlists.total === 0 ? false : true
+      }
+    })
   },
   watch: {
     $route: {
       handler(to, from) {
+        this.checkHasResults()
         this.isActive = decodeURIComponent(to.path.substr(to.path.lastIndexOf('/') + 1))
       },
       immediate: true

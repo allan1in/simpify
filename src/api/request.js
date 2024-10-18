@@ -39,11 +39,12 @@ service.interceptors.response.use(
     // Do something with response error
 
     // Bad or expired token
-    alert('Bad or expired token, please login again')
-    window.localStorage.clear()
-    router.push({ name: 'Login' })
+    if (error.status === 401) {
+      alert('Bad or expired token, please login again')
+      window.localStorage.clear()
+      router.push({ name: 'Login' })
+    }
 
-    console.log(error)
     return Promise.reject(error)
   }
 )

@@ -20,7 +20,6 @@ import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'GetArtists',
-  props: ['showTypes'],
   components: {
     ArtistCard,
     TitleSimple,
