@@ -123,7 +123,7 @@ export default {
 
   &__cover {
     padding: 2rem;
-    background: linear-gradient(to bottom, $color-bg-6, $color-bg-3);
+    background: linear-gradient(to bottom, $color-bg-5, $color-bg-3);
     display: flex;
     align-items: end;
     justify-content: start;

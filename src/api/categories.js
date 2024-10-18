@@ -7,3 +7,11 @@ export function getSeveralCategories(params) {
     params
   })
 }
+
+export function getCategory(id, params) {
+  return request({
+    url: `/browse/categories/${id}`,
+    method: 'get',
+    params
+  })
+}

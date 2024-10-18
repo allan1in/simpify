@@ -9,7 +9,6 @@
           <router-link
             :to="{ name: 'Browse', params: { categoryId: item.id } }"
             class="search-container__content__cards-wrapper__card"
-            :style="{ backgroundColor: 'hsl(' + Math.random() * 360 + ', 35%, 50%)' }"
             v-for="(item, index) in categories"
             :key="item.id"
           >
@@ -112,6 +111,7 @@ export default {
         position: relative;
         overflow: hidden;
         cursor: pointer;
+        background: linear-gradient(-65deg, $color-bg-4 20%, $color-bg-3 70%);
 
         &:hover {
           text-decoration: none;
