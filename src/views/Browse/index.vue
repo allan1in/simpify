@@ -83,7 +83,7 @@ $color-bg-cover: hsl(random(360), 40%, 50%);
   &__content {
     padding: 2.4rem;
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
   }
 }
 </style>

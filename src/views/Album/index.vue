@@ -16,12 +16,18 @@
             }}</span>
             <h1 class="album-container__cover__info__title">{{ album.name }}</h1>
             <div class="album-container__cover__info__details">
-              <router-link
-                class="album-container__cover__info__details__artist"
+              <span
                 v-for="(artist, index) in album.artists"
-                :to="{ name: 'Artist', params: { artistId: artist.id } }"
-                >{{ index === 0 ? artist.name : ` • ${artist.name}` }}</router-link
+                class="album-container__cover__info__details__artist"
               >
+                {{ index === 0 ? '' : ' • ' }}
+                <router-link
+                  class="album-container__cover__info__details__artist__link"
+                  :to="{ name: 'Artist', params: { artistId: artist.id } }"
+                  >{{ artist.name }}</router-link
+                >
+              </span>
+
               <span class="album-container__cover__info__details__release-year">
                 {{ ` • ${album.release_date.split('-')[0]}` }}
               </span>
@@ -156,21 +162,15 @@ export default {
       }
 
       &__details {
+        margin-top: 1rem;
         font-size: 1.4rem;
         color: $color-font-secondary;
 
-        &__artist {
+        @include twoLineEllipsis;
+
+        &__artist__link {
           font-weight: 700;
           color: $color-font-primary;
-          vertical-align: bottom;
-        }
-
-        &__release-year {
-          vertical-align: bottom;
-        }
-
-        &__total-tracks {
-          vertical-align: bottom;
         }
       }
     }

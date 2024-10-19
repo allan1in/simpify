@@ -7,6 +7,14 @@ export function getArtist(id) {
   })
 }
 
+export function getSeveralArtists(params) {
+  return request({
+    url: `/artists`,
+    method: 'get',
+    params
+  })
+}
+
 export function getTopTracks(id) {
   return request({
     url: `/artists/${id}/top-tracks`,

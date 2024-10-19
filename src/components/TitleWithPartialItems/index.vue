@@ -76,7 +76,7 @@ export default {
 
   &__content {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
   }
 }
 </style>

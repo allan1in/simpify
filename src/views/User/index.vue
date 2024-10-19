@@ -25,10 +25,12 @@
               </span>
               <span class="user-container__cover__info__details__followers">
                 {{
-                  ` • ${
-                    Intl.NumberFormat().format(profile.followers.total) +
-                    (profile.followers.total === '1' ? ' follower' : ' followers')
-                  }`
+                  profile.followers.total === 0
+                    ? ''
+                    : ` • ${
+                        Intl.NumberFormat().format(profile.followers.total) +
+                        (profile.followers.total === '1' ? ' follower' : ' followers')
+                      }`
                 }}
               </span>
             </div>
@@ -158,7 +160,7 @@ export default {
 
     &__playlists {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
     }
   }
 }

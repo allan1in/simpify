@@ -83,7 +83,7 @@ export default {
     padding: 2.4rem;
 
     &__title-wrapper {
-      padding: 0.8rem 0;
+      padding: 1.6rem 0;
 
       &__title {
         @include titleStyles;
@@ -92,9 +92,8 @@ export default {
 
     &__cards-wrapper {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(min(30rem, 100%), 1fr));
       gap: 2.4rem;
-      padding: 2.4rem 0;
 
       &__card {
         aspect-ratio: 7 / 4;

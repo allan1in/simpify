@@ -22,7 +22,11 @@
                 >{{ playlist.owner.display_name }}</router-link
               >
               <span class="playlist-container__cover__info__details__release-year">
-                {{ ` • ${Intl.NumberFormat().format(playlist.followers.total)} followers` }}
+                {{
+                  playlist.followers.total === 0
+                    ? ''
+                    : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${playlist.followers.total === 1 ? 'follower' : 'followers'}`
+                }}
               </span>
               <span class="playlist-container__cover__info__details__total-playlist.tracks">
                 {{ ` • ${playlist.tracks.total} songs` }}
