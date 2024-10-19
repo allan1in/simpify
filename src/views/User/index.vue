@@ -1,57 +1,53 @@
 <template>
-  <MyOverlayScrollbars os-element="main">
+  <Container :loading>
     <div class="user-container">
-      <div v-if="!loading" class="user-container">
-        <div class="user-container__cover">
-          <div class="user-container__cover__img-wrapper">
-            <img
-              v-if="profile.images[0]"
-              class="user-container__cover__img-wrapper__img"
-              :src="profile.images[0].url"
-              :alt="profile.display_name"
-            />
-            <div v-else class="user-container__cover__img-wrapper__icon-wrapper">
-              <IconDefaultUser />
-            </div>
-          </div>
-          <div class="user-container__cover__info">
-            <span class="user-container__cover__info__type">{{
-              `${profile.type.charAt(0).toUpperCase()}${profile.type.slice(1)}`
-            }}</span>
-            <h1 class="user-container__cover__info__title">{{ profile.display_name }}</h1>
-            <div class="user-container__cover__info__details">
-              <span class="user-container__cover__info__details__playlists">
-                {{ `${Intl.NumberFormat().format(playlists.total)} Public Playlists` }}
-              </span>
-              <span class="user-container__cover__info__details__followers">
-                {{
-                  profile.followers.total === 0
-                    ? ''
-                    : ` • ${
-                        Intl.NumberFormat().format(profile.followers.total) +
-                        (profile.followers.total === '1' ? ' follower' : ' followers')
-                      }`
-                }}
-              </span>
-            </div>
+      <div class="user-container__cover">
+        <div class="user-container__cover__img-wrapper">
+          <img
+            v-if="profile.images[0]"
+            class="user-container__cover__img-wrapper__img"
+            :src="profile.images[0].url"
+            :alt="profile.display_name"
+          />
+          <div v-else class="user-container__cover__img-wrapper__icon-wrapper">
+            <IconDefaultUser />
           </div>
         </div>
-        <div class="user-container__content">
-          <TitleSimple title="Public Playlists" />
-          <div class="user-container__content__playlists">
-            <PlaylistCard v-for="item in playlists.items" :item="item" />
+        <div class="user-container__cover__info">
+          <span class="user-container__cover__info__type">{{
+            `${profile.type.charAt(0).toUpperCase()}${profile.type.slice(1)}`
+          }}</span>
+          <h1 class="user-container__cover__info__title">{{ profile.display_name }}</h1>
+          <div class="user-container__cover__info__details">
+            <span class="user-container__cover__info__details__playlists">
+              {{ `${Intl.NumberFormat().format(playlists.total)} Public Playlists` }}
+            </span>
+            <span class="user-container__cover__info__details__followers">
+              {{
+                profile.followers.total === 0
+                  ? ''
+                  : ` • ${
+                      Intl.NumberFormat().format(profile.followers.total) +
+                      (profile.followers.total === '1' ? ' follower' : ' followers')
+                    }`
+              }}
+            </span>
           </div>
         </div>
       </div>
-      <Loading :loading />
+      <div class="user-container__content">
+        <TitleSimple title="Public Playlists" />
+        <div class="user-container__content__playlists">
+          <PlaylistCard v-for="item in playlists.items" :item="item" />
+        </div>
+      </div>
     </div>
-  </MyOverlayScrollbars>
+  </Container>
 </template>
 
 <script>
 import { getUserPlaylists, getUserProfile } from '@/api/user'
-import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
-import Loading from '@/components/Loading/index.vue'
+import Container from '@/components/Container/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import PlaylistCard from '@/components/PlaylistCard/index.vue'
 import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
@@ -59,8 +55,7 @@ import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
 export default {
   name: 'User',
   components: {
-    MyOverlayScrollbars,
-    Loading,
+    Container,
     TitleSimple,
     PlaylistCard,
     IconDefaultUser
@@ -99,9 +94,6 @@ export default {
 
 <style lang="scss" scoped>
 .user-container {
-  min-height: $height-content;
-  height: $height-content;
-
   &__cover {
     padding: 2rem;
     background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);

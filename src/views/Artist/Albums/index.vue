@@ -1,32 +1,27 @@
 <template>
-  <MyOverlayScrollbars os-element="main">
+  <Container :loading>
     <div class="artist-all-albums">
-      <div class="artist-all-albums__content" v-if="!loading">
-        <TitleSimple :title="'Albums'" />
-        <div class="artist-all-albums__content__results">
-          <AlbumCard v-for="item in albums" :key="item.id" :item="item" />
-        </div>
+      <TitleSimple :title="'Albums'" />
+      <div class="artist-all-albums__results">
+        <AlbumCard v-for="item in albums" :key="item.id" :item="item" />
       </div>
-      <Loading :loading />
     </div>
-  </MyOverlayScrollbars>
+  </Container>
 </template>
 
 <script>
-import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import AlbumCard from '@/components/AlbumCard/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import { getAlbums } from '@/api/artist'
-import Loading from '@/components/Loading/index.vue'
+import Container from '@/components/Container/index.vue'
 
 export default {
   name: 'ArtistAllAlbums',
   components: {
-    MyOverlayScrollbars,
     AlbumCard,
     TitleSimple,
     AlbumCard,
-    Loading
+    Container
   },
   data() {
     return {
@@ -53,16 +48,11 @@ export default {
 
 <style lang="scss" scoped>
 .artist-all-albums {
-  min-height: $height-content;
-  height: $height-content;
+  padding: 2.4rem;
 
-  &__content {
-    padding: 2.4rem;
-
-    &__results {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
-    }
+  &__results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
   }
 }
 </style>

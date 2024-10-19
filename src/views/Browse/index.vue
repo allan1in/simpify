@@ -1,22 +1,18 @@
 <template>
-  <MyOverlayScrollbars os-element="main">
+  <Container :loading>
     <div class="browse-container">
-      <div v-if="!loading">
-        <div class="browse-container__cover">
-          <h1 class="browse-container__cover__title">{{ category.name }}</h1>
-        </div>
-        <div class="browse-container__content">
-          <PlaylistCard v-for="item in playlists" :item="item" />
-        </div>
+      <div class="browse-container__cover">
+        <h1 class="browse-container__cover__title">{{ category.name }}</h1>
       </div>
-      <Loading :loading />
+      <div class="browse-container__content">
+        <PlaylistCard v-for="item in playlists" :item="item" />
+      </div>
     </div>
-  </MyOverlayScrollbars>
+  </Container>
 </template>
 
 <script>
-import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
-import Loading from '@/components/Loading/index.vue'
+import Container from '@/components/Container/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import { getCategory, getCategoryPlaylists } from '@/api/categories.js'
 import PlaylistCard from '@/components/PlaylistCard/index.vue'
@@ -24,8 +20,7 @@ import PlaylistCard from '@/components/PlaylistCard/index.vue'
 export default {
   nmae: 'Browse',
   components: {
-    MyOverlayScrollbars,
-    Loading,
+    Container,
     TitleSimple,
     PlaylistCard
   },
@@ -66,8 +61,6 @@ export default {
 $color-bg-cover: hsl(random(360), 40%, 50%);
 
 .browse-container {
-  height: $height-content;
-  min-height: $height-content;
   &__cover {
     background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
     padding: 4.8rem 2.4rem;

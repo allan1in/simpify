@@ -1,67 +1,63 @@
 <template>
-  <MyOverlayScrollbars :os-element="'main'">
+  <Container :loading>
     <div class="playlist-container">
-      <div v-if="!loading">
-        <div class="playlist-container__cover">
-          <div class="playlist-container__cover__img-wrapper">
-            <img
-              class="playlist-container__cover__img-wrapper__img"
-              :src="playlist.images[0].url"
-              :alt="playlist.owner.display_name"
-            />
-          </div>
-          <div class="playlist-container__cover__info">
-            <span class="playlist-container__cover__info__type">{{
-              `${playlist.type.charAt(0).toUpperCase()}${playlist.type.slice(1)}`
-            }}</span>
-            <h1 class="playlist-container__cover__info__title">{{ playlist.name }}</h1>
-            <div class="playlist-container__cover__info__details">
-              <router-link
-                class="playlist-container__cover__info__details__owner"
-                :to="{ name: 'User', params: { userId: playlist.owner.id } }"
-                >{{ playlist.owner.display_name }}</router-link
-              >
-              <span class="playlist-container__cover__info__details__release-year">
-                {{
-                  playlist.followers.total === 0
-                    ? ''
-                    : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${playlist.followers.total === 1 ? 'follower' : 'followers'}`
-                }}
-              </span>
-              <span class="playlist-container__cover__info__details__total-playlist.tracks">
-                {{ ` • ${playlist.tracks.total} songs` }}
-              </span>
-              <span class="playlist-container__cover__info__details__duration">
-                {{
-                  ` • ${getFormatTime(
-                    playlist.tracks.items.reduce((acc, item) => {
-                      return acc + (item.track !== null ? item.track.duration_ms : 0)
-                    }, 0)
-                  )}`
-                }}
-              </span>
-            </div>
-          </div>
-        </div>
-        <div class="playlist-container__content">
-          <TrackListHeader />
-          <TrackCard
-            v-for="(item, index) in playlist.tracks.items"
-            :item="item.track"
-            :index="index"
-            :show-playlist="false"
-            :show-image="false"
+      <div class="playlist-container__cover">
+        <div class="playlist-container__cover__img-wrapper">
+          <img
+            class="playlist-container__cover__img-wrapper__img"
+            :src="playlist.images[0].url"
+            :alt="playlist.owner.display_name"
           />
         </div>
+        <div class="playlist-container__cover__info">
+          <span class="playlist-container__cover__info__type">{{
+            `${playlist.type.charAt(0).toUpperCase()}${playlist.type.slice(1)}`
+          }}</span>
+          <h1 class="playlist-container__cover__info__title">{{ playlist.name }}</h1>
+          <div class="playlist-container__cover__info__details">
+            <router-link
+              class="playlist-container__cover__info__details__owner"
+              :to="{ name: 'User', params: { userId: playlist.owner.id } }"
+              >{{ playlist.owner.display_name }}</router-link
+            >
+            <span class="playlist-container__cover__info__details__release-year">
+              {{
+                playlist.followers.total === 0
+                  ? ''
+                  : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${playlist.followers.total === 1 ? 'follower' : 'followers'}`
+              }}
+            </span>
+            <span class="playlist-container__cover__info__details__total-playlist.tracks">
+              {{ ` • ${playlist.tracks.total} songs` }}
+            </span>
+            <span class="playlist-container__cover__info__details__duration">
+              {{
+                ` • ${getFormatTime(
+                  playlist.tracks.items.reduce((acc, item) => {
+                    return acc + (item.track !== null ? item.track.duration_ms : 0)
+                  }, 0)
+                )}`
+              }}
+            </span>
+          </div>
+        </div>
       </div>
-      <Loading :loading />
+      <div class="playlist-container__content">
+        <TrackListHeader />
+        <TrackCard
+          v-for="(item, index) in playlist.tracks.items"
+          :item="item.track"
+          :index="index"
+          :show-playlist="false"
+          :show-image="false"
+        />
+      </div>
     </div>
-  </MyOverlayScrollbars>
+  </Container>
 </template>
 
 <script>
-import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
-import Loading from '@/components/Loading/index.vue'
+import Container from '@/components/Container/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import TrackListHeader from '@/components/TrackListHeader/index.vue'
 import TrackCard from '@/components/TrackCard/index.vue'
@@ -71,8 +67,7 @@ import { timeFormatAlbum } from '@/utils/time_format'
 export default {
   name: 'Playlist',
   components: {
-    MyOverlayScrollbars,
-    Loading,
+    Container,
     TitleSimple,
     TrackListHeader,
     TrackCard
@@ -108,8 +103,6 @@ export default {
 
 <style lang="scss" scoped>
 .playlist-container {
-  min-height: $height-content;
-
   &__cover {
     padding: 2rem;
     background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);

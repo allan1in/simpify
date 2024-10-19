@@ -1,42 +1,37 @@
 <template>
-  <MyOverlayScrollbars os-element="main">
+  <Container :loading>
     <div class="search-container">
-      <div class="search-container__content" v-if="!loading">
-        <div class="search-container__content__title-wrapper">
-          <h1 class="search-container__content__title-wrapper__title">Browse All</h1>
-        </div>
-        <div class="search-container__content__cards-wrapper">
-          <router-link
-            :to="{ name: 'Browse', params: { categoryId: item.id } }"
-            class="search-container__content__cards-wrapper__card"
-            v-for="(item, index) in categories"
-            :key="item.id"
-          >
-            <h2 class="search-container__content__cards-wrapper__card__name">{{ item.name }}</h2>
-            <img
-              v-if="item.cover"
-              class="search-container__content__cards-wrapper__card__img"
-              :src="item.cover"
-              :alt="item.name"
-            />
-          </router-link>
-        </div>
+      <div class="search-container__title-wrapper">
+        <h1 class="search-container__title-wrapper__title">Browse All</h1>
       </div>
-      <Loading :loading="loading" />
+      <div class="search-container__cards-wrapper">
+        <router-link
+          :to="{ name: 'Browse', params: { categoryId: item.id } }"
+          class="search-container__cards-wrapper__card"
+          v-for="(item, index) in categories"
+          :key="item.id"
+        >
+          <h2 class="search-container__cards-wrapper__card__name">{{ item.name }}</h2>
+          <img
+            v-if="item.cover"
+            class="search-container__cards-wrapper__card__img"
+            :src="item.cover"
+            :alt="item.name"
+          />
+        </router-link>
+      </div>
     </div>
-  </MyOverlayScrollbars>
+  </Container>
 </template>
 
 <script>
-import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
-import Loading from '@/components/Loading/index.vue'
+import Container from '@/components/Container/index.vue'
 import { getSeveralCategories, getCategoryPlaylists } from '@/api/categories'
 
 export default {
   name: 'Search',
   components: {
-    MyOverlayScrollbars,
-    Loading
+    Container
   },
   data() {
     return {
@@ -77,54 +72,50 @@ export default {
 
 <style lang="scss" scoped>
 .search-container {
-  min-height: $height-content;
+  padding: 2.4rem;
 
-  &__content {
-    padding: 2.4rem;
+  &__title-wrapper {
+    padding: 1.6rem 0;
 
-    &__title-wrapper {
-      padding: 1.6rem 0;
+    &__title {
+      @include titleStyles;
+    }
+  }
 
-      &__title {
+  &__cards-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(30rem, 100%), 1fr));
+    gap: 2.4rem;
+
+    &__card {
+      aspect-ratio: 7 / 4;
+      border-radius: $border-radius-default;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      background: linear-gradient(-65deg, $color-bg-4 20%, $color-bg-3 70%);
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &__name {
+        padding: 1.6rem;
+
         @include titleStyles;
       }
-    }
 
-    &__cards-wrapper {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(30rem, 100%), 1fr));
-      gap: 2.4rem;
-
-      &__card {
-        aspect-ratio: 7 / 4;
-        border-radius: $border-radius-default;
-        position: relative;
-        overflow: hidden;
-        cursor: pointer;
-        background: linear-gradient(-65deg, $color-bg-4 20%, $color-bg-3 70%);
-
-        &:hover {
-          text-decoration: none;
-        }
-
-        &__name {
-          padding: 1.6rem;
-
-          @include titleStyles;
-        }
-
-        &__img {
-          display: block;
-          position: absolute;
-          right: 0;
-          bottom: 0;
-          width: 45%;
-          aspect-ratio: 1 / 1;
-          background-color: $color-bg-1;
-          transform: rotate(25deg) translate(18%, -2%);
-          border-radius: calc($gutter / 2);
-          box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-        }
+      &__img {
+        display: block;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 45%;
+        aspect-ratio: 1 / 1;
+        background-color: $color-bg-1;
+        transform: rotate(25deg) translate(18%, -2%);
+        border-radius: calc($gutter / 2);
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
       }
     }
   }

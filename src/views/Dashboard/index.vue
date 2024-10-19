@@ -1,8 +1,4 @@
-<template>
-  <div>
-    {{ access_token }}
-  </div>
-</template>
+<template></template>
 
 <script>
 import { useUserStore } from '@/stores/user'

@@ -1,82 +1,77 @@
 <template>
-  <MyOverlayScrollbars os-element="main">
+  <Container :loading>
     <div class="artist-container">
-      <div v-if="!loading">
-        <div
-          class="artist-container__cover"
-          :style="{
-            'background-image': `url(${artist.images.length !== 0 ? artist.images[0].url : ''})`
-          }"
-        >
-          <h1 class="artist-container__cover__title">{{ artist.name }}</h1>
-          <div class="artist-container__cover__followers">
-            {{
-              Intl.NumberFormat().format(artist.followers.total) +
-              (artist.followers.total === '1' ? ' follower' : ' followers')
-            }}
-          </div>
-        </div>
-        <div class="artist-container__content">
-          <div v-if="tracks.length !== 0" class="artist-container__content__popular">
-            <TitleSimple :title="'Popular'" />
-            <div class="artist-container__content__popular__content">
-              <TrackListHeader />
-              <TrackCard
-                v-for="(track, index) in tracks"
-                :key="track.id"
-                :index="index"
-                :showArtists="false"
-                :item="track"
-              />
-            </div>
-          </div>
-          <TitleWithPartialItems
-            v-if="albums.length !== 0"
-            :router-name="'ArtistAllAlbums'"
-            :title="'Albums'"
-            :album-card-props="{ items: albums, showAlbumType: true, showArtists: false }"
-          />
-          <TitleWithPartialItems
-            v-if="singles.length !== 0"
-            :router-name="'ArtistAllSingles'"
-            :title="'Singles'"
-            :album-card-props="{ items: singles, showAlbumType: true, showArtists: false }"
-          />
-          <TitleWithPartialItems
-            v-if="appearsOn.length !== 0"
-            :router-name="'ArtistAllAppearsOn'"
-            :title="'Appears On'"
-            :album-card-props="{ items: appearsOn, showAlbumType: true, showArtists: false }"
-          />
+      <div
+        class="artist-container__cover"
+        :style="{
+          'background-image': `url(${artist.images.length !== 0 ? artist.images[0].url : ''})`
+        }"
+      >
+        <h1 class="artist-container__cover__title">{{ artist.name }}</h1>
+        <div class="artist-container__cover__followers">
+          {{
+            Intl.NumberFormat().format(artist.followers.total) +
+            (artist.followers.total === '1' ? ' follower' : ' followers')
+          }}
         </div>
       </div>
-      <Loading :loading="loading" />
+      <div class="artist-container__content">
+        <div v-if="tracks.length !== 0" class="artist-container__content__popular">
+          <TitleSimple :title="'Popular'" />
+          <div class="artist-container__content__popular__content">
+            <TrackListHeader />
+            <TrackCard
+              v-for="(track, index) in tracks"
+              :key="track.id"
+              :index="index"
+              :showArtists="false"
+              :item="track"
+            />
+          </div>
+        </div>
+        <TitleWithPartialItems
+          v-if="albums.length !== 0"
+          :router-name="'ArtistAllAlbums'"
+          :title="'Albums'"
+          :album-card-props="{ items: albums, showAlbumType: true, showArtists: false }"
+        />
+        <TitleWithPartialItems
+          v-if="singles.length !== 0"
+          :router-name="'ArtistAllSingles'"
+          :title="'Singles'"
+          :album-card-props="{ items: singles, showAlbumType: true, showArtists: false }"
+        />
+        <TitleWithPartialItems
+          v-if="appearsOn.length !== 0"
+          :router-name="'ArtistAllAppearsOn'"
+          :title="'Appears On'"
+          :album-card-props="{ items: appearsOn, showAlbumType: true, showArtists: false }"
+        />
+      </div>
     </div>
-  </MyOverlayScrollbars>
+  </Container>
 </template>
 
 <script>
 import TrackCard from '@/components/TrackCard/index.vue'
 import TrackListHeader from '@/components/TrackListHeader/index.vue'
-import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import { getAlbums, getAppearsOn, getArtist, getSingles, getTopTracks } from '@/api/artist'
 import AlbumCard from '@/components/AlbumCard/index.vue'
 import ArtistCard from '@/components/ArtistCard/index.vue'
 import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
-import Loading from '@/components/Loading/index.vue'
+import Container from '@/components/Container/index.vue'
 
 export default {
   name: 'Artist',
   components: {
-    MyOverlayScrollbars,
     TrackListHeader,
     TrackCard,
     AlbumCard,
     ArtistCard,
     TitleWithPartialItems,
     TitleSimple,
-    Loading
+    Container
   },
   data() {
     return {
@@ -146,9 +141,6 @@ export default {
 
 <style lang="scss" scoped>
 .artist-container {
-  min-height: $height-content;
-  height: $height-content;
-
   &__cover {
     background-repeat: no-repeat;
     background-size: cover;
