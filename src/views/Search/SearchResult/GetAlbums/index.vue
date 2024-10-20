@@ -14,7 +14,7 @@
 
 <script>
 import { searchAlbums } from '@/api/search'
-import AlbumCard from '../../../../components/AlbumCard/index.vue'
+import AlbumCard from '@/components/CardAlbum/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import Loading from '@/components/Loading/index.vue'
 

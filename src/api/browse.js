@@ -23,3 +23,11 @@ export function getCategoryPlaylists(id, params) {
     params
   })
 }
+
+export function getFeaturedPlaylists(params) {
+  return request({
+    url: `/browse/featured-playlists`,
+    method: 'get',
+    params
+  })
+}

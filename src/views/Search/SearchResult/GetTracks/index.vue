@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import TrackCard from '@/components/TrackCard/index.vue'
-import TrackListHeader from '@/components/TrackListHeader/index.vue'
+import TrackCard from '@/components/CardTrack/index.vue'
+import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import { searchTracks } from '@/api/search'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import Loading from '@/components/Loading/index.vue'

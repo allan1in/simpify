@@ -21,3 +21,19 @@ export function getUserPlaylists(id, params) {
     params
   })
 }
+
+export function getUserTopArtists(params) {
+  return request({
+    url: `/me/top/artists`,
+    method: 'get',
+    params
+  })
+}
+
+export function getUserTopSongs(params) {
+  return request({
+    url: `/me/top/tracks`,
+    method: 'get',
+    params
+  })
+}

@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: 'PlaylistCard',
+  name: 'CardPlaylist',
   props: {
     item: {
       type: Object,

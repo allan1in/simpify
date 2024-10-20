@@ -20,6 +20,7 @@ import Artist from '@/views/Artist/index.vue'
 import Playlist from '@/views/Playlist/index.vue'
 import User from '@/views/User/index.vue'
 import Browse from '@/views/Browse/index.vue'
+import FeaturedPlaylists from '@/views/Dashboard/FeaturedPlaylists/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +38,11 @@ const router = createRouter({
           path: '',
           name: 'Dashboard',
           component: Dashboard
+        },
+        {
+          path: '/featured-playlists',
+          name: 'FeaturedPlaylists',
+          component: FeaturedPlaylists
         }
       ]
     },

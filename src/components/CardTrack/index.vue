@@ -55,7 +55,7 @@ import IconPlay from '@/components/Icons/IconPlay.vue'
 import { timeFormatTrack } from '@/utils/time_format'
 
 export default {
-  name: 'TrackCard',
+  name: 'CardTrack',
   components: {
     IconPlay
   },

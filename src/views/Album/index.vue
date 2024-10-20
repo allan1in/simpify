@@ -62,8 +62,8 @@
 <script>
 import Container from '@/components/Container/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
-import TrackListHeader from '@/components/TrackListHeader/index.vue'
-import TrackCard from '@/components/TrackCard/index.vue'
+import TrackListHeader from '@/components/HeaderTrackList/index.vue'
+import TrackCard from '@/components/CardTrack/index.vue'
 import { getAlbum, getTracks } from '@/api/album'
 import { timeFormatAlbum } from '@/utils/time_format'
 

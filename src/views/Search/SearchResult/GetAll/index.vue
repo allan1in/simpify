@@ -37,10 +37,10 @@
 </template>
 
 <script>
-import AlbumCard from '../../../../components/AlbumCard/index.vue'
-import ArtistCard from '../../../../components/ArtistCard/index.vue'
-import TrackCard from '@/components/TrackCard/index.vue'
-import TrackListHeader from '@/components/TrackListHeader/index.vue'
+import AlbumCard from '@/components/CardAlbum/index.vue'
+import ArtistCard from '@/components/CardArtist/index.vue'
+import TrackCard from '@/components/CardTrack/index.vue'
+import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import { searchAlbums, searchPlaylists } from '@/api/search'
 import { searchArtists } from '@/api/search'
 import { searchTracks } from '@/api/search'

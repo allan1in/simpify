@@ -14,3 +14,11 @@ export function getTracks(id, params) {
     params
   })
 }
+
+export function getNewReleases(params) {
+  return request({
+    method: 'get',
+    url: `/browse/new-releases`,
+    params
+  })
+}

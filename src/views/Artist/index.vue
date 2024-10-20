@@ -53,11 +53,11 @@
 </template>
 
 <script>
-import TrackCard from '@/components/TrackCard/index.vue'
-import TrackListHeader from '@/components/TrackListHeader/index.vue'
+import TrackCard from '@/components/CardTrack/index.vue'
+import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import { getAlbums, getAppearsOn, getArtist, getSingles, getTopTracks } from '@/api/artist'
-import AlbumCard from '@/components/AlbumCard/index.vue'
-import ArtistCard from '@/components/ArtistCard/index.vue'
+import AlbumCard from '@/components/CardAlbum/index.vue'
+import ArtistCard from '@/components/CardArtist/index.vue'
 import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import Container from '@/components/Container/index.vue'

@@ -16,7 +16,7 @@
 
 <script>
 import { searchPlaylists } from '@/api/search'
-import PlaylistCard from '../../../../components/PlaylistCard/index.vue'
+import PlaylistCard from '@/components/CardPlaylist/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import Loading from '@/components/Loading/index.vue'
 

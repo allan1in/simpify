@@ -26,7 +26,7 @@
 
 <script>
 import Container from '@/components/Container/index.vue'
-import { getSeveralCategories, getCategoryPlaylists } from '@/api/categories'
+import { getSeveralCategories, getCategoryPlaylists } from '@/api/browse'
 
 export default {
   name: 'Search',

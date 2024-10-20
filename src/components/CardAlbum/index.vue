@@ -1,7 +1,7 @@
 <template>
   <div class="album-card" @click="$router.push({ name: 'Album', params: { albumId: item.id } })">
     <div class="album-card__img-wrapper">
-      <img :src="item.images[1].url" alt="Album Cover" class="album-card__img-wrapper__img" />
+      <img :src="item.images[0].url" alt="Album Cover" class="album-card__img-wrapper__img" />
     </div>
     <div class="album-card__name-wrapper">
       <router-link
@@ -34,7 +34,7 @@
 
 <script>
 export default {
-  name: 'AlbumCard',
+  name: 'CardAlbum',
   props: {
     item: {
       type: Object,

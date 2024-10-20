@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import AlbumCard from '@/components/AlbumCard/index.vue'
+import AlbumCard from '@/components/CardAlbum/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import { getAppearsOn } from '@/api/artist'
 import Container from '@/components/Container/index.vue'

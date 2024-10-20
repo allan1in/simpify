@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import ArtistCard from '../../../../components/ArtistCard/index.vue'
+import ArtistCard from '@/components/CardArtist/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import { searchArtists } from '@/api/search'
 import Loading from '@/components/Loading/index.vue'

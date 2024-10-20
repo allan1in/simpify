@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'TrackListHeader',
+  name: 'HeaderTrackList',
   props: {
     showAlbum: {
       type: Boolean,

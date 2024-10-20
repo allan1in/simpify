@@ -30,9 +30,9 @@
 
 <script>
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
-import ArtistCard from '@/components/ArtistCard/index.vue'
-import AlbumCard from '@/components/AlbumCard/index.vue'
-import PlaylistCard from '@/components/PlaylistCard/index.vue'
+import ArtistCard from '@/components/CardArtist/index.vue'
+import AlbumCard from '@/components/CardAlbum/index.vue'
+import PlaylistCard from '@/components/CardPlaylist/index.vue'
 
 export default {
   name: 'TitleWithPartialItems',

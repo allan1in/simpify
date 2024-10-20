@@ -14,8 +14,8 @@
 <script>
 import Container from '@/components/Container/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
-import { getCategory, getCategoryPlaylists } from '@/api/categories.js'
-import PlaylistCard from '@/components/PlaylistCard/index.vue'
+import { getCategory, getCategoryPlaylists } from '@/api/browse.js'
+import PlaylistCard from '@/components/CardPlaylist/index.vue'
 
 export default {
   nmae: 'Browse',

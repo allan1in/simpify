@@ -28,7 +28,7 @@
 import IconDefaultArtist from '@/components/Icons/IconDefaultArtist.vue'
 
 export default {
-  name: 'ArtistCard',
+  name: 'CardArtist',
   components: {
     IconDefaultArtist
   },

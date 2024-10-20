@@ -49,7 +49,7 @@
 import { getUserPlaylists, getUserProfile } from '@/api/user'
 import Container from '@/components/Container/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
-import PlaylistCard from '@/components/PlaylistCard/index.vue'
+import PlaylistCard from '@/components/CardPlaylist/index.vue'
 import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
 
 export default {

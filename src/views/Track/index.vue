@@ -53,7 +53,7 @@ import TitleSimple from '@/components/TitleSimple/index.vue'
 import { timeFormatAlbum } from '@/utils/time_format'
 import { getTrack } from '@/api/track'
 import { getSeveralArtists } from '@/api/artist'
-import ArtistCard from '@/components/ArtistCard/index.vue'
+import ArtistCard from '@/components/CardArtist/index.vue'
 
 export default {
   name: 'Track',
