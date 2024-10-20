@@ -26,6 +26,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 1.6rem;
 
   &__title {
     margin: 1.6rem 0;

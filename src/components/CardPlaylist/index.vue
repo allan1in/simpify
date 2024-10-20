@@ -39,7 +39,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.6rem 0;
+  padding: 1.6rem;
   cursor: pointer;
 
   &:hover {
@@ -47,7 +47,7 @@ export default {
   }
 
   &__img-wrapper {
-    width: 85%;
+    width: 100%;
     aspect-ratio: 1 / 1;
     border-radius: $border-radius-default;
     overflow: hidden;
@@ -65,7 +65,7 @@ export default {
   }
 
   &__name-wrapper {
-    width: 85%;
+    width: 100%;
     padding-top: 1.2rem;
 
     &__name {
@@ -76,7 +76,7 @@ export default {
   }
 
   &__info-wrapper {
-    width: 85%;
+    width: 100%;
 
     &__info {
       font-size: 1.4rem;

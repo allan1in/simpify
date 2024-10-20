@@ -55,10 +55,10 @@ export default {
   min-height: inherit;
 
   &__content {
-    padding: 2.4rem;
+    padding: 1.6rem;
 
     &__msg {
-      padding-bottom: 2.4rem;
+      padding-bottom: 1.6rem;
 
       &__total {
         @include titleStyles;

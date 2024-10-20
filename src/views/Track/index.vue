@@ -101,12 +101,12 @@ export default {
 <style lang="scss" scoped>
 .track-container {
   &__cover {
-    padding: 2rem;
+    padding: 3.2rem;
     background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
     display: flex;
     align-items: end;
     justify-content: start;
-    gap: 2.5rem;
+    gap: 3.2rem;
 
     &__img-wrapper {
       flex-shrink: 0;
@@ -153,7 +153,7 @@ export default {
   }
 
   &__content {
-    padding: 2.4rem;
+    padding: 1.6rem;
 
     &__artists {
       display: grid;

@@ -22,6 +22,7 @@ export default {
 
 <style lang="scss" scoped>
 .list-header {
+  margin: 1.6rem;
   padding: 0 2.4rem;
   display: flex;
   height: 3.6rem;
@@ -29,7 +30,6 @@ export default {
   font-size: 1.4rem;
   color: $color-font-secondary;
   border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
-  margin: 1.6rem 0;
 
   &__num-wrapper {
     flex-basis: 3.6rem;

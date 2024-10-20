@@ -145,7 +145,7 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 50%;
-    padding: 6rem 2.4rem;
+    padding: 6.4rem 3.2rem;
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -170,9 +170,9 @@ export default {
   }
 
   &__content {
-    padding: 2.4rem;
+    padding: 1.6rem;
     &__popular {
-      padding: 2.4rem 0;
+      padding: 1.6rem 0;
     }
   }
 }

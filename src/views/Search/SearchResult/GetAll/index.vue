@@ -133,11 +133,11 @@ export default {
   min-height: inherit;
 
   &__content {
-    padding: 2.4rem;
+    padding: 1.6rem;
 
     &__songs {
       &__title {
-        padding-bottom: 2.4rem;
+        padding-bottom: 1.6rem;
 
         @include titleStyles;
       }

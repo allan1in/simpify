@@ -48,7 +48,7 @@ export default {
 
 <style lang="scss" scoped>
 .artist-all-singles {
-  padding: 2.4rem;
+  padding: 1.6rem;
 
   &__results {
     display: grid;

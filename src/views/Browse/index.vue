@@ -63,7 +63,7 @@ $color-bg-cover: hsl(random(360), 40%, 50%);
 .browse-container {
   &__cover {
     background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
-    padding: 4.8rem 2.4rem;
+    padding: 4.8rem 3.2rem;
 
     &__title {
       font-size: 8rem;
@@ -74,7 +74,7 @@ $color-bg-cover: hsl(random(360), 40%, 50%);
   }
 
   &__content {
-    padding: 2.4rem;
+    padding: 1.6rem;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
   }

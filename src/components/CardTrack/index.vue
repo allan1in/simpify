@@ -94,6 +94,7 @@ export default {
 
 <style lang="scss" scoped>
 .track-card {
+  margin: 0 1.6rem;
   padding: 0 2.4rem;
   display: flex;
   height: 5.6rem;
