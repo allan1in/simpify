@@ -38,6 +38,8 @@ export default {
   overflow: hidden;
   cursor: pointer;
 
+  @include transition;
+
   &__cover-wrapper {
     height: 100%;
     aspect-ratio: 1 / 1;

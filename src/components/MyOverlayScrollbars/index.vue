@@ -1,5 +1,6 @@
 <template>
   <OverlayScrollbarsComponent
+    @os-scroll="onScroll"
     :element="osElement"
     :options="{
       scrollbars: {
@@ -28,6 +29,14 @@ export default {
     osElement: {
       type: String,
       required: true
+    }
+  },
+  methods: {
+    onScroll(instance, event) {
+      console.log(
+        event.srcElement.clientHeight + event.srcElement.scrollTop >=
+          event.srcElement.scrollHeight - 100
+      )
     }
   }
 }

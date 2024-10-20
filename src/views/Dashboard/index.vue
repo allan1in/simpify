@@ -117,7 +117,7 @@ export default {
       padding: 1.6rem;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(min(30rem, 100%), 1fr));
-      gap: $gutter;
+      gap: calc($gutter * 2);
     }
   }
 
