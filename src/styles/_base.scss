@@ -23,6 +23,7 @@ button {
   border: none;
   cursor: pointer;
   background-color: transparent;
+  color: $color-font-primary;
 }
 
 input {
@@ -49,4 +50,8 @@ a {
 
 h1 {
   line-height: 1.2;
+}
+
+ul {
+  list-style: none;
 }

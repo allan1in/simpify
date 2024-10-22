@@ -40,7 +40,6 @@ service.interceptors.response.use(
 
     // Bad or expired token
     if (error.status === 401) {
-      alert('Bad or expired token, please login again')
       window.localStorage.clear()
       router.push({ name: 'Login' })
     }

@@ -9,7 +9,8 @@ export const useUserStore = defineStore('user', {
     refresh_in: localStorage.getItem('refresh_in') || null,
     expires: localStorage.getItem('expires') || null,
     display_name: '',
-    avatar: ''
+    avatar: '',
+    uid: ''
   }),
   actions: {
     async getToken(code) {
@@ -54,6 +55,11 @@ export const useUserStore = defineStore('user', {
 
       this.avatar = res.images[0].url
       this.display_name = res.display_name
+      this.uid = res.id
+    },
+    logOut() {
+      window.localStorage.clear()
+      window.location.reload()
     }
   }
 })

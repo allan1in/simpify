@@ -45,7 +45,7 @@
         </div>
       </div>
     </div>
-    <div class="nav-bar__right">
+    <DropDown class="nav-bar__right" top="5.6rem">
       <button class="nav-bar__right__photo-wrapper">
         <img
           class="nav-bar__right__photo-wrapper__photo"
@@ -54,7 +54,18 @@
           :title="display_name"
         />
       </button>
-    </div>
+      <template #dropDownItems>
+        <DropDownItem
+          toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account"
+          >Account</DropDownItem
+        >
+        <DropDownItem :to="{ name: 'User', params: { userId: uid } }">Profile</DropDownItem>
+        <DropDownItem toExternal="https://www.spotify.com/us/premium/?ref=web_loggedin_upgrade_menu"
+          >Upgrade to Premium</DropDownItem
+        >
+        <DropDownItem :topLine="true" @click.prevent="logOut">Log out</DropDownItem>
+      </template>
+    </DropDown>
   </nav>
 </template>
 
@@ -67,7 +78,9 @@ import IconHomeActive from '@/components/Icons/IconHomeActive.vue'
 import IconPrimaryLogo from '@/components/Icons/IconPrimaryLogo.vue'
 import IconSearch from '@/components/Icons/IconSearch.vue'
 import { useUserStore } from '@/stores/user'
-import { mapState } from 'pinia'
+import { mapActions, mapState } from 'pinia'
+import DropDown from '@/components/DropDown/index.vue'
+import DropDownItem from '@/components/DropDownItem/index.vue'
 
 export default {
   name: 'NavBar',
@@ -78,10 +91,12 @@ export default {
     IconSearch,
     IconBrowse,
     IconBrowseActive,
-    IconClose
+    IconClose,
+    DropDown,
+    DropDownItem
   },
   computed: {
-    ...mapState(useUserStore, ['avatar', 'display_name'])
+    ...mapState(useUserStore, ['avatar', 'display_name', 'uid'])
   },
   data() {
     return {
@@ -110,7 +125,8 @@ export default {
           params: { inputContent: this.inputContent }
         })
       }
-    }
+    },
+    ...mapActions(useUserStore, ['logOut'])
   },
   watch: {
     // Set data values by route
