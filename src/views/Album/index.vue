@@ -1,5 +1,5 @@
 <template>
-  <Container :loading>
+  <Container :loading @load-more="getTracks">
     <div class="album-container">
       <div class="album-container__cover">
         <div class="album-container__cover__img-wrapper">
@@ -64,7 +64,7 @@ import Container from '@/components/Container/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import TrackCard from '@/components/CardTrack/index.vue'
-import { getAlbum, getTracks } from '@/api/album'
+import { getAlbum, getTracks, getNextTracks } from '@/api/album'
 import { timeFormatAlbum } from '@/utils/time_format'
 
 export default {
@@ -79,8 +79,12 @@ export default {
     return {
       id: this.$route.params.albumId,
       album: {},
-      tracks: {},
-      loading: false
+      tracks: [],
+      loading: false,
+      loadMore: false,
+      limit: 14,
+      offset: 0,
+      next: ''
     }
   },
   methods: {
@@ -97,12 +101,28 @@ export default {
       this.album = res
     },
     async getTracks() {
-      const params = {
-        limit: 50,
-        offset: 0
+      if (!this.loadMore && this.next !== null) {
+        let res
+        this.loadMore = true
+
+        if (this.next === '') {
+          const params = {
+            limit: this.limit,
+            offset: this.offset
+          }
+          res = (await getTracks(this.id, params)).data
+        } else {
+          let path = this.next
+          res = (await getNextTracks(this.id, path.slice(path.indexOf('?') + 1))).data
+        }
+
+        let newVals = res.items
+        let oldVals = JSON.parse(JSON.stringify(this.tracks))
+        this.tracks = [...oldVals, ...newVals]
+        this.next = res.next
+
+        this.loadMore = false
       }
-      const res = (await getTracks(this.id, params)).data.items
-      this.tracks = res
     }
   },
   watch: {

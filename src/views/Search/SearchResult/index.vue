@@ -1,9 +1,9 @@
 <template>
-  <MyOverlayScrollbars os-element="main">
+  <MyOverlayScrollbars os-element="main" @load-more="toggleLoadMore">
     <div class="search-container">
       <TopBar />
       <section class="search-container__search-content">
-        <RouterView />
+        <RouterView :load-more="loadMore" @load-more-finish="toggleLoadMore" />
       </section>
     </div>
   </MyOverlayScrollbars>
@@ -22,12 +22,18 @@ export default {
         album: undefined,
         artist: undefined,
         playlist: undefined
-      }
+      },
+      loadMore: false
     }
   },
   components: {
     TopBar,
     MyOverlayScrollbars
+  },
+  methods: {
+    toggleLoadMore(trigger = true) {
+      this.loadMore = trigger
+    }
   }
 }
 </script>

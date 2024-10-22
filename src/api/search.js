@@ -59,3 +59,10 @@ export function searchPlaylists(params) {
     }
   })
 }
+
+export function searchNextPage(path) {
+  return request({
+    url: `/search?${path}`,
+    method: 'get'
+  })
+}

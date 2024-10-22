@@ -1,5 +1,5 @@
 <template>
-  <Container :loading>
+  <Container :loading @load-more="getPlaylists">
     <div class="browse-container">
       <div class="browse-container__cover">
         <h1 class="browse-container__cover__title">{{ category.name }}</h1>
@@ -14,7 +14,7 @@
 <script>
 import Container from '@/components/Container/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
-import { getCategory, getCategoryPlaylists } from '@/api/browse.js'
+import { getCategory, getCategoryPlaylists, getNextCategoryPlaylists } from '@/api/browse.js'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
 
 export default {
@@ -28,7 +28,11 @@ export default {
     return {
       loading: true,
       category: {},
-      playlists: {}
+      playlists: [],
+      limit: 28,
+      offset: 0,
+      next: '',
+      loadMore: false
     }
   },
   methods: {
@@ -42,13 +46,36 @@ export default {
       this.category = res
     },
     async getPlaylists() {
-      const params = {
-        limit: 28,
-        offset: 0
+      if (!this.loadMore && this.next !== null) {
+        let res
+        this.loadMore = true
+
+        if (this.next === '') {
+          const params = {
+            limit: this.limit,
+            offset: this.offset
+          }
+          res = (await getCategoryPlaylists(this.$route.params.categoryId, params)).data.playlists
+        } else {
+          let path = this.next
+          res = (
+            await getNextCategoryPlaylists(
+              this.$route.params.categoryId,
+              path.slice(path.indexOf('?') + 1)
+            )
+          ).data.playlists
+        }
+
+        let newVals = res.items
+        let oldVals = JSON.parse(JSON.stringify(this.playlists))
+        this.playlists = [...oldVals, ...newVals]
+
+        this.next = res.next
+        this.offset = res.offset + res.limit
+
+        this.loadMore = false
+        this.loading = false
       }
-      const res = (await getCategoryPlaylists(this.$route.params.categoryId, params)).data.playlists
-        .items
-      this.playlists = res
     }
   },
   created() {

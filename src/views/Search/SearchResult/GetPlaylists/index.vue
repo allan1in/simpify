@@ -1,13 +1,8 @@
 <template>
   <main v-if="!loading" class="album-container">
     <div class="album-container__content">
-      <TitleSimple :title="'Playlists'">
-        <template #before-title>{{
-          playlists.total === 1000 ? '999+' : playlists.total + ' '
-        }}</template>
-      </TitleSimple>
       <div class="album-container__content__results">
-        <PlaylistCard v-for="item in playlists.items" :key="item.id" :item="item" />
+        <PlaylistCard v-for="item in playlists" :key="item.id" :item="item" />
       </div>
     </div>
   </main>
@@ -15,38 +10,78 @@
 </template>
 
 <script>
-import { searchPlaylists } from '@/api/search'
+import { searchPlaylists, searchNextPage } from '@/api/search'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
-import TitleSimple from '@/components/TitleSimple/index.vue'
 import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'GetPlaylists',
   data() {
     return {
-      playlists: {},
-      loading: true
+      playlists: [],
+      loading: true,
+      limit: 28,
+      offset: 0,
+      next: ''
+    }
+  },
+  // https://danyal.dk/blog/2022/12/05/vuejs-3-emit-the-warning-extraneous-non-emits-event-listeners/
+  emits: ['loadMoreFinish'],
+  props: {
+    loadMore: {
+      type: Boolean,
+      require: true,
+      default: false
+    }
+  },
+  props: {
+    loadMore: {
+      type: Boolean,
+      require: true
     }
   },
   components: {
     PlaylistCard,
-    TitleSimple,
     Loading
   },
   methods: {
     async getPlaylists() {
-      const params = {
-        q: this.$route.params.inputContent,
-        limit: 28,
-        offset: 0
+      if (this.next != null) {
+        let res
+
+        if (this.next === '') {
+          const params = {
+            q: this.$route.params.inputContent,
+            limit: this.limit,
+            offset: this.offset
+          }
+          res = (await searchPlaylists(params)).data.playlists
+        } else {
+          let path = this.next
+          res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).data.playlists
+        }
+
+        let newVals = res.items
+        let oldVals = JSON.parse(JSON.stringify(this.playlists))
+
+        this.playlists = [...oldVals, ...newVals]
+        this.next = res.next
+        this.offset = res.limit + res.offset
+
+        this.$emit('loadMoreFinish', false)
+        this.loading = false
       }
-      const res = (await searchPlaylists(params)).data.playlists
-      this.playlists = res
-      this.loading = false
     }
   },
-  mounted() {
+  created() {
     this.getPlaylists()
+  },
+  watch: {
+    loadMore(newVal, oldVal) {
+      if (newVal) {
+        this.getPlaylists()
+      }
+    }
   }
 }
 </script>

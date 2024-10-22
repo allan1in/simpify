@@ -34,6 +34,13 @@ export function getAlbums(id, params) {
   })
 }
 
+export function getNextAlbums(id, path) {
+  return request({
+    url: `/artists/${id}/albums?${path}`,
+    method: 'get'
+  })
+}
+
 export function getSingles(id, params) {
   return request({
     url: `/artists/${id}/albums`,
@@ -46,6 +53,13 @@ export function getSingles(id, params) {
   })
 }
 
+export function getNextSingles(id, path) {
+  return request({
+    url: `/artists/${id}/albums?${path}`,
+    method: 'get'
+  })
+}
+
 export function getAppearsOn(id, params) {
   return request({
     url: `/artists/${id}/albums`,
@@ -55,5 +69,12 @@ export function getAppearsOn(id, params) {
       limit: params.limit,
       offset: params.offset
     }
+  })
+}
+
+export function getNextAppearsOn(id, path) {
+  return request({
+    url: `/artists/${id}/albums?${path}`,
+    method: 'get'
   })
 }

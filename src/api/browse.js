@@ -8,6 +8,13 @@ export function getSeveralCategories(params) {
   })
 }
 
+export function getNextSeveralCategories(path) {
+  return request({
+    url: `/browse/categories?${path}`,
+    method: 'get'
+  })
+}
+
 export function getCategory(id, params) {
   return request({
     url: `/browse/categories/${id}`,
@@ -24,10 +31,24 @@ export function getCategoryPlaylists(id, params) {
   })
 }
 
+export function getNextCategoryPlaylists(id, path) {
+  return request({
+    url: `/browse/categories/${id}/playlists?${path}`,
+    method: 'get'
+  })
+}
+
 export function getFeaturedPlaylists(params) {
   return request({
     url: `/browse/featured-playlists`,
     method: 'get',
     params
+  })
+}
+
+export function getNextFeaturedPlaylists(path) {
+  return request({
+    url: `/browse/featured-playlists?${path}`,
+    method: 'get'
   })
 }

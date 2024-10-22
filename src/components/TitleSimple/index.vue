@@ -1,8 +1,6 @@
 <template>
   <h1 class="title-simple">
-    <slot name="before-title"></slot>
     {{ title }}
-    <slot name="after-title"></slot>
   </h1>
 </template>
 

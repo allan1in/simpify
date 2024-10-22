@@ -1,5 +1,5 @@
 <template>
-  <Container :loading>
+  <Container :loading @load-more="getAppearsOn">
     <div class="artist-all-appears-on">
       <TitleSimple :title="'Appears On'" />
       <div class="artist-all-appears-on__results">
@@ -12,7 +12,7 @@
 <script>
 import AlbumCard from '@/components/CardAlbum/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
-import { getAppearsOn } from '@/api/artist'
+import { getAppearsOn, getNextAppearsOn } from '@/api/artist'
 import Container from '@/components/Container/index.vue'
 
 export default {
@@ -25,19 +25,40 @@ export default {
   },
   data() {
     return {
-      appearsOn: {},
-      loading: true
+      id: this.$route.params.artistId,
+      appearsOn: [],
+      loading: true,
+      limit: 14,
+      offset: 0,
+      next: '',
+      loadMore: false
     }
   },
   methods: {
     async getAppearsOn() {
-      const params = {
-        limit: 28,
-        offset: 0
+      if (!this.loadMore && this.next !== null) {
+        let res
+        this.loadMore = true
+
+        if (this.next === '') {
+          const params = {
+            limit: this.limit,
+            offset: this.offset
+          }
+          res = (await getAppearsOn(this.id, params)).data
+        } else {
+          let path = this.next
+          res = (await getNextAppearsOn(this.id, path.slice(path.indexOf('?') + 1))).data
+        }
+
+        let newVals = res.items
+        let oldVals = JSON.parse(JSON.stringify(this.appearsOn))
+        this.appearsOn = [...oldVals, ...newVals]
+        this.next = res.next
+
+        this.loadMore = false
+        this.loading = false
       }
-      const res = (await getAppearsOn(this.$route.params.artistId, params)).data.items
-      this.appearsOn = res
-      this.loading = false
     }
   },
   created() {

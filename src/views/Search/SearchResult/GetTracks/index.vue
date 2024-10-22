@@ -1,11 +1,8 @@
 <template>
   <main v-if="!loading" class="track-container">
     <div class="track-container__content">
-      <TitleSimple :title="'Tracks'">
-        <template #before-title>{{ tracks.total + ' ' }}</template>
-      </TitleSimple>
       <TrackListHeader />
-      <TrackCard v-for="(item, index) in tracks.items" :key="index" :item="item" :index="index" />
+      <TrackCard v-for="(item, index) in tracks" :key="index" :item="item" :index="index" />
     </div>
   </main>
   <Loading :loading />
@@ -14,8 +11,7 @@
 <script>
 import TrackCard from '@/components/CardTrack/index.vue'
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
-import { searchTracks } from '@/api/search'
-import TitleSimple from '@/components/TitleSimple/index.vue'
+import { searchTracks, searchNextPage } from '@/api/search'
 import Loading from '@/components/Loading/index.vue'
 
 export default {
@@ -23,29 +19,64 @@ export default {
   components: {
     TrackCard,
     TrackListHeader,
-    TitleSimple,
     Loading
   },
   data() {
     return {
-      tracks: {},
-      loading: true
+      tracks: [],
+      loading: true,
+      limit: 14,
+      offset: 0,
+      next: ''
+    }
+  },
+  // https://danyal.dk/blog/2022/12/05/vuejs-3-emit-the-warning-extraneous-non-emits-event-listeners/
+  emits: ['loadMoreFinish'],
+  props: {
+    loadMore: {
+      type: Boolean,
+      require: true,
+      default: false
     }
   },
   methods: {
     async getTracks() {
-      const params = {
-        q: this.$route.params.inputContent,
-        limit: 28,
-        offset: 0
+      if (this.next != null) {
+        let res
+
+        if (this.next === '') {
+          const params = {
+            q: this.$route.params.inputContent,
+            limit: this.limit,
+            offset: this.offset
+          }
+          res = (await searchTracks(params)).data.tracks
+        } else {
+          let path = this.next
+          res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).data.tracks
+        }
+
+        let newVals = res.items
+        let oldVals = JSON.parse(JSON.stringify(this.tracks))
+
+        this.tracks = [...oldVals, ...newVals]
+        this.next = res.next
+        this.offset = res.limit + res.offset
+
+        this.$emit('loadMoreFinish', false)
+        this.loading = false
       }
-      const res = (await searchTracks(params)).data.tracks
-      this.tracks = res
-      this.loading = false
     }
   },
-  mounted() {
+  created() {
     this.getTracks()
+  },
+  watch: {
+    loadMore(newVal, oldVal) {
+      if (newVal) {
+        this.getTracks()
+      }
+    }
   }
 }
 </script>

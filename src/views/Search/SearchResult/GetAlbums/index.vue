@@ -1,11 +1,8 @@
 <template>
   <main v-if="!loading" class="album-container">
     <div class="album-container__content">
-      <TitleSimple :title="'Albums'">
-        <template #before-title>{{ albums.total + ' ' }}</template>
-      </TitleSimple>
       <div class="album-container__content__results">
-        <AlbumCard v-for="item in albums.items" :key="item.id" :item="item" />
+        <AlbumCard v-for="item in albums" :key="item.id" :item="item" />
       </div>
     </div>
   </main>
@@ -13,38 +10,72 @@
 </template>
 
 <script>
-import { searchAlbums } from '@/api/search'
+import { searchAlbums, searchNextPage } from '@/api/search'
 import AlbumCard from '@/components/CardAlbum/index.vue'
-import TitleSimple from '@/components/TitleSimple/index.vue'
 import Loading from '@/components/Loading/index.vue'
 
 export default {
   name: 'GetAlbums',
   data() {
     return {
-      albums: {},
-      loading: true
+      albums: [],
+      loading: true,
+      limit: 28,
+      offset: 0,
+      next: ''
+    }
+  },
+  // https://danyal.dk/blog/2022/12/05/vuejs-3-emit-the-warning-extraneous-non-emits-event-listeners/
+  emits: ['loadMoreFinish'],
+  props: {
+    loadMore: {
+      type: Boolean,
+      require: true,
+      default: false
     }
   },
   components: {
     AlbumCard,
-    TitleSimple,
     Loading
   },
   methods: {
     async getAlbums() {
-      const params = {
-        q: this.$route.params.inputContent,
-        limit: 28,
-        offset: 0
+      if (this.next != null) {
+        let res
+
+        if (this.next === '') {
+          const params = {
+            q: this.$route.params.inputContent,
+            limit: this.limit,
+            offset: this.offset
+          }
+          res = (await searchAlbums(params)).data.albums
+        } else {
+          let path = this.next
+          res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).data.albums
+        }
+
+        let newVals = res.items
+        let oldVals = JSON.parse(JSON.stringify(this.albums))
+
+        this.albums = [...oldVals, ...newVals]
+        this.next = res.next
+        this.offset = res.limit + res.offset
+
+        this.$emit('loadMoreFinish', false)
+        this.loading = false
       }
-      const res = (await searchAlbums(params)).data.albums
-      this.albums = res
-      this.loading = false
     }
   },
-  mounted() {
+  created() {
     this.getAlbums()
+  },
+  watch: {
+    loadMore(newVal, oldVal) {
+      if (newVal) {
+        this.getAlbums()
+      }
+    }
   }
 }
 </script>

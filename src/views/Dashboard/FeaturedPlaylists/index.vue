@@ -1,5 +1,5 @@
 <template>
-  <Container :loading>
+  <Container :loading @load-more="getPlaylists">
     <div class="featured-playlists-container">
       <TitleSimple title="Featured Playlists" />
       <div class="featured-playlists-container__content">
@@ -13,7 +13,7 @@
 import Container from '@/components/Container/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
 import CardPlaylist from '@/components/CardPlaylist/index.vue'
-import { getFeaturedPlaylists } from '@/api/browse'
+import { getFeaturedPlaylists, getNextFeaturedPlaylists } from '@/api/browse'
 
 export default {
   name: 'FeaturedPlaylists',
@@ -25,18 +25,40 @@ export default {
   data() {
     return {
       loading: true,
-      playlists: {}
+      playlists: [],
+      limit: 28,
+      offset: 0,
+      next: '',
+      loadMore: false
     }
   },
   methods: {
     async getPlaylists() {
-      const params = {
-        limit: 28,
-        offset: 0
+      if (!this.loadMore && this.next !== null) {
+        let res
+        this.loadMore = true
+
+        if (this.next === '') {
+          const params = {
+            limit: this.limit,
+            offset: this.offset
+          }
+          res = (await getFeaturedPlaylists(params)).data.playlists
+        } else {
+          let path = this.next
+          res = (await getNextFeaturedPlaylists(path.slice(path.indexOf('?') + 1))).data.playlists
+        }
+
+        let newVals = res.items
+        let oldVals = JSON.parse(JSON.stringify(this.playlists))
+        this.playlists = [...oldVals, ...newVals]
+
+        this.next = res.next
+        this.offset = res.offset + res.limit
+
+        this.loadMore = false
+        this.loading = false
       }
-      const res = (await getFeaturedPlaylists(params)).data.playlists.items
-      this.playlists = res
-      this.loading = false
     }
   },
   created() {

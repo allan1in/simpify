@@ -1,5 +1,5 @@
 <template>
-  <Container :loading>
+  <Container :loading @load-more="getNewReleases">
     <div class="dashboard-container">
       <div class="dashboard-container__top-songs">
         <TitleSimple title="Top Songs" />
@@ -39,7 +39,7 @@ import AlbumCard from '@/components/CardAlbum/index.vue'
 import CardHorizontal from '@/components/CardHorizontal/index.vue'
 import { getFeaturedPlaylists } from '@/api/browse'
 import { getUserTopArtists, getUserTopSongs } from '@/api/user'
-import { getNewReleases } from '@/api/album'
+import { getNewReleases, getNextNewReleases } from '@/api/album'
 
 export default {
   name: 'Dashboard',
@@ -55,10 +55,14 @@ export default {
   data() {
     return {
       loading: true,
-      playlists: {},
-      artists: {},
-      albums: {},
-      tracks: {}
+      playlists: [],
+      artists: [],
+      albums: [],
+      tracks: [],
+      limit: 28,
+      offset: 0,
+      next: '',
+      loadMore: false
     }
   },
   methods: {
@@ -94,12 +98,30 @@ export default {
       this.artists = res
     },
     async getNewReleases() {
-      const params = {
-        limit: 28,
-        offset: 0
+      if (!this.loadMore && this.next !== null) {
+        let res
+        this.loadMore = true
+
+        if (this.next === '') {
+          const params = {
+            limit: this.limit,
+            offset: this.offset
+          }
+          res = (await getNewReleases(params)).data.albums
+        } else {
+          let path = this.next
+          res = (await getNextNewReleases(path.slice(path.indexOf('?') + 1))).data.albums
+        }
+
+        let newVals = res.items
+        let oldVals = JSON.parse(JSON.stringify(this.albums))
+        this.albums = [...oldVals, ...newVals]
+
+        this.next = res.next
+        this.offset = res.offset + res.limit
+
+        this.loadMore = false
       }
-      const res = (await getNewReleases(params)).data.albums.items
-      this.albums = res
     }
   },
   created() {

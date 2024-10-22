@@ -1,5 +1,5 @@
 <template>
-  <Container :loading>
+  <Container :loading @load-more="getAll">
     <div class="search-container">
       <div class="search-container__title-wrapper">
         <h1 class="search-container__title-wrapper__title">Browse All</h1>
@@ -26,7 +26,7 @@
 
 <script>
 import Container from '@/components/Container/index.vue'
-import { getSeveralCategories, getCategoryPlaylists } from '@/api/browse'
+import { getSeveralCategories, getCategoryPlaylists, getNextSeveralCategories } from '@/api/browse'
 
 export default {
   name: 'Search',
@@ -36,25 +36,56 @@ export default {
   data() {
     return {
       loading: true,
-      categories: {}
+      categories: [],
+      limit: 28,
+      next: '',
+      offset: 0,
+      loadMore: false
     }
   },
   methods: {
     async getAll() {
-      await this.getSeveralCategories()
-      await this.getCategoriesCovers()
-      this.loading = false
+      if (!this.loadMore && this.next !== null) {
+        this.loadMore = true
+
+        await this.getSeveralCategories()
+        await this.getCategoriesCovers()
+
+        this.loadMore = false
+        this.loading = false
+      }
     },
     async getSeveralCategories() {
-      const params = {
-        limit: 28,
-        offset: 0
+      let res
+      this.loadMore = true
+
+      if (this.next === '') {
+        const params = {
+          limit: this.limit,
+          offset: this.offset
+        }
+        res = (await getSeveralCategories(params)).data.categories
+      } else {
+        let path = this.next
+        res = (await getNextSeveralCategories(path.slice(path.indexOf('?') + 1))).data.categories
       }
-      const res = (await getSeveralCategories(params)).data.categories.items
-      this.categories = res
+
+      let newVals = res.items
+      let oldVals = JSON.parse(JSON.stringify(this.categories))
+      this.categories = [...oldVals, ...newVals]
+
+      this.next = res.next
+      this.offset = res.offset + res.limit
+
+      this.loadMore = false
     },
     async getCategoriesCovers() {
-      this.categories.forEach(async (item) => {
+      this.categories.forEach(async (item, index) => {
+        // Skip elements in the array that already have a cover property
+        if (index + 1 <= this.offset - this.limit) {
+          return
+        }
+
         const params = {
           limit: 1,
           offset: 0

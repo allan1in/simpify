@@ -1,5 +1,5 @@
 <template>
-  <MyOverlayScrollbars os-element="main">
+  <MyOverlayScrollbars os-element="main" @load-more="$emit('loadMore')">
     <div class="container">
       <div v-if="!loading">
         <slot></slot>

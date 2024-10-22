@@ -1,5 +1,5 @@
 <template>
-  <Container :loading>
+  <Container :loading @load-more="getAlbums">
     <div class="artist-all-albums">
       <TitleSimple :title="'Albums'" />
       <div class="artist-all-albums__results">
@@ -12,7 +12,7 @@
 <script>
 import AlbumCard from '@/components/CardAlbum/index.vue'
 import TitleSimple from '@/components/TitleSimple/index.vue'
-import { getAlbums } from '@/api/artist'
+import { getAlbums, getNextAlbums } from '@/api/artist'
 import Container from '@/components/Container/index.vue'
 
 export default {
@@ -25,19 +25,40 @@ export default {
   },
   data() {
     return {
-      albums: {},
-      loading: true
+      id: this.$route.params.artistId,
+      albums: [],
+      loading: true,
+      limit: 14,
+      offset: 0,
+      next: '',
+      loadMore: false
     }
   },
   methods: {
     async getAlbums() {
-      const params = {
-        limit: 28,
-        offset: 0
+      if (!this.loadMore && this.next !== null) {
+        let res
+        this.loadMore = true
+
+        if (this.next === '') {
+          const params = {
+            limit: this.limit,
+            offset: this.offset
+          }
+          res = (await getAlbums(this.id, params)).data
+        } else {
+          let path = this.next
+          res = (await getNextAlbums(this.id, path.slice(path.indexOf('?') + 1))).data
+        }
+
+        let newVals = res.items
+        let oldVals = JSON.parse(JSON.stringify(this.albums))
+        this.albums = [...oldVals, ...newVals]
+        this.next = res.next
+
+        this.loadMore = false
+        this.loading = false
       }
-      const res = (await getAlbums(this.$route.params.artistId, params)).data.items
-      this.albums = res
-      this.loading = false
     }
   },
   created() {
