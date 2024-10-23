@@ -55,3 +55,9 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+
+## TODO
+
+1. srcset in images
+2. undefined backfall
+3. arrows in navbar

@@ -1,12 +1,9 @@
 <template>
   <Container :loading>
     <div class="artist-container">
-      <div
-        class="artist-container__cover"
-        :style="{
-          'background-image': `url(${artist.images.length !== 0 ? artist.images[0].url : ''})`
-        }"
-      >
+      <div class="artist-container__cover" :style="{
+        'background-image': `url(${artist.images.length !== 0 ? artist.images[0].url : ''})`
+      }">
         <h1 class="artist-container__cover__title">{{ artist.name }}</h1>
         <div class="artist-container__cover__followers">
           {{
@@ -20,39 +17,19 @@
           <TitleShowAll :title="'Popular'" />
           <div class="artist-container__content__popular__content">
             <TrackListHeader />
-            <TrackCard
-              v-for="(track, index) in tracks"
-              :key="track.id"
-              :index="index"
-              :showArtists="false"
-              :item="track"
-            />
+            <TrackCard v-for="(track, index) in tracks" :key="track.id" :index="index" :showArtists="false"
+              :item="track" />
           </div>
         </div>
-        <TitleWithPartialItems
-          v-if="albums.length !== 0"
-          :router-name="'ArtistAllAlbums'"
-          :limit="albums_limit"
-          :total="albums_total"
-          :title="'Albums'"
-          :album-card-props="{ items: albums, showAlbumType: true, showArtists: false }"
-        />
-        <TitleWithPartialItems
-          v-if="singles.length !== 0"
-          :router-name="'ArtistAllSingles'"
-          :limit="singles_limit"
-          :total="singles_total"
-          :title="'Singles'"
-          :album-card-props="{ items: singles, showAlbumType: true, showArtists: false }"
-        />
-        <TitleWithPartialItems
-          v-if="appearsOn.length !== 0"
-          :router-name="'ArtistAllAppearsOn'"
-          :limit="appearsOn_limit"
-          :total="appearsOn_total"
-          :title="'Appears On'"
-          :album-card-props="{ items: appearsOn, showAlbumType: true, showArtists: false }"
-        />
+        <TitleWithPartialItems v-if="albums.length !== 0" :router-name="'ArtistAllAlbums'" :limit="albums_limit"
+          :total="albums_total" :title="'Albums'"
+          :album-card-props="{ items: albums, showAlbumType: true, showArtists: false }" />
+        <TitleWithPartialItems v-if="singles.length !== 0" :router-name="'ArtistAllSingles'" :limit="singles_limit"
+          :total="singles_total" :title="'Singles'"
+          :album-card-props="{ items: singles, showAlbumType: true, showArtists: false }" />
+        <TitleWithPartialItems v-if="appearsOn.length !== 0" :router-name="'ArtistAllAppearsOn'"
+          :limit="appearsOn_limit" :total="appearsOn_total" :title="'Appears On'"
+          :album-card-props="{ items: appearsOn, showAlbumType: true, showArtists: false }" />
       </div>
     </div>
   </Container>
@@ -85,17 +62,17 @@ export default {
       artist: {},
       tracks: {},
       albums: {},
-      albums_limit:7,
-      albums_offset:0,
-      albums_total:0,
+      albums_limit: 7,
+      albums_offset: 0,
+      albums_total: 0,
       singles: {},
-      singles_limit:7,
-      singles_offset:0,
-      singles_total:0,
+      singles_limit: 7,
+      singles_offset: 0,
+      singles_total: 0,
       appearsOn: {},
-      appearsOn_limit:7,
-      appearsOn_offset:0,
-      appearsOn_total:0,
+      appearsOn_limit: 7,
+      appearsOn_offset: 0,
+      appearsOn_total: 0,
       loading: true
     }
   },
@@ -160,6 +137,7 @@ export default {
 <style lang="scss" scoped>
 .artist-container {
   &__cover {
+    background-image: url("https://i.scdn.co/image/ab67616d0000b2737c20fb440980c4f2f24346c5");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 50%;
@@ -189,6 +167,7 @@ export default {
 
   &__content {
     padding: 1.6rem;
+
     &__popular {
       padding: 1.6rem 0;
     }

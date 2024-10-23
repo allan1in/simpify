@@ -19,6 +19,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 $progress-line-color: #4d4d4d;
+
 .process {
   flex: 1;
   position: relative;

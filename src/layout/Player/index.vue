@@ -2,11 +2,11 @@
   <footer class="player-bar">
     <div class="player-bar__left">
       <div class="player-bar__left__cover-wrapper">
-        <img class="player-bar__left__cover-wrapper__cover" :src="song.cover" alt="" />
+        <img class="player-bar__left__cover-wrapper__cover" :src="coverUrl" alt="" />
       </div>
       <div class="player-bar__left__msg-wrapper">
-        <div class="player-bar__left__msg-wrapper__title">{{ song.title }}</div>
-        <div class="player-bar__left__msg-wrapper__artist">{{ song.artist }}</div>
+        <div class="player-bar__left__msg-wrapper__title">{{ name }}</div>
+        <div class="player-bar__left__msg-wrapper__artist">{{ artist }}</div>
       </div>
       <!-- <button class="icon-wrapper" @click="song.isLike = !song.isLike">
         <IconInLikeSong v-if="song.isLike" />
@@ -15,18 +15,14 @@
     </div>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
-        <button
-          class="icon-wrapper"
-          :class="{ 'btn-active': isShuffle }"
-          @click="isShuffle = !isShuffle"
-        >
+        <button class="icon-wrapper" :class="{ 'btn-active': isShuffle }" @click="isShuffle = !isShuffle">
           <IconShuffle />
         </button>
         <button class="icon-wrapper">
           <IconPrevious />
         </button>
         <button class="player-bar__mid__btn-group__play" @click="isPause = !isPause">
-          <span class="icon-wrapper-round">
+          <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
             <IconPlay v-if="isPause" />
             <IconPause v-else />
           </span>
@@ -34,11 +30,7 @@
         <button class="icon-wrapper">
           <IconNext />
         </button>
-        <button
-          class="icon-wrapper"
-          :class="{ 'btn-active': isRepeat }"
-          @click="isRepeat = !isRepeat"
-        >
+        <button class="icon-wrapper" :class="{ 'btn-active': isRepeat }" @click="isRepeat = !isRepeat">
           <IconRepeat />
         </button>
       </div>
@@ -73,25 +65,11 @@
       >
         <IconConnectToDevice />
       </button> -->
-      <div class="player-bar__right__volume">
-        <button class="icon-wrapper" @click="isMute = !isMute">
-          <IconVolumeMuted v-if="isMute || volume == 0" />
-          <IconVolumeQuiet v-else-if="volume <= 33" />
-          <IconVolumeNormal v-else-if="volume <= 66" />
-          <IconVolumeLoud v-else />
-        </button>
-        <div class="player-bar__right__volume__progress-wrapper">
-          <ProcessBar :percentage="isMute ? 0 : volume" />
-        </div>
-      </div>
-      <button
-        class="icon-wrapper"
-        :class="{ 'btn-active': isMiniPlayer }"
-        @click="isMiniPlayer = !isMiniPlayer"
-      >
+      <VolumeBar :isMute="isMute" :volume="volume" @mute="isMute = !isMute" />
+      <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
       </button>
-      <button class="icon-wrapper">
+      <button class="icon-wrapper" @click="toggleFullScreemPlayer">
         <IconFullScreen />
       </button>
     </div>
@@ -106,12 +84,7 @@ import IconPlay from '@/components/Icons/IconPlay.vue'
 import IconPrevious from '@/components/Icons/IconPrevious.vue'
 import IconRepeat from '@/components/Icons/IconRepeat.vue'
 import IconShuffle from '@/components/Icons/IconShuffle.vue'
-import cover from '@/assets/cover.jfif'
-import ProcessBar from './ProcessBar/index.vue'
-import IconVolumeLoud from '@/components/Icons/IconVolumeLoud.vue'
-import IconVolumeNormal from '@/components/Icons/IconVolumeNormal.vue'
-import IconVolumeQuiet from '@/components/Icons/IconVolumeQuiet.vue'
-import IconVolumeMuted from '@/components/Icons/IconVolumeMuted.vue'
+import ProcessBar from '@/components/ProcessBar/index.vue'
 import IconNowPlayingView from '@/components/Icons/IconNowPlayingView.vue'
 import IconQueen from '@/components/Icons/IconQueen.vue'
 import IconConnectToDevice from '@/components/Icons/IconConnectToDevice.vue'
@@ -119,6 +92,10 @@ import IconLyrics from '@/components/Icons/IconLyrics.vue'
 import IconMiniPlayer from '@/components/Icons/IconMiniPlayer.vue'
 import IconFullScreen from '@/components/Icons/IconFullScreen.vue'
 import IconInLikeSong from '@/components/Icons/IconInLikeSong.vue'
+import { mapActions, mapState } from 'pinia'
+import { useAppStore } from '@/stores/app'
+import { useTrackStore } from '@/stores/track'
+import VolumeBar from '@/components/VolumeBar/index.vue'
 
 export default {
   name: 'Player',
@@ -130,10 +107,6 @@ export default {
     IconShuffle,
     IconRepeat,
     IconAddToLikeSong,
-    IconVolumeLoud,
-    IconVolumeNormal,
-    IconVolumeQuiet,
-    IconVolumeMuted,
     IconNowPlayingView,
     IconQueen,
     IconConnectToDevice,
@@ -141,29 +114,23 @@ export default {
     IconMiniPlayer,
     IconFullScreen,
     IconInLikeSong,
-    ProcessBar
+    ProcessBar,
+    VolumeBar
   },
   data() {
     return {
-      isPause: true,
-      isShuffle: false,
-      isRepeat: false,
-      isMute: false,
-      isFullScreen: false,
       isMiniPlayer: false,
       isConnectToDevice: false,
       isQueen: false,
       isLyrics: false,
-      isNowPlayingView: false,
-      song: {
-        cover: cover,
-        title: 'Airport Take Off',
-        artist: '陶喆',
-        isLike: false
-      },
-      percentage: 24,
-      volume: 66
+      isNowPlayingView: false
     }
+  },
+  computed: {
+    ...mapState(useTrackStore, ['isPause', 'isShuffle', 'isRepeat', 'isMute', 'coverUrl', 'name', 'artist', 'volume', 'percentage'])
+  },
+  methods: {
+    ...mapActions(useAppStore, ['toggleFullScreemPlayer'])
   }
 }
 </script>
@@ -178,7 +145,7 @@ $msg-artist-font-size: 1.2rem;
   fill: $color-brand;
   position: relative;
 
-  &::after {
+  &::before {
     content: '';
     display: block;
     height: 0.4rem;
@@ -218,6 +185,7 @@ $msg-artist-font-size: 1.2rem;
   height: $height-player;
   margin-top: $gutter;
   display: flex;
+  position: relative;
 
   &__left {
     flex: 3;
@@ -285,7 +253,7 @@ $msg-artist-font-size: 1.2rem;
 
         @include clickAnimation;
 
-        .icon-wrapper-round {
+        &__icon-wrapper-round {
           display: inline-block;
           fill: $color-bg-1;
           height: 1.6rem;
@@ -317,16 +285,6 @@ $msg-artist-font-size: 1.2rem;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-
-    &__volume {
-      margin-right: $gutter;
-      display: flex;
-      align-items: center;
-
-      &__progress-wrapper {
-        width: 9.3rem;
-      }
-    }
   }
 }
 </style>
