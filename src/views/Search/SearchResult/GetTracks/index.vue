@@ -25,9 +25,9 @@ export default {
     return {
       tracks: [],
       loading: true,
-      limit: 14,
-      offset: 0,
-      next: ''
+      loading_limit: 14,
+      loading_offset: 0,
+      loading_next: ''
     }
   },
   // https://danyal.dk/blog/2022/12/05/vuejs-3-emit-the-warning-extraneous-non-emits-event-listeners/
@@ -41,18 +41,18 @@ export default {
   },
   methods: {
     async getTracks() {
-      if (this.next != null) {
+      if (this.loading_next != null) {
         let res
 
-        if (this.next === '') {
+        if (this.loading_next === '') {
           const params = {
             q: this.$route.params.inputContent,
-            limit: this.limit,
-            offset: this.offset
+            limit: this.loading_limit,
+            offset: this.loading_offset
           }
           res = (await searchTracks(params)).data.tracks
         } else {
-          let path = this.next
+          let path = this.loading_next
           res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).data.tracks
         }
 
@@ -60,8 +60,7 @@ export default {
         let oldVals = JSON.parse(JSON.stringify(this.tracks))
 
         this.tracks = [...oldVals, ...newVals]
-        this.next = res.next
-        this.offset = res.limit + res.offset
+        this.loading_next = res.next
 
         this.$emit('loadMoreFinish', false)
         this.loading = false

@@ -2,25 +2,25 @@
   <Container :loading @load-more="getNewReleases">
     <div class="dashboard-container">
       <div class="dashboard-container__top-songs">
-        <TitleSimple title="Top Songs" />
+        <TitleShowAll title="Top Songs" />
         <div class="dashboard-container__top-songs__content">
           <CardHorizontal v-for="item in tracks" :item="item" />
         </div>
       </div>
       <div class="dashboard-container__featured-playlists">
-        <TitleShowAll router-name="FeaturedPlaylists" title="Featured Playlists" />
+        <TitleShowAll :router-name="playlists_total>playlists_limit?'FeaturedPlaylists':''" title="Featured Playlists" />
         <div class="dashboard-container__featured-playlists__content">
           <PlaylistCard v-for="item in playlists" :item="item" />
         </div>
       </div>
       <div class="dashboard-container__top-artists">
-        <TitleSimple title="Top Artists" />
+        <TitleShowAll title="Top Artists" />
         <div class="dashboard-container__top-artists__content">
           <ArtistCard v-for="item in artists" :item="item" />
         </div>
       </div>
       <div class="dashboard-container__new-releases">
-        <TitleSimple title="New Releases" />
+        <TitleShowAll title="New Releases" />
         <div class="dashboard-container__new-releases__content">
           <AlbumCard v-for="item in albums" :item="item" />
         </div>
@@ -31,7 +31,6 @@
 
 <script>
 import Container from '@/components/Container/index.vue'
-import TitleSimple from '@/components/TitleSimple/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
 import ArtistCard from '@/components/CardArtist/index.vue'
@@ -45,7 +44,6 @@ export default {
   name: 'Dashboard',
   components: {
     Container,
-    TitleSimple,
     PlaylistCard,
     TitleShowAll,
     ArtistCard,
@@ -56,60 +54,67 @@ export default {
     return {
       loading: true,
       playlists: [],
+      playlists_total:0,
+      playlists_limit: 7,
       artists: [],
-      albums: [],
+      artists_limit: 7,
       tracks: [],
-      limit: 28,
-      offset: 0,
-      next: '',
-      loadMore: false
+      tracks_limit: 8,
+      albums: [],
+      albums_limit: 28,
+      albums_offset: 0,
+      albums_next: '',
+      albums_loadMore: false
     }
   },
   methods: {
     async getAll() {
       await this.getUserTopSongs()
-      await this.getPlalists()
+      await this.getPlaylists()
       await this.getUserTopArtists()
       await this.getNewReleases()
       this.loading = false
     },
     async getUserTopSongs() {
       const params = {
-        limit: 8,
+        time_range:'short_term',
+        limit: this.tracks_limit,
         offset: 0
       }
       const res = (await getUserTopSongs(params)).data.items
       this.tracks = res
     },
-    async getPlalists() {
+    async getPlaylists() {
       const params = {
-        limit: 7,
+        limit: this.playlists_limit,
         offset: 0
       }
-      const res = (await getFeaturedPlaylists(params)).data.playlists.items
-      this.playlists = res
+      const res = (await getFeaturedPlaylists(params)).data.playlists
+      this.playlists = res.items
+      this.playlists_total = res.total
     },
     async getUserTopArtists() {
       const params = {
-        limit: 7,
+        time_range:'short_term',
+        limit: this.artists_limit,
         offset: 0
       }
       const res = (await getUserTopArtists(params)).data.items
       this.artists = res
     },
     async getNewReleases() {
-      if (!this.loadMore && this.next !== null) {
+      if (!this.albums_loadMore && this.albums_next !== null) {
         let res
-        this.loadMore = true
+        this.albums_loadMore = true
 
-        if (this.next === '') {
+        if (this.albums_next === '') {
           const params = {
-            limit: this.limit,
-            offset: this.offset
+            limit: this.albums_limit,
+            offset: this.albums_offset
           }
           res = (await getNewReleases(params)).data.albums
         } else {
-          let path = this.next
+          let path = this.albums_next
           res = (await getNextNewReleases(path.slice(path.indexOf('?') + 1))).data.albums
         }
 
@@ -117,10 +122,9 @@ export default {
         let oldVals = JSON.parse(JSON.stringify(this.albums))
         this.albums = [...oldVals, ...newVals]
 
-        this.next = res.next
-        this.offset = res.offset + res.limit
+        this.albums_next = res.next
 
-        this.loadMore = false
+        this.albums_loadMore = false
       }
     }
   },
@@ -138,7 +142,7 @@ export default {
     &__content {
       padding: 1.6rem;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(30rem, 100%), 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(20%, 100%), 1fr));
       gap: calc($gutter * 2);
     }
   }
@@ -148,7 +152,7 @@ export default {
   &__new-releases {
     &__content {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
     }
   }
 }

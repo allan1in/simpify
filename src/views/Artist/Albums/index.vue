@@ -1,7 +1,7 @@
 <template>
   <Container :loading @load-more="getAlbums">
     <div class="artist-all-albums">
-      <TitleSimple :title="'Albums'" />
+      <TitleShowAll :title="'Albums'" />
       <div class="artist-all-albums__results">
         <AlbumCard v-for="item in albums" :key="item.id" :item="item" />
       </div>
@@ -11,7 +11,7 @@
 
 <script>
 import AlbumCard from '@/components/CardAlbum/index.vue'
-import TitleSimple from '@/components/TitleSimple/index.vue'
+import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import { getAlbums, getNextAlbums } from '@/api/artist'
 import Container from '@/components/Container/index.vue'
 
@@ -19,7 +19,7 @@ export default {
   name: 'ArtistAllAlbums',
   components: {
     AlbumCard,
-    TitleSimple,
+    TitleShowAll,
     AlbumCard,
     Container
   },
@@ -28,35 +28,35 @@ export default {
       id: this.$route.params.artistId,
       albums: [],
       loading: true,
-      limit: 14,
-      offset: 0,
-      next: '',
-      loadMore: false
+      albums_limit: 28,
+      albums_offset: 0,
+      albums_next: '',
+      albums_loadMore: false
     }
   },
   methods: {
     async getAlbums() {
-      if (!this.loadMore && this.next !== null) {
+      if (!this.albums_loadMore && this.albums_next !== null) {
         let res
-        this.loadMore = true
+        this.albums_loadMore = true
 
-        if (this.next === '') {
+        if (this.albums_next === '') {
           const params = {
-            limit: this.limit,
-            offset: this.offset
+            limit: this.albums_limit,
+            offset: this.albums_offset
           }
           res = (await getAlbums(this.id, params)).data
         } else {
-          let path = this.next
+          let path = this.albums_next
           res = (await getNextAlbums(this.id, path.slice(path.indexOf('?') + 1))).data
         }
 
         let newVals = res.items
         let oldVals = JSON.parse(JSON.stringify(this.albums))
         this.albums = [...oldVals, ...newVals]
-        this.next = res.next
+        this.albums_next = res.next
 
-        this.loadMore = false
+        this.albums_loadMore = false
         this.loading = false
       }
     }
@@ -73,7 +73,7 @@ export default {
 
   &__results {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
   }
 }
 </style>

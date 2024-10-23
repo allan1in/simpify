@@ -1,6 +1,6 @@
 <template>
   <section class="title-with-partial-items">
-    <TitleShowAll :router-name="routerName" :title="title" />
+    <TitleShowAll :router-name="total>limit?routerName:''" :title="title" />
     <div class="title-with-partial-items__content">
       <ArtistCard
         v-if="artistCardProps"
@@ -45,11 +45,22 @@ export default {
   props: {
     routerName: {
       type: String,
-      require: true
+      require: false,
+      default:''
     },
     title: {
       type: String,
       require: true
+    },
+    limit:{
+      type: Number,
+      require: false,
+      default:0
+    },
+    total:{
+      type: Number,
+      require: false,
+      default:0
     },
     albumCardProps: {
       type: Object,
@@ -76,7 +87,7 @@ export default {
 
   &__content {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
   }
 }
 </style>

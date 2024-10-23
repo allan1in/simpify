@@ -33,25 +33,25 @@ export default {
     return {
       artists: [],
       loading: true,
-      limit: 28,
-      offset: 0,
-      next: ''
+      artists_limit: 28,
+      artists_offset: 0,
+      artists_next: ''
     }
   },
   methods: {
     async getArtists() {
-      if (this.next != null) {
+      if (this.artists_next != null) {
         let res
 
-        if (this.next === '') {
+        if (this.artists_next === '') {
           const params = {
             q: this.$route.params.inputContent,
-            limit: this.limit,
-            offset: this.offset
+            limit: this.artists_limit,
+            offset: this.artists_offset
           }
           res = (await searchArtists(params)).data.artists
         } else {
-          let path = this.next
+          let path = this.artists_next
           res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).data.artists
         }
 
@@ -59,8 +59,7 @@ export default {
         let oldVals = JSON.parse(JSON.stringify(this.artists))
 
         this.artists = [...oldVals, ...newVals]
-        this.next = res.next
-        this.offset = res.limit + res.offset
+        this.artists_next = res.next
 
         this.$emit('loadMoreFinish', false)
         this.loading = false
@@ -93,7 +92,7 @@ export default {
 
     &__results {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
     }
   }
 }

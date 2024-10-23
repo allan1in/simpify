@@ -17,7 +17,7 @@
       </div>
       <div class="artist-container__content">
         <div v-if="tracks.length !== 0" class="artist-container__content__popular">
-          <TitleSimple :title="'Popular'" />
+          <TitleShowAll :title="'Popular'" />
           <div class="artist-container__content__popular__content">
             <TrackListHeader />
             <TrackCard
@@ -32,18 +32,24 @@
         <TitleWithPartialItems
           v-if="albums.length !== 0"
           :router-name="'ArtistAllAlbums'"
+          :limit="albums_limit"
+          :total="albums_total"
           :title="'Albums'"
           :album-card-props="{ items: albums, showAlbumType: true, showArtists: false }"
         />
         <TitleWithPartialItems
           v-if="singles.length !== 0"
           :router-name="'ArtistAllSingles'"
+          :limit="singles_limit"
+          :total="singles_total"
           :title="'Singles'"
           :album-card-props="{ items: singles, showAlbumType: true, showArtists: false }"
         />
         <TitleWithPartialItems
           v-if="appearsOn.length !== 0"
           :router-name="'ArtistAllAppearsOn'"
+          :limit="appearsOn_limit"
+          :total="appearsOn_total"
           :title="'Appears On'"
           :album-card-props="{ items: appearsOn, showAlbumType: true, showArtists: false }"
         />
@@ -59,7 +65,7 @@ import { getAlbums, getAppearsOn, getArtist, getSingles, getTopTracks } from '@/
 import AlbumCard from '@/components/CardAlbum/index.vue'
 import ArtistCard from '@/components/CardArtist/index.vue'
 import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
-import TitleSimple from '@/components/TitleSimple/index.vue'
+import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import Container from '@/components/Container/index.vue'
 
 export default {
@@ -70,7 +76,7 @@ export default {
     AlbumCard,
     ArtistCard,
     TitleWithPartialItems,
-    TitleSimple,
+    TitleShowAll,
     Container
   },
   data() {
@@ -79,8 +85,17 @@ export default {
       artist: {},
       tracks: {},
       albums: {},
+      albums_limit:7,
+      albums_offset:0,
+      albums_total:0,
       singles: {},
+      singles_limit:7,
+      singles_offset:0,
+      singles_total:0,
       appearsOn: {},
+      appearsOn_limit:7,
+      appearsOn_offset:0,
+      appearsOn_total:0,
       loading: true
     }
   },
@@ -103,27 +118,30 @@ export default {
     },
     async getAlbums() {
       const params = {
-        limit: 7,
-        offset: 0
+        limit: this.albums_limit,
+        offset: this.albums_offset
       }
-      const res = (await getAlbums(this.id, params)).data.items
-      this.albums = res
+      const res = (await getAlbums(this.id, params)).data
+      this.albums = res.items
+      this.albums_total = res.total
     },
     async getSingles() {
       const params = {
-        limit: 7,
-        offset: 0
+        limit: this.singles_limit,
+        offset: this.singles_offset
       }
-      const res = (await getSingles(this.id, params)).data.items
-      this.singles = res
+      const res = (await getSingles(this.id, params)).data
+      this.singles = res.items
+      this.singles_total = res.total
     },
     async getAppearsOn() {
       const params = {
-        limit: 7,
-        offset: 0
+        limit: this.appearsOn_limit,
+        offset: this.appearsOn_offset
       }
-      const res = (await getAppearsOn(this.id, params)).data.items
-      this.appearsOn = res
+      const res = (await getAppearsOn(this.id, params)).data
+      this.appearsOn = res.items
+      this.appearsOn_total = res.total
     }
   },
   watch: {

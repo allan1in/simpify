@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="track-container__content">
-        <TitleSimple title="All Artists" />
+        <TitleShowAll title="All Artists" />
         <div class="track-container__content__artists">
           <ArtistCard v-for="artist in artists" :key="artist.id" :item="artist" />
         </div>
@@ -49,7 +49,7 @@
 
 <script>
 import Container from '@/components/Container/index.vue'
-import TitleSimple from '@/components/TitleSimple/index.vue'
+import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import { timeFormatAlbum } from '@/utils/time_format'
 import { getTrack } from '@/api/track'
 import { getSeveralArtists } from '@/api/artist'
@@ -59,7 +59,7 @@ export default {
   name: 'Track',
   components: {
     Container,
-    TitleSimple,
+    TitleShowAll,
     ArtistCard
   },
   data() {

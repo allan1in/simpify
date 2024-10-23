@@ -1,7 +1,7 @@
 <template>
   <Container :loading @load-more="getSingles">
     <div class="artist-all-singles">
-      <TitleSimple :title="'Singles'" />
+      <TitleShowAll :title="'Singles'" />
       <div class="artist-all-singles__results">
         <AlbumCard v-for="item in singles" :key="item.id" :item="item" />
       </div>
@@ -11,7 +11,7 @@
 
 <script>
 import AlbumCard from '@/components/CardAlbum/index.vue'
-import TitleSimple from '@/components/TitleSimple/index.vue'
+import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import { getSingles, getNextSingles } from '@/api/artist'
 import Container from '@/components/Container/index.vue'
 
@@ -19,7 +19,7 @@ export default {
   name: 'ArtistAllSingles',
   components: {
     AlbumCard,
-    TitleSimple,
+    TitleShowAll,
     AlbumCard,
     Container
   },
@@ -28,35 +28,35 @@ export default {
       singles: [],
       loading: true,
       id: this.$route.params.artistId,
-      limit: 14,
-      offset: 0,
-      next: '',
-      loadMore: false
+      singles_limit: 28,
+      singles_offset: 0,
+      singles_next: '',
+      singles_loadMore: false
     }
   },
   methods: {
     async getSingles() {
-      if (!this.loadMore && this.next !== null) {
+      if (!this.singles_loadMore && this.singles_next !== null) {
         let res
-        this.loadMore = true
+        this.singles_loadMore = true
 
-        if (this.next === '') {
+        if (this.singles_next === '') {
           const params = {
-            limit: this.limit,
-            offset: this.offset
+            limit: this.singles_limit,
+            offset: this.singles_offset
           }
           res = (await getSingles(this.id, params)).data
         } else {
-          let path = this.next
+          let path = this.singles_next
           res = (await getNextSingles(this.id, path.slice(path.indexOf('?') + 1))).data
         }
 
         let newVals = res.items
         let oldVals = JSON.parse(JSON.stringify(this.singles))
         this.singles = [...oldVals, ...newVals]
-        this.next = res.next
+        this.singles_next = res.next
 
-        this.loadMore = false
+        this.singles_loadMore = false
         this.loading = false
       }
     }
@@ -73,7 +73,7 @@ export default {
 
   &__results {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
   }
 }
 </style>

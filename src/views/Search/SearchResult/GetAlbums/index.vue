@@ -20,9 +20,9 @@ export default {
     return {
       albums: [],
       loading: true,
-      limit: 28,
-      offset: 0,
-      next: ''
+      albums_limit: 28,
+      albums_offset: 0,
+      albums_next: ''
     }
   },
   // https://danyal.dk/blog/2022/12/05/vuejs-3-emit-the-warning-extraneous-non-emits-event-listeners/
@@ -40,18 +40,18 @@ export default {
   },
   methods: {
     async getAlbums() {
-      if (this.next != null) {
+      if (this.albums_next != null) {
         let res
 
-        if (this.next === '') {
+        if (this.albums_next === '') {
           const params = {
             q: this.$route.params.inputContent,
-            limit: this.limit,
-            offset: this.offset
+            limit: this.albums_limit,
+            offset: this.albums_offset
           }
           res = (await searchAlbums(params)).data.albums
         } else {
-          let path = this.next
+          let path = this.albums_next
           res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).data.albums
         }
 
@@ -59,8 +59,7 @@ export default {
         let oldVals = JSON.parse(JSON.stringify(this.albums))
 
         this.albums = [...oldVals, ...newVals]
-        this.next = res.next
-        this.offset = res.limit + res.offset
+        this.albums_next = res.next
 
         this.$emit('loadMoreFinish', false)
         this.loading = false
@@ -93,7 +92,7 @@ export default {
 
     &__results {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
     }
   }
 }

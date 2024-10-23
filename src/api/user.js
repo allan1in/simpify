@@ -22,6 +22,13 @@ export function getUserPlaylists(id, params) {
   })
 }
 
+export function getNextUserPlaylists(id, path) {
+  return request({
+    url: `/users/${id}/playlists?${path}`,
+    method: 'get'
+  })
+}
+
 export function getUserTopArtists(params) {
   return request({
     url: `/me/top/artists`,

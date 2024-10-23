@@ -63,7 +63,7 @@
         <DropDownItem toExternal="https://www.spotify.com/us/premium/?ref=web_loggedin_upgrade_menu"
           >Upgrade to Premium</DropDownItem
         >
-        <DropDownItem :topLine="true" @click.prevent="logOut">Log out</DropDownItem>
+        <DropDownItem :topLine="true" @click.prevent="logout">Log out</DropDownItem>
       </template>
     </DropDown>
   </nav>
@@ -126,7 +126,7 @@ export default {
         })
       }
     },
-    ...mapActions(useUserStore, ['logOut'])
+    ...mapActions(useUserStore, ['logout'])
   },
   watch: {
     // Set data values by route

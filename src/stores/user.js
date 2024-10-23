@@ -13,7 +13,7 @@ export const useUserStore = defineStore('user', {
     uid: ''
   }),
   actions: {
-    async getToken(code) {
+    async login(code) {
       const { clientId, redirectUrl, tokenEndpoint } = settings
       const code_verifier = localStorage.getItem('code_verifier')
 
@@ -57,7 +57,7 @@ export const useUserStore = defineStore('user', {
       this.display_name = res.display_name
       this.uid = res.id
     },
-    logOut() {
+    logout() {
       window.localStorage.clear()
       window.location.reload()
     }

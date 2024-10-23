@@ -61,7 +61,6 @@
 
 <script>
 import Container from '@/components/Container/index.vue'
-import TitleSimple from '@/components/TitleSimple/index.vue'
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import TrackCard from '@/components/CardTrack/index.vue'
 import { getAlbum, getTracks, getNextTracks } from '@/api/album'
@@ -70,7 +69,6 @@ import { timeFormatAlbum } from '@/utils/time_format'
 export default {
   name: 'Album',
   components: {
-    TitleSimple,
     TrackListHeader,
     TrackCard,
     Container
@@ -81,10 +79,10 @@ export default {
       album: {},
       tracks: [],
       loading: false,
-      loadMore: false,
-      limit: 14,
-      offset: 0,
-      next: ''
+      tracks_loadMore: false,
+      tracks_limit: 14,
+      tracks_offset: 0,
+      tracks_next: ''
     }
   },
   methods: {
@@ -101,27 +99,27 @@ export default {
       this.album = res
     },
     async getTracks() {
-      if (!this.loadMore && this.next !== null) {
+      if (!this.tracks_loadMore && this.tracks_next !== null) {
         let res
-        this.loadMore = true
+        this.tracks_loadMore = true
 
-        if (this.next === '') {
+        if (this.tracks_next === '') {
           const params = {
-            limit: this.limit,
-            offset: this.offset
+            limit: this.tracks_limit,
+            offset: this.tracks_offset
           }
           res = (await getTracks(this.id, params)).data
         } else {
-          let path = this.next
+          let path = this.tracks_next
           res = (await getNextTracks(this.id, path.slice(path.indexOf('?') + 1))).data
         }
 
         let newVals = res.items
         let oldVals = JSON.parse(JSON.stringify(this.tracks))
         this.tracks = [...oldVals, ...newVals]
-        this.next = res.next
+        this.tracks_next = res.next
 
-        this.loadMore = false
+        this.tracks_loadMore = false
       }
     }
   },

@@ -33,7 +33,8 @@ export default {
   background-color: $color-bg-3;
   display: flex;
   justify-content: start;
-  height: 6rem;
+  width: 100%;
+  aspect-ratio: 6 / 1;
   border-radius: $border-radius-small;
   overflow: hidden;
   cursor: pointer;

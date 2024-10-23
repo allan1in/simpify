@@ -1,8 +1,11 @@
 <template>
-  <div class="title-show-all">
+  <div class="title-show-all" v-if="routerName!==''">
     <router-link class="title-show-all__title" :to="{ name: routerName }">{{ title }}</router-link>
     <router-link class="title-show-all__show-all" :to="{ name: routerName }">Show All</router-link>
   </div>
+  <h1 v-else class="title-simple">
+    {{ title }}
+  </h1>
 </template>
 
 <script>
@@ -11,7 +14,8 @@ export default {
   props: {
     routerName: {
       type: String,
-      require: true
+      require: false,
+      default:''
     },
     title: {
       type: String,
@@ -39,5 +43,12 @@ export default {
     font-weight: 700;
     font-family: $font-family-title;
   }
+}
+
+.title-simple {
+  display: block;
+  padding: 1.6rem;
+
+  @include titleStyles;
 }
 </style>

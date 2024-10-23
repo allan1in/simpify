@@ -24,7 +24,7 @@
               {{
                 playlist.followers.total === 0
                   ? ''
-                  : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${playlist.followers.total === 1 ? 'follower' : 'followers'}`
+                  : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${playlist.followers.total === 1 ? ' follower' : ' followers'}`
               }}
             </span>
             <span class="playlist-container__cover__info__details__total-playlist.tracks">
@@ -58,7 +58,6 @@
 
 <script>
 import Container from '@/components/Container/index.vue'
-import TitleSimple from '@/components/TitleSimple/index.vue'
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import TrackCard from '@/components/CardTrack/index.vue'
 import { getPlaylist } from '@/api/playlist'
@@ -68,7 +67,6 @@ export default {
   name: 'Playlist',
   components: {
     Container,
-    TitleSimple,
     TrackListHeader,
     TrackCard
   },

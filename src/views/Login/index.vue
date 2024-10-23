@@ -48,13 +48,13 @@ export default {
       // Redirect the user to the authorization server for login
       window.location.href = authUrl.toString()
     },
-    ...mapActions(useUserStore, ['getToken'])
+    ...mapActions(useUserStore, ['login'])
   },
   async created() {
     // Check if authorization server response param exists
     let code = this.$route.query.code
     if (code) {
-      await this.getToken(code)
+      await this.login(code)
       this.$router.push({ name: 'Dashboard' })
     } else {
       this.redirectToSpotifyAuthorize()

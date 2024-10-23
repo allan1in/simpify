@@ -1,5 +1,5 @@
 <template>
-  <Container :loading>
+  <Container :loading @load-more="getPlaylists">
     <div class="user-container">
       <div class="user-container__cover">
         <div class="user-container__cover__img-wrapper">
@@ -20,7 +20,7 @@
           <h1 class="user-container__cover__info__title">{{ profile.display_name }}</h1>
           <div class="user-container__cover__info__details">
             <span class="user-container__cover__info__details__playlists">
-              {{ `${Intl.NumberFormat().format(playlists.total)} Public Playlists` }}
+              {{ `${Intl.NumberFormat().format(playlists_total)} Public Playlists` }}
             </span>
             <span class="user-container__cover__info__details__followers">
               {{
@@ -36,9 +36,9 @@
         </div>
       </div>
       <div class="user-container__content">
-        <TitleSimple title="Public Playlists" />
+        <TitleShowAll title="Public Playlists" />
         <div class="user-container__content__playlists">
-          <PlaylistCard v-for="item in playlists.items" :item="item" />
+          <PlaylistCard v-for="item in playlists" :item="item" />
         </div>
       </div>
     </div>
@@ -46,9 +46,9 @@
 </template>
 
 <script>
-import { getUserPlaylists, getUserProfile } from '@/api/user'
+import { getUserPlaylists, getUserProfile, getNextUserPlaylists } from '@/api/user'
 import Container from '@/components/Container/index.vue'
-import TitleSimple from '@/components/TitleSimple/index.vue'
+import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
 import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
 
@@ -56,15 +56,21 @@ export default {
   name: 'User',
   components: {
     Container,
-    TitleSimple,
+    TitleShowAll,
     PlaylistCard,
     IconDefaultUser
   },
   data() {
     return {
+      id:this.$route.params.userId,
       profile: {},
-      playlists: {},
-      loading: true
+      playlists: [],
+      loading: true,
+      playlists_loadMore: false,
+      playlists_next:'',
+      playlists_limit: 28,
+      playlists_offset: 0,
+      playlists_total: 0,
     }
   },
   methods: {
@@ -78,12 +84,29 @@ export default {
       this.profile = res
     },
     async getPlaylists() {
-      const params = {
-        limit: 28,
-        offset: 0
+      if (!this.playlists_loadMore && this.playlists_next !== null) {
+        let res
+        this.playlists_loadMore = true
+
+        if (this.playlists_next === '') {
+          const params = {
+            limit: this.playlists_limit,
+            offset: this.playlists_offset
+          }
+          res = (await getUserPlaylists(this.id, params)).data
+        } else {
+          let path = this.playlists_next
+          res = (await getNextUserPlaylists(this.id, path.slice(path.indexOf('?') + 1))).data
+        }
+
+        let newVals = res.items
+        let oldVals = JSON.parse(JSON.stringify(this.playlists))
+        this.playlists = [...oldVals, ...newVals]
+        this.playlists_next = res.next
+        this.playlists_total = res.total
+
+        this.playlists_loadMore = false
       }
-      const res = (await getUserPlaylists(this.$route.params.userId, params)).data
-      this.playlists = res
     }
   },
   created() {
@@ -152,7 +175,7 @@ export default {
 
     &__playlists {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
     }
   }
 }

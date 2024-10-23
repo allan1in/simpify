@@ -2,7 +2,7 @@
   <Container :loading @load-more="getAll">
     <div class="search-container">
       <div class="search-container__title-wrapper">
-        <h1 class="search-container__title-wrapper__title">Browse All</h1>
+        <TitleShowAll title="Browse All"/>
       </div>
       <div class="search-container__cards-wrapper">
         <router-link
@@ -27,46 +27,48 @@
 <script>
 import Container from '@/components/Container/index.vue'
 import { getSeveralCategories, getCategoryPlaylists, getNextSeveralCategories } from '@/api/browse'
+import TitleShowAll from '@/components/TitleShowAll/index.vue'
 
 export default {
   name: 'Search',
   components: {
-    Container
+    Container,
+    TitleShowAll
   },
   data() {
     return {
       loading: true,
       categories: [],
-      limit: 28,
-      next: '',
-      offset: 0,
-      loadMore: false
+      categories_limit: 28,
+      categories_next: '',
+      categories_offset: 0,
+      categories_loadMore: false
     }
   },
   methods: {
     async getAll() {
-      if (!this.loadMore && this.next !== null) {
-        this.loadMore = true
+      if (!this.categories_loadMore && this.categories_next !== null) {
+        this.categories_loadMore = true
 
         await this.getSeveralCategories()
         await this.getCategoriesCovers()
 
-        this.loadMore = false
+        this.categories_loadMore = false
         this.loading = false
       }
     },
     async getSeveralCategories() {
       let res
-      this.loadMore = true
+      this.categories_loadMore = true
 
-      if (this.next === '') {
+      if (this.categories_next === '') {
         const params = {
-          limit: this.limit,
-          offset: this.offset
+          limit: this.categories_limit,
+          offset: this.categories_offset
         }
         res = (await getSeveralCategories(params)).data.categories
       } else {
-        let path = this.next
+        let path = this.categories_next
         res = (await getNextSeveralCategories(path.slice(path.indexOf('?') + 1))).data.categories
       }
 
@@ -74,15 +76,15 @@ export default {
       let oldVals = JSON.parse(JSON.stringify(this.categories))
       this.categories = [...oldVals, ...newVals]
 
-      this.next = res.next
-      this.offset = res.offset + res.limit
+      this.categories_next = res.next
+      this.categories_offset = res.offset + res.limit
 
-      this.loadMore = false
+      this.categories_loadMore = false
     },
     async getCategoriesCovers() {
       this.categories.forEach(async (item, index) => {
         // Skip elements in the array that already have a cover property
-        if (index + 1 <= this.offset - this.limit) {
+        if (index + 1 <= this.categories_offset - this.categories_limit) {
           return
         }
 
@@ -103,19 +105,12 @@ export default {
 
 <style lang="scss" scoped>
 .search-container {
-  padding: 2.4rem;
-
-  &__title-wrapper {
-    padding: 1.6rem 0;
-
-    &__title {
-      @include titleStyles;
-    }
-  }
+  padding: 1.6rem;
 
   &__cards-wrapper {
+    padding: 1.6rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(30rem, 100%), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(20%, 100%), 1fr));
     gap: 2.4rem;
 
     &__card {
