@@ -1,13 +1,13 @@
 <template>
     <div class="volume-container">
-        <button class="icon-wrapper" @click="$emit('mute')">
+        <button class="icon-wrapper" @click="toggleMute">
             <IconVolumeMuted v-if="isMute || volume == 0" />
             <IconVolumeQuiet v-else-if="volume <= 33" />
             <IconVolumeNormal v-else-if="volume <= 66" />
             <IconVolumeLoud v-else />
         </button>
         <div class="volume-container__progress-wrapper">
-            <ProcessBar :percentage="isMute ? 0 : volume" />
+            <ProcessBar :percentage="isMute ? 0 : volume" @click-seek="updateSeek" />
         </div>
     </div>
 </template>
@@ -17,25 +17,24 @@ import IconVolumeLoud from '../Icons/IconVolumeLoud.vue';
 import IconVolumeNormal from '../Icons/IconVolumeNormal.vue';
 import IconVolumeQuiet from '../Icons/IconVolumeQuiet.vue';
 import IconVolumeMuted from '../Icons/IconVolumeMuted.vue';
+import { mapActions, mapState } from 'pinia';
+import { useTrackStore } from '@/stores/track';
+import { useAppStore } from '@/stores/app';
 
 export default {
     name: 'VolumeBar',
-    props: {
-        isMute: {
-            type: Boolean,
-            require: true
-        },
-        volume: {
-            type: Number,
-            require: true
-        }
-    },
     components: {
         ProcessBar,
         IconVolumeLoud,
         IconVolumeNormal,
         IconVolumeQuiet,
         IconVolumeMuted
+    },
+    computed: {
+        ...mapState(useAppStore, ['isMute', 'volume'])
+    },
+    methods: {
+        ...mapActions(useAppStore, ['toggleMute', 'updateSeek'])
     }
 }
 </script>

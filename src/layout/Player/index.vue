@@ -65,7 +65,7 @@
       >
         <IconConnectToDevice />
       </button> -->
-      <VolumeBar :isMute="isMute" :volume="volume" @mute="isMute = !isMute" />
+      <VolumeBar />
       <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
       </button>
@@ -127,7 +127,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(useTrackStore, ['isPause', 'isShuffle', 'isRepeat', 'isMute', 'coverUrl', 'name', 'artist', 'volume', 'percentage'])
+    ...mapState(useTrackStore, ['coverUrl', 'name', 'artist', 'percentage']),
+    ...mapState(useAppStore, ['isPause', 'isShuffle', 'isRepeat', 'isMute', 'volume'])
   },
   methods: {
     ...mapActions(useAppStore, ['toggleFullScreemPlayer'])

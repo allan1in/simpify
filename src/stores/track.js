@@ -9,25 +9,6 @@ export const useTrackStore = defineStore('track', {
     artist: 'Lady Gaga',
     duration: '5:34',
     seek: '3:43',
-    percentage: 66,
-    volume: 33,
-    isShuffle: false,
-    isPause: false,
-    isRepeat: false,
-    isMute: false
-  }),
-  actions: {
-    toggleShuffle() {
-      this.isShuffle = !this.isShuffle
-    },
-    togglePause() {
-      this.isPause = !this.isPause
-    },
-    toggleRepeat() {
-      this.isRepeat = !this.isRepeat
-    },
-    toggleMute() {
-      this.isMute = !this.isMute
-    }
-  }
+    percentage: 66
+  })
 })

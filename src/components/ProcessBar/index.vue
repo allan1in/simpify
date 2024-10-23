@@ -1,5 +1,5 @@
 <template>
-  <div class="process">
+  <div class="process" @click="(event) => { $emit('clickSeek', event) }">
     <div class="process__line">
       <div class="process__line__seek" :style="{ left: `calc(${percentage}% - 100%)` }"></div>
     </div>
@@ -7,6 +7,7 @@
   </div>
 </template>
 <script>
+
 export default {
   name: 'ProcessBar',
   props: {

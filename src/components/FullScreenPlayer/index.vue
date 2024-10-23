@@ -55,7 +55,7 @@
                 </div>
                 <div class="full-screen-container__player__btns__right">
                     <div class="full-screen-container__player__btns__right__volume">
-                        <VolumeBar :isMute="isMute" :volume="volume" @mute="toggleMute" />
+                        <VolumeBar />
                     </div>
                     <button class="icon-wrapper" @click="toggleFullScreemPlayer">
                         <IconFullScreenClose />
@@ -85,8 +85,8 @@ import VolumeBar from '@/components/VolumeBar/index.vue'
 export default {
     name: 'FullScreenPlayer',
     computed: {
-        ...mapState(useAppStore, ['showFullScreenPlayer']),
-        ...mapState(useTrackStore, ['fromType', 'fromName', 'coverUrl', 'name', 'artist', 'seek', 'duration', 'percentage', 'isPause', 'isRepeat', 'isShuffle', 'isMute', 'volume'])
+        ...mapState(useAppStore, ['showFullScreenPlayer', 'isPause', 'isRepeat', 'isShuffle', 'isMute', 'volume']),
+        ...mapState(useTrackStore, ['fromType', 'fromName', 'coverUrl', 'name', 'artist', 'seek', 'duration', 'percentage'])
     },
     components: {
         IconPrimaryLogo,
@@ -102,8 +102,7 @@ export default {
         ProcessBar
     },
     methods: {
-        ...mapActions(useAppStore, ['toggleFullScreemPlayer']),
-        ...mapActions(useTrackStore, ['togglePause', 'toggleRepeat', 'toggleShuffle', 'toggleMute'])
+        ...mapActions(useAppStore, ['toggleFullScreemPlayer', 'togglePause', 'toggleRepeat', 'toggleShuffle'])
     }
 }
 </script>
