@@ -9,6 +9,6 @@ export const useTrackStore = defineStore('track', {
     artist: 'Lady Gaga',
     duration: '5:34',
     seek: '3:43',
-    percentage: 66
+    percentage: 0
   })
 })

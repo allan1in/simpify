@@ -1,13 +1,17 @@
 <template>
   <div class="volume-container">
-    <button class="icon-wrapper" @click="toggleMute">
+    <button class="icon-wrapper" @click="isMute = !isMute">
       <IconVolumeMuted v-if="isMute || volume == 0" />
       <IconVolumeQuiet v-else-if="volume <= 33" />
       <IconVolumeNormal v-else-if="volume <= 66" />
       <IconVolumeLoud v-else />
     </button>
     <div class="volume-container__progress-wrapper">
-      <ProcessBar :percentage="isMute ? 0 : volume" @update="updateSeek" />
+      <ProcessBar
+        :percentage="isMute ? 0 : volume"
+        @update="updateVolume"
+        @mouse-down="handleMouseDown"
+      />
     </div>
   </div>
 </template>
@@ -17,7 +21,7 @@ import IconVolumeLoud from '../Icons/IconVolumeLoud.vue'
 import IconVolumeNormal from '../Icons/IconVolumeNormal.vue'
 import IconVolumeQuiet from '../Icons/IconVolumeQuiet.vue'
 import IconVolumeMuted from '../Icons/IconVolumeMuted.vue'
-import { mapActions, mapState } from 'pinia'
+import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 
 export default {
@@ -30,10 +34,17 @@ export default {
     IconVolumeMuted
   },
   computed: {
-    ...mapState(useAppStore, ['isMute', 'volume'])
+    ...mapWritableState(useAppStore, ['isMute', 'volume'])
   },
   methods: {
-    ...mapActions(useAppStore, ['toggleMute', 'updateSeek'])
+    updateVolume(newVal) {
+      this.volume = newVal
+    },
+    handleMouseDown() {
+      if (this.isMute) {
+        this.isMute = false
+      }
+    }
   }
 }
 </script>

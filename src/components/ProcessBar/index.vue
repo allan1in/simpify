@@ -1,5 +1,5 @@
 <template>
-  <div class="process" @mousedown="handleMouseDown">
+  <div ref="process" class="process" @mousedown="handleMouseDown">
     <div class="process__line">
       <div
         ref="seek"
@@ -21,18 +21,41 @@ export default {
   },
   methods: {
     handleMouseDown(event) {
-      this.$emit('update', event)
+      // Prevent default drag events
+      event.preventDefault()
 
       let prePos = event.clientX
       let nextPos
+      // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+      let minPos = this.$refs.process.getBoundingClientRect().left
+      let maxPos = this.$refs.process.getBoundingClientRect().right
+      let width = this.$refs.process.getBoundingClientRect().width
 
+      this.$emit('mouseDown')
+      let newVal = Math.ceil(100 * ((event.clientX - minPos) / width))
+      this.$emit('update', newVal)
       document.onmousemove = (e) => {
-        nextPos = prePos - e.clientX
-        prePos = e.clientX
-        this.$refs.seek.style.left = this.$refs.seek.offsetLeft - nextPos + 'px'
-        this.$refs.dot.style.left = this.$refs.dot.offsetLeft - nextPos + 'px'
-        // console.log(this.$refs.seek.style.left)
-        // console.log(this.$refs.dot.style.left)
+        if (e.clientX > maxPos) {
+          this.$refs.seek.style.left = 0 + 'px'
+          this.$refs.dot.style.left = this.$refs.seek.style.left + this.$refs.dot.width / 2
+
+          let newVal = Math.ceil(100 * ((maxPos - minPos) / width))
+          this.$emit('update', newVal)
+        } else if (e.clientX < minPos) {
+          this.$refs.seek.style.left = '-' + this.$refs.process.width + 'px'
+          this.$refs.dot.style.left = this.$refs.seek.style.left + this.$refs.dot.width / 2
+
+          let newVal = Math.ceil(100 * ((minPos - minPos) / width))
+          this.$emit('update', newVal)
+        } else {
+          nextPos = prePos - e.clientX
+          prePos = e.clientX
+          this.$refs.seek.style.left = this.$refs.seek.offsetLeft - nextPos + 'px'
+          this.$refs.dot.style.left = this.$refs.dot.offsetLeft - nextPos + 'px'
+
+          let newVal = Math.ceil(100 * ((e.clientX - minPos) / width))
+          this.$emit('update', newVal)
+        }
       }
 
       document.onmouseup = () => {
@@ -51,7 +74,6 @@ $progress-line-color: #4d4d4d;
   position: relative;
   width: 100%;
   height: 0.4rem;
-  user-select: none;
 
   &:hover &__line__seek,
   &:active &__line__seek {
@@ -74,7 +96,6 @@ $progress-line-color: #4d4d4d;
     border-radius: 0.2rem;
     overflow: hidden;
     cursor: pointer;
-    user-select: none;
 
     &__seek {
       position: absolute;
@@ -85,7 +106,6 @@ $progress-line-color: #4d4d4d;
       border-radius: inherit;
       background-color: $color-font-primary;
       cursor: pointer;
-      user-select: none;
     }
   }
 
@@ -100,7 +120,6 @@ $progress-line-color: #4d4d4d;
     background-color: $color-font-primary;
     border-radius: 50%;
     cursor: pointer;
-    user-select: none;
   }
 }
 </style>

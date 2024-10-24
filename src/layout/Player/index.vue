@@ -15,7 +15,11 @@
     </div>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
-        <button class="icon-wrapper" :class="{ 'btn-active': isShuffle }" @click="isShuffle = !isShuffle">
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': isShuffle }"
+          @click="isShuffle = !isShuffle"
+        >
           <IconShuffle />
         </button>
         <button class="icon-wrapper">
@@ -30,15 +34,15 @@
         <button class="icon-wrapper">
           <IconNext />
         </button>
-        <button class="icon-wrapper" :class="{ 'btn-active': isRepeat }" @click="isRepeat = !isRepeat">
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': isRepeat }"
+          @click="isRepeat = !isRepeat"
+        >
           <IconRepeat />
         </button>
       </div>
-      <div class="player-bar__mid__bottom">
-        <div class="player-bar__mid__bottom__seek">-:--</div>
-        <ProcessBar :percentage="percentage" />
-        <div class="player-bar__mid__bottom__duration">-:--</div>
-      </div>
+      <SeekBar />
     </div>
     <div class="player-bar__right">
       <!-- <button
@@ -66,7 +70,11 @@
         <IconConnectToDevice />
       </button> -->
       <VolumeBar />
-      <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
+      <button
+        class="icon-wrapper"
+        :class="{ 'btn-active': isMiniPlayer }"
+        @click="isMiniPlayer = !isMiniPlayer"
+      >
         <IconMiniPlayer />
       </button>
       <button class="icon-wrapper" @click="toggleFullScreemPlayer">
@@ -84,7 +92,6 @@ import IconPlay from '@/components/Icons/IconPlay.vue'
 import IconPrevious from '@/components/Icons/IconPrevious.vue'
 import IconRepeat from '@/components/Icons/IconRepeat.vue'
 import IconShuffle from '@/components/Icons/IconShuffle.vue'
-import ProcessBar from '@/components/ProcessBar/index.vue'
 import IconNowPlayingView from '@/components/Icons/IconNowPlayingView.vue'
 import IconQueen from '@/components/Icons/IconQueen.vue'
 import IconConnectToDevice from '@/components/Icons/IconConnectToDevice.vue'
@@ -96,6 +103,7 @@ import { mapActions, mapState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import { useTrackStore } from '@/stores/track'
 import VolumeBar from '@/components/VolumeBar/index.vue'
+import SeekBar from '@/components/SeekBar/index.vue'
 
 export default {
   name: 'Player',
@@ -114,8 +122,8 @@ export default {
     IconMiniPlayer,
     IconFullScreen,
     IconInLikeSong,
-    ProcessBar,
-    VolumeBar
+    VolumeBar,
+    SeekBar
   },
   data() {
     return {
@@ -260,23 +268,6 @@ $msg-artist-font-size: 1.2rem;
           height: 1.6rem;
           width: 1.6rem;
         }
-      }
-    }
-
-    &__bottom {
-      display: flex;
-      gap: $gutter;
-      font-size: 1.2rem;
-      color: $color-font-secondary;
-
-      &__seek {
-        min-width: 4rem;
-        text-align: right;
-      }
-
-      &__duration {
-        min-width: 4rem;
-        text-align: left;
       }
     }
   }

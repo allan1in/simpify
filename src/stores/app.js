@@ -21,14 +21,6 @@ export const useAppStore = defineStore('app', {
     },
     toggleRepeat() {
       this.isRepeat = !this.isRepeat
-    },
-    toggleMute() {
-      this.isMute = !this.isMute
-    },
-    updateSeek(event) {
-      const currentTarget = event.currentTarget
-      const { x, width } = currentTarget.getBoundingClientRect()
-      this.volume = Math.ceil(100 * ((event.clientX - x) / width))
     }
   }
 })
