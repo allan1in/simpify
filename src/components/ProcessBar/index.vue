@@ -1,19 +1,44 @@
 <template>
-  <div class="process" @click="(event) => { $emit('clickSeek', event) }">
+  <div class="process" @mousedown="handleMouseDown">
     <div class="process__line">
-      <div class="process__line__seek" :style="{ left: `calc(${percentage}% - 100%)` }"></div>
+      <div
+        ref="seek"
+        class="process__line__seek"
+        :style="{ left: `calc(${percentage}% - 100%)` }"
+      ></div>
     </div>
-    <div class="process__dot" :style="{ left: `${percentage}%` }"></div>
+    <div ref="dot" class="process__dot" :style="{ left: `${percentage}%` }"></div>
   </div>
 </template>
 <script>
-
 export default {
   name: 'ProcessBar',
   props: {
     percentage: {
       type: Number,
       required: true
+    }
+  },
+  methods: {
+    handleMouseDown(event) {
+      this.$emit('update', event)
+
+      let prePos = event.clientX
+      let nextPos
+
+      document.onmousemove = (e) => {
+        nextPos = prePos - e.clientX
+        prePos = e.clientX
+        this.$refs.seek.style.left = this.$refs.seek.offsetLeft - nextPos + 'px'
+        this.$refs.dot.style.left = this.$refs.dot.offsetLeft - nextPos + 'px'
+        // console.log(this.$refs.seek.style.left)
+        // console.log(this.$refs.dot.style.left)
+      }
+
+      document.onmouseup = () => {
+        document.onmousemove = null
+        document.onmouseup = null
+      }
     }
   }
 }
@@ -25,12 +50,16 @@ $progress-line-color: #4d4d4d;
   flex: 1;
   position: relative;
   width: 100%;
+  height: 0.4rem;
+  user-select: none;
 
-  &:hover &__line__seek {
+  &:hover &__line__seek,
+  &:active &__line__seek {
     background-color: $color-brand;
   }
 
-  &:hover &__dot {
+  &:hover &__dot,
+  &:active &__dot {
     display: block;
   }
 
@@ -44,6 +73,8 @@ $progress-line-color: #4d4d4d;
     height: 0.4rem;
     border-radius: 0.2rem;
     overflow: hidden;
+    cursor: pointer;
+    user-select: none;
 
     &__seek {
       position: absolute;
@@ -53,6 +84,8 @@ $progress-line-color: #4d4d4d;
       height: inherit;
       border-radius: inherit;
       background-color: $color-font-primary;
+      cursor: pointer;
+      user-select: none;
     }
   }
 
@@ -67,6 +100,7 @@ $progress-line-color: #4d4d4d;
     background-color: $color-font-primary;
     border-radius: 50%;
     cursor: pointer;
+    user-select: none;
   }
 }
 </style>
