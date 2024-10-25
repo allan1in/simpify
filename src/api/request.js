@@ -1,14 +1,11 @@
 import axios from 'axios'
 import settings from '@/settings.js'
-import { useUserStore } from '@/stores/user'
-import router from '@/router'
 
 const { baseURL } = settings
 
 // https://axios-http.com/docs/instance
 const service = axios.create({
-  baseURL: baseURL,
-  timeout: 5000
+  baseURL: baseURL
 })
 
 // https://axios-http.com/docs/interceptors
@@ -16,9 +13,9 @@ const service = axios.create({
 service.interceptors.request.use(
   function (config) {
     // Do something before request is sent
-    if (useUserStore().access_token) {
+    if (localStorage.getItem('access_token')) {
       // Let each request carry access_token
-      config.headers['Authorization'] = 'Bearer ' + useUserStore().access_token
+      config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token')
     }
     return config
   },
@@ -34,14 +31,12 @@ service.interceptors.response.use(
     // Do something with response data
     return response
   },
-  function (error) {
+  async function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
 
     // Bad or expired token
     if (error.status === 401) {
-      window.localStorage.clear()
-      router.push({ name: 'Login' })
     }
 
     return Promise.reject(error)

@@ -8,7 +8,8 @@
         </div>
       </div>
       <div class="dashboard-container__featured-playlists">
-        <TitleShowAll :router-name="playlists_total>playlists_limit?'FeaturedPlaylists':''" title="Featured Playlists" />
+        <TitleShowAll :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
+          title="Featured Playlists" />
         <div class="dashboard-container__featured-playlists__content">
           <PlaylistCard v-for="item in playlists" :item="item" />
         </div>
@@ -54,7 +55,7 @@ export default {
     return {
       loading: true,
       playlists: [],
-      playlists_total:0,
+      playlists_total: 0,
       playlists_limit: 7,
       artists: [],
       artists_limit: 7,
@@ -77,7 +78,7 @@ export default {
     },
     async getUserTopSongs() {
       const params = {
-        time_range:'short_term',
+        time_range: 'short_term',
         limit: this.tracks_limit,
         offset: 0
       }
@@ -95,7 +96,7 @@ export default {
     },
     async getUserTopArtists() {
       const params = {
-        time_range:'short_term',
+        time_range: 'short_term',
         limit: this.artists_limit,
         offset: 0
       }
