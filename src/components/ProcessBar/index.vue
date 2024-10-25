@@ -29,29 +29,29 @@ export default {
       let newVal
 
       this.$emit('mouseDown')
-      newVal = Math.ceil(100 * ((event.clientX - minPos) / width))
-      this.$emit('update', newVal)
+      newVal = 100 * ((event.clientX - minPos) / width)
+      this.$emit('updatePercentage', newVal)
       document.onmousemove = (e) => {
         if (e.clientX > maxPos) {
           this.$refs.seek.style.left = 0 + 'px'
           this.$refs.dot.style.left = this.$refs.seek.style.left + this.$refs.dot.width / 2
 
-          newVal = Math.ceil(100 * ((maxPos - minPos) / width))
+          newVal = 100 * ((maxPos - minPos) / width)
         } else if (e.clientX < minPos) {
           this.$refs.seek.style.left = '-' + this.$refs.process.width + 'px'
           this.$refs.dot.style.left = this.$refs.seek.style.left + this.$refs.dot.width / 2
 
-          newVal = Math.ceil(100 * ((minPos - minPos) / width))
+          newVal = 100 * ((minPos - minPos) / width)
         } else {
           nextPos = prePos - e.clientX
           prePos = e.clientX
           this.$refs.seek.style.left = this.$refs.seek.offsetLeft - nextPos + 'px'
           this.$refs.dot.style.left = this.$refs.dot.offsetLeft - nextPos + 'px'
 
-          newVal = Math.ceil(100 * ((e.clientX - minPos) / width))
+          newVal = 100 * ((e.clientX - minPos) / width)
         }
 
-        this.$emit('update', newVal)
+        this.$emit('updatePercentage', newVal)
       }
 
       document.onmouseup = () => {

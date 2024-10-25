@@ -2,7 +2,7 @@
 export function timeFormatTrack(time) {
   let min = Math.floor(time / 1000 / 60)
   let sec = Math.floor((time / 1000) % 60)
-  return `${min > 59 ? '59' : (min + '').length === 1 ? '0' + min : min}:${(sec + '').length === 1 ? '0' + sec : sec}`
+  return `${min > 59 ? '59' : min}:${(sec + '').length === 1 ? '0' + sec : sec}`
 }
 
 // HH hour MM min SS sec

@@ -5,10 +5,12 @@ export const useTrackStore = defineStore('track', {
     fromType: 'ALBUM',
     fromName: 'Phonk',
     coverUrl: 'https://i.scdn.co/image/ab67616d0000b27382ea2e9e1858aa012c57cd45',
-    name: 'Die With A Smile',
+    track: 'Die With A Smile',
+    track_id: '2plbrEY59IikOBgBGLjaoe',
     artist: 'Lady Gaga',
-    duration: '5:34',
-    seek: '3:43',
-    percentage: 0
+    artist_id: '1HY2Jd0NmPuamShAr6KMms',
+    percentage: 0,
+    duration: '--:--',
+    seek: '--:--'
   })
 })

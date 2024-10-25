@@ -2,11 +2,14 @@
   <footer class="player-bar">
     <div class="player-bar__left">
       <div class="player-bar__left__cover-wrapper">
-        <img class="player-bar__left__cover-wrapper__cover" :src="coverUrl" alt="" />
+        <img class="player-bar__left__cover-wrapper__cover" :src="coverUrl" alt="track" />
       </div>
       <div class="player-bar__left__msg-wrapper">
-        <div class="player-bar__left__msg-wrapper__title">{{ name }}</div>
-        <div class="player-bar__left__msg-wrapper__artist">{{ artist }}</div>
+        <div class="player-bar__left__msg-wrapper__title"><router-link
+            :to="{ name: 'Track', params: { trackId: track_id } }">{{
+              track }}</router-link></div>
+        <div class="player-bar__left__msg-wrapper__artist"><router-link
+            :to="{ name: 'Artist', params: { artistId: artist_id } }">{{ artist }}</router-link></div>
       </div>
       <!-- <button class="icon-wrapper" @click="song.isLike = !song.isLike">
         <IconInLikeSong v-if="song.isLike" />
@@ -30,8 +33,10 @@
         <button class="icon-wrapper">
           <IconNext />
         </button>
-        <button class="icon-wrapper" :class="{ 'btn-active': isRepeat }" @click="isRepeat = !isRepeat">
-          <IconRepeat />
+        <button class="icon-wrapper" :class="{ 'btn-active': isRepeat || isRepeatSingle }" @click="handleRepeatClick">
+          <IconRepeatSingle v-if="isRepeatSingle" />
+          <IconRepeat v-else />
+
         </button>
       </div>
       <SeekBar />
@@ -65,7 +70,7 @@
       <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
       </button>
-      <button class="icon-wrapper" @click="toggleFullScreemPlayer">
+      <button class="icon-wrapper" @click="toggleFullScreenPlayer">
         <IconFullScreen />
       </button>
     </div>
@@ -79,6 +84,7 @@ import IconPause from '@/components/Icons/IconPause.vue'
 import IconPlay from '@/components/Icons/IconPlay.vue'
 import IconPrevious from '@/components/Icons/IconPrevious.vue'
 import IconRepeat from '@/components/Icons/IconRepeat.vue'
+import IconRepeatSingle from '@/components/Icons/IconRepeatSingle.vue'
 import IconShuffle from '@/components/Icons/IconShuffle.vue'
 import IconNowPlayingView from '@/components/Icons/IconNowPlayingView.vue'
 import IconQueen from '@/components/Icons/IconQueen.vue'
@@ -102,6 +108,7 @@ export default {
     IconPrevious,
     IconShuffle,
     IconRepeat,
+    IconRepeatSingle,
     IconAddToLikeSong,
     IconNowPlayingView,
     IconQueen,
@@ -119,16 +126,39 @@ export default {
       isConnectToDevice: false,
       isQueen: false,
       isLyrics: false,
-      isNowPlayingView: false
+      isNowPlayingView: false,
+
     }
   },
   computed: {
-    ...mapWritableState(useTrackStore, ['coverUrl', 'name', 'artist', 'percentage']),
-    ...mapWritableState(useAppStore, ['isPause', 'isShuffle', 'isRepeat', 'isMute', 'volume', 'showFullScreenPlayer'])
+    ...mapWritableState(useTrackStore, ['coverUrl', 'track', 'artist', 'percentage', 'track_id', 'artist_id']),
+    ...mapWritableState(useAppStore, ['isPause', 'isShuffle', 'isRepeat', 'isRepeatSingle', 'isMute', 'volume', 'showFullScreenPlayer'])
   },
   methods: {
-    toggleFullScreemPlayer() {
+    toggleFullScreenPlayer() {
       this.showFullScreenPlayer = !this.showFullScreenPlayer
+      this.openFullscreen()
+    },
+    handleRepeatClick() {
+      if (this.isRepeatSingle) {
+        this.isRepeatSingle = false
+      } else if (!this.isRepeat) {
+        this.isRepeat = true
+      } else {
+        this.isRepeat = false
+        this.isRepeatSingle = true
+      }
+    },
+    /* View in fullscreen */
+    openFullscreen() {
+      let element = document.documentElement
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.webkitRequestFullscreen) { /* Safari */
+        element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) { /* IE11 */
+        element.msRequestFullscreen();
+      }
     }
   }
 }

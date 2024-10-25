@@ -1,5 +1,5 @@
 <template>
-    <main v-if="showFullScreenPlayer" class="full-screen-container">
+    <main @mousemove="isCursorMove = true" class="full-screen-container">
         <div class="full-screen-container__top">
             <div class="full-screen-container__top__title">
                 <div class="full-screen-container__top__title__icon-wrapper">
@@ -10,22 +10,24 @@
                     <h2 class="full-screen-container__top__title__text-wrapper__name">{{ fromName }}</h2>
                 </div>
             </div>
-            <button class="full-screen-container__top__close-wrapper" @click="toggleFullScreemPlayer">
+            <button :class="{ 'full-screen-container__top__close-wrapper-show': isCursorMove }"
+                class="full-screen-container__top__close-wrapper" @click="toggleFullScreenPlayer">
                 <div class="full-screen-container__top__close-wrapper__close">
                     <IconClose />
                 </div>
             </button>
         </div>
         <div class="full-screen-container__content">
-            <div class="full-screen-container__content__cover-wrapper">
-                <img class="full-screen-container__content__cover-wrapper__cover" :src="coverUrl" :alt="name">
+            <div class="full-screen-container__content__cover-wrapper"
+                :class="{ 'full-screen-container__content__cover-wrapper-small': !isCursorMove }">
+                <img class="full-screen-container__content__cover-wrapper__cover" :src="coverUrl" :alt="track">
             </div>
             <div class="full-screen-container__content__text-wrapper">
-                <h1 class="full-screen-container__content__text-wrapper__name">{{ name }}</h1>
+                <h1 class="full-screen-container__content__text-wrapper__name">{{ track }}</h1>
                 <h2 class="full-screen-container__content__text-wrapper__artist">{{ artist }}</h2>
             </div>
         </div>
-        <div class="full-screen-container__player">
+        <div class="full-screen-container__player" :class="{ 'full-screen-container__player-show': isCursorMove }">
             <div class="full-screen-container__player__seek-bar">
                 <SeekBar size="large" />
             </div>
@@ -47,15 +49,17 @@
                     <button class="icon-wrapper">
                         <IconNext />
                     </button>
-                    <button class="icon-wrapper" :class="{ 'btn-active': isRepeat }" @click="toggleRepeat">
-                        <IconRepeat />
+                    <button class="icon-wrapper" :class="{ 'btn-active': isRepeat || isRepeatSingle }"
+                        @click="handleRepeatClick">
+                        <IconRepeatSingle v-if="isRepeatSingle" />
+                        <IconRepeat v-else />
                     </button>
                 </div>
                 <div class="full-screen-container__player__btns__right">
                     <div class="full-screen-container__player__btns__right__volume">
                         <VolumeBar />
                     </div>
-                    <button class="icon-wrapper" @click="toggleFullScreemPlayer">
+                    <button class="icon-wrapper" @click="toggleFullScreenPlayer">
                         <IconFullScreenClose />
                     </button>
                 </div>
@@ -76,15 +80,21 @@ import IconPlay from '../Icons/IconPlay.vue';
 import IconPrevious from '../Icons/IconPrevious.vue';
 import IconNext from '../Icons/IconNext.vue';
 import IconRepeat from '../Icons/IconRepeat.vue';
+import IconRepeatSingle from '../Icons/IconRepeatSingle.vue';
 import IconFullScreenClose from '../Icons/IconFullScreenClose.vue';
 import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
 
 export default {
     name: 'FullScreenPlayer',
+    data() {
+        return {
+            isCursorMove: true
+        }
+    },
     computed: {
-        ...mapWritableState(useAppStore, ['showFullScreenPlayer', 'isPause', 'isRepeat', 'isShuffle', 'isMute', 'volume']),
-        ...mapWritableState(useTrackStore, ['fromType', 'fromName', 'coverUrl', 'name', 'artist'])
+        ...mapWritableState(useAppStore, ['isPause', 'isRepeat', 'isRepeatSingle', 'isShuffle', 'isMute', 'volume', 'showFullScreenPlayer']),
+        ...mapWritableState(useTrackStore, ['fromType', 'fromName', 'coverUrl', 'track', 'artist'])
     },
     components: {
         IconPrimaryLogo,
@@ -95,12 +105,14 @@ export default {
         IconPrevious,
         IconNext,
         IconRepeat,
+        IconRepeatSingle,
         IconFullScreenClose,
         VolumeBar,
         SeekBar
     },
     methods: {
-        toggleFullScreemPlayer() {
+        toggleFullScreenPlayer() {
+            this.closeFullscreen()
             this.showFullScreenPlayer = !this.showFullScreenPlayer
         },
         togglePause() {
@@ -111,6 +123,34 @@ export default {
         },
         toggleShuffle() {
             this.isShuffle = !this.isShuffle
+        },
+        /* Close fullscreen */
+        closeFullscreen() {
+            if (document.fullscreenElement != null) {
+                document.exitFullscreen();
+            }
+        },
+        handleRepeatClick() {
+            if (this.isRepeatSingle) {
+                this.isRepeatSingle = false
+            } else if (!this.isRepeat) {
+                this.isRepeat = true
+            } else {
+                this.isRepeat = false
+                this.isRepeatSingle = true
+            }
+        },
+    },
+    watch: {
+        isCursorMove: {
+            handler(newVal, oldVal) {
+                if (newVal) {
+                    setTimeout(() => {
+                        this.isCursorMove = false
+                    }, 3000);
+                }
+            },
+            immediate: true
         }
     }
 }
@@ -158,6 +198,7 @@ export default {
 }
 
 .full-screen-container {
+    overflow: hidden;
     height: 100vh;
     width: 100vw;
     position: absolute;
@@ -168,12 +209,12 @@ export default {
     padding: 4rem 6rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 3.2rem;
 
     &__top {
+        flex: 1;
         display: flex;
         justify-content: space-between;
-
 
         &__title {
             display: flex;
@@ -208,10 +249,18 @@ export default {
             width: 4rem;
             border-radius: 50%;
             background-color: $color-bg-5;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
+            transform: translateX(10rem);
+            opacity: 0;
+
+            @include transitionSlow;
+
+            &-show {
+                opacity: 1;
+                transform: translateX(0rem);
+            }
 
             &__close {
                 height: 2rem;
@@ -222,6 +271,7 @@ export default {
     }
 
     &__content {
+        flex: 12;
         display: flex;
         justify-content: start;
         align-items: end;
@@ -232,6 +282,12 @@ export default {
             aspect-ratio: 1 / 1;
             border-radius: $border-radius-default;
             overflow: hidden;
+
+            @include transitionSlow;
+
+            &-small {
+                height: 20vh;
+            }
 
             &__cover {
                 height: 100%;
@@ -260,10 +316,18 @@ export default {
     }
 
     &__player {
+        flex: 3;
+        opacity: 0;
+
+        @include transitionSlow;
+
+        &-show {
+            opacity: 1;
+        }
 
         &__seek-bar {
             width: 100%;
-            margin-bottom: 1rem;
+            margin-bottom: 1.6rem;
         }
 
         &__btns {

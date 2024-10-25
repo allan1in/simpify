@@ -7,7 +7,7 @@
       <IconVolumeLoud v-else />
     </button>
     <div class="volume-container__progress-wrapper">
-      <ProcessBar :percentage="isMute ? 0 : volume" @update="updateVolume" @mouse-down="handleMouseDown" />
+      <ProcessBar :percentage="isMute ? 0 : volume" @update-percentage="updateVolume" @mouse-down="handleMouseDown" />
     </div>
   </div>
 </template>

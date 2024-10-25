@@ -15,6 +15,10 @@
   transition: all 0.22s ease-in;
 }
 
+@mixin transitionSlow {
+  transition: all 0.5s ease-in;
+}
+
 @mixin oneLineEllipsis {
   display: -webkit-box;
   -webkit-line-clamp: 1;

@@ -2,7 +2,7 @@
   <div class="seek-bar" :class="{ 'seek-bar-large': size === 'large', 'seek-bar-default': size === 'default' }">
     <div class="seek-bar__seek">{{ seek }}</div>
     <div class="seek-bar__process-bar">
-      <ProcessBar :percentage="percentage" @update="updatePercentage" />
+      <ProcessBar :percentage="percentage" @update-percentage="updatePercentage" />
     </div>
     <div class="seek-bar__duration">{{ duration }}</div>
   </div>
@@ -53,6 +53,7 @@ export default {
   }
 
   &__seek {
+    min-width: 3.6rem;
     text-align: right;
   }
 
@@ -62,6 +63,7 @@ export default {
   }
 
   &__duration {
+    min-width: 3.6rem;
     text-align: left;
   }
 
