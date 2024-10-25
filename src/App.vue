@@ -8,7 +8,7 @@
 <script>
 import FullScreenPlayer from '@/components/FullScreenPlayer/index.vue'
 import { mapWritableState } from 'pinia';
-import { useAppStore } from './stores/app';
+import { usePlayerStore } from './stores/player';
 
 export default {
   name: 'App',
@@ -16,7 +16,7 @@ export default {
     FullScreenPlayer
   },
   computed: {
-    ...mapWritableState(useAppStore, ['showFullScreenPlayer'])
+    ...mapWritableState(usePlayerStore, ['showFullScreenPlayer'])
   }
 }
 </script>

@@ -69,8 +69,7 @@
 </template>
 
 <script>
-import { useAppStore } from '@/stores/app';
-import { useTrackStore } from '@/stores/track'
+import { usePlayerStore } from '@/stores/player'
 import { mapWritableState } from 'pinia';
 import IconPrimaryLogo from '@/components/Icons/IconPrimaryLogo.vue';
 import IconClose from '@/components/Icons/IconClose.vue';
@@ -93,8 +92,7 @@ export default {
         }
     },
     computed: {
-        ...mapWritableState(useAppStore, ['isPause', 'isRepeat', 'isRepeatSingle', 'isShuffle', 'isMute', 'volume', 'showFullScreenPlayer']),
-        ...mapWritableState(useTrackStore, ['fromType', 'fromName', 'coverUrl', 'track', 'artist'])
+        ...mapWritableState(usePlayerStore, ['fromType', 'fromName', 'coverUrl', 'track', 'artist', 'isPause', 'isRepeat', 'isRepeatSingle', 'isShuffle', 'isMute', 'volume', 'showFullScreenPlayer']),
     },
     components: {
         IconPrimaryLogo,

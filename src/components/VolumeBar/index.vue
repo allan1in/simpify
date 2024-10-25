@@ -18,7 +18,7 @@ import IconVolumeNormal from '../Icons/IconVolumeNormal.vue'
 import IconVolumeQuiet from '../Icons/IconVolumeQuiet.vue'
 import IconVolumeMuted from '../Icons/IconVolumeMuted.vue'
 import { mapWritableState } from 'pinia'
-import { useAppStore } from '@/stores/app'
+import { usePlayerStore } from '@/stores/player'
 
 export default {
   name: 'VolumeBar',
@@ -30,7 +30,7 @@ export default {
     IconVolumeMuted
   },
   computed: {
-    ...mapWritableState(useAppStore, ['isMute', 'volume'])
+    ...mapWritableState(usePlayerStore, ['isMute', 'volume'])
   },
   methods: {
     updateVolume(newVal) {

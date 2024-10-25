@@ -10,8 +10,8 @@
 
 <script>
 import ProcessBar from '@/components/ProcessBar/index.vue'
-import { useTrackStore } from '@/stores/track'
 import { mapWritableState } from 'pinia'
+import { usePlayerStore } from '@/stores/player'
 
 export default {
   name: 'SeekBar',
@@ -26,7 +26,7 @@ export default {
     ProcessBar
   },
   computed: {
-    ...mapWritableState(useTrackStore, ['percentage', 'seek', 'duration'])
+    ...mapWritableState(usePlayerStore, ['percentage', 'seek', 'duration'])
   },
   methods: {
     updatePercentage(newVal) {

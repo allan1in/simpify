@@ -10,8 +10,8 @@ import { OverlayScrollbars, ClickScrollPlugin } from 'overlayscrollbars'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
-import App from './App.vue'
 import router from './router'
+import App from './App.vue'
 
 // https://github.com/KingSora/OverlayScrollbars?tab=readme-ov-file#consuming-plugins
 OverlayScrollbars.plugin(ClickScrollPlugin)

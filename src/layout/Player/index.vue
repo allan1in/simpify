@@ -94,8 +94,7 @@ import IconMiniPlayer from '@/components/Icons/IconMiniPlayer.vue'
 import IconFullScreen from '@/components/Icons/IconFullScreen.vue'
 import IconInLikeSong from '@/components/Icons/IconInLikeSong.vue'
 import { mapWritableState } from 'pinia'
-import { useAppStore } from '@/stores/app'
-import { useTrackStore } from '@/stores/track'
+import { usePlayerStore } from '@/stores/player'
 import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
 
@@ -131,8 +130,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useTrackStore, ['coverUrl', 'track', 'artist', 'percentage', 'track_id', 'artist_id']),
-    ...mapWritableState(useAppStore, ['isPause', 'isShuffle', 'isRepeat', 'isRepeatSingle', 'isMute', 'volume', 'showFullScreenPlayer'])
+    ...mapWritableState(usePlayerStore, ['coverUrl', 'track', 'artist', 'percentage', 'track_id', 'artist_id', 'isPause', 'isShuffle', 'isRepeat', 'isRepeatSingle', 'isMute', 'volume', 'showFullScreenPlayer']),
   },
   methods: {
     toggleFullScreenPlayer() {
