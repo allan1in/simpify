@@ -1,11 +1,7 @@
 <template>
   <div ref="process" class="process" @mousedown="handleMouseDown">
     <div class="process__line">
-      <div
-        ref="seek"
-        class="process__line__seek"
-        :style="{ left: `calc(${percentage}% - 100%)` }"
-      ></div>
+      <div ref="seek" class="process__line__seek" :style="{ left: `calc(${percentage}% - 100%)` }"></div>
     </div>
     <div ref="dot" class="process__dot" :style="{ left: `${percentage}%` }"></div>
   </div>
@@ -30,32 +26,32 @@ export default {
       let minPos = this.$refs.process.getBoundingClientRect().left
       let maxPos = this.$refs.process.getBoundingClientRect().right
       let width = this.$refs.process.getBoundingClientRect().width
+      let newVal
 
       this.$emit('mouseDown')
-      let newVal = Math.ceil(100 * ((event.clientX - minPos) / width))
+      newVal = Math.ceil(100 * ((event.clientX - minPos) / width))
       this.$emit('update', newVal)
       document.onmousemove = (e) => {
         if (e.clientX > maxPos) {
           this.$refs.seek.style.left = 0 + 'px'
           this.$refs.dot.style.left = this.$refs.seek.style.left + this.$refs.dot.width / 2
 
-          let newVal = Math.ceil(100 * ((maxPos - minPos) / width))
-          this.$emit('update', newVal)
+          newVal = Math.ceil(100 * ((maxPos - minPos) / width))
         } else if (e.clientX < minPos) {
           this.$refs.seek.style.left = '-' + this.$refs.process.width + 'px'
           this.$refs.dot.style.left = this.$refs.seek.style.left + this.$refs.dot.width / 2
 
-          let newVal = Math.ceil(100 * ((minPos - minPos) / width))
-          this.$emit('update', newVal)
+          newVal = Math.ceil(100 * ((minPos - minPos) / width))
         } else {
           nextPos = prePos - e.clientX
           prePos = e.clientX
           this.$refs.seek.style.left = this.$refs.seek.offsetLeft - nextPos + 'px'
           this.$refs.dot.style.left = this.$refs.dot.offsetLeft - nextPos + 'px'
 
-          let newVal = Math.ceil(100 * ((e.clientX - minPos) / width))
-          this.$emit('update', newVal)
+          newVal = Math.ceil(100 * ((e.clientX - minPos) / width))
         }
+
+        this.$emit('update', newVal)
       }
 
       document.onmouseup = () => {

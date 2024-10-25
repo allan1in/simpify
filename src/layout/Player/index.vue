@@ -15,11 +15,7 @@
     </div>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
-        <button
-          class="icon-wrapper"
-          :class="{ 'btn-active': isShuffle }"
-          @click="isShuffle = !isShuffle"
-        >
+        <button class="icon-wrapper" :class="{ 'btn-active': isShuffle }" @click="isShuffle = !isShuffle">
           <IconShuffle />
         </button>
         <button class="icon-wrapper">
@@ -34,11 +30,7 @@
         <button class="icon-wrapper">
           <IconNext />
         </button>
-        <button
-          class="icon-wrapper"
-          :class="{ 'btn-active': isRepeat }"
-          @click="isRepeat = !isRepeat"
-        >
+        <button class="icon-wrapper" :class="{ 'btn-active': isRepeat }" @click="isRepeat = !isRepeat">
           <IconRepeat />
         </button>
       </div>
@@ -70,11 +62,7 @@
         <IconConnectToDevice />
       </button> -->
       <VolumeBar />
-      <button
-        class="icon-wrapper"
-        :class="{ 'btn-active': isMiniPlayer }"
-        @click="isMiniPlayer = !isMiniPlayer"
-      >
+      <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
       </button>
       <button class="icon-wrapper" @click="toggleFullScreemPlayer">
@@ -99,7 +87,7 @@ import IconLyrics from '@/components/Icons/IconLyrics.vue'
 import IconMiniPlayer from '@/components/Icons/IconMiniPlayer.vue'
 import IconFullScreen from '@/components/Icons/IconFullScreen.vue'
 import IconInLikeSong from '@/components/Icons/IconInLikeSong.vue'
-import { mapActions, mapState } from 'pinia'
+import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import { useTrackStore } from '@/stores/track'
 import VolumeBar from '@/components/VolumeBar/index.vue'
@@ -135,11 +123,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(useTrackStore, ['coverUrl', 'name', 'artist', 'percentage']),
-    ...mapState(useAppStore, ['isPause', 'isShuffle', 'isRepeat', 'isMute', 'volume'])
+    ...mapWritableState(useTrackStore, ['coverUrl', 'name', 'artist', 'percentage']),
+    ...mapWritableState(useAppStore, ['isPause', 'isShuffle', 'isRepeat', 'isMute', 'volume', 'showFullScreenPlayer'])
   },
   methods: {
-    ...mapActions(useAppStore, ['toggleFullScreemPlayer'])
+    toggleFullScreemPlayer() {
+      this.showFullScreenPlayer = !this.showFullScreenPlayer
+    }
   }
 }
 </script>

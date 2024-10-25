@@ -26,10 +26,8 @@
             </div>
         </div>
         <div class="full-screen-container__player">
-            <div class="full-screen-container__player__process-bar">
-                <div class="full-screen-container__player__process-bar__seek">{{ seek }}</div>
-                <ProcessBar :percentage="percentage" />
-                <div class="full-screen-container__player__process-bar__duration">{{ duration }}</div>
+            <div class="full-screen-container__player__seek-bar">
+                <SeekBar size="large" />
             </div>
             <div class="full-screen-container__player__btns">
                 <div class="full-screen-container__player__btns__left"></div>
@@ -69,10 +67,9 @@
 <script>
 import { useAppStore } from '@/stores/app';
 import { useTrackStore } from '@/stores/track'
-import { mapActions, mapState } from 'pinia';
+import { mapWritableState } from 'pinia';
 import IconPrimaryLogo from '@/components/Icons/IconPrimaryLogo.vue';
 import IconClose from '@/components/Icons/IconClose.vue';
-import ProcessBar from '@/components/ProcessBar/index.vue'
 import IconShuffle from '../Icons/IconShuffle.vue';
 import IconPause from '../Icons/IconPause.vue';
 import IconPlay from '../Icons/IconPlay.vue';
@@ -81,12 +78,13 @@ import IconNext from '../Icons/IconNext.vue';
 import IconRepeat from '../Icons/IconRepeat.vue';
 import IconFullScreenClose from '../Icons/IconFullScreenClose.vue';
 import VolumeBar from '@/components/VolumeBar/index.vue'
+import SeekBar from '@/components/SeekBar/index.vue'
 
 export default {
     name: 'FullScreenPlayer',
     computed: {
-        ...mapState(useAppStore, ['showFullScreenPlayer', 'isPause', 'isRepeat', 'isShuffle', 'isMute', 'volume']),
-        ...mapState(useTrackStore, ['fromType', 'fromName', 'coverUrl', 'name', 'artist', 'seek', 'duration', 'percentage'])
+        ...mapWritableState(useAppStore, ['showFullScreenPlayer', 'isPause', 'isRepeat', 'isShuffle', 'isMute', 'volume']),
+        ...mapWritableState(useTrackStore, ['fromType', 'fromName', 'coverUrl', 'name', 'artist'])
     },
     components: {
         IconPrimaryLogo,
@@ -99,10 +97,21 @@ export default {
         IconRepeat,
         IconFullScreenClose,
         VolumeBar,
-        ProcessBar
+        SeekBar
     },
     methods: {
-        ...mapActions(useAppStore, ['toggleFullScreemPlayer', 'togglePause', 'toggleRepeat', 'toggleShuffle'])
+        toggleFullScreemPlayer() {
+            this.showFullScreenPlayer = !this.showFullScreenPlayer
+        },
+        togglePause() {
+            this.isPause = !this.isPause
+        },
+        toggleRepeat() {
+            this.isRepeat = !this.isRepeat
+        },
+        toggleShuffle() {
+            this.isShuffle = !this.isShuffle
+        }
     }
 }
 </script>
@@ -252,14 +261,9 @@ export default {
 
     &__player {
 
-        &__process-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 5rem;
-            gap: 1.6rem;
-            font-size: 1.8rem;
-            color: $color-font-secondary;
+        &__seek-bar {
+            width: 100%;
+            margin-bottom: 1rem;
         }
 
         &__btns {

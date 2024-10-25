@@ -8,19 +8,5 @@ export const useAppStore = defineStore('app', {
     isPause: false,
     isRepeat: false,
     isMute: false
-  }),
-  actions: {
-    toggleFullScreemPlayer() {
-      this.showFullScreenPlayer = !this.showFullScreenPlayer
-    },
-    toggleShuffle() {
-      this.isShuffle = !this.isShuffle
-    },
-    togglePause() {
-      this.isPause = !this.isPause
-    },
-    toggleRepeat() {
-      this.isRepeat = !this.isRepeat
-    }
-  }
+  })
 })

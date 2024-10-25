@@ -1,17 +1,13 @@
 <template>
   <div class="volume-container">
-    <button class="icon-wrapper" @click="isMute = !isMute">
+    <button class="icon-wrapper" @click="handleMuteClick">
       <IconVolumeMuted v-if="isMute || volume == 0" />
       <IconVolumeQuiet v-else-if="volume <= 33" />
       <IconVolumeNormal v-else-if="volume <= 66" />
       <IconVolumeLoud v-else />
     </button>
     <div class="volume-container__progress-wrapper">
-      <ProcessBar
-        :percentage="isMute ? 0 : volume"
-        @update="updateVolume"
-        @mouse-down="handleMouseDown"
-      />
+      <ProcessBar :percentage="isMute ? 0 : volume" @update="updateVolume" @mouse-down="handleMouseDown" />
     </div>
   </div>
 </template>
@@ -42,6 +38,21 @@ export default {
     },
     handleMouseDown() {
       if (this.isMute) {
+        this.isMute = false
+      }
+    },
+    handleMuteClick() {
+      if (this.volume === 0) {
+        this.volume = 25
+      }
+      this.isMute = !this.isMute
+    }
+  },
+  watch: {
+    volume(newVal, oldVal) {
+      if (newVal === 0) {
+        this.isMute = true
+      } else {
         this.isMute = false
       }
     }
