@@ -1,17 +1,16 @@
 <template>
-  <MyOverlayScrollbars os-element="main" @load-more="toggleLoadMore">
-    <div class="search-container">
-      <TopBar />
-      <section class="search-container__search-content">
-        <RouterView :load-more="loadMore" @load-more-finish="toggleLoadMore" />
-      </section>
-    </div>
-  </MyOverlayScrollbars>
+  <div class="search-container">
+    <TopBar />
+    <section class="search-container__search-content">
+      <RouterView />
+    </section>
+  </div>
 </template>
 
 <script>
+import { mapWritableState } from 'pinia'
 import TopBar from './TopBar/index.vue'
-import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
+import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'SearchResult',
@@ -22,18 +21,17 @@ export default {
         album: undefined,
         artist: undefined,
         playlist: undefined
-      },
-      loadMore: false
+      }
     }
+  },
+  computed: {
+    ...mapWritableState(useAppStore, ['loading'])
   },
   components: {
-    TopBar,
-    MyOverlayScrollbars
+    TopBar
   },
-  methods: {
-    toggleLoadMore(trigger = true) {
-      this.loadMore = trigger
-    }
+  beforeUnmount() {
+    this.loading = true
   }
 }
 </script>

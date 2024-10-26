@@ -1,49 +1,71 @@
 <template>
-  <Container :loading>
-    <div class="artist-container">
-      <div class="artist-container__cover" :style="{
+  <div class="artist-container" v-if="!loading">
+    <div
+      class="artist-container__cover"
+      :style="{
         'background-image': `url(${artist.images.length !== 0 ? artist.images[0].url : ''})`
-      }">
-        <h1 class="artist-container__cover__title">{{ artist.name }}</h1>
-        <div class="artist-container__cover__followers">
-          {{
-            Intl.NumberFormat().format(artist.followers.total) +
-            (artist.followers.total === '1' ? ' follower' : ' followers')
-          }}
-        </div>
-      </div>
-      <div class="artist-container__content">
-        <div v-if="tracks.length !== 0" class="artist-container__content__popular">
-          <TitleShowAll :title="'Popular'" />
-          <div class="artist-container__content__popular__content">
-            <TrackListHeader />
-            <TrackCard v-for="(track, index) in tracks" :key="track.id" :index="index" :showArtists="false"
-              :item="track" />
-          </div>
-        </div>
-        <TitleWithPartialItems v-if="albums.length !== 0" :router-name="'ArtistAllAlbums'" :limit="albums_limit"
-          :total="albums_total" :title="'Albums'"
-          :album-card-props="{ items: albums, showAlbumType: true, showArtists: false }" />
-        <TitleWithPartialItems v-if="singles.length !== 0" :router-name="'ArtistAllSingles'" :limit="singles_limit"
-          :total="singles_total" :title="'Singles'"
-          :album-card-props="{ items: singles, showAlbumType: true, showArtists: false }" />
-        <TitleWithPartialItems v-if="appearsOn.length !== 0" :router-name="'ArtistAllAppearsOn'"
-          :limit="appearsOn_limit" :total="appearsOn_total" :title="'Appears On'"
-          :album-card-props="{ items: appearsOn, showAlbumType: true, showArtists: false }" />
+      }"
+    >
+      <h1 class="artist-container__cover__title">{{ artist.name }}</h1>
+      <div class="artist-container__cover__followers">
+        {{
+          Intl.NumberFormat().format(artist.followers.total) +
+          (artist.followers.total === '1' ? ' follower' : ' followers')
+        }}
       </div>
     </div>
-  </Container>
+    <div class="artist-container__content">
+      <div v-if="tracks.length !== 0" class="artist-container__content__popular">
+        <TitleShowAll :title="'Popular'" />
+        <div class="artist-container__content__popular__content">
+          <TrackListHeader />
+          <TrackCard
+            v-for="(track, index) in tracks"
+            :key="track.id"
+            :index="index"
+            :showArtists="false"
+            :item="track"
+          />
+        </div>
+      </div>
+      <TitleWithPartialItems
+        v-if="albums.length !== 0"
+        :router-name="'ArtistAllAlbums'"
+        :limit="albums_limit"
+        :total="albums_total"
+        :title="'Albums'"
+        :album-card-props="{ items: albums, showAlbumType: true, showArtists: false }"
+      />
+      <TitleWithPartialItems
+        v-if="singles.length !== 0"
+        :router-name="'ArtistAllSingles'"
+        :limit="singles_limit"
+        :total="singles_total"
+        :title="'Singles'"
+        :album-card-props="{ items: singles, showAlbumType: true, showArtists: false }"
+      />
+      <TitleWithPartialItems
+        v-if="appearsOn.length !== 0"
+        :router-name="'ArtistAllAppearsOn'"
+        :limit="appearsOn_limit"
+        :total="appearsOn_total"
+        :title="'Appears On'"
+        :album-card-props="{ items: appearsOn, showAlbumType: true, showArtists: false }"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
 import TrackCard from '@/components/CardTrack/index.vue'
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
-import { getAlbums, getAppearsOn, getArtist, getSingles, getTopTracks } from '@/api/artist'
+import { getAlbums, getAppearsOn, getArtist, getSingles, getTopTracks } from '@/api/meta/artist'
 import AlbumCard from '@/components/CardAlbum/index.vue'
 import ArtistCard from '@/components/CardArtist/index.vue'
 import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
-import Container from '@/components/Container/index.vue'
+import { mapWritableState } from 'pinia'
+import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'Artist',
@@ -53,8 +75,7 @@ export default {
     AlbumCard,
     ArtistCard,
     TitleWithPartialItems,
-    TitleShowAll,
-    Container
+    TitleShowAll
   },
   data() {
     return {
@@ -73,8 +94,11 @@ export default {
       appearsOn_limit: 7,
       appearsOn_offset: 0,
       appearsOn_total: 0,
-      loading: true
+      loading_more: false
     }
+  },
+  computed: {
+    ...mapWritableState(useAppStore, ['loadMore', 'loading'])
   },
   methods: {
     async getAll() {
@@ -124,12 +148,14 @@ export default {
   watch: {
     $route: {
       async handler(to, from) {
-        this.loading = true
         this.id = to.params.artistId
         await this.getAll()
       },
       immediate: true
     }
+  },
+  beforeUnmount() {
+    this.loading = true
   }
 }
 </script>
@@ -137,7 +163,7 @@ export default {
 <style lang="scss" scoped>
 .artist-container {
   &__cover {
-    background-image: url("https://i.scdn.co/image/ab67616d0000b2737c20fb440980c4f2f24346c5");
+    background-image: url('https://i.scdn.co/image/ab67616d0000b2737c20fb440980c4f2f24346c5');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 50%;

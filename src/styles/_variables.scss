@@ -18,6 +18,8 @@ $font-family-text: 'SpotifyMixUI', sans-serif;
 
 // PADDING OR MARGIN
 $gutter: 0.8rem;
+$gutter-2x: calc(2 * $gutter);
+$gutter-4x: calc(2 * $gutter-2x);
 
 // HEIGHT
 $height-player: 7.2rem;
@@ -28,3 +30,6 @@ $height-content: calc(100vh - $height-player - $height-nav - 4 * $gutter);
 // BORDER
 $border-radius-default: 0.8rem;
 $border-radius-small: 0.4rem;
+
+// WIDTH
+$max-width-main-view: 192rem;

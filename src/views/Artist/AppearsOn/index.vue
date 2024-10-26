@@ -1,44 +1,49 @@
 <template>
-  <Container :loading @load-more="getAppearsOn">
-    <div class="artist-all-appears-on">
-      <TitleShowAll :title="'Appears On'" />
-      <div class="artist-all-appears-on__results">
-        <AlbumCard v-for="item in appearsOn" :key="item.id" :item="item" />
-      </div>
+  <div class="artist-all-appears-on" v-if="!loading">
+    <TitleShowAll :title="'Appears On'" />
+    <div class="artist-all-appears-on__results">
+      <AlbumCard v-for="item in appearsOn" :key="item.id" :item="item" />
     </div>
-  </Container>
+  </div>
 </template>
 
 <script>
 import AlbumCard from '@/components/CardAlbum/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
-import { getAppearsOn, getNextAppearsOn } from '@/api/artist'
-import Container from '@/components/Container/index.vue'
+import { getAppearsOn, getNextAppearsOn } from '@/api/meta/artist'
+import { mapWritableState } from 'pinia'
+import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'ArtistAllApearsOn',
   components: {
     AlbumCard,
     TitleShowAll,
-    AlbumCard,
-    Container
+    AlbumCard
   },
   data() {
     return {
       id: this.$route.params.artistId,
       appearsOn: [],
-      loading: true,
-      appearsOn_limit: 28,
+      appearsOn_limit: 32,
       appearsOn_offset: 0,
       appearsOn_next: '',
-      appearsOn_next: false
+      loadingMore: false
     }
   },
+  computed: {
+    ...mapWritableState(useAppStore, ['loadMore', 'loading'])
+  },
   methods: {
+    async getAll() {
+      await this.getAppearsOn()
+
+      this.loading = false
+    },
     async getAppearsOn() {
-      if (!this.appearsOn_next && this.appearsOn_next !== null) {
+      if (!this.loadingMore && this.appearsOn_next !== null) {
+        this.loadingMore = true
         let res
-        this.appearsOn_next = true
 
         if (this.appearsOn_next === '') {
           const params = {
@@ -56,13 +61,23 @@ export default {
         this.appearsOn = [...oldVals, ...newVals]
         this.appearsOn_next = res.next
 
-        this.appearsOn_next = false
-        this.loading = false
+        this.loadingMore = false
+      }
+      this.loadMore = false
+    }
+  },
+  watch: {
+    loadMore(newVal, oldVal) {
+      if (newVal) {
+        this.getAppearsOn()
       }
     }
   },
   created() {
-    this.getAppearsOn()
+    this.getAll()
+  },
+  beforeUnmount() {
+    this.loading = true
   }
 }
 </script>
@@ -72,8 +87,7 @@ export default {
   padding: 1.6rem;
 
   &__results {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
+    @include gridCardsPreview;
   }
 }
 </style>

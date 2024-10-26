@@ -1,5 +1,5 @@
 <template>
-  <main class="all-container">
+  <main class="all-container" v-if="!loading">
     <div v-if="!loading" class="all-container__content">
       <div v-if="tracks.total" class="all-container__content__songs">
         <TitleShowAll :router-name="'GetTracks'" :title="'Songs'" />
@@ -38,7 +38,6 @@
         :playlist-card-props="{ items: playlists.items }"
       />
     </div>
-    <Loading :loading="loading" />
   </main>
 </template>
 
@@ -47,13 +46,14 @@ import AlbumCard from '@/components/CardAlbum/index.vue'
 import ArtistCard from '@/components/CardArtist/index.vue'
 import TrackCard from '@/components/CardTrack/index.vue'
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
-import { searchAlbums, searchPlaylists } from '@/api/search'
-import { searchArtists } from '@/api/search'
-import { searchTracks } from '@/api/search'
+import { searchAlbums, searchPlaylists } from '@/api/meta/search'
+import { searchArtists } from '@/api/meta/search'
+import { searchTracks } from '@/api/meta/search'
 import { debounce } from '@/utils/debounce'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
-import Loading from '@/components/Loading/index.vue'
+import { mapWritableState } from 'pinia'
+import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'GetAll',
@@ -63,25 +63,26 @@ export default {
     AlbumCard,
     TrackListHeader,
     TitleShowAll,
-    TitleWithPartialItems,
-    Loading
+    TitleWithPartialItems
   },
   data() {
     return {
       tracks: {},
-      tracks_limit:4,
-      tracks_offset:0,
+      tracks_limit: 4,
+      tracks_offset: 0,
       artists: {},
-      artists_limit:7,
-      artists_offset:0,
+      artists_limit: 7,
+      artists_offset: 0,
       albums: {},
-      albums_limit:7,
-      albums_offset:0,
+      albums_limit: 7,
+      albums_offset: 0,
       playlists: {},
-      playlists_limit:7,
-      playlists_offset:0,
-      loading: true
+      playlists_limit: 7,
+      playlists_offset: 0
     }
+  },
+  computed: {
+    ...mapWritableState(useAppStore, ['loading'])
   },
   methods: {
     getAll: debounce(async function () {
@@ -130,8 +131,11 @@ export default {
       this.playlists = res
     }
   },
-  mounted() {
+  created() {
     this.getAll()
+  },
+  beforeUnmount() {
+    this.loading = true
   },
   watch: {
     $route(to, from) {

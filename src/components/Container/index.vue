@@ -1,7 +1,7 @@
 <template>
-  <MyOverlayScrollbars os-element="main" @load-more="$emit('loadMore')">
+  <MyOverlayScrollbars os-element="main">
     <div class="container">
-      <div v-if="!loading">
+      <div class="container__content" v-show="!loading">
         <slot></slot>
       </div>
       <Loading :loading="loading" />
@@ -12,6 +12,8 @@
 <script>
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import Loading from '@/components/Loading/index.vue'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'Search',
@@ -19,12 +21,8 @@ export default {
     MyOverlayScrollbars,
     Loading
   },
-  props: {
-    loading: {
-      type: Boolean,
-      require: true,
-      default: true
-    }
+  computed: {
+    ...mapState(useAppStore, ['loading'])
   }
 }
 </script>
@@ -32,5 +30,10 @@ export default {
 <style lang="scss" scoped>
 .container {
   min-height: $height-content;
+
+  &__content {
+    max-width: $max-width-main-view;
+    margin: 0 auto;
+  }
 }
 </style>

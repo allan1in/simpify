@@ -18,12 +18,17 @@
 
 <script>
 // https://github.com/KingSora/OverlayScrollbars/blob/master/packages/overlayscrollbars-vue/README.md#properties
+import { useAppStore } from '@/stores/app'
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-vue'
+import { mapWritableState } from 'pinia'
 
 export default {
   name: 'MyOverlayScrollbars',
   components: {
     OverlayScrollbarsComponent
+  },
+  computed: {
+    ...mapWritableState(useAppStore, ['loadMore'])
   },
   props: {
     osElement: {
@@ -42,7 +47,7 @@ export default {
         Math.ceil(event.srcElement.clientHeight + event.srcElement.scrollTop) >=
         event.srcElement.scrollHeight - bottom
       if (trigger) {
-        this.$emit('loadMore')
+        this.loadMore = true
       }
     }
   }

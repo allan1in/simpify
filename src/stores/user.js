@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import settings from '@/settings'
-import { getCurrentUserProfile } from '@/api/user'
+import { getCurrentUserProfile } from '@/api/meta/user'
 import { getToken, refreshToken } from '@/api/auth/index'
 
 const { clientId, redirectUrl } = settings

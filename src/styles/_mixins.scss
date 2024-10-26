@@ -39,3 +39,27 @@
   font-family: $font-family-title;
   font-weight: 700;
 }
+
+@mixin gridCardsPreview {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(calc(($max-width-main-view - (2 * $gutter-2x) - (2 * $gutter)) / 8), 100%), 1fr)
+  );
+}
+
+@mixin gridCardsTopSongs {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(calc(($max-width-main-view / 4) - 3 * $gutter-2x - (2 * $gutter)), 100%), 1fr)
+  );
+}
+
+@mixin gridCardsSearch {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(calc(($max-width-main-view - (5 * $gutter-4x) - (2 * $gutter)) / 4), 100%), 1fr)
+  );
+}

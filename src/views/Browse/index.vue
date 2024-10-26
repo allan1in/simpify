@@ -1,37 +1,37 @@
 <template>
-  <Container :loading @load-more="getPlaylists">
-    <div class="browse-container">
-      <div class="browse-container__cover">
-        <h1 class="browse-container__cover__title">{{ category.name }}</h1>
-      </div>
-      <div class="browse-container__content">
-        <PlaylistCard v-for="item in playlists" :item="item" />
-      </div>
+  <div class="browse-container" v-if="!loading">
+    <div class="browse-container__cover">
+      <h1 class="browse-container__cover__title">{{ category.name }}</h1>
     </div>
-  </Container>
+    <div class="browse-container__content">
+      <PlaylistCard v-for="item in playlists" :item="item" />
+    </div>
+  </div>
 </template>
 
 <script>
-import Container from '@/components/Container/index.vue'
-import { getCategory, getCategoryPlaylists, getNextCategoryPlaylists } from '@/api/browse.js'
+import { getCategory, getCategoryPlaylists, getNextCategoryPlaylists } from '@/api/meta/browse.js'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
+import { mapWritableState } from 'pinia'
+import { useAppStore } from '@/stores/app'
 
 export default {
   nmae: 'Browse',
   components: {
-    Container,
     PlaylistCard
   },
   data() {
     return {
-      loading: true,
       category: {},
       playlists: [],
       playlists_limit: 28,
       playlists_offset: 0,
       playlists_next: '',
-      playlists_loadMore: false
+      loading_more: false
     }
+  },
+  computed: {
+    ...mapWritableState(useAppStore, ['loadMore', 'loading'])
   },
   methods: {
     async getAll() {
@@ -44,9 +44,9 @@ export default {
       this.category = res
     },
     async getPlaylists() {
-      if (!this.playlists_loadMore && this.playlists_next !== null) {
+      if (!this.loading_more && this.playlists_next !== null) {
+        this.loading_more = true
         let res
-        this.playlists_loadMore = true
 
         if (this.playlists_next === '') {
           const params = {
@@ -69,14 +69,23 @@ export default {
         this.playlists = [...oldVals, ...newVals]
 
         this.playlists_next = res.next
-
-        this.playlists_loadMore = false
-        this.loading = false
+        this.loading_more = false
+      }
+      this.loadMore = false
+    }
+  },
+  watch: {
+    loadMore(newVal, oldVal) {
+      if (newVal) {
+        this.getPlaylists()
       }
     }
   },
   created() {
     this.getAll()
+  },
+  beforeUnmount() {
+    this.loading = true
   }
 }
 </script>

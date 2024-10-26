@@ -4,7 +4,9 @@
     <section class="mid-wrapper">
       <!-- <MyLibrary /> -->
       <div class="main-view">
-        <RouterView />
+        <Container>
+          <RouterView />
+        </Container>
       </div>
       <!-- <DetailInfo /> -->
     </section>
@@ -17,6 +19,7 @@ import DetailInfo from './DetailInfo/index.vue'
 import MyLibrary from './MyLibrary/index.vue'
 import NavBar from './NavBar/index.vue'
 import PlayerBar from './Player/index.vue'
+import Container from '@/components/Container/index.vue'
 
 export default {
   name: 'Layout',
@@ -24,7 +27,8 @@ export default {
     NavBar,
     MyLibrary,
     DetailInfo,
-    PlayerBar
+    PlayerBar,
+    Container
   }
 }
 </script>

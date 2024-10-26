@@ -6,41 +6,39 @@
       </div>
     </div>
   </main>
-  <Loading :loading />
 </template>
 
 <script>
 import ArtistCard from '@/components/CardArtist/index.vue'
-import { searchArtists, searchNextPage } from '@/api/search'
-import Loading from '@/components/Loading/index.vue'
+import { searchArtists, searchNextPage } from '@/api/meta/search'
+import { mapWritableState } from 'pinia'
+import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'GetArtists',
   components: {
-    ArtistCard,
-    Loading
-  },
-  // https://danyal.dk/blog/2022/12/05/vuejs-3-emit-the-warning-extraneous-non-emits-event-listeners/
-  emits: ['loadMoreFinish'],
-  props: {
-    loadMore: {
-      type: Boolean,
-      require: true,
-      default: false
-    }
+    ArtistCard
   },
   data() {
     return {
       artists: [],
-      loading: true,
       artists_limit: 28,
       artists_offset: 0,
-      artists_next: ''
+      artists_next: '',
+      loadingMore: false
     }
   },
+  computed: {
+    ...mapWritableState(useAppStore, ['loading', 'loadMore'])
+  },
   methods: {
+    async getAll() {
+      await this.getArtists()
+      this.loading = false
+    },
     async getArtists() {
-      if (this.artists_next != null) {
+      if (!this.loadingMore && this.artists_next != null) {
+        this.loadingMore = true
         let res
 
         if (this.artists_next === '') {
@@ -61,13 +59,10 @@ export default {
         this.artists = [...oldVals, ...newVals]
         this.artists_next = res.next
 
-        this.$emit('loadMoreFinish', false)
-        this.loading = false
+        this.loadingMore = false
       }
+      this.loadMore = false
     }
-  },
-  created() {
-    this.getArtists()
   },
   watch: {
     loadMore(newVal, oldVal) {
@@ -75,6 +70,12 @@ export default {
         this.getArtists()
       }
     }
+  },
+  created() {
+    this.getAll()
+  },
+  beforeUnmount() {
+    this.loading = true
   }
 }
 </script>

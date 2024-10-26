@@ -6,41 +6,39 @@
       </div>
     </div>
   </main>
-  <Loading :loading />
 </template>
 
 <script>
-import { searchAlbums, searchNextPage } from '@/api/search'
+import { searchAlbums, searchNextPage } from '@/api/meta/search'
 import AlbumCard from '@/components/CardAlbum/index.vue'
-import Loading from '@/components/Loading/index.vue'
+import { useAppStore } from '@/stores/app'
+import { mapWritableState } from 'pinia'
 
 export default {
   name: 'GetAlbums',
   data() {
     return {
       albums: [],
-      loading: true,
       albums_limit: 28,
       albums_offset: 0,
-      albums_next: ''
-    }
-  },
-  // https://danyal.dk/blog/2022/12/05/vuejs-3-emit-the-warning-extraneous-non-emits-event-listeners/
-  emits: ['loadMoreFinish'],
-  props: {
-    loadMore: {
-      type: Boolean,
-      require: true,
-      default: false
+      albums_next: '',
+      loadingMore: false
     }
   },
   components: {
-    AlbumCard,
-    Loading
+    AlbumCard
+  },
+  computed: {
+    ...mapWritableState(useAppStore, ['loading', 'loadMore'])
   },
   methods: {
+    async getAll() {
+      await this.getAlbums()
+      this.loading = false
+    },
     async getAlbums() {
-      if (this.albums_next != null) {
+      if (!this.loadingMore && this.albums_next != null) {
+        this.loadingMore = true
         let res
 
         if (this.albums_next === '') {
@@ -61,13 +59,10 @@ export default {
         this.albums = [...oldVals, ...newVals]
         this.albums_next = res.next
 
-        this.$emit('loadMoreFinish', false)
-        this.loading = false
+        this.loadingMore = false
       }
+      this.loadMore = false
     }
-  },
-  created() {
-    this.getAlbums()
   },
   watch: {
     loadMore(newVal, oldVal) {
@@ -75,6 +70,12 @@ export default {
         this.getAlbums()
       }
     }
+  },
+  created() {
+    this.getAll()
+  },
+  beforeUnmount() {
+    this.loading = true
   }
 }
 </script>

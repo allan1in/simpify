@@ -1,44 +1,48 @@
 <template>
-  <Container :loading @load-more="getAlbums">
-    <div class="artist-all-albums">
-      <TitleShowAll :title="'Albums'" />
-      <div class="artist-all-albums__results">
-        <AlbumCard v-for="item in albums" :key="item.id" :item="item" />
-      </div>
+  <div class="artist-all-albums" v-if="!loading">
+    <TitleShowAll :title="'Albums'" />
+    <div class="artist-all-albums__results">
+      <AlbumCard v-for="item in albums" :key="item.id" :item="item" />
     </div>
-  </Container>
+  </div>
 </template>
 
 <script>
 import AlbumCard from '@/components/CardAlbum/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
-import { getAlbums, getNextAlbums } from '@/api/artist'
-import Container from '@/components/Container/index.vue'
+import { getAlbums, getNextAlbums } from '@/api/meta/artist'
+import { mapWritableState } from 'pinia'
+import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'ArtistAllAlbums',
   components: {
     AlbumCard,
     TitleShowAll,
-    AlbumCard,
-    Container
+    AlbumCard
   },
   data() {
     return {
       id: this.$route.params.artistId,
       albums: [],
-      loading: true,
-      albums_limit: 28,
+      albums_limit: 32,
       albums_offset: 0,
       albums_next: '',
-      albums_loadMore: false
+      loadingMore: false
     }
   },
+  computed: {
+    ...mapWritableState(useAppStore, ['loadMore', 'loading'])
+  },
   methods: {
+    async getAll() {
+      await this.getAlbums()
+      this.loading = false
+    },
     async getAlbums() {
-      if (!this.albums_loadMore && this.albums_next !== null) {
+      if (!this.loadingMore && this.albums_next !== null) {
+        this.loadingMore = true
         let res
-        this.albums_loadMore = true
 
         if (this.albums_next === '') {
           const params = {
@@ -56,13 +60,23 @@ export default {
         this.albums = [...oldVals, ...newVals]
         this.albums_next = res.next
 
-        this.albums_loadMore = false
-        this.loading = false
+        this.loadingMore = false
+      }
+      this.loadMore = false
+    }
+  },
+  watch: {
+    loadMore(newVal, oldVal) {
+      if (newVal) {
+        this.getAlbums()
       }
     }
   },
   created() {
-    this.getAlbums()
+    this.getAll()
+  },
+  beforeUnmount() {
+    this.loading = true
   }
 }
 </script>
@@ -72,8 +86,7 @@ export default {
   padding: 1.6rem;
 
   &__results {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
+    @include gridCardsPreview;
   }
 }
 </style>

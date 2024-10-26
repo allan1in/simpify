@@ -1,4 +1,4 @@
-import { getPlayerState } from '@/api/player'
+import { getPlayerState } from '@/api/meta/player'
 import { defineStore } from 'pinia'
 
 export const usePlayerStore = defineStore('player', {

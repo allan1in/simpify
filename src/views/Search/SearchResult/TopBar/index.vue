@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { search } from '@/api/search'
+import { search } from '@/api/meta/search'
 import { debounce } from '@/utils/debounce'
 
 export default {

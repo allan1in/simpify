@@ -1,82 +1,82 @@
 <template>
-  <Container :loading @load-more="getPlaylists">
-    <div class="user-container">
-      <div class="user-container__cover">
-        <div class="user-container__cover__img-wrapper">
-          <img
-            v-if="profile.images[0]"
-            class="user-container__cover__img-wrapper__img"
-            :src="profile.images[0].url"
-            :alt="profile.display_name"
-          />
-          <div v-else class="user-container__cover__img-wrapper__icon-wrapper">
-            <IconDefaultUser />
-          </div>
-        </div>
-        <div class="user-container__cover__info">
-          <span class="user-container__cover__info__type">{{
-            `${profile.type.charAt(0).toUpperCase()}${profile.type.slice(1)}`
-          }}</span>
-          <h1 class="user-container__cover__info__title">{{ profile.display_name }}</h1>
-          <div class="user-container__cover__info__details">
-            <span class="user-container__cover__info__details__playlists">
-              {{ `${Intl.NumberFormat().format(playlists_total)} Public Playlists` }}
-            </span>
-            <span class="user-container__cover__info__details__followers">
-              {{
-                profile.followers.total === 0
-                  ? ''
-                  : ` • ${
-                      Intl.NumberFormat().format(profile.followers.total) +
-                      (profile.followers.total === '1' ? ' follower' : ' followers')
-                    }`
-              }}
-            </span>
-          </div>
+  <div class="user-container" v-if="!loading">
+    <div class="user-container__cover">
+      <div class="user-container__cover__img-wrapper">
+        <img
+          v-if="profile.images[0]"
+          class="user-container__cover__img-wrapper__img"
+          :src="profile.images[0].url"
+          :alt="profile.display_name"
+        />
+        <div v-else class="user-container__cover__img-wrapper__icon-wrapper">
+          <IconDefaultUser />
         </div>
       </div>
-      <div class="user-container__content">
-        <TitleShowAll title="Public Playlists" />
-        <div class="user-container__content__playlists">
-          <PlaylistCard v-for="item in playlists" :item="item" />
+      <div class="user-container__cover__info">
+        <span class="user-container__cover__info__type">{{
+          `${profile.type.charAt(0).toUpperCase()}${profile.type.slice(1)}`
+        }}</span>
+        <h1 class="user-container__cover__info__title">{{ profile.display_name }}</h1>
+        <div class="user-container__cover__info__details">
+          <span class="user-container__cover__info__details__playlists">
+            {{ `${Intl.NumberFormat().format(playlists_total)} Public Playlists` }}
+          </span>
+          <span class="user-container__cover__info__details__followers">
+            {{
+              profile.followers.total === 0
+                ? ''
+                : ` • ${
+                    Intl.NumberFormat().format(profile.followers.total) +
+                    (profile.followers.total === '1' ? ' follower' : ' followers')
+                  }`
+            }}
+          </span>
         </div>
       </div>
     </div>
-  </Container>
+    <div class="user-container__content">
+      <TitleShowAll title="Public Playlists" />
+      <div class="user-container__content__playlists">
+        <PlaylistCard v-for="item in playlists" :item="item" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { getUserPlaylists, getUserProfile, getNextUserPlaylists } from '@/api/user'
-import Container from '@/components/Container/index.vue'
+import { getUserPlaylists, getUserProfile, getNextUserPlaylists } from '@/api/meta/user'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
 import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
+import { mapWritableState } from 'pinia'
+import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'User',
   components: {
-    Container,
     TitleShowAll,
     PlaylistCard,
     IconDefaultUser
   },
   data() {
     return {
-      id:this.$route.params.userId,
+      id: this.$route.params.userId,
       profile: {},
       playlists: [],
-      loading: true,
-      playlists_loadMore: false,
-      playlists_next:'',
-      playlists_limit: 28,
+      playlists_next: '',
+      playlists_limit: 32,
       playlists_offset: 0,
-      playlists_total: 0,
+      playlists_total: 0
     }
+  },
+  computed: {
+    ...mapWritableState(useAppStore, ['loadMore', 'loading'])
   },
   methods: {
     async getAll() {
       await this.getProfile()
       await this.getPlaylists()
+
       this.loading = false
     },
     async getProfile() {
@@ -84,9 +84,9 @@ export default {
       this.profile = res
     },
     async getPlaylists() {
-      if (!this.playlists_loadMore && this.playlists_next !== null) {
+      if (!this.loading_more && this.playlists_next !== null) {
+        this.loading_more = true
         let res
-        this.playlists_loadMore = true
 
         if (this.playlists_next === '') {
           const params = {
@@ -105,12 +105,24 @@ export default {
         this.playlists_next = res.next
         this.playlists_total = res.total
 
-        this.playlists_loadMore = false
+        this.loading_more = false
+      }
+      this.loadMore = false
+    }
+  },
+  watch: {
+    loadMore(newVal, oldVal) {
+      if (newVal) {
+        console.log('new')
+        this.getPlaylists()
       }
     }
   },
   created() {
     this.getAll()
+  },
+  beforeUnmount() {
+    this.loading = true
   }
 }
 </script>
@@ -118,12 +130,12 @@ export default {
 <style lang="scss" scoped>
 .user-container {
   &__cover {
-    padding: 2rem;
+    padding: $gutter-4x;
     background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
     display: flex;
     align-items: end;
     justify-content: start;
-    gap: 2.5rem;
+    gap: $gutter-4x;
 
     &__img-wrapper {
       flex-shrink: 0;
@@ -171,11 +183,10 @@ export default {
   }
 
   &__content {
-    padding: 2.4rem;
+    padding: $gutter-2x;
 
     &__playlists {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
+      @include gridCardsPreview;
     }
   }
 }

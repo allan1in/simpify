@@ -5,43 +5,41 @@
       <TrackCard v-for="(item, index) in tracks" :key="index" :item="item" :index="index" />
     </div>
   </main>
-  <Loading :loading />
 </template>
 
 <script>
 import TrackCard from '@/components/CardTrack/index.vue'
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
-import { searchTracks, searchNextPage } from '@/api/search'
-import Loading from '@/components/Loading/index.vue'
+import { searchTracks, searchNextPage } from '@/api/meta/search'
+import { useAppStore } from '@/stores/app'
+import { mapWritableState } from 'pinia'
 
 export default {
   name: 'GetTracks',
   components: {
     TrackCard,
-    TrackListHeader,
-    Loading
+    TrackListHeader
   },
   data() {
     return {
       tracks: [],
-      loading: true,
-      loading_limit: 14,
+      loading_limit: 20,
       loading_offset: 0,
-      loading_next: ''
+      loading_next: '',
+      loadingMore: false
     }
   },
-  // https://danyal.dk/blog/2022/12/05/vuejs-3-emit-the-warning-extraneous-non-emits-event-listeners/
-  emits: ['loadMoreFinish'],
-  props: {
-    loadMore: {
-      type: Boolean,
-      require: true,
-      default: false
-    }
+  computed: {
+    ...mapWritableState(useAppStore, ['loading', 'loadMore'])
   },
   methods: {
+    async getAll() {
+      await this.getTracks()
+      this.loading = false
+    },
     async getTracks() {
-      if (this.loading_next != null) {
+      if (!this.loadingMore && this.loading_next != null) {
+        this.loadingMore = true
         let res
 
         if (this.loading_next === '') {
@@ -62,13 +60,10 @@ export default {
         this.tracks = [...oldVals, ...newVals]
         this.loading_next = res.next
 
-        this.$emit('loadMoreFinish', false)
-        this.loading = false
+        this.loadingMore = false
       }
+      this.loadMore = false
     }
-  },
-  created() {
-    this.getTracks()
   },
   watch: {
     loadMore(newVal, oldVal) {
@@ -76,6 +71,12 @@ export default {
         this.getTracks()
       }
     }
+  },
+  created() {
+    this.getAll()
+  },
+  beforeUnmount() {
+    this.loading = true
   }
 }
 </script>

@@ -6,47 +6,39 @@
       </div>
     </div>
   </main>
-  <Loading :loading />
 </template>
 
 <script>
-import { searchPlaylists, searchNextPage } from '@/api/search'
+import { searchPlaylists, searchNextPage } from '@/api/meta/search'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
-import Loading from '@/components/Loading/index.vue'
+import { useAppStore } from '@/stores/app'
+import { mapWritableState } from 'pinia'
 
 export default {
   name: 'GetPlaylists',
   data() {
     return {
       playlists: [],
-      loading: true,
       playlists_limit: 28,
       playlists_offset: 0,
-      playlists_next: ''
-    }
-  },
-  // https://danyal.dk/blog/2022/12/05/vuejs-3-emit-the-warning-extraneous-non-emits-event-listeners/
-  emits: ['loadMoreFinish'],
-  props: {
-    loadMore: {
-      type: Boolean,
-      require: true,
-      default: false
-    }
-  },
-  props: {
-    loadMore: {
-      type: Boolean,
-      require: true
+      playlists_next: '',
+      loadingMore: false
     }
   },
   components: {
-    PlaylistCard,
-    Loading
+    PlaylistCard
+  },
+  computed: {
+    ...mapWritableState(useAppStore, ['loadMore', 'loading'])
   },
   methods: {
+    async getAll() {
+      await this.getPlaylists()
+      this.loading = false
+    },
     async getPlaylists() {
-      if (this.playlists_next != null) {
+      if (!this.loadingMore && this.playlists_next != null) {
+        this.loadingMore = true
         let res
 
         if (this.playlists_next === '') {
@@ -67,13 +59,10 @@ export default {
         this.playlists = [...oldVals, ...newVals]
         this.playlists_next = res.next
 
-        this.$emit('loadMoreFinish', false)
-        this.loading = false
+        this.loadingMore = false
       }
+      this.loadMore = false
     }
-  },
-  created() {
-    this.getPlaylists()
   },
   watch: {
     loadMore(newVal, oldVal) {
@@ -81,6 +70,12 @@ export default {
         this.getPlaylists()
       }
     }
+  },
+  created() {
+    this.getAll()
+  },
+  beforeUnmount() {
+    this.loading = true
   }
 }
 </script>
