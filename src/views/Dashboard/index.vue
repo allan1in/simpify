@@ -153,6 +153,7 @@ export default {
 <style lang="scss" scoped>
 .dashboard-container {
   padding: 1.6rem;
+  background: linear-gradient(to bottom, $color-bg-5 0rem, transparent 50rem);
 
   &__top-songs {
     &__content {
