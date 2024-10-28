@@ -50,10 +50,10 @@ export default {
             limit: this.singles_limit,
             offset: this.singles_offset
           }
-          res = (await getSingles(this.id, params)).data
+          res = (await getSingles(this.id, params))
         } else {
           let path = this.singles_next
-          res = (await getNextSingles(this.id, path.slice(path.indexOf('?') + 1))).data
+          res = (await getNextSingles(this.id, path.slice(path.indexOf('?') + 1)))
         }
 
         let newVals = res.items
@@ -87,7 +87,7 @@ export default {
   padding: 1.6rem;
 
   &__results {
-    @include gridCardsPreview;
+    @include gridCards;
   }
 }
 </style>

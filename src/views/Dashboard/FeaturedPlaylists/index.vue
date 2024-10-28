@@ -49,10 +49,10 @@ export default {
             limit: this.playlists_limit,
             offset: this.playlists_offset
           }
-          res = (await getFeaturedPlaylists(params)).data.playlists
+          res = (await getFeaturedPlaylists(params)).playlists
         } else {
           let path = this.playlists_next
-          res = (await getNextFeaturedPlaylists(path.slice(path.indexOf('?') + 1))).data.playlists
+          res = (await getNextFeaturedPlaylists(path.slice(path.indexOf('?') + 1))).playlists
         }
 
         let newVals = res.items
@@ -86,7 +86,7 @@ export default {
   padding: 1.6rem;
 
   &__content {
-    @include gridCardsPreview;
+    @include gridCards;
   }
 }
 </style>

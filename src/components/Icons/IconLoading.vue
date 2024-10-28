@@ -1,5 +1,5 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" height="12px" width="56px" viewBox="0 0 1 100">
+  <svg xmlns="http://www.w3.org/2000/svg" display="block" height="1.2rem" width="5.6rem" viewBox="0 0 1 100">
     <circle class="dot dot1" cx="-140" cy="50" r="32"></circle>
     <circle class="dot dot2" cx="0" cy="50" r="32"></circle>
     <circle class="dot dot3" cx="140" cy="50" r="32"></circle>
@@ -32,11 +32,13 @@
     opacity: 0.75;
     transform: scale(1.3);
   }
+
   72.5% {
     animation-timing-function: linear;
     opacity: 0.5;
     transform: scale(1);
   }
+
   100% {
     opacity: 0.5;
     transform: scale(1);

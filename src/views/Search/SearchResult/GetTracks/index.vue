@@ -48,10 +48,10 @@ export default {
             limit: this.loading_limit,
             offset: this.loading_offset
           }
-          res = (await searchTracks(params)).data.tracks
+          res = (await searchTracks(params)).tracks
         } else {
           let path = this.loading_next
-          res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).data.tracks
+          res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).tracks
         }
 
         let newVals = res.items

@@ -4,19 +4,10 @@
       <TitleShowAll title="Browse All" />
     </div>
     <div class="search-container__cards-wrapper">
-      <router-link
-        :to="{ name: 'Browse', params: { categoryId: item.id } }"
-        class="search-container__cards-wrapper__card"
-        v-for="(item, index) in categories"
-        :key="item.id"
-      >
+      <router-link :to="{ name: 'Browse', params: { categoryId: item.id } }"
+        class="search-container__cards-wrapper__card" v-for="(item, index) in categories" :key="item.id">
         <h2 class="search-container__cards-wrapper__card__name">{{ item.name }}</h2>
-        <img
-          v-if="item.cover"
-          class="search-container__cards-wrapper__card__img"
-          :src="item.cover"
-          :alt="item.name"
-        />
+        <img v-if="item.cover" class="search-container__cards-wrapper__card__img" :src="item.cover" :alt="item.name" />
       </router-link>
     </div>
   </div>
@@ -72,10 +63,10 @@ export default {
             limit: this.categories_limit,
             offset: this.categories_offset
           }
-          res = (await getSeveralCategories(params)).data.categories
+          res = (await getSeveralCategories(params)).categories
         } else {
           let path = this.categories_next
-          res = (await getNextSeveralCategories(path.slice(path.indexOf('?') + 1))).data.categories
+          res = (await getNextSeveralCategories(path.slice(path.indexOf('?') + 1))).categories
         }
 
         let newVals = res.items
@@ -100,7 +91,7 @@ export default {
           limit: 1,
           offset: 0
         }
-        const res = (await getCategoryPlaylists(item.id, params)).data.playlists.items
+        const res = (await getCategoryPlaylists(item.id, params)).playlists.items
         item.cover = res[0].images[0].url
       })
     }
@@ -127,10 +118,9 @@ export default {
 
   &__cards-wrapper {
     padding: 1.6rem;
-
-    @include gridCardsSearch;
-
     gap: $gutter-4x;
+
+    @include gridCardsLess;
 
     &__card {
       aspect-ratio: 7 / 4;

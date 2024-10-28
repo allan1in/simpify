@@ -1,16 +1,16 @@
 <template>
   <main class="app-container">
-    <NavBar />
-    <section class="mid-wrapper">
+    <NavBar class="app-container__nav" />
+    <section class="app-container__mid-wrapper">
       <!-- <MyLibrary /> -->
-      <div class="main-view">
+      <div class="app-container__mid-wrapper__main-view">
         <Container>
           <RouterView />
         </Container>
       </div>
       <!-- <DetailInfo /> -->
     </section>
-    <PlayerBar />
+    <PlayerBar class="app-container__player" />
   </main>
 </template>
 
@@ -39,12 +39,12 @@ export default {
   height: 100vh;
   padding: $gutter;
 
-  .mid-wrapper {
+  &__mid-wrapper {
     height: $height-content;
     display: flex;
     gap: $gutter;
 
-    .main-view {
+    &__main-view {
       background-color: $color-bg-2;
       border-radius: $border-radius-default;
       flex: 4;

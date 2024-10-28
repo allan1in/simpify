@@ -47,10 +47,10 @@ export default {
             limit: this.playlists_limit,
             offset: this.playlists_offset
           }
-          res = (await searchPlaylists(params)).data.playlists
+          res = (await searchPlaylists(params)).playlists
         } else {
           let path = this.playlists_next
-          res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).data.playlists
+          res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).playlists
         }
 
         let newVals = res.items
@@ -92,8 +92,7 @@ export default {
     }
 
     &__results {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
+      @include gridCards;
     }
   }
 }

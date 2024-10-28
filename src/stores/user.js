@@ -16,15 +16,13 @@ export const useUserStore = defineStore('user', {
       const code_verifier = localStorage.getItem('code_verifier')
 
       // Request tokens
-      const response = (
-        await getToken({
-          client_id: clientId,
-          code: code,
-          redirect_uri: redirectUrl,
-          // Prove the client identity via code_verifier
-          code_verifier: code_verifier
-        })
-      ).data
+      const response = await getToken({
+        client_id: clientId,
+        code: code,
+        redirect_uri: redirectUrl,
+        // Prove the client identity via code_verifier
+        code_verifier: code_verifier
+      })
 
       const { access_token, refresh_token, expires_in } = response
 
@@ -37,7 +35,7 @@ export const useUserStore = defineStore('user', {
       localStorage.setItem('expires', expiry)
     },
     async getUserData() {
-      const res = (await getCurrentUserProfile()).data
+      const res = await getCurrentUserProfile()
 
       this.avatar = res.images[0].url
       this.display_name = res.display_name
@@ -48,11 +46,9 @@ export const useUserStore = defineStore('user', {
       window.location.reload()
     },
     async refreshToken() {
-      const response = (
-        await refreshToken({
-          client_id: clientId
-        })
-      ).data
+      const response = await refreshToken({
+        client_id: clientId
+      })
 
       const { access_token, refresh_token, expires_in } = response
 

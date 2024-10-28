@@ -2,11 +2,7 @@
   <div class="album-container" v-if="!loading">
     <div class="album-container__cover">
       <div class="album-container__cover__img-wrapper">
-        <img
-          class="album-container__cover__img-wrapper__img"
-          :src="album.images[1].url"
-          :alt="album.name"
-        />
+        <img class="album-container__cover__img-wrapper__img" :src="album.images[1].url" :alt="album.name" />
       </div>
       <div class="album-container__cover__info">
         <span class="album-container__cover__info__type">{{
@@ -14,16 +10,10 @@
         }}</span>
         <h1 class="album-container__cover__info__title">{{ album.name }}</h1>
         <div class="album-container__cover__info__details">
-          <span
-            v-for="(artist, index) in album.artists"
-            class="album-container__cover__info__details__artist"
-          >
+          <span v-for="(artist, index) in album.artists" class="album-container__cover__info__details__artist">
             {{ index === 0 ? '' : ' • ' }}
-            <router-link
-              class="album-container__cover__info__details__artist__link"
-              :to="{ name: 'Artist', params: { artistId: artist.id } }"
-              >{{ artist.name }}</router-link
-            >
+            <router-link class="album-container__cover__info__details__artist__link"
+              :to="{ name: 'Artist', params: { artistId: artist.id } }">{{ artist.name }}</router-link>
           </span>
 
           <span class="album-container__cover__info__details__release-year">
@@ -46,13 +36,7 @@
     </div>
     <div class="album-container__content">
       <TrackListHeader :showAlbum="false" />
-      <TrackCard
-        v-for="(item, index) in tracks"
-        :item="item"
-        :index="index"
-        :show-album="false"
-        :show-image="false"
-      />
+      <TrackCard v-for="(item, index) in tracks" :item="item" :index="index" :show-album="false" :show-image="false" />
     </div>
   </div>
 </template>
@@ -96,7 +80,7 @@ export default {
       this.loading = false
     },
     async getAlbum() {
-      const res = (await getAlbum(this.id)).data
+      const res = (await getAlbum(this.id))
       this.album = res
     },
     async getTracks() {
@@ -109,10 +93,10 @@ export default {
             limit: this.tracks_limit,
             offset: this.tracks_offset
           }
-          res = (await getTracks(this.id, params)).data
+          res = (await getTracks(this.id, params))
         } else {
           let path = this.tracks_next
-          res = (await getNextTracks(this.id, path.slice(path.indexOf('?') + 1))).data
+          res = (await getNextTracks(this.id, path.slice(path.indexOf('?') + 1)))
         }
 
         let newVals = res.items
@@ -147,12 +131,12 @@ export default {
 <style lang="scss" scoped>
 .album-container {
   &__cover {
-    padding: 3.2rem;
+    padding: $gutter-4x;
     background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
     display: flex;
     align-items: end;
     justify-content: start;
-    gap: 3.2rem;
+    gap: $gutter-4x;
 
     &__img-wrapper {
       flex-shrink: 0;

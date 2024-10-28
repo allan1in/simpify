@@ -1,5 +1,6 @@
 import axios from 'axios'
 import settings from '@/settings.js'
+import { useUserStore } from '@/stores/user'
 
 const { baseURL } = settings
 
@@ -29,7 +30,7 @@ service.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    return response
+    return response.data
   },
   async function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
@@ -37,6 +38,10 @@ service.interceptors.response.use(
 
     // Bad or expired token
     if (error.status === 401) {
+      await useUserStore().refreshToken()
+      response.config.headers.Authorization = `Bearer ${localStorage.getItem('access_token')}`
+      const res = await service.request(response.config)
+      return res
     }
 
     return Promise.reject(error)

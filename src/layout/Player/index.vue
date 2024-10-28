@@ -66,7 +66,7 @@
       >
         <IconConnectToDevice />
       </button> -->
-      <VolumeBar />
+      <VolumeBar class="player-bar__right__volume-bar" />
       <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
       </button>
@@ -163,8 +163,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$cover-width: 56px;
-$cover-height: 56px;
 $msg-title-font-size: 1.4rem;
 $msg-artist-font-size: 1.2rem;
 
@@ -224,29 +222,33 @@ $msg-artist-font-size: 1.2rem;
       margin: 0 $gutter;
 
       &__title {
-        font-size: $msg-title-font-size;
-        // cursor: pointer;
+        @include oneLineEllipsis;
 
-        // &:hover {
-        //   text-decoration: underline;
-        // }
+        font-size: $msg-title-font-size;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
 
       &__artist {
+        @include oneLineEllipsis;
+
         font-size: $msg-artist-font-size;
         color: $color-font-secondary;
-        // cursor: pointer;
+        cursor: pointer;
 
-        // &:hover {
-        //   text-decoration: underline;
-        //   color: $color-font-primary;
-        // }
+        &:hover {
+          text-decoration: underline;
+          color: $color-font-primary;
+        }
       }
     }
 
     &__cover-wrapper {
-      width: $cover-width;
-      height: $cover-height;
+      height: 80%;
+      aspect-ratio: 1 / 1;
       margin: 0 $gutter;
 
       &__cover {
@@ -262,15 +264,20 @@ $msg-artist-font-size: 1.2rem;
     flex-direction: column;
     justify-content: center;
 
+    @include respond(phone) {
+      flex: 10;
+    }
+
     &__btn-group {
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: $gutter;
       margin-bottom: $gutter;
 
       &__play {
-        height: 3.2rem;
-        width: 3.2rem;
+        height: calc($height-player * 0.5);
+        width: calc($height-player * 0.5);
         border-radius: 50%;
         background-color: $color-font-primary;
         display: flex;
@@ -283,8 +290,8 @@ $msg-artist-font-size: 1.2rem;
         &__icon-wrapper-round {
           display: inline-block;
           fill: $color-bg-1;
-          height: 1.6rem;
-          width: 1.6rem;
+          height: 50%;
+          width: 50%;
         }
       }
     }
@@ -295,6 +302,10 @@ $msg-artist-font-size: 1.2rem;
     display: flex;
     justify-content: flex-end;
     align-items: center;
+
+    @include respond(phone) {
+      display: none
+    }
   }
 }
 </style>

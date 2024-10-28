@@ -40,26 +40,71 @@
   font-weight: 700;
 }
 
-@mixin gridCardsPreview {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(min(calc(($max-width-main-view - (2 * $gutter-2x) - (2 * $gutter)) / 8), 100%), 1fr)
-  );
+// MEDIA QUERY MANAGER
+
+/*
+0 - 600px:      Phone
+600 - 768px:    Tablet portrait
+768 - 1024px:   Tablet landscape
+1024 - 1440px:  Default
+1440 + :        Big desktop
+*/
+
+// reference: https://gs.statcounter.com/screen-resolution-stats
+
+@mixin respond($breackpoint) {
+  @if $breackpoint == phone {
+      @media only screen and (max-width: 600px) {
+          // <= 600px
+          @content;
+      }
+  }
+
+  @if $breackpoint == tab-port {
+      @media only screen and (max-width: 768px) {
+          // <= 768px
+          @content;
+      }
+  }
+
+  @if $breackpoint == tab-land {
+      @media only screen and (max-width: 1024px) {
+          // <= 1024px
+          @content;
+      }
+  }
+
+  @if $breackpoint == desktop {
+      @media only screen and (max-width: 1440px) {
+          // <= 1440px
+          @content;
+      }
+  }
 }
 
-@mixin gridCardsTopSongs {
+// https://sass-lang.com/documentation/at-rules/mixin/#keyword-arguments
+@mixin gridCards() {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(min(calc(($max-width-main-view / 4) - 3 * $gutter-2x - (2 * $gutter)), 100%), 1fr)
-  );
+  grid-template-columns: repeat(8, 1fr);
+
+  @include respond(tab-land){
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @include respond(phone){
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-@mixin gridCardsSearch {
+@mixin gridCardsLess(){
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(min(calc(($max-width-main-view - (5 * $gutter-4x) - (2 * $gutter)) / 4), 100%), 1fr)
-  );
+  grid-template-columns: repeat(4, 1fr);
+
+  @include respond(tab-land){
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond(phone){
+    grid-template-columns: repeat(1, 1fr);
+  }
 }

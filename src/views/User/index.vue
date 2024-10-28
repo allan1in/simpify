@@ -2,12 +2,8 @@
   <div class="user-container" v-if="!loading">
     <div class="user-container__cover">
       <div class="user-container__cover__img-wrapper">
-        <img
-          v-if="profile.images[0]"
-          class="user-container__cover__img-wrapper__img"
-          :src="profile.images[0].url"
-          :alt="profile.display_name"
-        />
+        <img v-if="profile.images[0]" class="user-container__cover__img-wrapper__img" :src="profile.images[0].url"
+          :alt="profile.display_name" />
         <div v-else class="user-container__cover__img-wrapper__icon-wrapper">
           <IconDefaultUser />
         </div>
@@ -25,10 +21,9 @@
             {{
               profile.followers.total === 0
                 ? ''
-                : ` • ${
-                    Intl.NumberFormat().format(profile.followers.total) +
-                    (profile.followers.total === '1' ? ' follower' : ' followers')
-                  }`
+                : ` • ${Intl.NumberFormat().format(profile.followers.total) +
+                (profile.followers.total === '1' ? ' follower' : ' followers')
+                }`
             }}
           </span>
         </div>
@@ -80,7 +75,7 @@ export default {
       this.loading = false
     },
     async getProfile() {
-      const res = (await getUserProfile(this.$route.params.userId)).data
+      const res = (await getUserProfile(this.$route.params.userId))
       this.profile = res
     },
     async getPlaylists() {
@@ -93,10 +88,10 @@ export default {
             limit: this.playlists_limit,
             offset: this.playlists_offset
           }
-          res = (await getUserPlaylists(this.id, params)).data
+          res = (await getUserPlaylists(this.id, params))
         } else {
           let path = this.playlists_next
-          res = (await getNextUserPlaylists(this.id, path.slice(path.indexOf('?') + 1))).data
+          res = (await getNextUserPlaylists(this.id, path.slice(path.indexOf('?') + 1)))
         }
 
         let newVals = res.items
@@ -186,7 +181,7 @@ export default {
     padding: $gutter-2x;
 
     &__playlists {
-      @include gridCardsPreview;
+      @include gridCards;
     }
   }
 }

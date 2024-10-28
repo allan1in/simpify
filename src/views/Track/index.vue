@@ -2,11 +2,7 @@
   <div class="track-container" v-if="!loading">
     <div class="track-container__cover">
       <div class="track-container__cover__img-wrapper">
-        <img
-          class="track-container__cover__img-wrapper__img"
-          :src="track.album.images[1].url"
-          :alt="track.name"
-        />
+        <img class="track-container__cover__img-wrapper__img" :src="track.album.images[1].url" :alt="track.name" />
       </div>
       <div class="track-container__cover__info">
         <span class="track-container__cover__info__type">{{
@@ -14,18 +10,12 @@
         }}</span>
         <h1 class="track-container__cover__info__title">{{ track.name }}</h1>
         <div class="track-container__cover__info__details">
-          <router-link
-            class="track-container__cover__info__details__artist"
-            :to="{ name: 'Artist', params: { artistId: artists[0].id } }"
-            >{{ artists[0].name }}</router-link
-          >
+          <router-link class="track-container__cover__info__details__artist"
+            :to="{ name: 'Artist', params: { artistId: artists[0].id } }">{{ artists[0].name }}</router-link>
           <span class="track-container__cover__info__details__album-wrapper">
             <span> • </span>
-            <router-link
-              class="track-container__cover__info__details__album-wrapper__album"
-              :to="{ name: 'Album', params: { albumId: track.album.id } }"
-              >{{ track.album.name }}</router-link
-            >
+            <router-link class="track-container__cover__info__details__album-wrapper__album"
+              :to="{ name: 'Album', params: { albumId: track.album.id } }">{{ track.album.name }}</router-link>
           </span>
           <span class="track-container__cover__info__details__release-year">
             {{ ` • ${track.album.release_date.split('-')[0]}` }}
@@ -80,7 +70,7 @@ export default {
       return timeFormatAlbum(time)
     },
     async getTrack() {
-      const res = (await getTrack(this.$route.params.trackId)).data
+      const res = (await getTrack(this.$route.params.trackId))
       this.track = res
     },
     async getArtists() {
@@ -89,7 +79,7 @@ export default {
           return acc + (acc !== '' ? ',' : '') + item.id
         }, '')
       }
-      const res = (await getSeveralArtists(params)).data.artists
+      const res = (await getSeveralArtists(params)).artists
       this.artists = res
     }
   },
@@ -105,12 +95,12 @@ export default {
 <style lang="scss" scoped>
 .track-container {
   &__cover {
-    padding: 3.2rem;
+    padding: $gutter-4x;
     background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
     display: flex;
     align-items: end;
     justify-content: start;
-    gap: 3.2rem;
+    gap: $gutter-4x;
 
     &__img-wrapper {
       flex-shrink: 0;
@@ -160,8 +150,7 @@ export default {
     padding: 1.6rem;
 
     &__artists {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+      @include gridCards;
     }
   }
 }

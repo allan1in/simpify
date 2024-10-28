@@ -210,7 +210,6 @@ export default {
     gap: 3.2rem;
 
     &__top {
-        flex: 1;
         display: flex;
         justify-content: space-between;
 
@@ -269,14 +268,15 @@ export default {
     }
 
     &__content {
-        flex: 12;
+        flex: auto;
         display: flex;
         justify-content: start;
         align-items: end;
         gap: 3rem;
+        padding: 5rem 0;
 
         &__cover-wrapper {
-            height: 50vh;
+            height: 70%;
             aspect-ratio: 1 / 1;
             border-radius: $border-radius-default;
             overflow: hidden;
@@ -284,7 +284,7 @@ export default {
             @include transitionSlow;
 
             &-small {
-                height: 20vh;
+                height: 40%;
             }
 
             &__cover {
@@ -314,7 +314,6 @@ export default {
     }
 
     &__player {
-        flex: 3;
         opacity: 0;
 
         @include transitionSlow;

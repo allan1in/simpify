@@ -23,7 +23,7 @@ export const usePlayerStore = defineStore('player', {
   }),
   actions: {
     async getPlayerState() {
-      const res = (await getPlayerState()).data
+      const res = await getPlayerState()
       console.log(res)
     }
   }

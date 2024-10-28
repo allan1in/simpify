@@ -47,10 +47,10 @@ export default {
             limit: this.artists_limit,
             offset: this.artists_offset
           }
-          res = (await searchArtists(params)).data.artists
+          res = (await searchArtists(params)).artists
         } else {
           let path = this.artists_next
-          res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).data.artists
+          res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).artists
         }
 
         let newVals = res.items
@@ -92,8 +92,7 @@ export default {
     }
 
     &__results {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
+      @include gridCards;
     }
   }
 }

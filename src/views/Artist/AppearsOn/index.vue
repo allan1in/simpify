@@ -50,10 +50,10 @@ export default {
             limit: this.appearsOn_limit,
             offset: this.appearsOn_offset
           }
-          res = (await getAppearsOn(this.id, params)).data
+          res = (await getAppearsOn(this.id, params))
         } else {
           let path = this.appearsOn_next
-          res = (await getNextAppearsOn(this.id, path.slice(path.indexOf('?') + 1))).data
+          res = (await getNextAppearsOn(this.id, path.slice(path.indexOf('?') + 1)))
         }
 
         let newVals = res.items
@@ -87,7 +87,7 @@ export default {
   padding: 1.6rem;
 
   &__results {
-    @include gridCardsPreview;
+    @include gridCards;
   }
 }
 </style>

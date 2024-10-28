@@ -2,11 +2,8 @@
   <div class="playlist-container" v-if="!loading">
     <div class="playlist-container__cover">
       <div class="playlist-container__cover__img-wrapper">
-        <img
-          class="playlist-container__cover__img-wrapper__img"
-          :src="playlist.images[0].url"
-          :alt="playlist.owner.display_name"
-        />
+        <img class="playlist-container__cover__img-wrapper__img" :src="playlist.images[0].url"
+          :alt="playlist.owner.display_name" />
       </div>
       <div class="playlist-container__cover__info">
         <span class="playlist-container__cover__info__type">{{
@@ -14,16 +11,15 @@
         }}</span>
         <h1 class="playlist-container__cover__info__title">{{ playlist.name }}</h1>
         <div class="playlist-container__cover__info__details">
-          <router-link
-            class="playlist-container__cover__info__details__owner"
-            :to="{ name: 'User', params: { userId: playlist.owner.id } }"
-            >{{ playlist.owner.display_name }}</router-link
-          >
+          <router-link class="playlist-container__cover__info__details__owner"
+            :to="{ name: 'User', params: { userId: playlist.owner.id } }">{{ playlist.owner.display_name
+            }}</router-link>
           <span class="playlist-container__cover__info__details__release-year">
             {{
               playlist.followers.total === 0
                 ? ''
-                : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${playlist.followers.total === 1 ? ' follower' : ' followers'}`
+                : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${playlist.followers.total === 1 ? ' follower'
+                  : ' followers'}`
             }}
           </span>
           <span class="playlist-container__cover__info__details__total-playlist.tracks">
@@ -43,13 +39,8 @@
     </div>
     <div class="playlist-container__content">
       <TrackListHeader />
-      <TrackCard
-        v-for="(item, index) in playlist.tracks.items"
-        :item="item.track"
-        :index="index"
-        :show-playlist="false"
-        :show-image="false"
-      />
+      <TrackCard v-for="(item, index) in playlist.tracks.items" :item="item.track" :index="index" :show-playlist="false"
+        :show-image="false" />
     </div>
   </div>
 </template>
@@ -82,7 +73,7 @@ export default {
       return timeFormatAlbum(time)
     },
     async getPlaylist() {
-      const res = (await getPlaylist(this.id)).data
+      const res = (await getPlaylist(this.id))
       this.playlist = res
       this.loading = false
     }
@@ -104,12 +95,12 @@ export default {
 <style lang="scss" scoped>
 .playlist-container {
   &__cover {
-    padding: 3.2rem;
+    padding: $gutter-4x;
     background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
     display: flex;
     align-items: end;
     justify-content: start;
-    gap: 3.2rem;
+    gap: $gutter-4x;
 
     &__img-wrapper {
       flex-shrink: 0;

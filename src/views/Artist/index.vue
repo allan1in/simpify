@@ -1,11 +1,8 @@
 <template>
   <div class="artist-container" v-if="!loading">
-    <div
-      class="artist-container__cover"
-      :style="{
-        'background-image': `url(${artist.images.length !== 0 ? artist.images[0].url : ''})`
-      }"
-    >
+    <div class="artist-container__cover" :style="{
+      'background-image': `url(${artist.images.length !== 0 ? artist.images[0].url : ''})`
+    }">
       <h1 class="artist-container__cover__title">{{ artist.name }}</h1>
       <div class="artist-container__cover__followers">
         {{
@@ -19,39 +16,19 @@
         <TitleShowAll :title="'Popular'" />
         <div class="artist-container__content__popular__content">
           <TrackListHeader />
-          <TrackCard
-            v-for="(track, index) in tracks"
-            :key="track.id"
-            :index="index"
-            :showArtists="false"
-            :item="track"
-          />
+          <TrackCard v-for="(track, index) in tracks" :key="track.id" :index="index" :showArtists="false"
+            :item="track" />
         </div>
       </div>
-      <TitleWithPartialItems
-        v-if="albums.length !== 0"
-        :router-name="'ArtistAllAlbums'"
-        :limit="albums_limit"
-        :total="albums_total"
-        :title="'Albums'"
-        :album-card-props="{ items: albums, showAlbumType: true, showArtists: false }"
-      />
-      <TitleWithPartialItems
-        v-if="singles.length !== 0"
-        :router-name="'ArtistAllSingles'"
-        :limit="singles_limit"
-        :total="singles_total"
-        :title="'Singles'"
-        :album-card-props="{ items: singles, showAlbumType: true, showArtists: false }"
-      />
-      <TitleWithPartialItems
-        v-if="appearsOn.length !== 0"
-        :router-name="'ArtistAllAppearsOn'"
-        :limit="appearsOn_limit"
-        :total="appearsOn_total"
-        :title="'Appears On'"
-        :album-card-props="{ items: appearsOn, showAlbumType: true, showArtists: false }"
-      />
+      <TitleWithPartialItems v-if="albums.length !== 0" :router-name="'ArtistAllAlbums'" :limit="albums_limit"
+        :total="albums_total" :title="'Albums'"
+        :album-card-props="{ items: albums, showAlbumType: true, showArtists: false }" />
+      <TitleWithPartialItems v-if="singles.length !== 0" :router-name="'ArtistAllSingles'" :limit="singles_limit"
+        :total="singles_total" :title="'Singles'"
+        :album-card-props="{ items: singles, showAlbumType: true, showArtists: false }" />
+      <TitleWithPartialItems v-if="appearsOn.length !== 0" :router-name="'ArtistAllAppearsOn'" :limit="appearsOn_limit"
+        :total="appearsOn_total" :title="'Appears On'"
+        :album-card-props="{ items: appearsOn, showAlbumType: true, showArtists: false }" />
     </div>
   </div>
 </template>
@@ -110,11 +87,11 @@ export default {
       this.loading = false
     },
     async getArtist() {
-      const res = (await getArtist(this.id)).data
+      const res = (await getArtist(this.id))
       this.artist = res
     },
     async getTopTracks() {
-      const res = (await getTopTracks(this.id)).data.tracks
+      const res = (await getTopTracks(this.id)).tracks
       this.tracks = res
     },
     async getAlbums() {
@@ -122,7 +99,7 @@ export default {
         limit: this.albums_limit,
         offset: this.albums_offset
       }
-      const res = (await getAlbums(this.id, params)).data
+      const res = (await getAlbums(this.id, params))
       this.albums = res.items
       this.albums_total = res.total
     },
@@ -131,7 +108,7 @@ export default {
         limit: this.singles_limit,
         offset: this.singles_offset
       }
-      const res = (await getSingles(this.id, params)).data
+      const res = (await getSingles(this.id, params))
       this.singles = res.items
       this.singles_total = res.total
     },
@@ -140,7 +117,7 @@ export default {
         limit: this.appearsOn_limit,
         offset: this.appearsOn_offset
       }
-      const res = (await getAppearsOn(this.id, params)).data
+      const res = (await getAppearsOn(this.id, params))
       this.appearsOn = res.items
       this.appearsOn_total = res.total
     }
@@ -167,7 +144,7 @@ export default {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 50%;
-    padding: 6.4rem 3.2rem;
+    padding: 6.4rem $gutter-4x;
     display: flex;
     flex-direction: column;
     align-items: start;

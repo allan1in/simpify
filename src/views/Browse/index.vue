@@ -24,7 +24,7 @@ export default {
     return {
       category: {},
       playlists: [],
-      playlists_limit: 28,
+      playlists_limit: 32,
       playlists_offset: 0,
       playlists_next: '',
       loading_more: false
@@ -40,7 +40,7 @@ export default {
       this.loading = false
     },
     async getCategory() {
-      const res = (await getCategory(this.$route.params.categoryId)).data
+      const res = (await getCategory(this.$route.params.categoryId))
       this.category = res
     },
     async getPlaylists() {
@@ -53,7 +53,7 @@ export default {
             limit: this.playlists_limit,
             offset: this.playlists_offset
           }
-          res = (await getCategoryPlaylists(this.$route.params.categoryId, params)).data.playlists
+          res = (await getCategoryPlaylists(this.$route.params.categoryId, params)).playlists
         } else {
           let path = this.playlists_next
           res = (
@@ -61,7 +61,7 @@ export default {
               this.$route.params.categoryId,
               path.slice(path.indexOf('?') + 1)
             )
-          ).data.playlists
+          ).playlists
         }
 
         let newVals = res.items
@@ -96,7 +96,7 @@ $color-bg-cover: hsl(random(360), 40%, 50%);
 .browse-container {
   &__cover {
     background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
-    padding: 4.8rem 3.2rem;
+    padding: 4.8rem $gutter-4x;
 
     &__title {
       font-size: 8rem;
@@ -108,8 +108,8 @@ $color-bg-cover: hsl(random(360), 40%, 50%);
 
   &__content {
     padding: 1.6rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
+
+    @include gridCards;
   }
 }
 </style>

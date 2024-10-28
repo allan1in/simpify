@@ -47,10 +47,10 @@ export default {
             limit: this.albums_limit,
             offset: this.albums_offset
           }
-          res = (await searchAlbums(params)).data.albums
+          res = (await searchAlbums(params)).albums
         } else {
           let path = this.albums_next
-          res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).data.albums
+          res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).albums
         }
 
         let newVals = res.items
@@ -92,8 +92,7 @@ export default {
     }
 
     &__results {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(14%, 100%), 1fr));
+      @include gridCards;
     }
   }
 }

@@ -1,7 +1,7 @@
 /* https://github.com/KingSora/OverlayScrollbars?tab=readme-ov-file#css-custom-properties */
 .os-theme-custom {
   /* The size of the scrollbar */
-  --os-size: 12px;
+  --os-size: 1.2rem;
   /* The axis-perpendicular padding of the scrollbar (horizontal: padding-y, vertical: padding-x)*/
   --os-padding-perpendicular: 0;
   /* The axis padding of the scrollbar (horizontal: padding-x, vertical: padding-y)*/

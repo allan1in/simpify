@@ -1,17 +1,10 @@
 <template>
-  <div
-    class="card-horizontal-container"
-    @click="$router.push({ name: 'Track', params: { trackId: item.id } })"
-  >
+  <div class="card-horizontal-container" @click="$router.push({ name: 'Track', params: { trackId: item.id } })">
     <div class="card-horizontal-container__cover-wrapper">
-      <img
-        class="card-horizontal-container__cover-wrapper__cover"
-        :src="item.album.images[0].url"
-        :alt="item.name"
-      />
+      <img class="card-horizontal-container__cover-wrapper__cover" :src="item.album.images[0].url" :alt="item.name" />
     </div>
-    <div class="card-horizontal-container__info">
-      <span>{{ item.name }}</span>
+    <div class="card-horizontal-container__info-wrapper">
+      <span class="card-horizontal-container__info-wrapper__info">{{ item.name }}</span>
     </div>
   </div>
 </template>
@@ -69,13 +62,17 @@ export default {
     }
   }
 
-  &__info {
+  &__info-wrapper {
     position: relative;
     display: flex;
     align-items: center;
-    padding-left: 2rem;
+    padding: 0 2rem;
     font-size: 1.4rem;
     font-weight: 700;
+
+    &__info {
+      @include oneLineEllipsis;
+    }
   }
 }
 </style>

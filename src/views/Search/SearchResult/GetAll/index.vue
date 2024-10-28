@@ -5,38 +5,15 @@
         <TitleShowAll :router-name="'GetTracks'" :title="'Songs'" />
         <div class="all-container__content__songs__results">
           <TrackListHeader />
-          <TrackCard
-            v-for="(item, index) in tracks.items"
-            :key="index"
-            :item="item"
-            :index="index"
-          />
+          <TrackCard v-for="(item, index) in tracks.items" :key="index" :item="item" :index="index" />
         </div>
       </div>
-      <TitleWithPartialItems
-        v-if="artists.total"
-        :router-name="'GetArtists'"
-        :title="'Artists'"
-        :limit="artists.limit"
-        :total="artists.total"
-        :artist-card-props="{ items: artists.items }"
-      />
-      <TitleWithPartialItems
-        v-if="albums.total"
-        :router-name="'GetAlbums'"
-        :title="'Albums'"
-        :limit="albums.limit"
-        :total="albums.total"
-        :album-card-props="{ items: albums.items }"
-      />
-      <TitleWithPartialItems
-        v-if="playlists.total"
-        :router-name="'GetPlaylists'"
-        :title="'Playlists'"
-        :limit="playlists.limit"
-        :total="playlists.total"
-        :playlist-card-props="{ items: playlists.items }"
-      />
+      <TitleWithPartialItems v-if="artists.total" :router-name="'GetArtists'" :title="'Artists'" :limit="artists.limit"
+        :total="artists.total" :artist-card-props="{ items: artists.items }" />
+      <TitleWithPartialItems v-if="albums.total" :router-name="'GetAlbums'" :title="'Albums'" :limit="albums.limit"
+        :total="albums.total" :album-card-props="{ items: albums.items }" />
+      <TitleWithPartialItems v-if="playlists.total" :router-name="'GetPlaylists'" :title="'Playlists'"
+        :limit="playlists.limit" :total="playlists.total" :playlist-card-props="{ items: playlists.items }" />
     </div>
   </main>
 </template>
@@ -71,13 +48,13 @@ export default {
       tracks_limit: 4,
       tracks_offset: 0,
       artists: {},
-      artists_limit: 7,
+      artists_limit: 8,
       artists_offset: 0,
       albums: {},
-      albums_limit: 7,
+      albums_limit: 8,
       albums_offset: 0,
       playlists: {},
-      playlists_limit: 7,
+      playlists_limit: 8,
       playlists_offset: 0
     }
   },
@@ -100,7 +77,7 @@ export default {
         limit: this.tracks_limit,
         offset: this.tracks_offset
       }
-      const res = (await searchTracks(params)).data.tracks
+      const res = (await searchTracks(params)).tracks
       this.tracks = res
     },
     async getArtists() {
@@ -109,7 +86,7 @@ export default {
         limit: this.artists_limit,
         offset: this.artists_offset
       }
-      const res = (await searchArtists(params)).data.artists
+      const res = (await searchArtists(params)).artists
       this.artists = res
     },
     async getAlbums() {
@@ -118,7 +95,7 @@ export default {
         limit: this.albums_limit,
         offset: this.albums_offset
       }
-      const res = (await searchAlbums(params)).data.albums
+      const res = (await searchAlbums(params)).albums
       this.albums = res
     },
     async getPlaylists() {
@@ -127,7 +104,7 @@ export default {
         limit: this.playlists_limit,
         offset: this.playlists_offset
       }
-      const res = (await searchPlaylists(params)).data.playlists
+      const res = (await searchPlaylists(params)).playlists
       this.playlists = res
     }
   },

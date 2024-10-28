@@ -7,10 +7,8 @@
       </div>
     </div>
     <div class="dashboard-container__featured-playlists">
-      <TitleShowAll
-        :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
-        title="Featured Playlists"
-      />
+      <TitleShowAll :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
+        title="Featured Playlists" />
       <div class="dashboard-container__featured-playlists__content">
         <PlaylistCard v-for="item in playlists" :item="item" />
       </div>
@@ -87,7 +85,7 @@ export default {
         limit: this.tracks_limit,
         offset: 0
       }
-      const res = (await getUserTopSongs(params)).data.items
+      const res = (await getUserTopSongs(params)).items
       this.tracks = res
     },
     async getPlaylists() {
@@ -95,7 +93,7 @@ export default {
         limit: this.playlists_limit,
         offset: 0
       }
-      const res = (await getFeaturedPlaylists(params)).data.playlists
+      const res = (await getFeaturedPlaylists(params)).playlists
       this.playlists = res.items
       this.playlists_total = res.total
     },
@@ -105,7 +103,7 @@ export default {
         limit: this.artists_limit,
         offset: 0
       }
-      const res = (await getUserTopArtists(params)).data.items
+      const res = (await getUserTopArtists(params)).items
       this.artists = res
     },
     async getNewReleases() {
@@ -118,10 +116,10 @@ export default {
             limit: this.albums_limit,
             offset: this.albums_offset
           }
-          res = (await getNewReleases(params)).data.albums
+          res = (await getNewReleases(params)).albums
         } else {
           let path = this.albums_next
-          res = (await getNextNewReleases(path.slice(path.indexOf('?') + 1))).data.albums
+          res = (await getNextNewReleases(path.slice(path.indexOf('?') + 1))).albums
         }
 
         let newVals = res.items
@@ -158,10 +156,9 @@ export default {
   &__top-songs {
     &__content {
       padding: 1.6rem;
-
-      @include gridCardsTopSongs;
-
       gap: $gutter-2x;
+
+      @include gridCardsLess;
     }
   }
 
@@ -169,7 +166,7 @@ export default {
   &__top-artists,
   &__new-releases {
     &__content {
-      @include gridCardsPreview;
+      @include gridCards;
     }
   }
 }

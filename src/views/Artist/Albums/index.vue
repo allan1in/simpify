@@ -49,10 +49,10 @@ export default {
             limit: this.albums_limit,
             offset: this.albums_offset
           }
-          res = (await getAlbums(this.id, params)).data
+          res = (await getAlbums(this.id, params))
         } else {
           let path = this.albums_next
-          res = (await getNextAlbums(this.id, path.slice(path.indexOf('?') + 1))).data
+          res = (await getNextAlbums(this.id, path.slice(path.indexOf('?') + 1)))
         }
 
         let newVals = res.items
@@ -86,7 +86,7 @@ export default {
   padding: 1.6rem;
 
   &__results {
-    @include gridCardsPreview;
+    @include gridCards;
   }
 }
 </style>
