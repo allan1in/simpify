@@ -1,19 +1,21 @@
 <template>
   <div class="dashboard-container" v-if="!loading">
-    <div class="dashboard-container__top-songs">
+    <div class="dashboard-container__top-songs" v-if="tracks.length !== 0">
       <TitleShowAll title="Top Songs" />
       <div class="dashboard-container__top-songs__content">
         <CardHorizontal v-for="item in tracks" :item="item" />
       </div>
     </div>
     <div class="dashboard-container__featured-playlists">
-      <TitleShowAll :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
-        title="Featured Playlists" />
+      <TitleShowAll
+        :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
+        title="Featured Playlists"
+      />
       <div class="dashboard-container__featured-playlists__content">
         <PlaylistCard v-for="item in playlists" :item="item" />
       </div>
     </div>
-    <div class="dashboard-container__top-artists">
+    <div class="dashboard-container__top-artists" v-if="artists.length !== 0">
       <TitleShowAll title="Top Artists" />
       <div class="dashboard-container__top-artists__content">
         <ArtistCard v-for="item in artists" :item="item" />

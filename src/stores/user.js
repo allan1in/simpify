@@ -37,7 +37,7 @@ export const useUserStore = defineStore('user', {
     async getUserData() {
       const res = await getCurrentUserProfile()
 
-      this.avatar = res.images[0].url
+      this.avatar = res.images.length !== 0 ? res.images[0].url : ''
       this.display_name = res.display_name
       this.uid = res.id
     },

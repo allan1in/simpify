@@ -59,11 +59,15 @@
     <DropDown class="nav-bar__right" top="5.6rem">
       <button class="nav-bar__right__photo-wrapper">
         <img
+          v-if="avatar.length !== 0"
           class="nav-bar__right__photo-wrapper__photo"
           :src="avatar"
           :alt="display_name"
           :title="display_name"
         />
+        <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
+          <IconDefaultUser class="nav-bar__right__photo-wrapper__photo-default-wrapper__photo" />
+        </div>
       </button>
       <template #dropDownItems>
         <DropDownItem
@@ -95,6 +99,7 @@ import DropDown from '@/components/DropDown/index.vue'
 import DropDownItem from '@/components/DropDownItem/index.vue'
 import IconArrowRight from '@/components/Icons/IconArrowRight.vue'
 import IconArrowLeft from '@/components/Icons/IconArrowLeft.vue'
+import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
 
 export default {
   name: 'NavBar',
@@ -109,7 +114,8 @@ export default {
     DropDown,
     DropDownItem,
     IconArrowLeft,
-    IconArrowRight
+    IconArrowRight,
+    IconDefaultUser
   },
   computed: {
     ...mapState(useUserStore, ['avatar', 'display_name', 'uid'])
@@ -376,6 +382,16 @@ export default {
         height: 65%;
         width: 65%;
         border-radius: 50%;
+
+        &-default-wrapper {
+          height: 40%;
+          aspect-ratio: 1 / 1;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          fill: $color-font-primary;
+        }
       }
     }
   }

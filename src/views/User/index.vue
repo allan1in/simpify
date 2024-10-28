@@ -2,8 +2,12 @@
   <div class="user-container" v-if="!loading">
     <div class="user-container__cover">
       <div class="user-container__cover__img-wrapper">
-        <img v-if="profile.images[0]" class="user-container__cover__img-wrapper__img" :src="profile.images[0].url"
-          :alt="profile.display_name" />
+        <img
+          v-if="profile.images[0]"
+          class="user-container__cover__img-wrapper__img"
+          :src="profile.images[0].url"
+          :alt="profile.display_name"
+        />
         <div v-else class="user-container__cover__img-wrapper__icon-wrapper">
           <IconDefaultUser />
         </div>
@@ -15,21 +19,24 @@
         <h1 class="user-container__cover__info__title">{{ profile.display_name }}</h1>
         <div class="user-container__cover__info__details">
           <span class="user-container__cover__info__details__playlists">
-            {{ `${Intl.NumberFormat().format(playlists_total)} Public Playlists` }}
+            {{
+              `${Intl.NumberFormat().format(playlists_total)} Public ${profile.followers.total > 1 ? ' Playlists' : ' Playlist'}`
+            }}
           </span>
           <span class="user-container__cover__info__details__followers">
             {{
               profile.followers.total === 0
                 ? ''
-                : ` • ${Intl.NumberFormat().format(profile.followers.total) +
-                (profile.followers.total === '1' ? ' follower' : ' followers')
-                }`
+                : ` • ${
+                    Intl.NumberFormat().format(profile.followers.total) +
+                    (profile.followers.total > 1 ? ' follower' : ' followers')
+                  }`
             }}
           </span>
         </div>
       </div>
     </div>
-    <div class="user-container__content">
+    <div class="user-container__content" v-if="playlists.length !== 0">
       <TitleShowAll title="Public Playlists" />
       <div class="user-container__content__playlists">
         <PlaylistCard v-for="item in playlists" :item="item" />
@@ -75,7 +82,7 @@ export default {
       this.loading = false
     },
     async getProfile() {
-      const res = (await getUserProfile(this.$route.params.userId))
+      const res = await getUserProfile(this.$route.params.userId)
       this.profile = res
     },
     async getPlaylists() {
@@ -88,10 +95,10 @@ export default {
             limit: this.playlists_limit,
             offset: this.playlists_offset
           }
-          res = (await getUserPlaylists(this.id, params))
+          res = await getUserPlaylists(this.id, params)
         } else {
           let path = this.playlists_next
-          res = (await getNextUserPlaylists(this.id, path.slice(path.indexOf('?') + 1)))
+          res = await getNextUserPlaylists(this.id, path.slice(path.indexOf('?') + 1))
         }
 
         let newVals = res.items
@@ -142,7 +149,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: $color-bg-4;
+      background-color: $color-bg-3;
 
       &__img {
         max-height: 100%;
