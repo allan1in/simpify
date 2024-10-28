@@ -5,11 +5,16 @@
         <img class="player-bar__left__cover-wrapper__cover" :src="coverUrl" alt="track" />
       </div>
       <div class="player-bar__left__msg-wrapper">
-        <div class="player-bar__left__msg-wrapper__title"><router-link
-            :to="{ name: 'Track', params: { trackId: track_id } }">{{
-              track }}</router-link></div>
-        <div class="player-bar__left__msg-wrapper__artist"><router-link
-            :to="{ name: 'Artist', params: { artistId: artist_id } }">{{ artist }}</router-link></div>
+        <div class="player-bar__left__msg-wrapper__title">
+          <router-link :to="{ name: 'Track', params: { trackId: track_id } }">{{
+            track
+          }}</router-link>
+        </div>
+        <div class="player-bar__left__msg-wrapper__artist">
+          <router-link :to="{ name: 'Artist', params: { artistId: artist_id } }">{{
+            artist
+          }}</router-link>
+        </div>
       </div>
       <!-- <button class="icon-wrapper" @click="song.isLike = !song.isLike">
         <IconInLikeSong v-if="song.isLike" />
@@ -18,7 +23,11 @@
     </div>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
-        <button class="icon-wrapper" :class="{ 'btn-active': isShuffle }" @click="isShuffle = !isShuffle">
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': isShuffle }"
+          @click="isShuffle = !isShuffle"
+        >
           <IconShuffle />
         </button>
         <button class="icon-wrapper">
@@ -33,10 +42,13 @@
         <button class="icon-wrapper">
           <IconNext />
         </button>
-        <button class="icon-wrapper" :class="{ 'btn-active': isRepeat || isRepeatSingle }" @click="handleRepeatClick">
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': isRepeat || isRepeatSingle }"
+          @click="handleRepeatClick"
+        >
           <IconRepeatSingle v-if="isRepeatSingle" />
           <IconRepeat v-else />
-
         </button>
       </div>
       <SeekBar />
@@ -67,9 +79,9 @@
         <IconConnectToDevice />
       </button> -->
       <VolumeBar class="player-bar__right__volume-bar" />
-      <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
+      <!-- <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
-      </button>
+      </button> -->
       <button class="icon-wrapper" @click="toggleFullScreenPlayer">
         <IconFullScreen />
       </button>
@@ -125,12 +137,25 @@ export default {
       isConnectToDevice: false,
       isQueen: false,
       isLyrics: false,
-      isNowPlayingView: false,
-
+      isNowPlayingView: false
     }
   },
   computed: {
-    ...mapWritableState(usePlayerStore, ['coverUrl', 'track', 'artist', 'percentage', 'track_id', 'artist_id', 'isPause', 'isShuffle', 'isRepeat', 'isRepeatSingle', 'isMute', 'volume', 'showFullScreenPlayer']),
+    ...mapWritableState(usePlayerStore, [
+      'coverUrl',
+      'track',
+      'artist',
+      'percentage',
+      'track_id',
+      'artist_id',
+      'isPause',
+      'isShuffle',
+      'isRepeat',
+      'isRepeatSingle',
+      'isMute',
+      'volume',
+      'showFullScreenPlayer'
+    ])
   },
   methods: {
     toggleFullScreenPlayer() {
@@ -151,11 +176,13 @@ export default {
     openFullscreen() {
       let element = document.documentElement
       if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if (element.webkitRequestFullscreen) { /* Safari */
-        element.webkitRequestFullscreen();
-      } else if (element.msRequestFullscreen) { /* IE11 */
-        element.msRequestFullscreen();
+        element.requestFullscreen()
+      } else if (element.webkitRequestFullscreen) {
+        /* Safari */
+        element.webkitRequestFullscreen()
+      } else if (element.msRequestFullscreen) {
+        /* IE11 */
+        element.msRequestFullscreen()
       }
     }
   }
@@ -304,7 +331,7 @@ $msg-artist-font-size: 1.2rem;
     align-items: center;
 
     @include respond(phone) {
-      display: none
+      display: none;
     }
   }
 }

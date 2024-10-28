@@ -60,4 +60,4 @@ npm run lint
 
 1. srcset in images
 2. undefined backfall
-3. arrows in navbar
+3. empty info

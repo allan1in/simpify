@@ -4,29 +4,53 @@
       <router-link to="/" class="nav-bar__left__logo">
         <IconPrimaryLogo />
       </router-link>
+      <div class="nav-bar__left__arrow">
+        <button class="nav-bar__left__arrow__left" @click="$router.go(-1)">
+          <IconArrowLeft />
+        </button>
+        <button class="nav-bar__left__arrow__right" @click="$router.go(1)">
+          <IconArrowRight />
+        </button>
+      </div>
     </div>
     <div class="nav-bar__mid-wrapper">
       <div class="nav-bar__mid-wrapper__mid">
         <button class="nav-bar__mid-wrapper__mid__home-btn" @click="toHome">
-          <span class="nav-bar__mid-wrapper__mid__home-btn__wrapper" :class="{ 'btn-active': isHome }">
+          <span
+            class="nav-bar__mid-wrapper__mid__home-btn__wrapper"
+            :class="{ 'btn-active': isHome }"
+          >
             <IconHomeActive v-if="isHome" />
             <IconHome v-else />
           </span>
         </button>
         <div class="nav-bar__mid-wrapper__mid__search">
-          <input class="nav-bar__mid-wrapper__mid__search__input" type="text" placeholder="What do you want to play?"
-            @click="toSearchPage" @focus="toSearchPage" @input="getSearchResult" v-model="inputContent" />
+          <input
+            class="nav-bar__mid-wrapper__mid__search__input"
+            type="text"
+            placeholder="What do you want to play?"
+            @click="toSearchPage"
+            @focus="toSearchPage"
+            @input="getSearchResult"
+            v-model="inputContent"
+          />
           <div class="nav-bar__mid-wrapper__mid__search__icon-wrapper">
             <IconSearch />
           </div>
-          <button v-if="inputContent.length === 0" class="nav-bar__mid-wrapper__mid__search__btn-wrapper"
-            :class="{ 'btn-active': isSearch }" @click="toSearchPage">
+          <button
+            v-if="inputContent.length === 0"
+            class="nav-bar__mid-wrapper__mid__search__btn-wrapper"
+            :class="{ 'btn-active': isSearch }"
+            @click="toSearchPage"
+          >
             <IconBrowseActive v-if="isSearch" />
             <IconBrowse v-else />
           </button>
-          <button v-else
+          <button
+            v-else
             class="nav-bar__mid-wrapper__mid__search__btn-wrapper nav-bar__mid-wrapper__mid__search__btn-wrapper__clear-border"
-            @click="inputContent = ''">
+            @click="inputContent = ''"
+          >
             <IconClose />
           </button>
         </div>
@@ -34,14 +58,22 @@
     </div>
     <DropDown class="nav-bar__right" top="5.6rem">
       <button class="nav-bar__right__photo-wrapper">
-        <img class="nav-bar__right__photo-wrapper__photo" :src="avatar" :alt="display_name" :title="display_name" />
+        <img
+          class="nav-bar__right__photo-wrapper__photo"
+          :src="avatar"
+          :alt="display_name"
+          :title="display_name"
+        />
       </button>
       <template #dropDownItems>
         <DropDownItem
-          toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account">
-          Account</DropDownItem>
+          toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account"
+        >
+          Account</DropDownItem
+        >
         <DropDownItem :to="{ name: 'User', params: { userId: uid } }">Profile</DropDownItem>
-        <DropDownItem toExternal="https://www.spotify.com/us/premium/?ref=web_loggedin_upgrade_menu">Upgrade to Premium
+        <DropDownItem toExternal="https://www.spotify.com/us/premium/?ref=web_loggedin_upgrade_menu"
+          >Upgrade to Premium
         </DropDownItem>
         <DropDownItem :topLine="true" @click.prevent="logout">Log out</DropDownItem>
       </template>
@@ -61,6 +93,8 @@ import { useUserStore } from '@/stores/user'
 import { mapActions, mapState } from 'pinia'
 import DropDown from '@/components/DropDown/index.vue'
 import DropDownItem from '@/components/DropDownItem/index.vue'
+import IconArrowRight from '@/components/Icons/IconArrowRight.vue'
+import IconArrowLeft from '@/components/Icons/IconArrowLeft.vue'
 
 export default {
   name: 'NavBar',
@@ -73,7 +107,9 @@ export default {
     IconBrowseActive,
     IconClose,
     DropDown,
-    DropDownItem
+    DropDownItem,
+    IconArrowLeft,
+    IconArrowRight
   },
   computed: {
     ...mapState(useUserStore, ['avatar', 'display_name', 'uid'])
@@ -159,6 +195,8 @@ export default {
     display: flex;
     align-items: center;
     z-index: 1;
+    justify-content: start;
+    gap: $gutter;
 
     &__logo {
       display: block;
@@ -166,6 +204,26 @@ export default {
       width: calc($height-nav * 2 / 3);
       fill: $color-font-primary;
       margin: 0 2rem;
+    }
+
+    &__arrow {
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      gap: $gutter;
+
+      &__left,
+      &__right {
+        height: calc($height-nav / 3);
+        aspect-ratio: 1 / 1;
+        fill: $color-font-primary;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        @include clickAnimation;
+      }
     }
 
     @include respond(tab-port) {
@@ -257,10 +315,9 @@ export default {
             cursor: text;
           }
 
-          &:focus+div {
+          &:focus + div {
             fill: $color-font-primary;
           }
-
         }
 
         &__icon-wrapper {
@@ -300,8 +357,6 @@ export default {
       }
     }
   }
-
-
 
   &__right {
     z-index: 1;

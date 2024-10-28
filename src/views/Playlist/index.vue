@@ -2,8 +2,11 @@
   <div class="playlist-container" v-if="!loading">
     <div class="playlist-container__cover">
       <div class="playlist-container__cover__img-wrapper">
-        <img class="playlist-container__cover__img-wrapper__img" :src="playlist.images[0].url"
-          :alt="playlist.owner.display_name" />
+        <img
+          class="playlist-container__cover__img-wrapper__img"
+          :src="playlist.images[0].url"
+          :alt="playlist.owner.display_name"
+        />
       </div>
       <div class="playlist-container__cover__info">
         <span class="playlist-container__cover__info__type">{{
@@ -11,21 +14,30 @@
         }}</span>
         <h1 class="playlist-container__cover__info__title">{{ playlist.name }}</h1>
         <div class="playlist-container__cover__info__details">
-          <router-link class="playlist-container__cover__info__details__owner"
-            :to="{ name: 'User', params: { userId: playlist.owner.id } }">{{ playlist.owner.display_name
-            }}</router-link>
+          <router-link
+            class="playlist-container__cover__info__details__owner"
+            :to="{ name: 'User', params: { userId: playlist.owner.id } }"
+            >{{ playlist.owner.display_name }}</router-link
+          >
           <span class="playlist-container__cover__info__details__release-year">
             {{
               playlist.followers.total === 0
                 ? ''
-                : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${playlist.followers.total === 1 ? ' follower'
-                  : ' followers'}`
+                : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${
+                    playlist.followers.total === 1 ? ' follower' : ' followers'
+                  }`
             }}
           </span>
-          <span class="playlist-container__cover__info__details__total-playlist.tracks">
+          <span
+            v-if="playlist.tracks.total !== 0"
+            class="playlist-container__cover__info__details__total-playlist.tracks"
+          >
             {{ ` • ${playlist.tracks.total} songs` }}
           </span>
-          <span class="playlist-container__cover__info__details__duration">
+          <span
+            v-if="playlist.tracks.total !== 0"
+            class="playlist-container__cover__info__details__duration"
+          >
             {{
               ` • ${getFormatTime(
                 playlist.tracks.items.reduce((acc, item) => {
@@ -39,8 +51,13 @@
     </div>
     <div class="playlist-container__content">
       <TrackListHeader />
-      <TrackCard v-for="(item, index) in playlist.tracks.items" :item="item.track" :index="index" :show-playlist="false"
-        :show-image="false" />
+      <TrackCard
+        v-for="(item, index) in playlist.tracks.items"
+        :item="item.track"
+        :index="index"
+        :show-playlist="false"
+        :show-image="false"
+      />
     </div>
   </div>
 </template>
@@ -73,7 +90,7 @@ export default {
       return timeFormatAlbum(time)
     },
     async getPlaylist() {
-      const res = (await getPlaylist(this.id))
+      const res = await getPlaylist(this.id)
       this.playlist = res
       this.loading = false
     }
