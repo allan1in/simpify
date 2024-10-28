@@ -1,14 +1,10 @@
 <template>
   <div class="drop-down-container">
-    <div @click="show = !show">
+    <div @click="handleClick">
       <slot></slot>
     </div>
 
-    <div
-      v-show="show"
-      class="drop-down-container__box"
-      :style="{ transform: `translateY(${top})` }"
-    >
+    <div ref="box" v-show="show" class="drop-down-container__box" :style="{ transform: `translateY(${top})` }">
       <ul class="drop-down-container__box__items-wrapper">
         <slot name="dropDownItems"></slot>
       </ul>
@@ -29,6 +25,24 @@ export default {
       type: String,
       require: false,
       default: 0
+    }
+  },
+  methods: {
+    handleClick(e) {
+      this.show = !this.show
+      // Hide element when click outside of it.
+      document.onmouseup = (event) => {
+        if (event.target != this.$refs.box && event.target != e.target) {
+          this.show = false
+        }
+      }
+    },
+  },
+  watch: {
+    show(newVal, oldVal) {
+      if (!newVal) {
+        document.onmouseup = null
+      }
     }
   }
 }
