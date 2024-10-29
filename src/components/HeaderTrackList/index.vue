@@ -31,6 +31,10 @@ export default {
   color: $color-font-secondary;
   border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
 
+  @include respond(phone) {
+    display: none;
+  }
+
   &__num-wrapper {
     flex-basis: 3.6rem;
     position: relative;

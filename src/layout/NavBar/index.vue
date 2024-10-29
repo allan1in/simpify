@@ -192,7 +192,6 @@ export default {
 
 .nav-bar {
   height: $height-nav;
-  margin-bottom: $gutter;
   display: flex;
   justify-content: space-between;
   position: relative;
@@ -222,11 +221,16 @@ export default {
       &__right {
         height: calc($height-nav / 3);
         aspect-ratio: 1 / 1;
-        fill: $color-font-primary;
+        fill: $color-font-secondary;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
+
+        &:hover,
+        &:active {
+          fill: $color-font-primary;
+        }
 
         @include clickAnimation;
       }
@@ -300,8 +304,6 @@ export default {
         }
 
         &__input {
-          @include transition;
-
           width: 100%;
           height: $height-nav;
           background-color: $color-bg-3;
@@ -310,6 +312,8 @@ export default {
           border-radius: calc($height-nav / 2);
           font-size: 1.6rem;
           cursor: pointer;
+
+          @include transition;
 
           &::placeholder {
             color: $color-font-secondary;

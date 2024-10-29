@@ -50,6 +50,8 @@ export default {
   padding: 1.6rem;
   cursor: pointer;
 
+  @include transition;
+
   &:hover {
     background-color: $color-bg-3;
   }

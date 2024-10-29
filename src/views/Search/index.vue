@@ -4,10 +4,19 @@
       <TitleShowAll title="Browse All" />
     </div>
     <div class="search-container__cards-wrapper">
-      <router-link :to="{ name: 'Browse', params: { categoryId: item.id } }"
-        class="search-container__cards-wrapper__card" v-for="(item, index) in categories" :key="item.id">
+      <router-link
+        :to="{ name: 'Browse', params: { categoryId: item.id } }"
+        class="search-container__cards-wrapper__card"
+        v-for="(item, index) in categories"
+        :key="item.id"
+      >
         <h2 class="search-container__cards-wrapper__card__name">{{ item.name }}</h2>
-        <img v-if="item.cover" class="search-container__cards-wrapper__card__img" :src="item.cover" :alt="item.name" />
+        <img
+          v-if="item.cover"
+          class="search-container__cards-wrapper__card__img"
+          :src="item.cover"
+          :alt="item.name"
+        />
       </router-link>
     </div>
   </div>

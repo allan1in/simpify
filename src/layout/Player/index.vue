@@ -2,7 +2,12 @@
   <footer class="player-bar">
     <div class="player-bar__left">
       <div class="player-bar__left__cover-wrapper">
-        <img class="player-bar__left__cover-wrapper__cover" :src="coverUrl" alt="track" />
+        <img
+          class="player-bar__left__cover-wrapper__cover"
+          :src="coverUrl"
+          alt="track"
+          @click="showFullScreenPlayer = true"
+        />
       </div>
       <div class="player-bar__left__msg-wrapper">
         <div class="player-bar__left__msg-wrapper__title">
@@ -51,7 +56,7 @@
           <IconRepeat v-else />
         </button>
       </div>
-      <SeekBar />
+      <SeekBar class="player-bar__mid__seek-bar" />
     </div>
     <div class="player-bar__right">
       <!-- <button
@@ -82,8 +87,12 @@
       <!-- <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
       </button> -->
-      <button class="icon-wrapper" @click="toggleFullScreenPlayer">
+      <button class="icon-wrapper player-bar__right__full-screen" @click="toggleFullScreenPlayer">
         <IconFullScreen />
+      </button>
+      <button class="icon-wrapper player-bar__right__play" @click="isPause = !isPause">
+        <IconPlay v-if="isPause" />
+        <IconPause v-else />
       </button>
     </div>
   </footer>
@@ -235,7 +244,6 @@ $msg-artist-font-size: 1.2rem;
 
 .player-bar {
   height: $height-player;
-  margin-top: $gutter;
   display: flex;
   position: relative;
 
@@ -249,19 +257,17 @@ $msg-artist-font-size: 1.2rem;
       margin: 0 $gutter;
 
       &__title {
-        @include oneLineEllipsis;
-
         font-size: $msg-title-font-size;
         cursor: pointer;
 
         &:hover {
           text-decoration: underline;
         }
+
+        @include oneLineEllipsis;
       }
 
       &__artist {
-        @include oneLineEllipsis;
-
         font-size: $msg-artist-font-size;
         color: $color-font-secondary;
         cursor: pointer;
@@ -270,6 +276,8 @@ $msg-artist-font-size: 1.2rem;
           text-decoration: underline;
           color: $color-font-primary;
         }
+
+        @include oneLineEllipsis;
       }
     }
 
@@ -281,6 +289,7 @@ $msg-artist-font-size: 1.2rem;
       &__cover {
         width: 100%;
         object-fit: cover;
+        cursor: pointer;
       }
     }
   }
@@ -322,6 +331,9 @@ $msg-artist-font-size: 1.2rem;
         }
       }
     }
+    @include respond(phone) {
+      display: none;
+    }
   }
 
   &__right {
@@ -330,8 +342,23 @@ $msg-artist-font-size: 1.2rem;
     justify-content: flex-end;
     align-items: center;
 
-    @include respond(phone) {
+    &__volume-bar,
+    &__full-screen {
+      @include respond(phone) {
+        display: none;
+      }
+    }
+
+    &__play {
       display: none;
+
+      @include respond(phone) {
+        display: block;
+        height: 4.4rem;
+        width: 4.4rem;
+        margin-right: 1.6rem;
+        fill: $color-font-primary;
+      }
     }
   }
 }

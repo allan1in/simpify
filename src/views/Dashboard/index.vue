@@ -6,7 +6,7 @@
         <CardHorizontal v-for="item in tracks" :item="item" />
       </div>
     </div>
-    <div class="dashboard-container__featured-playlists">
+    <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
       <TitleShowAll
         :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
         title="Featured Playlists"
@@ -21,7 +21,7 @@
         <ArtistCard v-for="item in artists" :item="item" />
       </div>
     </div>
-    <div class="dashboard-container__new-releases">
+    <div class="dashboard-container__new-releases" v-if="albums.length !== 0">
       <TitleShowAll title="New Releases" />
       <div class="dashboard-container__new-releases__content">
         <AlbumCard v-for="item in albums" :item="item" />
@@ -153,7 +153,7 @@ export default {
 <style lang="scss" scoped>
 .dashboard-container {
   padding: 1.6rem;
-  background: linear-gradient(to bottom, $color-bg-5 0rem, transparent 50rem);
+  background: linear-gradient(to bottom, $color-bg-6 0rem, transparent 50rem);
 
   &__top-songs {
     &__content {

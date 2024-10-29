@@ -4,9 +4,17 @@
     <section class="app-container__mid-wrapper">
       <!-- <MyLibrary /> -->
       <div class="app-container__mid-wrapper__main-view">
-        <Container>
-          <RouterView />
-        </Container>
+        <MyOverlayScrollbars os-element="main">
+          <div class="app-container__mid-wrapper__main-view__container">
+            <div
+              class="app-container__mid-wrapper__main-view__container__content"
+              v-show="!loading"
+            >
+              <RouterView />
+            </div>
+            <Loading :loading="loading" />
+          </div>
+        </MyOverlayScrollbars>
       </div>
       <!-- <DetailInfo /> -->
     </section>
@@ -19,7 +27,10 @@ import DetailInfo from './DetailInfo/index.vue'
 import MyLibrary from './MyLibrary/index.vue'
 import NavBar from './NavBar/index.vue'
 import PlayerBar from './Player/index.vue'
-import Container from '@/components/Container/index.vue'
+import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
+import Loading from '@/components/Loading/index.vue'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'Layout',
@@ -28,7 +39,11 @@ export default {
     MyLibrary,
     DetailInfo,
     PlayerBar,
-    Container
+    MyOverlayScrollbars,
+    Loading
+  },
+  computed: {
+    ...mapState(useAppStore, ['loading'])
   }
 }
 </script>
@@ -38,8 +53,12 @@ export default {
   background-color: $color-bg-1;
   height: 100vh;
   padding: $gutter;
+  display: flex;
+  flex-direction: column;
+  gap: $gutter;
 
   &__mid-wrapper {
+    flex-grow: 10;
     height: $height-content;
     display: flex;
     gap: $gutter;
@@ -50,6 +69,15 @@ export default {
       flex: 4;
       height: inherit;
       overflow: hidden;
+
+      &__container {
+        min-height: $height-content;
+
+        &__content {
+          max-width: $max-width-main-view;
+          margin: 0 auto;
+        }
+      }
     }
   }
 }

@@ -102,6 +102,12 @@ export default {
   color: $color-font-secondary;
   border-radius: $border-radius-small;
 
+  @include transition;
+
+  @include respond(phone) {
+    padding: 0;
+  }
+
   &:hover {
     background-color: $color-bg-5;
   }
@@ -148,6 +154,10 @@ export default {
 
         @include clickAnimation;
       }
+    }
+
+    @include respond(phone) {
+      display: none;
     }
   }
 
@@ -206,6 +216,10 @@ export default {
     &__album {
       @include oneLineEllipsis;
     }
+
+    @include respond(phone) {
+      display: none;
+    }
   }
 
   &__duration-wrapper {
@@ -213,6 +227,10 @@ export default {
     display: flex;
     align-items: center;
     height: 100%;
+
+    @include respond(phone) {
+      display: none;
+    }
   }
 }
 </style>

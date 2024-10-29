@@ -119,6 +119,11 @@ export default {
     justify-content: start;
     gap: $gutter-4x;
 
+    @include respond(phone) {
+      flex-direction: column;
+      align-items: center;
+    }
+
     &__img-wrapper {
       flex-shrink: 0;
       overflow: hidden;
@@ -126,13 +131,22 @@ export default {
       width: 22rem;
       border-radius: $border-radius-default;
 
+      @include respond(phone) {
+        height: unset;
+        width: 60%;
+        aspect-ratio: 1 / 1;
+      }
+
       &__img {
-        max-height: 100%;
+        height: 100%;
+        width: 100%;
         object-fit: cover;
       }
     }
 
     &__info {
+      width: 80%;
+
       &__type {
         font-size: 1.4rem;
       }
@@ -141,12 +155,16 @@ export default {
         font-family: $font-family-title;
         font-size: 9.6rem;
         font-weight: 800;
+        line-height: 1.5;
 
         @include oneLineEllipsis;
+
+        @include respond(phone) {
+          font-size: 3.2rem;
+        }
       }
 
       &__details {
-        margin-top: 1rem;
         font-size: 1.4rem;
         color: $color-font-secondary;
 

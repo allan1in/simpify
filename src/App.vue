@@ -3,12 +3,11 @@
     <RouterView />
     <FullScreenPlayer v-show="showFullScreenPlayer" />
   </main>
-
 </template>
 <script>
 import FullScreenPlayer from '@/components/FullScreenPlayer/index.vue'
-import { mapWritableState } from 'pinia';
-import { usePlayerStore } from './stores/player';
+import { mapWritableState } from 'pinia'
+import { usePlayerStore } from './stores/player'
 
 export default {
   name: 'App',

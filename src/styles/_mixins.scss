@@ -1,43 +1,56 @@
 // SCSS mixins
 
+// https://sass-lang.com/documentation/breaking-changes/mixed-decls/
 @mixin clickAnimation {
-  &:hover {
-    transform: scale(1.04);
-  }
+  & {
+    &:hover {
+      transform: scale(1.04);
+    }
 
-  &:active {
-    transform: scale(1);
-    opacity: 0.8;
+    &:active {
+      transform: scale(1);
+      opacity: 0.8;
+    }
   }
 }
 
 @mixin transition {
-  transition: all 0.22s ease-in;
+  & {
+    transition: all 0.22s ease-in;
+  }
 }
 
 @mixin transitionSlow {
-  transition: all 0.5s ease-in;
+  & {
+    transition: all 0.5s ease-in;
+  }
 }
 
 @mixin oneLineEllipsis {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  & {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 @mixin twoLineEllipsis {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  & {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 @mixin titleStyles {
-  font-size: 2.4rem;
-  color: $color-font-primary;
-  font-family: $font-family-title;
-  font-weight: 700;
+  & {
+    font-size: 2.4rem;
+    color: $color-font-primary;
+    font-family: $font-family-title;
+    font-weight: 700;
+  }
 }
 
 // MEDIA QUERY MANAGER
@@ -54,57 +67,73 @@
 
 @mixin respond($breackpoint) {
   @if $breackpoint == phone {
+    & {
       @media only screen and (max-width: 600px) {
-          // <= 600px
-          @content;
+        // <= 600px
+        @content;
       }
+    }
   }
 
   @if $breackpoint == tab-port {
+    & {
       @media only screen and (max-width: 768px) {
-          // <= 768px
-          @content;
+        // <= 768px
+        @content;
       }
+    }
   }
 
   @if $breackpoint == tab-land {
+    & {
       @media only screen and (max-width: 1024px) {
-          // <= 1024px
-          @content;
+        // <= 1024px
+        @content;
       }
+    }
   }
 
   @if $breackpoint == desktop {
+    & {
       @media only screen and (max-width: 1440px) {
-          // <= 1440px
-          @content;
+        // <= 1440px
+        @content;
       }
+    }
   }
 }
 
 // https://sass-lang.com/documentation/at-rules/mixin/#keyword-arguments
 @mixin gridCards() {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-
-  @include respond(tab-land){
-    grid-template-columns: repeat(4, 1fr);
+  & {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
   }
 
-  @include respond(phone){
-    grid-template-columns: repeat(2, 1fr);
+  @include respond(tab-land) {
+    & {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @include respond(phone) {
+    & {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 }
 
-@mixin gridCardsLess(){
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+@mixin gridCardsLess() {
+  & {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
 
-  @include respond(tab-land){
-    grid-template-columns: repeat(2, 1fr);
-  }
+    @include respond(tab-land) {
+      grid-template-columns: repeat(2, 1fr);
+    }
 
-  @include respond(phone){
-    grid-template-columns: repeat(1, 1fr);
+    @include respond(phone) {
+      grid-template-columns: repeat(1, 1fr);
+    }
   }
 }
