@@ -191,20 +191,19 @@ router.beforeEach(async (to, from, next) => {
       // White list pages
       next('/')
     } else {
-      let userStore = useUserStore()
-      if (userStore.display_name) {
+      if (useUserStore().display_name) {
         // Has userData
         next()
       } else {
         // Has no userData
         try {
-          await userStore.getUserData()
+          await useUserStore().getUserData()
           next()
         } catch (error) {
           // Bad or expired token
           // window.localStorage.clear()
           // next('/login')
-          console.log(error)
+          console.log('e: ' + error)
           next()
         }
       }

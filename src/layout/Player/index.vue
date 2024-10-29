@@ -114,7 +114,7 @@ import IconLyrics from '@/components/Icons/IconLyrics.vue'
 import IconMiniPlayer from '@/components/Icons/IconMiniPlayer.vue'
 import IconFullScreen from '@/components/Icons/IconFullScreen.vue'
 import IconInLikeSong from '@/components/Icons/IconInLikeSong.vue'
-import { mapWritableState } from 'pinia'
+import { mapActions, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
@@ -193,7 +193,11 @@ export default {
         /* IE11 */
         element.msRequestFullscreen()
       }
-    }
+    },
+    ...mapActions(usePlayerStore, ['initPlayer'])
+  },
+  created() {
+    this.initPlayer()
   }
 }
 </script>
