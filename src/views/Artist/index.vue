@@ -182,6 +182,12 @@ export default {
       margin: -2rem;
       padding: 2rem;
 
+      @include respond(phone) {
+        font-size: 4rem;
+        margin: -0.6rem;
+        padding: 0.6rem;
+      }
+
       @include oneLineEllipsis;
     }
 

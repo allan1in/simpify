@@ -202,8 +202,10 @@ router.beforeEach(async (to, from, next) => {
           next()
         } catch (error) {
           // Bad or expired token
-          window.localStorage.clear()
-          next('/login')
+          // window.localStorage.clear()
+          // next('/login')
+          console.log(error)
+          next()
         }
       }
     }

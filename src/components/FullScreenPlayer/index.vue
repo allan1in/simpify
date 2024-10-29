@@ -180,9 +180,6 @@ export default {
       },
       immediate: true
     }
-  },
-  mounted() {
-    console.log('create')
   }
 }
 </script>

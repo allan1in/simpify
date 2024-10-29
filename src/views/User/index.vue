@@ -139,6 +139,11 @@ export default {
     justify-content: start;
     gap: $gutter-4x;
 
+    @include respond(phone) {
+      flex-direction: column;
+      align-items: center;
+    }
+
     &__img-wrapper {
       flex-shrink: 0;
       overflow: hidden;
@@ -150,6 +155,12 @@ export default {
       align-items: center;
       justify-content: center;
       background-color: $color-bg-3;
+
+      @include respond(phone) {
+        height: unset;
+        width: 60%;
+        aspect-ratio: 1 / 1;
+      }
 
       &__img {
         max-height: 100%;
@@ -174,6 +185,10 @@ export default {
         font-weight: 800;
 
         @include oneLineEllipsis;
+
+        @include respond(phone) {
+          font-size: 3.2rem;
+        }
       }
 
       &__details {

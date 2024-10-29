@@ -1,42 +1,45 @@
 <template>
   <div class="album-container" v-if="!loading">
     <div class="album-container__cover">
-      <div class="album-container__cover__img-wrapper">
-        <img class="album-container__cover__img-wrapper__img" :src="album.images[1].url" :alt="album.name" />
-      </div>
-      <div class="album-container__cover__info">
-        <span class="album-container__cover__info__type">{{
-          `${album.type.charAt(0).toUpperCase()}${album.type.slice(1)}`
-        }}</span>
-        <h1 class="album-container__cover__info__title">{{ album.name }}</h1>
-        <div class="album-container__cover__info__details">
-          <span v-for="(artist, index) in album.artists" class="album-container__cover__info__details__artist">
-            {{ index === 0 ? '' : ' • ' }}
-            <router-link class="album-container__cover__info__details__artist__link"
-              :to="{ name: 'Artist', params: { artistId: artist.id } }">{{ artist.name }}</router-link>
-          </span>
+      <Banner :item="album">
+        <span
+          v-for="(artist, index) in album.artists"
+          class="album-container__banner-details__artist"
+        >
+          {{ index === 0 ? '' : ' • ' }}
+          <router-link
+            class="album-container__banner-details__artist__link"
+            :to="{ name: 'Artist', params: { artistId: artist.id } }"
+            >{{ artist.name }}</router-link
+          >
+        </span>
 
-          <span class="album-container__cover__info__details__release-year">
-            {{ ` • ${album.release_date.split('-')[0]}` }}
-          </span>
-          <span class="album-container__cover__info__details__total-tracks">
-            {{ ` • ${album.total_tracks} songs` }}
-          </span>
-          <span class="album-container__cover__info__details__duration">
-            {{
-              ` • ${getFormatTime(
-                tracks.reduce((acc, track) => {
-                  return acc + track.duration_ms
-                }, 0)
-              )}`
-            }}
-          </span>
-        </div>
-      </div>
+        <span class="album-container__banner-details__release-year">
+          {{ ` • ${album.release_date.split('-')[0]}` }}
+        </span>
+        <span class="album-container__banner-details__total-tracks">
+          {{ ` • ${album.total_tracks} songs` }}
+        </span>
+        <span class="album-container__banner-details__duration">
+          {{
+            ` • ${getFormatTime(
+              tracks.reduce((acc, track) => {
+                return acc + track.duration_ms
+              }, 0)
+            )}`
+          }}
+        </span>
+      </Banner>
     </div>
     <div class="album-container__content">
       <TrackListHeader :showAlbum="false" />
-      <TrackCard v-for="(item, index) in tracks" :item="item" :index="index" :show-album="false" :show-image="false" />
+      <TrackCard
+        v-for="(item, index) in tracks"
+        :item="item"
+        :index="index"
+        :show-album="false"
+        :show-image="false"
+      />
     </div>
   </div>
 </template>
@@ -48,12 +51,14 @@ import { getAlbum, getTracks, getNextTracks } from '@/api/meta/album'
 import { timeFormatAlbum } from '@/utils/time_format'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
+import Banner from '@/components/Banner/index.vue'
 
 export default {
   name: 'Album',
   components: {
     TrackListHeader,
-    TrackCard
+    TrackCard,
+    Banner
   },
   data() {
     return {
@@ -80,7 +85,7 @@ export default {
       this.loading = false
     },
     async getAlbum() {
-      const res = (await getAlbum(this.id))
+      const res = await getAlbum(this.id)
       this.album = res
     },
     async getTracks() {
@@ -93,10 +98,10 @@ export default {
             limit: this.tracks_limit,
             offset: this.tracks_offset
           }
-          res = (await getTracks(this.id, params))
+          res = await getTracks(this.id, params)
         } else {
           let path = this.tracks_next
-          res = (await getNextTracks(this.id, path.slice(path.indexOf('?') + 1)))
+          res = await getNextTracks(this.id, path.slice(path.indexOf('?') + 1))
         }
 
         let newVals = res.items
@@ -130,52 +135,10 @@ export default {
 
 <style lang="scss" scoped>
 .album-container {
-  &__cover {
-    padding: $gutter-4x;
-    background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
-    display: flex;
-    align-items: end;
-    justify-content: start;
-    gap: $gutter-4x;
-
-    &__img-wrapper {
-      flex-shrink: 0;
-      overflow: hidden;
-      height: 22rem;
-      width: 22rem;
-      border-radius: $border-radius-default;
-
-      &__img {
-        max-height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    &__info {
-      &__type {
-        font-size: 1.4rem;
-      }
-
-      &__title {
-        font-family: $font-family-title;
-        font-size: 9.6rem;
-        font-weight: 800;
-
-        @include oneLineEllipsis;
-      }
-
-      &__details {
-        margin-top: 1rem;
-        font-size: 1.4rem;
-        color: $color-font-secondary;
-
-        @include twoLineEllipsis;
-
-        &__artist__link {
-          font-weight: 700;
-          color: $color-font-primary;
-        }
-      }
+  &__banner-details {
+    &__artist__link {
+      font-weight: 700;
+      color: $color-font-primary;
     }
   }
 

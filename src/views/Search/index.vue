@@ -101,7 +101,7 @@ export default {
           offset: 0
         }
         const res = (await getCategoryPlaylists(item.id, params)).playlists.items
-        item.cover = res[0].images[0].url
+        item.cover = res[0] ? res[0].images[0].url : ''
       })
     }
   },

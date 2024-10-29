@@ -1,53 +1,40 @@
 <template>
   <div class="playlist-container" v-if="!loading">
-    <div class="playlist-container__cover">
-      <div class="playlist-container__cover__img-wrapper">
-        <img
-          class="playlist-container__cover__img-wrapper__img"
-          :src="playlist.images[0].url"
-          :alt="playlist.owner.display_name"
-        />
-      </div>
-      <div class="playlist-container__cover__info">
-        <span class="playlist-container__cover__info__type">{{
-          `${playlist.type.charAt(0).toUpperCase()}${playlist.type.slice(1)}`
-        }}</span>
-        <h1 class="playlist-container__cover__info__title">{{ playlist.name }}</h1>
-        <div class="playlist-container__cover__info__details">
-          <router-link
-            class="playlist-container__cover__info__details__owner"
-            :to="{ name: 'User', params: { userId: playlist.owner.id } }"
-            >{{ playlist.owner.display_name }}</router-link
-          >
-          <span class="playlist-container__cover__info__details__release-year">
-            {{
-              playlist.followers.total === 0
-                ? ''
-                : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${
-                    playlist.followers.total === 1 ? ' follower' : ' followers'
-                  }`
-            }}
-          </span>
-          <span
-            v-if="playlist.tracks.total !== 0"
-            class="playlist-container__cover__info__details__total-playlist.tracks"
-          >
-            {{ ` • ${playlist.tracks.total} songs` }}
-          </span>
-          <span
-            v-if="playlist.tracks.total !== 0"
-            class="playlist-container__cover__info__details__duration"
-          >
-            {{
-              ` • ${getFormatTime(
-                playlist.tracks.items.reduce((acc, item) => {
-                  return acc + (item.track !== null ? item.track.duration_ms : 0)
-                }, 0)
-              )}`
-            }}
-          </span>
-        </div>
-      </div>
+    <div class="playlist-container__banner">
+      <Banner :item="playlist">
+        <router-link
+          class="playlist-container__banner-details__owner"
+          :to="{ name: 'User', params: { userId: playlist.owner.id } }"
+          >{{ playlist.owner.display_name }}</router-link
+        >
+        <span class="playlist-container__banner-details__release-year">
+          {{
+            playlist.followers.total === 0
+              ? ''
+              : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${
+                  playlist.followers.total === 1 ? ' follower' : ' followers'
+                }`
+          }}
+        </span>
+        <span
+          v-if="playlist.tracks.total !== 0"
+          class="playlist-container__banner-details__total-playlist.tracks"
+        >
+          {{ ` • ${playlist.tracks.total} songs` }}
+        </span>
+        <span
+          v-if="playlist.tracks.total !== 0"
+          class="playlist-container__banner-details__duration"
+        >
+          {{
+            ` • ${getFormatTime(
+              playlist.tracks.items.reduce((acc, item) => {
+                return acc + (item.track !== null ? item.track.duration_ms : 0)
+              }, 0)
+            )}`
+          }}
+        </span>
+      </Banner>
     </div>
     <div class="playlist-container__content">
       <TrackListHeader />
@@ -69,12 +56,14 @@ import { getPlaylist } from '@/api/meta/playlist'
 import { timeFormatAlbum } from '@/utils/time_format'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
+import Banner from '@/components/Banner/index.vue'
 
 export default {
   name: 'Playlist',
   components: {
     TrackListHeader,
-    TrackCard
+    TrackCard,
+    Banner
   },
   data() {
     return {
@@ -111,80 +100,12 @@ export default {
 
 <style lang="scss" scoped>
 .playlist-container {
-  &__cover {
-    padding: $gutter-4x;
-    background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
-    display: flex;
-    align-items: end;
-    justify-content: start;
-    gap: $gutter-4x;
-
-    @include respond(phone) {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    &__img-wrapper {
-      flex-shrink: 0;
-      overflow: hidden;
-      height: 22rem;
-      width: 22rem;
-      border-radius: $border-radius-default;
-
-      @include respond(phone) {
-        height: unset;
-        width: 60%;
-        aspect-ratio: 1 / 1;
-      }
-
-      &__img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-      }
-    }
-
-    &__info {
-      width: 80%;
-
-      &__type {
-        font-size: 1.4rem;
-      }
-
-      &__title {
-        font-family: $font-family-title;
-        font-size: 9.6rem;
-        font-weight: 800;
-        line-height: 1.5;
-
-        @include oneLineEllipsis;
-
-        @include respond(phone) {
-          font-size: 3.2rem;
-        }
-      }
-
-      &__details {
-        font-size: 1.4rem;
-        color: $color-font-secondary;
-
-        &__owner {
-          font-weight: 700;
-          color: $color-font-primary;
-          vertical-align: bottom;
-        }
-
-        &__release-year {
-          vertical-align: bottom;
-        }
-
-        &__total-tracks {
-          vertical-align: bottom;
-        }
-      }
+  &__banner-details {
+    &__owner {
+      font-weight: 700;
+      color: $color-font-primary;
     }
   }
-
   &__content {
     padding: 1.6rem;
   }

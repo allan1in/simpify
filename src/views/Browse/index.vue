@@ -40,7 +40,7 @@ export default {
       this.loading = false
     },
     async getCategory() {
-      const res = (await getCategory(this.$route.params.categoryId))
+      const res = await getCategory(this.$route.params.categoryId)
       this.category = res
     },
     async getPlaylists() {
@@ -103,6 +103,10 @@ $color-bg-cover: hsl(random(360), 40%, 50%);
       font-weight: 800;
       font-family: $font-family-title;
       text-shadow: 0 0 20px rgba($color-bg-1, 1);
+
+      @include respond(phone) {
+        font-size: 4rem;
+      }
     }
   }
 
