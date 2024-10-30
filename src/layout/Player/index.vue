@@ -1,24 +1,21 @@
 <template>
   <footer class="player-bar">
     <div class="player-bar__left">
-      <div class="player-bar__left__cover-wrapper">
-        <img
-          class="player-bar__left__cover-wrapper__cover"
-          :src="coverUrl"
-          alt="track"
-          @click="showFullScreenPlayer = true"
-        />
+      <div class="player-bar__left__cover-wrapper" v-if="album.images">
+        <img class="player-bar__left__cover-wrapper__cover" :src="album.images[0].url" alt="track"
+          @click="showFullScreenPlayer = true" />
       </div>
       <div class="player-bar__left__msg-wrapper">
-        <div class="player-bar__left__msg-wrapper__title">
-          <router-link :to="{ name: 'Track', params: { trackId: track_id } }">{{
-            track
+        <div class="player-bar__left__msg-wrapper__title" v-if="track.id">
+          <router-link :to="{ name: 'Track', params: { trackId: track.id } }">{{
+            track.name
           }}</router-link>
         </div>
-        <div class="player-bar__left__msg-wrapper__artist">
-          <router-link :to="{ name: 'Artist', params: { artistId: artist_id } }">{{
-            artist
-          }}</router-link>
+        <div class="player-bar__left__msg-wrapper__artist" v-if="artists.length">
+          <router-link v-for="(artist, index) in artists" :key="artist.uri"
+            :to="{ name: 'Artist', params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] } }">
+            {{ (index === 0 ? '' : ', ') + artist.name }}
+          </router-link>
         </div>
       </div>
       <!-- <button class="icon-wrapper" @click="song.isLike = !song.isLike">
@@ -28,31 +25,23 @@
     </div>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
-        <button
-          class="icon-wrapper"
-          :class="{ 'btn-active': isShuffle }"
-          @click="isShuffle = !isShuffle"
-        >
+        <button class="icon-wrapper" :class="{ 'btn-active': isShuffle }" @click="toggleShuffle">
           <IconShuffle />
         </button>
-        <button class="icon-wrapper">
+        <button class="icon-wrapper" @click="preTrack">
           <IconPrevious />
         </button>
-        <button class="player-bar__mid__btn-group__play" @click="isPause = !isPause">
+        <button class="player-bar__mid__btn-group__play" @click="togglePlay">
           <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
             <IconPlay v-if="isPause" />
             <IconPause v-else />
           </span>
         </button>
-        <button class="icon-wrapper">
+        <button class="icon-wrapper" @click="nextTrack">
           <IconNext />
         </button>
-        <button
-          class="icon-wrapper"
-          :class="{ 'btn-active': isRepeat || isRepeatSingle }"
-          @click="handleRepeatClick"
-        >
-          <IconRepeatSingle v-if="isRepeatSingle" />
+        <button class="icon-wrapper" :class="{ 'btn-active': repeatMode !== 0 }" @click="setRepeatMode">
+          <IconRepeatSingle v-if="repeatMode === 2" />
           <IconRepeat v-else />
         </button>
       </div>
@@ -91,7 +80,7 @@
         <IconFullScreen />
       </button>
       <button class="icon-wrapper player-bar__right__play" @click="isPause = !isPause">
-        <IconPlay v-if="isPause" />
+        <IconPlay v-if="!isPause" />
         <IconPause v-else />
       </button>
     </div>
@@ -151,16 +140,14 @@ export default {
   },
   computed: {
     ...mapWritableState(usePlayerStore, [
-      'coverUrl',
+      'player',
+      'album',
       'track',
-      'artist',
+      'artists',
       'percentage',
-      'track_id',
-      'artist_id',
       'isPause',
       'isShuffle',
-      'isRepeat',
-      'isRepeatSingle',
+      'repeatMode',
       'isMute',
       'volume',
       'showFullScreenPlayer'
@@ -170,16 +157,6 @@ export default {
     toggleFullScreenPlayer() {
       this.showFullScreenPlayer = !this.showFullScreenPlayer
       this.openFullscreen()
-    },
-    handleRepeatClick() {
-      if (this.isRepeatSingle) {
-        this.isRepeatSingle = false
-      } else if (!this.isRepeat) {
-        this.isRepeat = true
-      } else {
-        this.isRepeat = false
-        this.isRepeatSingle = true
-      }
     },
     /* View in fullscreen */
     openFullscreen() {
@@ -194,7 +171,7 @@ export default {
         element.msRequestFullscreen()
       }
     },
-    ...mapActions(usePlayerStore, ['initPlayer'])
+    ...mapActions(usePlayerStore, ['initPlayer', 'togglePlay', 'nextTrack', 'preTrack', 'setRepeatMode', 'toggleShuffle'])
   },
   created() {
     this.initPlayer()
@@ -274,12 +251,6 @@ $msg-artist-font-size: 1.2rem;
       &__artist {
         font-size: $msg-artist-font-size;
         color: $color-font-secondary;
-        cursor: pointer;
-
-        &:hover {
-          text-decoration: underline;
-          color: $color-font-primary;
-        }
 
         @include oneLineEllipsis;
       }
@@ -335,6 +306,7 @@ $msg-artist-font-size: 1.2rem;
         }
       }
     }
+
     @include respond(phone) {
       display: none;
     }

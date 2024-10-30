@@ -7,7 +7,8 @@
       <IconVolumeLoud v-else />
     </button>
     <div class="volume-container__progress-wrapper">
-      <ProcessBar :percentage="isMute ? 0 : volume" @update-percentage="updateVolume" @mouse-down="handleMouseDown" />
+      <ProcessBar :percentage="isMute ? 0 : volume" @update-percentage="updateVolume" @mouse-down="handleMouseDown"
+        @mouse-up="handleMouseUp" />
     </div>
   </div>
 </template>
@@ -17,7 +18,7 @@ import IconVolumeLoud from '../Icons/IconVolumeLoud.vue'
 import IconVolumeNormal from '../Icons/IconVolumeNormal.vue'
 import IconVolumeQuiet from '../Icons/IconVolumeQuiet.vue'
 import IconVolumeMuted from '../Icons/IconVolumeMuted.vue'
-import { mapWritableState } from 'pinia'
+import { mapActions, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 
 export default {
@@ -36,17 +37,23 @@ export default {
     updateVolume(newVal) {
       this.volume = newVal
     },
-    handleMouseDown() {
+    async handleMouseDown() {
       if (this.isMute) {
         this.isMute = false
       }
+      await this.stopListenPos()
     },
     handleMuteClick() {
       if (this.volume === 0) {
         this.volume = 25
       }
       this.isMute = !this.isMute
-    }
+    },
+    async handleMouseUp() {
+      await this.setVolume()
+      await this.listenPos()
+    },
+    ...mapActions(usePlayerStore, ['listenPos', 'stopListenPos', 'setVolume'])
   },
   watch: {
     volume(newVal, oldVal) {
@@ -55,6 +62,9 @@ export default {
       } else {
         this.isMute = false
       }
+    },
+    isMute(newVal, oldVal) {
+      this.setVolume()
     }
   }
 }

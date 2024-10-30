@@ -1,7 +1,7 @@
 <template>
   <div ref="process" class="process" @mousedown="handleMouseDown">
     <div class="process__line">
-      <div ref="seek" class="process__line__seek" :style="{ left: `calc(${percentage}% - 100%)` }"></div>
+      <div ref="position" class="process__line__position" :style="{ left: `calc(${percentage}% - 100%)` }"></div>
     </div>
     <div ref="dot" class="process__dot" :style="{ left: `${percentage}%` }"></div>
   </div>
@@ -33,19 +33,19 @@ export default {
       this.$emit('updatePercentage', newVal)
       document.onmousemove = (e) => {
         if (e.clientX > maxPos) {
-          this.$refs.seek.style.left = 0 + 'px'
-          this.$refs.dot.style.left = this.$refs.seek.style.left + this.$refs.dot.width / 2
+          this.$refs.position.style.left = 0 + 'px'
+          this.$refs.dot.style.left = this.$refs.position.style.left + this.$refs.dot.width / 2
 
           newVal = 100 * ((maxPos - minPos) / width)
         } else if (e.clientX < minPos) {
-          this.$refs.seek.style.left = '-' + this.$refs.process.width + 'px'
-          this.$refs.dot.style.left = this.$refs.seek.style.left + this.$refs.dot.width / 2
+          this.$refs.position.style.left = '-' + this.$refs.process.width + 'px'
+          this.$refs.dot.style.left = this.$refs.position.style.left + this.$refs.dot.width / 2
 
           newVal = 100 * ((minPos - minPos) / width)
         } else {
           nextPos = prePos - e.clientX
           prePos = e.clientX
-          this.$refs.seek.style.left = this.$refs.seek.offsetLeft - nextPos + 'px'
+          this.$refs.position.style.left = this.$refs.position.offsetLeft - nextPos + 'px'
           this.$refs.dot.style.left = this.$refs.dot.offsetLeft - nextPos + 'px'
 
           newVal = 100 * ((e.clientX - minPos) / width)
@@ -57,6 +57,8 @@ export default {
       document.onmouseup = () => {
         document.onmousemove = null
         document.onmouseup = null
+
+        this.$emit('mouseUp')
       }
     }
   }
@@ -71,8 +73,8 @@ $progress-line-color: #4d4d4d;
   width: 100%;
   height: 0.4rem;
 
-  &:hover &__line__seek,
-  &:active &__line__seek {
+  &:hover &__line__position,
+  &:active &__line__position {
     background-color: $color-brand;
   }
 
@@ -93,7 +95,7 @@ $progress-line-color: #4d4d4d;
     overflow: hidden;
     cursor: pointer;
 
-    &__seek {
+    &__position {
       position: absolute;
       left: -100%;
       top: 0;

@@ -191,7 +191,7 @@ router.beforeEach(async (to, from, next) => {
       // White list pages
       next('/')
     } else {
-      if (useUserStore().display_name) {
+      if (useUserStore().uid) {
         // Has userData
         next()
       } else {

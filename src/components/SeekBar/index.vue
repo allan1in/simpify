@@ -1,17 +1,19 @@
 <template>
   <div class="seek-bar" :class="{ 'seek-bar-large': size === 'large', 'seek-bar-default': size === 'default' }">
-    <div class="seek-bar__seek">{{ seek }}</div>
+    <div class="seek-bar__seek">{{ timeFormat(position) }}</div>
     <div class="seek-bar__process-bar">
-      <ProcessBar :percentage="percentage" @update-percentage="updatePercentage" />
+      <ProcessBar :percentage="percentage" @update-percentage="updatePercentage" @mouse-up="handleMouseUp"
+        @mouse-down="stopListenPos" />
     </div>
-    <div class="seek-bar__duration">{{ duration }}</div>
+    <div class="seek-bar__duration">{{ timeFormat(duration) }}</div>
   </div>
 </template>
 
 <script>
 import ProcessBar from '@/components/ProcessBar/index.vue'
-import { mapWritableState } from 'pinia'
+import { mapActions, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
+import { timeFormatTrack } from '@/utils/time_format'
 
 export default {
   name: 'SeekBar',
@@ -26,12 +28,23 @@ export default {
     ProcessBar
   },
   computed: {
-    ...mapWritableState(usePlayerStore, ['percentage', 'seek', 'duration'])
+    ...mapWritableState(usePlayerStore, ['percentage', 'position', 'duration', 'player', 'duration', 'isPause'])
   },
   methods: {
     updatePercentage(newVal) {
       this.percentage = newVal
-    }
+    },
+    timeFormat(time) {
+      return timeFormatTrack(time)
+    },
+    async handleMouseUp() {
+      await this.player.seek(this.duration * this.percentage / 100)
+      await this.listenPos()
+      if (this.isPause) {
+        await this.togglePlay()
+      }
+    },
+    ...mapActions(usePlayerStore, ['stopListenPos', 'listenPos', 'togglePlay'])
   }
 }
 </script>
@@ -45,7 +58,7 @@ export default {
   align-items: center;
 
   &-default {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
 
   &-large {
@@ -53,8 +66,8 @@ export default {
   }
 
   &__seek {
-    min-width: 3.6rem;
-    text-align: right;
+    min-width: 3.2rem;
+    text-align: center;
   }
 
   &__process-bar {

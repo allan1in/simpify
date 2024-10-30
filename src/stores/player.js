@@ -1,25 +1,28 @@
 import { defineStore } from 'pinia'
 import { useUserStore } from './user'
+import {
+  getPlaybackState,
+  setRepeatMode,
+  togglePlaybackShuffle,
+  transferPlayback
+} from '@/api/meta/player'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
+    player: null,
+    activeDevice: {},
     showFullScreenPlayer: false,
     volume: 50,
     isShuffle: false,
     isPause: true,
-    isRepeat: false,
-    isRepeatSingle: false,
+    repeatMode: 0,
     isMute: false,
-    fromType: 'ALBUM',
-    fromName: 'Phonk',
-    coverUrl: 'https://i.scdn.co/image/ab67616d0000b27382ea2e9e1858aa012c57cd45',
-    track: 'Die With A Smile',
-    track_id: '2plbrEY59IikOBgBGLjaoe',
-    artist: 'Lady Gaga',
-    artist_id: '1HY2Jd0NmPuamShAr6KMms',
     percentage: 0,
-    duration: '--:--',
-    seek: '--:--'
+    duration: 0,
+    position: 0,
+    album: {},
+    track: {},
+    artists: []
   }),
   actions: {
     initPlayer() {
@@ -42,37 +45,118 @@ export const usePlayerStore = defineStore('player', {
 
         // Events
 
-        this.player.addListener('ready', ({ device_id }) => {
-          console.log('Ready with Device ID', device_id)
+        this.player.addListener('ready', async (res) => {
+          console.log('Ready with Device ID', res)
+          const state = await getPlaybackState()
+          if (!state.device) {
+            this.activeDevice = res.device_id
+            await transferPlayback({ device_ids: [res.device_id] })
+          } else {
+            this.activeDevice = state.device
+            this.volume = this.activeDevice.volume_percent
+            this.repeatMode = state.repeat_state
+            this.shuffle = state.shuffle_state
+            this.isPause = !state.is_playing
+            this.album = state.item.album
+            this.artists = state.item.artists
+            this.track = { name: state.item.name, id: state.item.id }
+            this.duration = state.item.duration_ms
+            this.position = state.progress_ms
+            this.percentage = 100 * (this.position / this.duration)
+          }
         })
 
-        this.player.addListener('not_ready', ({ device_id }) => {
-          console.log('Device ID has gone offline', device_id)
+        this.player.addListener('not_ready', (res) => {
+          console.log('Device ID has gone offline', res)
         })
 
-        this.player.addListener('autoplay_failed', () => {
-          console.log('Autoplay is not allowed by the browser autoplay rules')
+        this.player.addListener('autoplay_failed', (res) => {
+          console.log('Autoplay is not allowed by the browser autoplay rules', res)
+        })
+
+        this.player.addListener('player_state_changed', (res) => {
+          this.isPause = res.paused
+          this.duration = res.duration
+          this.position = res.position
+          this.percentage = 100 * (res.position / res.duration)
+          this.album = res.track_window.current_track.album
+          this.track = {
+            id: res.track_window.current_track.id,
+            name: res.track_window.current_track.name
+          }
+          this.artists = res.track_window.current_track.artists
+          this.repeatMode = res.repeat_mode
+          this.isShuffle = res.shuffle
+
+          this.player.getVolume().then((volume) => {
+            this.volume = volume * 100
+          })
         })
 
         // Errors
 
-        this.player.addListener('initialization_error', ({ message }) => {
-          console.error('SDK Error: ' + message)
+        this.player.addListener('initialization_error', (message) => {
+          console.log('SDK Error: ' + message)
         })
 
-        this.player.addListener('authentication_error', ({ message }) => {
-          console.error('SDK Error: ' + message)
+        this.player.addListener('authentication_error', (message) => {
+          console.log('SDK Error: ' + message)
         })
 
-        this.player.addListener('account_error', ({ message }) => {
-          console.error('SDK Error: ' + message)
+        this.player.addListener('account_error', (message) => {
+          console.log('SDK Error: ' + message)
         })
 
-        this.player.on('playback_error', ({ message }) => {
-          console.error('SDK Error: ' + message)
+        this.player.on('playback_error', (message) => {
+          console.log(message)
         })
 
         this.player.connect()
+        this.listenPos()
+      }
+    },
+    listenPos() {
+      this.player.addListener('progress', async (res) => {
+        this.position = res.position
+        this.percentage = 100 * (res.position / this.duration)
+
+        this.volume = (await this.player.getVolume()) * 100
+      })
+    },
+    stopListenPos() {
+      this.player.removeListener('progress')
+    },
+    async togglePlay() {
+      await this.player.togglePlay()
+      this.isPause = !this.isPause
+    },
+    nextTrack() {
+      this.player.nextTrack()
+    },
+    preTrack() {
+      this.player.previousTrack()
+    },
+    async setRepeatMode() {
+      if (this.repeatMode === 0) {
+        await setRepeatMode({ state: 'context' })
+        this.repeatMode = 1
+      } else if (this.repeatMode === 1) {
+        await setRepeatMode({ state: 'track' })
+        this.repeatMode = 2
+      } else {
+        await setRepeatMode({ state: 'off' })
+        this.repeatMode = 0
+      }
+    },
+    async toggleShuffle() {
+      await togglePlaybackShuffle({ state: !this.isShuffle })
+      this.isShuffle = !this.isShuffle
+    },
+    setVolume() {
+      if (this.isMute) {
+        this.player.setVolume(0)
+      } else {
+        this.player.setVolume(this.volume / 100)
       }
     }
   }
