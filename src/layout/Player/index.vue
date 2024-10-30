@@ -2,8 +2,12 @@
   <footer class="player-bar">
     <div class="player-bar__left">
       <div class="player-bar__left__cover-wrapper" v-if="album.images">
-        <img class="player-bar__left__cover-wrapper__cover" :src="album.images[0].url" alt="track"
-          @click="showFullScreenPlayer = true" />
+        <img
+          class="player-bar__left__cover-wrapper__cover"
+          :src="album.images[0].url"
+          alt="track"
+          @click="showFullScreenPlayer = true"
+        />
       </div>
       <div class="player-bar__left__msg-wrapper">
         <div class="player-bar__left__msg-wrapper__title" v-if="track.id">
@@ -12,8 +16,14 @@
           }}</router-link>
         </div>
         <div class="player-bar__left__msg-wrapper__artist" v-if="artists.length">
-          <router-link v-for="(artist, index) in artists" :key="artist.uri"
-            :to="{ name: 'Artist', params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] } }">
+          <router-link
+            v-for="(artist, index) in artists"
+            :key="artist.uri"
+            :to="{
+              name: 'Artist',
+              params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
+            }"
+          >
             {{ (index === 0 ? '' : ', ') + artist.name }}
           </router-link>
         </div>
@@ -40,7 +50,11 @@
         <button class="icon-wrapper" @click="nextTrack">
           <IconNext />
         </button>
-        <button class="icon-wrapper" :class="{ 'btn-active': repeatMode !== 0 }" @click="setRepeatMode">
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': repeatMode !== 0 }"
+          @click="setRepeatMode"
+        >
           <IconRepeatSingle v-if="repeatMode === 2" />
           <IconRepeat v-else />
         </button>
@@ -79,8 +93,8 @@
       <button class="icon-wrapper player-bar__right__full-screen" @click="toggleFullScreenPlayer">
         <IconFullScreen />
       </button>
-      <button class="icon-wrapper player-bar__right__play" @click="isPause = !isPause">
-        <IconPlay v-if="!isPause" />
+      <button class="icon-wrapper player-bar__right__play-phone" @click="togglePlay">
+        <IconPlay v-if="isPause" />
         <IconPause v-else />
       </button>
     </div>
@@ -171,7 +185,14 @@ export default {
         element.msRequestFullscreen()
       }
     },
-    ...mapActions(usePlayerStore, ['initPlayer', 'togglePlay', 'nextTrack', 'preTrack', 'setRepeatMode', 'toggleShuffle'])
+    ...mapActions(usePlayerStore, [
+      'initPlayer',
+      'togglePlay',
+      'nextTrack',
+      'preTrack',
+      'setRepeatMode',
+      'toggleShuffle'
+    ])
   },
   created() {
     this.initPlayer()
@@ -233,6 +254,11 @@ $msg-artist-font-size: 1.2rem;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+
+    @include respond(phone) {
+      flex: unset;
+      flex-grow: 1;
+    }
 
     &__msg-wrapper {
       margin: 0 $gutter;
@@ -318,6 +344,11 @@ $msg-artist-font-size: 1.2rem;
     justify-content: flex-end;
     align-items: center;
 
+    @include respond(phone) {
+      flex: unset;
+      flex-shrink: 0;
+    }
+
     &__volume-bar,
     &__full-screen {
       @include respond(phone) {
@@ -325,14 +356,14 @@ $msg-artist-font-size: 1.2rem;
       }
     }
 
-    &__play {
+    &__play-phone {
       display: none;
 
       @include respond(phone) {
         display: block;
         height: 4.4rem;
         width: 4.4rem;
-        margin-right: 1.6rem;
+        margin: 0 1.6rem;
         fill: $color-font-primary;
       }
     }

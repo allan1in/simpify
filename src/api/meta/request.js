@@ -38,9 +38,11 @@ service.interceptors.response.use(
 
     // Bad or expired token
     if (error.status === 401) {
+      console.log('Bad or expired token')
       await useUserStore().refreshToken()
       response.config.headers.Authorization = `Bearer ${localStorage.getItem('access_token')}`
       const res = await service.request(response.config)
+      console.log('res: ' + res)
       return res
     }
 
