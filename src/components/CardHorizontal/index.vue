@@ -18,7 +18,13 @@
       >
     </div>
     <div class="card-horizontal-container__right-wrapper">
-      <div class="card-horizontal-container__right-wrapper__btn-wrapper">
+      <div
+        class="card-horizontal-container__right-wrapper__btn-wrapper"
+        :class="{
+          'card-horizontal-container__right-wrapper__btn-wrapper-playing':
+            !isPause && item.uri === context.uri
+        }"
+      >
         <ButtonTogglePlay :item="item" />
       </div>
     </div>
@@ -27,6 +33,8 @@
 
 <script>
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
+import { usePlayerStore } from '@/stores/player'
+import { mapState } from 'pinia'
 
 export default {
   name: 'CardHorizontal',
@@ -38,6 +46,9 @@ export default {
   },
   components: {
     ButtonTogglePlay
+  },
+  computed: {
+    ...mapState(usePlayerStore, ['isPause', 'context'])
   }
 }
 </script>
@@ -117,6 +128,11 @@ export default {
       opacity: 0;
 
       @include transition;
+
+      &-playing {
+        transform: translateX(0);
+        opacity: 1;
+      }
     }
   }
 }

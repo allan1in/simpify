@@ -168,8 +168,8 @@ export default {
       }
 
       &__icon-wrapper {
-        height: 6.4rem;
-        width: 6.4rem;
+        height: 30%;
+        aspect-ratio: 1 / 1;
         fill: $color-bg-7;
       }
     }

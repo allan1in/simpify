@@ -1,7 +1,7 @@
 <template>
   <div class="playlist-container" v-if="!loading">
     <div class="playlist-container__banner">
-      <Banner :item="playlist">
+      <Banner :item="playlist" :images="playlist.images">
         <router-link
           class="playlist-container__banner-details__owner"
           :to="{ name: 'User', params: { userId: playlist.owner.id } }"

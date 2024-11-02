@@ -4,9 +4,10 @@
       <div class="track-card__left__num-wrapper">
         <span>{{ index + 1 }}</span>
       </div>
-      <div class="track-card__left__icon-wrapper">
+      <div v-if="item.id !== null" class="track-card__left__icon-wrapper">
         <button class="track-card__left__icon-wrapper__icon">
-          <IconPlay />
+          <IconPause v-if="!isPause && item.uri === current_track.uri" />
+          <IconPlay v-else />
         </button>
       </div>
     </div>
@@ -21,43 +22,65 @@
       </div>
       <div class="track-card__title__msg-wrapper">
         <router-link
+          v-if="item.id !== null"
           :to="{ name: 'Track', params: { trackId: item.id } }"
           class="track-card__title__msg-wrapper__name"
         >
           {{ item.name }}
         </router-link>
+        <span v-else class="track-card__title__msg-wrapper__name"> {{ item.name }}</span>
         <div v-if="showArtists" class="track-card__title__msg-wrapper__artists">
           <router-link
+            v-if="item.id !== null"
             v-for="(artist, index) in item.artists"
             :key="artist.id"
             :to="{ name: 'Artist', params: { artistId: artist.id } }"
           >
             {{ (index === 0 ? '' : ', ') + artist.name }}
           </router-link>
+          <span
+            v-else
+            class="track-card__title__msg-wrapper__artists"
+            v-for="(artist, index) in item.artists"
+          >
+            {{ (index === 0 ? '' : ', ') + artist.name }}</span
+          >
         </div>
       </div>
     </div>
     <div v-if="showAlbum" class="track-card__album-wrapper">
       <router-link
+        v-if="item.id !== null"
         :to="{ name: 'Album', params: { albumId: item.album.id } }"
         class="track-card__album-wrapper__album"
         >{{ item.album.name }}</router-link
       >
+      <span v-else class="track-card__album-wrapper__album">
+        {{ item.album.name }}
+      </span>
     </div>
     <div class="track-card__duration-wrapper">
       <span>{{ getFormatTime(item.duration_ms) }}</span>
     </div>
+    <div v-if="item.id === null" class="track-card__cover"></div>
   </div>
 </template>
 
 <script>
 import IconPlay from '@/components/Icons/IconPlay.vue'
 import { timeFormatTrack } from '@/utils/time_format'
+import IconPause from '../Icons/IconPause.vue'
+import { mapState } from 'pinia'
+import { usePlayerStore } from '@/stores/player'
 
 export default {
   name: 'CardTrack',
   components: {
-    IconPlay
+    IconPlay,
+    IconPause
+  },
+  computed: {
+    ...mapState(usePlayerStore, ['current_track', 'isPause'])
   },
   props: {
     item: {
@@ -101,8 +124,7 @@ export default {
   font-size: 1.4rem;
   color: $color-font-secondary;
   border-radius: $border-radius-small;
-
-  @include transition;
+  position: relative;
 
   @include respond(phone) {
     padding: 0;
@@ -231,6 +253,16 @@ export default {
     @include respond(phone) {
       display: none;
     }
+  }
+
+  &__cover {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: $color-bg-2;
+    opacity: 0.7;
   }
 }
 </style>

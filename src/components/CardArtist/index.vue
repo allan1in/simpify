@@ -1,16 +1,27 @@
 <template>
   <div class="artist-card" @click="$router.push({ name: 'Artist', params: { artistId: item.id } })">
-    <div class="artist-card__img-wrapper">
-      <img
-        v-if="item.images[1]"
-        :src="item.images[1].url"
-        alt="Artist Cover"
-        class="artist-card__img-wrapper__img"
-      />
-      <div v-else class="artist-card__img-wrapper__icon-wrapper">
-        <IconDefaultArtist />
+    <div class="artist-card__img-box">
+      <div class="artist-card__img-box__img-wrapper">
+        <img
+          v-if="item.images[1]"
+          :src="item.images[1].url"
+          alt="Artist Cover"
+          class="artist-card__img-box__img-wrapper__img"
+        />
+        <div v-else class="artist-card__img-box__img-wrapper__icon-wrapper">
+          <IconDefaultArtist />
+        </div>
+      </div>
+      <div
+        class="artist-card__img-box__toggle-play"
+        :class="{
+          'artist-card__img-box__toggle-play-playing': !isPause && item.uri === context.uri
+        }"
+      >
+        <ButtonTogglePlay :item />
       </div>
     </div>
+
     <div class="artist-card__name-wrapper">
       <router-link
         :to="{ name: 'Artist', params: { artistId: item.id } }"
@@ -26,17 +37,24 @@
 
 <script>
 import IconDefaultArtist from '@/components/Icons/IconDefaultArtist.vue'
+import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
+import { mapState } from 'pinia'
+import { usePlayerStore } from '@/stores/player'
 
 export default {
   name: 'CardArtist',
   components: {
-    IconDefaultArtist
+    IconDefaultArtist,
+    ButtonTogglePlay
   },
   props: {
     item: {
       type: Object,
       require: true
     }
+  },
+  computed: {
+    ...mapState(usePlayerStore, ['isPause', 'context'])
   }
 }
 </script>
@@ -49,6 +67,7 @@ export default {
   align-items: center;
   padding: 1.6rem;
   cursor: pointer;
+  position: relative;
 
   @include transition;
 
@@ -56,27 +75,54 @@ export default {
     background-color: $color-bg-3;
   }
 
-  &__img-wrapper {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: $color-bg-6;
-    box-shadow: 0 0 15px 12px rgba(0, 0, 0, 0.2);
+  &:hover &__img-box__toggle-play {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-    &__img {
+  &__img-box {
+    position: relative;
+
+    &__img-wrapper {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: $color-bg-6;
+      box-shadow: 0 0 15px 12px rgba(0, 0, 0, 0.2);
+
+      &__img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      &__icon-wrapper {
+        width: 30%;
+        aspect-ratio: 1 / 1;
+        fill: $color-bg-7;
+      }
     }
 
-    &__icon-wrapper {
-      width: 40%;
+    &__toggle-play {
+      width: 25%;
       aspect-ratio: 1 / 1;
-      fill: $color-font-primary;
+      position: absolute;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 10;
+      opacity: 0;
+      transform: translateY(1rem);
+
+      @include transition;
+
+      &-playing {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
   }
 

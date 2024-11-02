@@ -1,7 +1,7 @@
 <template>
   <div class="track-container" v-if="!loading">
     <div class="track-container__banner">
-      <Banner :item="track" :img-url="track.album.images[0].url">
+      <Banner :item="track" :images="track.album.images">
         <router-link
           class="track-container__banner-details__artist"
           :to="{ name: 'Artist', params: { artistId: artists[0].id } }"

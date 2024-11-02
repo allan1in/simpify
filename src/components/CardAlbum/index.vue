@@ -1,8 +1,23 @@
 <template>
   <div class="album-card" @click="$router.push({ name: 'Album', params: { albumId: item.id } })">
-    <div class="album-card__img-wrapper">
-      <img :src="item.images[0].url" alt="Album Cover" class="album-card__img-wrapper__img" />
+    <div class="album-card__img-box">
+      <div class="album-card__img-box__img-wrapper">
+        <img
+          :src="item.images[0].url"
+          alt="Album Cover"
+          class="album-card__img-box__img-wrapper__img"
+        />
+      </div>
+      <div
+        class="album-card__img-box__toggle-play"
+        :class="{
+          'album-card__img-box__toggle-play-playing': !isPause && item.uri === context.uri
+        }"
+      >
+        <ButtonTogglePlay :item />
+      </div>
     </div>
+
     <div class="album-card__name-wrapper">
       <router-link
         :to="{ name: 'Album', params: { albumId: item.id } }"
@@ -33,6 +48,10 @@
 </template>
 
 <script>
+import { usePlayerStore } from '@/stores/player'
+import { mapState } from 'pinia'
+import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
+
 export default {
   name: 'CardAlbum',
   props: {
@@ -50,6 +69,12 @@ export default {
       require: false,
       default: false
     }
+  },
+  components: {
+    ButtonTogglePlay
+  },
+  computed: {
+    ...mapState(usePlayerStore, ['isPause', 'context'])
   }
 }
 </script>
@@ -69,21 +94,48 @@ export default {
     background-color: $color-bg-3;
   }
 
-  &__img-wrapper {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    border-radius: $border-radius-default;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: $color-bg-6;
-    box-shadow: 0 0 15px 12px rgba(0, 0, 0, 0.2);
+  &:hover &__img-box__toggle-play {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-    &__img {
-      height: 100%;
+  &__img-box {
+    position: relative;
+
+    &__img-wrapper {
       width: 100%;
-      object-fit: cover;
+      aspect-ratio: 1 / 1;
+      border-radius: $border-radius-default;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $color-bg-6;
+      box-shadow: 0 0 15px 12px rgba(0, 0, 0, 0.2);
+
+      &__img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+
+    &__toggle-play {
+      width: 25%;
+      aspect-ratio: 1 / 1;
+      position: absolute;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 10;
+      opacity: 0;
+      transform: translateY(1rem);
+
+      @include transition;
+
+      &-playing {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
   }
 

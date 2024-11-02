@@ -1,23 +1,43 @@
 <template>
   <section class="top-bar-container">
-    <button v-if="showTags.track || showTags.artist || showTags.album" class="top-bar-container__btn"
-      :class="{ 'btn-active': isActive === $route.params.inputContent }" @click="getAll">
+    <button
+      v-if="showTags.track || showTags.artist || showTags.album"
+      class="top-bar-container__btn"
+      :class="{ 'btn-active': isActive === $route.params.inputContent }"
+      @click="getAll"
+    >
       All
     </button>
-    <button v-if="showTags.track" class="top-bar-container__btn" :class="{ 'btn-active': isActive === 'tracks' }"
-      @click="getSongs">
+    <button
+      v-if="showTags.track"
+      class="top-bar-container__btn"
+      :class="{ 'btn-active': isActive === 'tracks' }"
+      @click="getSongs"
+    >
       Songs
     </button>
-    <button v-if="showTags.artist" class="top-bar-container__btn" :class="{ 'btn-active': isActive === 'artists' }"
-      @click="getArtists">
+    <button
+      v-if="showTags.artist"
+      class="top-bar-container__btn"
+      :class="{ 'btn-active': isActive === 'artists' }"
+      @click="getArtists"
+    >
       Artists
     </button>
-    <button v-if="showTags.album" class="top-bar-container__btn" :class="{ 'btn-active': isActive === 'albums' }"
-      @click="getAlbums">
+    <button
+      v-if="showTags.album"
+      class="top-bar-container__btn"
+      :class="{ 'btn-active': isActive === 'albums' }"
+      @click="getAlbums"
+    >
       Albums
     </button>
-    <button v-if="showTags.playlist" class="top-bar-container__btn" :class="{ 'btn-active': isActive === 'playlists' }"
-      @click="getPlaylists">
+    <button
+      v-if="showTags.playlist"
+      class="top-bar-container__btn"
+      :class="{ 'btn-active': isActive === 'playlists' }"
+      @click="getPlaylists"
+    >
       Playlists
     </button>
   </section>
@@ -60,7 +80,7 @@ export default {
           limit: 1,
           offset: 0
         }
-        const res = (await search(params))
+        const res = await search(params)
         this.showTags.album = res.albums.total === 0 ? false : true
         this.showTags.artist = res.artists.total === 0 ? false : true
         this.showTags.track = res.tracks.total === 0 ? false : true
@@ -93,7 +113,7 @@ export default {
 .top-bar-container {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: start;

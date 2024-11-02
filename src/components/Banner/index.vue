@@ -2,10 +2,14 @@
   <div class="banner">
     <div class="banner__img-wrapper" :class="{ 'banner__img-wrapper-round': imgShape === 'round' }">
       <img
+        v-if="images !== null"
         class="banner__img-wrapper__img"
-        :src="item.images ? item.images[0].url : imgUrl"
+        :src="images[0].url"
         :alt="item.name ? item.name : item.display_name"
       />
+      <div v-else class="banner__img-wrapper__icon">
+        <IconDefaultPlaylist />
+      </div>
     </div>
     <div class="banner__info">
       <span class="banner__info__type">{{
@@ -20,17 +24,21 @@
 </template>
 
 <script>
+import IconDefaultPlaylist from '../Icons/IconDefaultPlaylist.vue'
+
 export default {
   name: 'Banner',
+  components: {
+    IconDefaultPlaylist
+  },
   props: {
     item: {
       type: Object,
       require: true
     },
-    imgUrl: {
-      type: String,
-      require: false,
-      default: ''
+    images: {
+      type: Object,
+      require: true
     },
     imgShape: {
       type: String,
@@ -61,6 +69,11 @@ export default {
     height: 22rem;
     width: 22rem;
     border-radius: $border-radius-default;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $color-bg-3;
+    box-shadow: 0 0 20px 20px rgba($color-bg-3, 0.2);
 
     &-round {
       border-radius: 50%;
@@ -76,6 +89,12 @@ export default {
       height: 100%;
       width: 100%;
       object-fit: cover;
+    }
+
+    &__icon {
+      height: 30%;
+      aspect-ratio: 1 / 1;
+      fill: $color-bg-7;
     }
   }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="album-container" v-if="!loading">
     <div class="album-container__cover">
-      <Banner :item="album">
+      <Banner :item="album" :images="album.images">
         <span
           v-for="(artist, index) in album.artists"
           class="album-container__banner-details__artist"
