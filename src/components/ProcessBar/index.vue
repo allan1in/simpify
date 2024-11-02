@@ -1,7 +1,11 @@
 <template>
   <div ref="process" class="process" @mousedown="handleMouseDown">
     <div class="process__line">
-      <div ref="position" class="process__line__position" :style="{ left: `calc(${percentage}% - 100%)` }"></div>
+      <div
+        ref="position"
+        class="process__line__position"
+        :style="{ left: `calc(${percentage}% - 100%)` }"
+      ></div>
     </div>
     <div ref="dot" class="process__dot" :style="{ left: `${percentage}%` }"></div>
   </div>
@@ -57,7 +61,6 @@ export default {
       document.onmouseup = () => {
         document.onmousemove = null
         document.onmouseup = null
-
         this.$emit('mouseUp')
       }
     }

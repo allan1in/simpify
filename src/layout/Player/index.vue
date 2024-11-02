@@ -1,23 +1,23 @@
 <template>
   <footer class="player-bar">
     <div class="player-bar__left">
-      <div class="player-bar__left__cover-wrapper" v-if="album.images">
+      <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
         <img
           class="player-bar__left__cover-wrapper__cover"
-          :src="album.images[0].url"
+          :src="current_track.album.images[0].url"
           alt="track"
           @click="showFullScreenPlayer = true"
         />
       </div>
       <div class="player-bar__left__msg-wrapper">
-        <div class="player-bar__left__msg-wrapper__title" v-if="track.id">
-          <router-link :to="{ name: 'Track', params: { trackId: track.id } }">{{
-            track.name
+        <div class="player-bar__left__msg-wrapper__title" v-if="current_track?.id">
+          <router-link :to="{ name: 'Track', params: { trackId: current_track.id } }">{{
+            current_track.name
           }}</router-link>
         </div>
-        <div class="player-bar__left__msg-wrapper__artist" v-if="artists.length">
+        <div class="player-bar__left__msg-wrapper__artist" v-if="current_track?.artists?.length">
           <router-link
-            v-for="(artist, index) in artists"
+            v-for="(artist, index) in current_track.artists"
             :key="artist.uri"
             :to="{
               name: 'Artist',
@@ -155,9 +155,7 @@ export default {
   computed: {
     ...mapWritableState(usePlayerStore, [
       'player',
-      'album',
-      'track',
-      'artists',
+      'current_track',
       'percentage',
       'isPause',
       'isShuffle',

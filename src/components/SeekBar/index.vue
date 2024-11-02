@@ -1,9 +1,16 @@
 <template>
-  <div class="seek-bar" :class="{ 'seek-bar-large': size === 'large', 'seek-bar-default': size === 'default' }">
+  <div
+    class="seek-bar"
+    :class="{ 'seek-bar-large': size === 'large', 'seek-bar-default': size === 'default' }"
+  >
     <div class="seek-bar__seek">{{ timeFormat(position) }}</div>
     <div class="seek-bar__process-bar">
-      <ProcessBar :percentage="percentage" @update-percentage="updatePercentage" @mouse-up="handleMouseUp"
-        @mouse-down="stopListenPos" />
+      <ProcessBar
+        :percentage="percentage"
+        @update-percentage="updatePercentage"
+        @mouse-up="handleMouseUp"
+        @mouse-down="stopListenPos"
+      />
     </div>
     <div class="seek-bar__duration">{{ timeFormat(duration) }}</div>
   </div>
@@ -28,7 +35,14 @@ export default {
     ProcessBar
   },
   computed: {
-    ...mapWritableState(usePlayerStore, ['percentage', 'position', 'duration', 'player', 'duration', 'isPause'])
+    ...mapWritableState(usePlayerStore, [
+      'percentage',
+      'position',
+      'duration',
+      'player',
+      'duration',
+      'isPause'
+    ])
   },
   methods: {
     updatePercentage(newVal) {
@@ -38,13 +52,15 @@ export default {
       return timeFormatTrack(time)
     },
     async handleMouseUp() {
-      await this.player.seek(this.duration * this.percentage / 100)
-      await this.listenPos()
-      if (this.isPause) {
-        await this.togglePlay()
-      }
+      await this.player.seek((this.duration * this.percentage) / 100)
+      await this.startListenPos()
     },
-    ...mapActions(usePlayerStore, ['stopListenPos', 'listenPos', 'togglePlay'])
+    ...mapActions(usePlayerStore, ['startListenPos', 'stopListenPos'])
+  },
+  watch: {
+    percentage(newVal, oldVal) {
+      this.position = (this.duration * this.percentage) / 100
+    }
   }
 }
 </script>
@@ -79,6 +95,5 @@ export default {
     min-width: 3.6rem;
     text-align: left;
   }
-
 }
 </style>

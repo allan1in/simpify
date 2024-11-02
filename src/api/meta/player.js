@@ -8,7 +8,7 @@ export function transferPlayback(data) {
   })
 }
 
-export function togglePlayback(data) {
+export function startPlayback(data) {
   return request({
     method: 'put',
     url: `/me/player/play`,

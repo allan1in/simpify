@@ -7,8 +7,11 @@
       <IconVolumeLoud v-else />
     </button>
     <div class="volume-container__progress-wrapper">
-      <ProcessBar :percentage="isMute ? 0 : volume" @update-percentage="updateVolume" @mouse-down="handleMouseDown"
-        @mouse-up="handleMouseUp" />
+      <ProcessBar
+        :percentage="isMute ? 0 : volume"
+        @update-percentage="updateVolume"
+        @mouse-down="handleMouseDown"
+      />
     </div>
   </div>
 </template>
@@ -34,14 +37,14 @@ export default {
     ...mapWritableState(usePlayerStore, ['isMute', 'volume'])
   },
   methods: {
-    updateVolume(newVal) {
+    async updateVolume(newVal) {
       this.volume = newVal
+      await this.setVolume()
     },
     async handleMouseDown() {
       if (this.isMute) {
         this.isMute = false
       }
-      await this.stopListenPos()
     },
     handleMuteClick() {
       if (this.volume === 0) {
@@ -49,11 +52,7 @@ export default {
       }
       this.isMute = !this.isMute
     },
-    async handleMouseUp() {
-      await this.setVolume()
-      await this.listenPos()
-    },
-    ...mapActions(usePlayerStore, ['listenPos', 'stopListenPos', 'setVolume'])
+    ...mapActions(usePlayerStore, ['setVolume'])
   },
   watch: {
     volume(newVal, oldVal) {

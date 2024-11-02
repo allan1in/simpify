@@ -5,9 +5,14 @@
         <div class="full-screen-container__top__title__icon-wrapper">
           <IconPrimaryLogo />
         </div>
-        <div class="full-screen-container__top__title__text-wrapper" v-if="album.name">
+        <div
+          class="full-screen-container__top__title__text-wrapper"
+          v-if="current_track?.album?.name"
+        >
           <h1 class="full-screen-container__top__title__text-wrapper__from">PLAYING FROM ALBUM</h1>
-          <h2 class="full-screen-container__top__title__text-wrapper__name">{{ album.name }}</h2>
+          <h2 class="full-screen-container__top__title__text-wrapper__name">
+            {{ current_track.album.name }}
+          </h2>
         </div>
       </div>
       <button
@@ -28,22 +33,25 @@
       <div
         class="full-screen-container__content__cover-wrapper"
         :class="{ 'full-screen-container__content__cover-wrapper-small': !isCursorMove }"
-        v-if="album.images"
+        v-if="current_track?.album?.images"
       >
         <img
           class="full-screen-container__content__cover-wrapper__cover"
-          :src="album.images[0].url"
-          :alt="track"
+          :src="current_track.album.images[0].url"
+          :alt="current_track.name"
         />
       </div>
       <div class="full-screen-container__content__text-wrapper">
-        <h1 class="full-screen-container__content__text-wrapper__name" v-if="track">
-          {{ track.name }}
+        <h1 class="full-screen-container__content__text-wrapper__name" v-if="current_track">
+          {{ current_track.name }}
         </h1>
         <h2 class="full-screen-container__content__text-wrapper__artist">
-          <span v-for="(artist, index) in artists" :key="artist.uri" v-if="artists.length">{{
-            (index === 0 ? '' : ', ') + artist.name
-          }}</span>
+          <span
+            v-for="(artist, index) in current_track.artists"
+            :key="artist.uri"
+            v-if="current_track?.artists?.length"
+            >{{ (index === 0 ? '' : ', ') + artist.name }}</span
+          >
         </h2>
       </div>
     </div>
@@ -123,9 +131,7 @@ export default {
   },
   computed: {
     ...mapWritableState(usePlayerStore, [
-      'album',
-      'track',
-      'artists',
+      'current_track',
       'isPause',
       'repeatMode',
       'isShuffle',

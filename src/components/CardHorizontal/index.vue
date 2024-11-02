@@ -6,17 +6,28 @@
     <div class="card-horizontal-container__cover-wrapper">
       <img
         class="card-horizontal-container__cover-wrapper__cover"
-        :src="item.album.images[0].url"
+        :src="item.images[0].url"
         :alt="item.name"
       />
     </div>
     <div class="card-horizontal-container__info-wrapper">
-      <span class="card-horizontal-container__info-wrapper__info">{{ item.name }}</span>
+      <router-link
+        :to="{ name: 'Playlist', params: { playlistId: item.id } }"
+        class="card-horizontal-container__info-wrapper__info"
+        >{{ item.name }}</router-link
+      >
+    </div>
+    <div class="card-horizontal-container__right-wrapper">
+      <div class="card-horizontal-container__right-wrapper__btn-wrapper">
+        <ButtonTogglePlay :item="item" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
+
 export default {
   name: 'CardHorizontal',
   props: {
@@ -24,6 +35,9 @@ export default {
       type: Object,
       require: true
     }
+  },
+  components: {
+    ButtonTogglePlay
   }
 }
 </script>
@@ -49,12 +63,17 @@ export default {
     top: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.2;
+    opacity: 0.3;
     background-color: $color-bg-6;
   }
 
   &:hover {
     background-color: $color-bg-6;
+  }
+
+  &:hover &__right-wrapper__btn-wrapper {
+    transform: translateX(0);
+    opacity: 1;
   }
 
   &__cover-wrapper {
@@ -70,6 +89,7 @@ export default {
   }
 
   &__info-wrapper {
+    flex-grow: 1;
     position: relative;
     display: flex;
     align-items: center;
@@ -79,6 +99,24 @@ export default {
 
     &__info {
       @include oneLineEllipsis;
+    }
+  }
+
+  &__right-wrapper {
+    justify-self: end;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__btn-wrapper {
+      height: 60%;
+      aspect-ratio: 1 / 1;
+      margin: 0 1.6rem;
+      z-index: 10;
+      transform: translateX(6rem);
+      opacity: 0;
+
+      @include transition;
     }
   }
 }

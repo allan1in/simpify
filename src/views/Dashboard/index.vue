@@ -1,18 +1,12 @@
 <template>
   <div class="dashboard-container" v-if="!loading">
-    <div class="dashboard-container__top-songs" v-if="tracks.length !== 0">
-      <TitleShowAll title="Top Songs" />
-      <div class="dashboard-container__top-songs__content">
-        <CardHorizontal v-for="item in tracks" :item="item" />
-      </div>
-    </div>
     <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
       <TitleShowAll
         :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
         title="Featured Playlists"
       />
       <div class="dashboard-container__featured-playlists__content">
-        <PlaylistCard v-for="item in playlists" :item="item" />
+        <CardHorizontal v-for="item in playlists" :item="item" />
       </div>
     </div>
     <div class="dashboard-container__top-artists" v-if="artists.length !== 0">
@@ -74,21 +68,11 @@ export default {
   },
   methods: {
     async getAll() {
-      await this.getUserTopSongs()
       await this.getPlaylists()
       await this.getUserTopArtists()
       await this.getNewReleases()
 
       this.loading = false
-    },
-    async getUserTopSongs() {
-      const params = {
-        time_range: 'short_term',
-        limit: this.tracks_limit,
-        offset: 0
-      }
-      const res = (await getUserTopSongs(params)).items
-      this.tracks = res
     },
     async getPlaylists() {
       const params = {
@@ -155,7 +139,7 @@ export default {
   padding: 1.6rem;
   background: linear-gradient(to bottom, $color-bg-6 0rem, transparent 50rem);
 
-  &__top-songs {
+  &__featured-playlists {
     &__content {
       padding: 1.6rem;
       gap: $gutter-2x;
@@ -164,7 +148,6 @@ export default {
     }
   }
 
-  &__featured-playlists,
   &__top-artists,
   &__new-releases {
     &__content {

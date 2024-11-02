@@ -10,8 +10,8 @@ import {
 export const usePlayerStore = defineStore('player', {
   state: () => ({
     player: null,
-    activeDevice: {},
     showFullScreenPlayer: false,
+    activeDevice: {},
     volume: 50,
     isShuffle: false,
     isPause: true,
@@ -20,9 +20,8 @@ export const usePlayerStore = defineStore('player', {
     percentage: 0,
     duration: 0,
     position: 0,
-    album: {},
-    track: {},
-    artists: []
+    current_track: {},
+    context: {}
   }),
   actions: {
     initPlayer() {
@@ -47,23 +46,8 @@ export const usePlayerStore = defineStore('player', {
 
         this.player.addListener('ready', async (res) => {
           console.log('Ready with Device ID', res)
-          const state = await getPlaybackState()
-          if (!state.device) {
-            this.activeDevice = res.device_id
-            await transferPlayback({ device_ids: [res.device_id] })
-          } else {
-            this.activeDevice = state.device
-            this.volume = this.activeDevice.volume_percent
-            this.repeatMode = state.repeat_state
-            this.shuffle = state.shuffle_state
-            this.isPause = !state.is_playing
-            this.album = state.item.album
-            this.artists = state.item.artists
-            this.track = { name: state.item.name, id: state.item.id }
-            this.duration = state.item.duration_ms
-            this.position = state.progress_ms
-            this.percentage = 100 * (this.position / this.duration)
-          }
+          this.activeDevice = { id: res.device_id }
+          await transferPlayback({ device_ids: [res.device_id] })
         })
 
         this.player.addListener('not_ready', (res) => {
@@ -75,58 +59,73 @@ export const usePlayerStore = defineStore('player', {
         })
 
         this.player.addListener('player_state_changed', (res) => {
-          this.isPause = res.paused
-          this.duration = res.duration
-          this.position = res.position
-          this.percentage = 100 * (res.position / res.duration)
-          this.album = res.track_window.current_track.album
-          this.track = {
-            id: res.track_window.current_track.id,
-            name: res.track_window.current_track.name
-          }
-          this.artists = res.track_window.current_track.artists
-          this.repeatMode = res.repeat_mode
-          this.isShuffle = res.shuffle
+          console.log('player_state_changed', res)
+          if (res === null) {
+            return
+          } else {
+            this.isPause = res.paused
+            this.duration = res.duration
+            this.position = res.position
+            this.percentage = 100 * (res.position / res.duration)
+            this.current_track = res.track_window?.current_track
+            this.repeatMode = res.repeat_mode
+            this.isShuffle = res.shuffle
 
-          this.player.getVolume().then((volume) => {
-            this.volume = volume * 100
-          })
+            this.player.getVolume().then((volume) => {
+              this.volume = volume * 100
+            })
+
+            this.context = res.context
+          }
         })
+
+        this.startListenPos()
 
         // Errors
 
         this.player.addListener('initialization_error', (message) => {
-          console.log('SDK Error: ' + message)
+          console.log('initialization_error: ' + message)
         })
 
         this.player.addListener('authentication_error', (message) => {
-          console.log('SDK Error: ' + message)
+          console.log('authentication_error: ' + message)
         })
 
         this.player.addListener('account_error', (message) => {
-          console.log('SDK Error: ' + message)
+          console.log('account_error: ' + message)
         })
 
         this.player.on('playback_error', (message) => {
-          console.log(message)
+          console.log('playback_error: ' + message)
+          if (message.split(' ').indexOf('401') !== -1) {
+            console.log('playback_error: Bad or expired token')
+          }
         })
 
         this.player.connect()
-        this.listenPos()
       }
     },
-    listenPos() {
+    startListenPos() {
       this.player.addListener('progress', async (res) => {
         this.position = res.position
         this.percentage = 100 * (res.position / this.duration)
-
-        this.volume = (await this.player.getVolume()) * 100
       })
     },
     stopListenPos() {
       this.player.removeListener('progress')
     },
     async togglePlay() {
+      let state = await this.player.getCurrentState()
+      if (!state) {
+        console.log('User is not playing music through the Web Playback SDK')
+        return
+      }
+
+      var current_track = state.track_window.current_track
+      var next_track = state.track_window.next_tracks[0]
+
+      console.log('Currently Playing', current_track)
+      console.log('Playing Next', next_track)
       await this.player.togglePlay()
       this.isPause = !this.isPause
     },

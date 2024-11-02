@@ -58,10 +58,12 @@ export const useUserStore = defineStore('user', {
       // Save to localStorage
       localStorage.setItem('access_token', access_token)
       localStorage.setItem('refresh_token', refresh_token)
-      localStorage.setItem('expires_in', expires_in)
-      const now = new Date()
-      const expiry = new Date(now.getTime() + expires_in * 1000)
-      localStorage.setItem('expires', expiry)
+
+      this.access_token = access_token
+      // localStorage.setItem('expires_in', expires_in)
+      // const now = new Date()
+      // const expiry = new Date(now.getTime() + expires_in * 1000)
+      // localStorage.setItem('expires', expiry)
     }
   }
 })
