@@ -1,11 +1,6 @@
 import { defineStore } from 'pinia'
 import { useUserStore } from './user'
-import {
-  getPlaybackState,
-  setRepeatMode,
-  togglePlaybackShuffle,
-  transferPlayback
-} from '@/api/meta/player'
+import { setRepeatMode, togglePlaybackShuffle, transferPlayback } from '@/api/meta/player'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
@@ -149,7 +144,6 @@ export const usePlayerStore = defineStore('player', {
     },
     async toggleShuffle() {
       await togglePlaybackShuffle({ state: !this.isShuffle })
-      this.isShuffle = !this.isShuffle
     },
     setVolume() {
       if (this.isMute) {

@@ -1,7 +1,7 @@
 <template>
   <div
     class="card-horizontal-container"
-    @click="$router.push({ name: 'Track', params: { trackId: item.id } })"
+    @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })"
   >
     <div class="card-horizontal-container__cover-wrapper">
       <img

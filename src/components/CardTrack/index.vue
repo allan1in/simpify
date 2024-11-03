@@ -1,14 +1,24 @@
 <template>
   <div v-if="item !== null" class="track-card">
     <div class="track-card__left">
-      <div class="track-card__left__num-wrapper">
-        <span>{{ index + 1 }}</span>
-      </div>
       <div v-if="item.id !== null" class="track-card__left__icon-wrapper">
-        <button class="track-card__left__icon-wrapper__icon">
+        <button class="track-card__left__icon-wrapper__icon" @click="handleTogglePlay">
           <IconPause v-if="!isPause && item.uri === current_track.uri" />
           <IconPlay v-else />
         </button>
+      </div>
+      <div class="track-card__left__num-wrapper">
+        <div
+          class="track-card__left__num-wrapper__playing"
+          v-if="!isPause && current_track.uri === item.uri"
+        >
+          <img
+            class="track-card__left__num-wrapper__playing__img"
+            src="/src/assets/images/playing.gif"
+            alt=""
+          />
+        </div>
+        <span v-else>{{ index + 1 }}</span>
       </div>
     </div>
 
@@ -22,6 +32,10 @@
       </div>
       <div class="track-card__title__msg-wrapper">
         <router-link
+          :class="{
+            'track-card__title__msg-wrapper__name-playing':
+              !isPause && current_track.uri === item.uri
+          }"
           v-if="item.id !== null"
           :to="{ name: 'Track', params: { trackId: item.id } }"
           class="track-card__title__msg-wrapper__name"
@@ -70,8 +84,9 @@
 import IconPlay from '@/components/Icons/IconPlay.vue'
 import { timeFormatTrack } from '@/utils/time_format'
 import IconPause from '../Icons/IconPause.vue'
-import { mapState } from 'pinia'
+import { mapActions, mapState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
+import { startPlayback } from '@/api/meta/player'
 
 export default {
   name: 'CardTrack',
@@ -110,7 +125,20 @@ export default {
   methods: {
     getFormatTime(time) {
       return timeFormatTrack(time)
-    }
+    },
+    handleTogglePlay() {
+      // Current track
+      if (this.current_track.uri === this.item.uri) {
+        this.togglePlay()
+      } else {
+        // New track
+        let params = {
+          uris: [this.item.uri]
+        }
+        startPlayback(params)
+      }
+    },
+    ...mapActions(usePlayerStore, ['togglePlay'])
   }
 }
 </script>
@@ -162,6 +190,18 @@ export default {
       height: 100%;
       display: flex;
       align-items: center;
+
+      &__playing {
+        height: 1.4rem;
+        aspect-ratio: 1 / 1;
+
+        &__img {
+          display: block;
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+        }
+      }
     }
 
     &__icon-wrapper {
@@ -170,7 +210,7 @@ export default {
       align-items: center;
 
       &__icon {
-        height: 1.5rem;
+        height: 1.6rem;
         aspect-ratio: 1 / 1;
         fill: $color-font-primary;
 
@@ -220,6 +260,10 @@ export default {
         color: $color-font-primary;
 
         @include oneLineEllipsis;
+
+        &-playing {
+          color: $color-brand;
+        }
       }
 
       &__artists {
