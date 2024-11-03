@@ -6,7 +6,7 @@
         'background-image': `url(${artist.images?.length !== 0 ? artist.images[0].url : ''})`
       }"
     >
-      <h1 class="artist-container__cover__title">{{ artist.name }}</h1>
+      <h1 class="artist-container__cover__title" :title="artist.name">{{ artist.name }}</h1>
       <div class="artist-container__cover__followers">
         {{
           Intl.NumberFormat().format(artist.followers.total) +
@@ -15,6 +15,11 @@
       </div>
     </div>
     <div class="artist-container__content">
+      <div class="artist-container__content__btn-group">
+        <div class="artist-container__content__btn-group__play-wrapper">
+          <ButtonTogglePlay :item="artist" />
+        </div>
+      </div>
       <div v-if="tracks.length !== 0" class="artist-container__content__popular">
         <TitleShowAll :title="'Popular'" />
         <div class="artist-container__content__popular__content">
@@ -66,6 +71,7 @@ import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
+import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 
 export default {
   name: 'Artist',
@@ -75,7 +81,8 @@ export default {
     AlbumCard,
     ArtistCard,
     TitleWithPartialItems,
-    TitleShowAll
+    TitleShowAll,
+    ButtonTogglePlay
   },
   data() {
     return {
@@ -182,12 +189,11 @@ export default {
       top: 0;
       width: 100%;
       height: 100%;
-      opacity: 0.3;
-      background-color: $color-bg-6;
+      background: linear-gradient(to bottom, rgba($color-bg-6, 0.1), rgba($color-bg-6, 0.3));
     }
 
     &__title {
-      font-size: 9.6rem;
+      font-size: 7rem;
       font-family: $font-family-title;
       font-weight: 800;
       text-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
@@ -214,6 +220,15 @@ export default {
 
   &__content {
     padding: 1.6rem;
+
+    &__btn-group {
+      padding: 0 $gutter-2x;
+      padding-top: $gutter-2x;
+      &__play-wrapper {
+        height: 5.4rem;
+        aspect-ratio: 1 / 1;
+      }
+    }
 
     &__popular {
       padding: 1.6rem 0;

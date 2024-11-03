@@ -65,3 +65,9 @@ h1 {
 ul {
   list-style: none;
 }
+
+@keyframes marquee {
+  to {
+    transform: translateX(min(100cqw - 100%, 0px));
+  }
+}

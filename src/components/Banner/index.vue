@@ -15,7 +15,9 @@
       <span class="banner__info__type">{{
         `${item.type.charAt(0).toUpperCase()}${item.type.slice(1)}`
       }}</span>
-      <h1 class="banner__info__title">{{ item.name ? item.name : item.display_name }}</h1>
+      <h1 class="banner__info__title" :title="item.name ? item.name : item.display_name">
+        {{ item.name ? item.name : item.display_name }}
+      </h1>
       <div class="banner__info__details">
         <slot></slot>
       </div>
@@ -107,7 +109,7 @@ export default {
 
     &__title {
       font-family: $font-family-title;
-      font-size: 9.6rem;
+      font-size: 7rem;
       font-weight: 800;
       line-height: 1.5;
 

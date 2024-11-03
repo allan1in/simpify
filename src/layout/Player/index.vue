@@ -35,24 +35,32 @@
     </div>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
-        <button class="icon-wrapper" :class="{ 'btn-active': isShuffle }" @click="toggleShuffle">
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': isShuffle, 'not-allowed': !isReady }"
+          @click="toggleShuffle"
+        >
           <IconShuffle />
         </button>
-        <button class="icon-wrapper" @click="preTrack">
+        <button class="icon-wrapper" @click="preTrack" :class="{ 'not-allowed': !isReady }">
           <IconPrevious />
         </button>
-        <button class="player-bar__mid__btn-group__play" @click="togglePlay">
+        <button
+          class="player-bar__mid__btn-group__play"
+          @click="togglePlay"
+          :class="{ 'not-allowed': !isReady }"
+        >
           <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
             <IconPlay v-if="isPause" />
             <IconPause v-else />
           </span>
         </button>
-        <button class="icon-wrapper" @click="nextTrack">
+        <button class="icon-wrapper" @click="nextTrack" :class="{ 'not-allowed': !isReady }">
           <IconNext />
         </button>
         <button
           class="icon-wrapper"
-          :class="{ 'btn-active': repeatMode !== 0 }"
+          :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': !isReady }"
           @click="setRepeatMode"
         >
           <IconRepeatSingle v-if="repeatMode === 2" />
@@ -90,10 +98,18 @@
       <!-- <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
       </button> -->
-      <button class="icon-wrapper player-bar__right__full-screen" @click="toggleFullScreenPlayer">
+      <button
+        class="icon-wrapper player-bar__right__full-screen"
+        @click="toggleFullScreenPlayer"
+        :class="{ 'not-allowed': !isReady }"
+      >
         <IconFullScreen />
       </button>
-      <button class="icon-wrapper player-bar__right__play-phone" @click="togglePlay">
+      <button
+        class="icon-wrapper player-bar__right__play-phone"
+        @click="togglePlay"
+        :class="{ 'not-allowed': !isReady }"
+      >
         <IconPlay v-if="isPause" />
         <IconPause v-else />
       </button>
@@ -162,7 +178,8 @@ export default {
       'repeatMode',
       'isMute',
       'volume',
-      'showFullScreenPlayer'
+      'showFullScreenPlayer',
+      'isReady'
     ])
   },
   methods: {
@@ -201,6 +218,20 @@ export default {
 <style lang="scss" scoped>
 $msg-title-font-size: 1.4rem;
 $msg-artist-font-size: 1.2rem;
+
+.not-allowed:nth-child(n) {
+  cursor: not-allowed;
+  opacity: 0.3;
+
+  &:hover {
+    transform: unset;
+  }
+
+  &:active {
+    transform: unset;
+    opacity: 0.3;
+  }
+}
 
 .btn-active:nth-child(n) {
   fill: $color-brand;

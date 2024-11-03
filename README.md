@@ -59,6 +59,5 @@ npm run lint
 ## TODO
 
 1. srcset in images
-2. undefined backfall
-3. empty info
-4. box-shadow sass variable
+2. box-shadow sass variable
+3. Rolling title when overflow

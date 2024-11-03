@@ -16,7 +16,9 @@
         <span class="user-container__cover__info__type">{{
           `${profile.type.charAt(0).toUpperCase()}${profile.type.slice(1)}`
         }}</span>
-        <h1 class="user-container__cover__info__title">{{ profile.display_name }}</h1>
+        <h1 class="user-container__cover__info__title" :title="profile.display_name">
+          {{ profile.display_name }}
+        </h1>
         <div class="user-container__cover__info__details">
           <span class="user-container__cover__info__details__playlists">
             {{
@@ -181,7 +183,7 @@ export default {
 
       &__title {
         font-family: $font-family-title;
-        font-size: 9.6rem;
+        font-size: 7rem;
         font-weight: 800;
 
         @include oneLineEllipsis;

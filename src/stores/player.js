@@ -16,7 +16,8 @@ export const usePlayerStore = defineStore('player', {
     duration: 0,
     position: 0,
     current_track: {},
-    context: {}
+    context: {},
+    isReady: false
   }),
   actions: {
     initPlayer() {
@@ -41,8 +42,8 @@ export const usePlayerStore = defineStore('player', {
 
         this.player.addListener('ready', async (res) => {
           console.log('Ready with Device ID', res)
-          this.activeDevice = { id: res.device_id }
           await transferPlayback({ device_ids: [res.device_id] })
+          this.activeDevice = { id: res.device_id }
         })
 
         this.player.addListener('not_ready', (res) => {
@@ -72,6 +73,7 @@ export const usePlayerStore = defineStore('player', {
 
             this.context = res.context
           }
+          this.isReady = true
         })
 
         this.startListenPos()
@@ -92,7 +94,7 @@ export const usePlayerStore = defineStore('player', {
 
         this.player.on('playback_error', (message) => {
           console.log('playback_error: ' + message)
-          if (message.split(' ').indexOf('401') !== -1) {
+          if (message.message.split(' ').indexOf('401') !== -1) {
             console.log('playback_error: Bad or expired token')
           }
         })
