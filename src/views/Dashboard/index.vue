@@ -1,12 +1,14 @@
 <template>
   <div class="dashboard-container" v-if="!loading">
-    <!-- <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
-      <TitleShowAll :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
-        title="Featured Playlists" />
+    <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
+      <TitleShowAll
+        :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
+        title="Featured Playlists"
+      />
       <div class="dashboard-container__featured-playlists__content">
         <CardHorizontal v-for="item in playlists" :item="item" />
       </div>
-    </div> -->
+    </div>
 
     <div class="dashboard-container__new-releases" v-if="albums.length !== 0">
       <TitleShowAll title="New Releases" />

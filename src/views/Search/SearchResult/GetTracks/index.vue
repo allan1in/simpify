@@ -2,7 +2,13 @@
   <main v-if="!loading" class="track-container">
     <div class="track-container__content">
       <TrackListHeader />
-      <TrackCard v-for="(item, index) in tracks" :key="index" :item="item" :index="index" />
+      <TrackCard
+        v-for="(item, index) in tracks"
+        :key="index"
+        :item="item"
+        :index="index"
+        :uris="uris"
+      />
     </div>
   </main>
 </template>
@@ -26,7 +32,8 @@ export default {
       loading_limit: 20,
       loading_offset: 0,
       loading_next: '',
-      loadingMore: false
+      loadingMore: false,
+      uris: []
     }
   },
   computed: {
@@ -55,6 +62,9 @@ export default {
         }
 
         let newVals = res.items
+        newVals.forEach((item) => {
+          this.uris.push(item.uri)
+        })
         let oldVals = JSON.parse(JSON.stringify(this.tracks))
 
         this.tracks = [...oldVals, ...newVals]

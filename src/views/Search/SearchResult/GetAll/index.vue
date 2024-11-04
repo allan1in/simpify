@@ -1,19 +1,46 @@
 <template>
   <main class="all-container" v-if="!loading">
     <div v-if="!loading" class="all-container__content">
-      <div v-if="tracks.total" class="all-container__content__songs">
-        <TitleShowAll :router-name="tracks.total > tracks_limit ? 'GetTracks' : ''" :title="'Songs'" />
+      <div v-if="tracks_total" class="all-container__content__songs">
+        <TitleShowAll
+          :router-name="tracks_total > tracks_limit ? 'GetTracks' : ''"
+          :title="'Songs'"
+        />
         <div class="all-container__content__songs__results">
           <TrackListHeader />
-          <TrackCard v-for="(item, index) in tracks.items" :key="index" :item="item" :index="index" />
+          <TrackCard
+            v-for="(item, index) in tracks"
+            :key="index"
+            :item="item"
+            :index="index"
+            :uris="uris"
+          />
         </div>
       </div>
-      <TitleWithPartialItems v-if="artists.total" :router-name="'GetArtists'" :title="'Artists'" :limit="artists.limit"
-        :total="artists.total" :artist-card-props="{ items: artists.items }" />
-      <TitleWithPartialItems v-if="albums.total" :router-name="'GetAlbums'" :title="'Albums'" :limit="albums.limit"
-        :total="albums.total" :album-card-props="{ items: albums.items }" />
-      <TitleWithPartialItems v-if="playlists.total" :router-name="'GetPlaylists'" :title="'Playlists'"
-        :limit="playlists.limit" :total="playlists.total" :playlist-card-props="{ items: playlists.items }" />
+      <TitleWithPartialItems
+        v-if="artists.total"
+        :router-name="'GetArtists'"
+        :title="'Artists'"
+        :limit="artists.limit"
+        :total="artists.total"
+        :artist-card-props="{ items: artists.items }"
+      />
+      <TitleWithPartialItems
+        v-if="albums.total"
+        :router-name="'GetAlbums'"
+        :title="'Albums'"
+        :limit="albums.limit"
+        :total="albums.total"
+        :album-card-props="{ items: albums.items }"
+      />
+      <TitleWithPartialItems
+        v-if="playlists.total"
+        :router-name="'GetPlaylists'"
+        :title="'Playlists'"
+        :limit="playlists.limit"
+        :total="playlists.total"
+        :playlist-card-props="{ items: playlists.items }"
+      />
     </div>
   </main>
 </template>
@@ -44,7 +71,7 @@ export default {
   },
   data() {
     return {
-      tracks: {},
+      tracks: [],
       tracks_limit: 4,
       tracks_offset: 0,
       artists: {},
@@ -59,7 +86,14 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loading'])
+    ...mapWritableState(useAppStore, ['loading']),
+    uris() {
+      let uris = []
+      this.tracks.forEach((item) => {
+        uris.push(item.uri)
+      })
+      return uris
+    }
   },
   methods: {
     getAll: debounce(async function () {
@@ -78,7 +112,8 @@ export default {
         offset: this.tracks_offset
       }
       const res = (await searchTracks(params)).tracks
-      this.tracks = res
+      this.tracks = res.items
+      this.tracks_total = res.total
     },
     async getArtists() {
       const params = {

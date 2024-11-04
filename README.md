@@ -59,5 +59,10 @@ npm run lint
 ## TODO
 
 1. srcset in images
-2. box-shadow sass variable
-3. Rolling title when overflow
+2. add title attribute
+3. white screen first load
+4. user dont have premirem
+5. skeleton screen
+6. theme
+7. i18n
+8. progress bar
