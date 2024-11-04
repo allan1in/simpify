@@ -39,7 +39,7 @@ export default {
   methods: {
     onScroll(instance, event) {
       /*  When the distance between the scroll bar and the bottom of 
-          the track is less than this value, the loading method will 
+          the track is less than variable bottom, the loading method will 
           be triggered.
       */
       let bottom = 300
