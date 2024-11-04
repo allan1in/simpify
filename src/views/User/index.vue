@@ -2,83 +2,106 @@
   <div class="user-container" v-if="!loading">
     <div class="user-container__cover">
       <div class="user-container__cover__img-wrapper">
-        <img
-          v-if="profile.images[0]"
-          class="user-container__cover__img-wrapper__img"
-          :src="profile.images[0].url"
-          :alt="profile.display_name"
-        />
+        <img v-if="profile.images[0]" class="user-container__cover__img-wrapper__img" :src="profile.images[0].url"
+          :alt="profile.display_name" />
         <div v-else class="user-container__cover__img-wrapper__icon-wrapper">
           <IconDefaultUser />
         </div>
       </div>
       <div class="user-container__cover__info">
-        <span class="user-container__cover__info__type">{{
-          `${profile.type.charAt(0).toUpperCase()}${profile.type.slice(1)}`
-        }}</span>
+        <span class="user-container__cover__info__type">Profile</span>
         <h1 class="user-container__cover__info__title" :title="profile.display_name">
           {{ profile.display_name }}
         </h1>
         <div class="user-container__cover__info__details">
-          <span class="user-container__cover__info__details__playlists">
+          <span class="user-container__cover__info__details__playlists" v-if="playlists_total">
             {{
-              `${Intl.NumberFormat().format(playlists_total)} Public ${profile.followers.total > 1 ? ' Playlists' : ' Playlist'}`
+              `${Intl.NumberFormat().format(playlists_total)} Public ${playlists_total > 1 ? ' Playlists' :
+                'Playlist'}`
             }}
           </span>
-          <span class="user-container__cover__info__details__followers">
+          <span class="user-container__cover__info__details__followers" v-if="profile.followers.total">
             {{
               profile.followers.total === 0
                 ? ''
-                : ` • ${
-                    Intl.NumberFormat().format(profile.followers.total) +
-                    (profile.followers.total > 1 ? ' follower' : ' followers')
-                  }`
+                : ` • ${Intl.NumberFormat().format(profile.followers.total) +
+                (profile.followers.total > 1 ? ' Followers' : ' Follower')
+                }`
             }}
           </span>
         </div>
       </div>
     </div>
-    <div class="user-container__content" v-if="playlists.length !== 0">
-      <TitleShowAll title="Public Playlists" />
-      <div class="user-container__content__playlists">
-        <PlaylistCard v-for="item in playlists" :item="item" />
+    <div class="user-container__content">
+      <div class="user-container__content__top-artists" v-if="this.uid === id && artists.length !== 0">
+        <TitleShowAll title="Top artists this month"
+          :router-name="this.artists_total > this.artists_limit ? 'GetArtistsForUser' : ''" />
+        <div class="user-container__content__top-artists__content">
+          <CardArtist v-for="item in artists" :item="item" />
+        </div>
+      </div>
+      <div class="user-container__content__top-songs" v-if="this.uid === id && tracks.length !== 0">
+        <TitleShowAll title="Top tracks this month"
+          :router-name="this.tracks_total > this.tracks_limit ? 'GetTracksForUser' : ''" />
+        <div class="user-container__content__top-songs__content">
+          <CardTrack v-for="item, index in tracks" :item="item" :index />
+        </div>
+      </div>
+      <div class="user-container__content__playlists" v-if="playlists.length !== 0">
+        <TitleShowAll title="Public Playlists"
+          :router-name="this.playlists_total > this.playlists_limit ? 'UserPlaylists' : ''" />
+        <div class="user-container__content__playlists__content">
+          <PlaylistCard v-for="item in playlists" :item="item" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getUserPlaylists, getUserProfile, getNextUserPlaylists } from '@/api/meta/user'
+import { getUserPlaylists, getUserProfile, getNextUserPlaylists, getUserTopArtists, getUserTopSongs } from '@/api/meta/user'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
 import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
-import { mapWritableState } from 'pinia'
+import { mapState, mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
+import { useUserStore } from '@/stores/user'
+import CardArtist from '@/components/CardArtist/index.vue'
+import CardTrack from '@/components/CardTrack/index.vue'
 
 export default {
   name: 'User',
   components: {
     TitleShowAll,
     PlaylistCard,
-    IconDefaultUser
+    IconDefaultUser,
+    CardArtist,
+    CardTrack
   },
   data() {
     return {
       id: this.$route.params.userId,
       profile: {},
       playlists: [],
-      playlists_next: '',
-      playlists_limit: 32,
-      playlists_offset: 0,
-      playlists_total: 0
+      playlists_limit: 8,
+      playlists_total: 0,
+      artists: [],
+      artists_limit: 8,
+      artists_total: 0,
+      tracks: [],
+      tracks_limit: 4,
+      tracks_total: 0
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loadMore', 'loading'])
+    ...mapWritableState(useAppStore, ['loading']),
+    ...mapState(useUserStore, ['uid'])
   },
   methods: {
     async getAll() {
       await this.getProfile()
+      await this.getUserTopArtists()
+      await this.getUserTopTracks()
       await this.getPlaylists()
 
       this.loading = false
@@ -87,46 +110,38 @@ export default {
       const res = await getUserProfile(this.$route.params.userId)
       this.profile = res
     },
+    async getUserTopArtists() {
+      const params = {
+        time_range: 'short_term',
+        limit: this.artists_limit,
+        offset: 0
+      }
+      const res = (await getUserTopArtists(params))
+      this.artists = res.items
+      this.artists_total = res.total
+    },
+    async getUserTopTracks() {
+      const params = {
+        time_range: 'short_term',
+        limit: this.tracks_limit,
+        offset: 0
+      }
+      const res = (await getUserTopSongs(params))
+      this.tracks = res.items
+      this.tracks_total = res.total
+    },
     async getPlaylists() {
-      if (!this.loading_more && this.playlists_next !== null) {
-        this.loading_more = true
-        let res
-
-        if (this.playlists_next === '') {
-          const params = {
-            limit: this.playlists_limit,
-            offset: this.playlists_offset
-          }
-          res = await getUserPlaylists(this.id, params)
-        } else {
-          let path = this.playlists_next
-          res = await getNextUserPlaylists(this.id, path.slice(path.indexOf('?') + 1))
-        }
-
-        let newVals = res.items
-        let oldVals = JSON.parse(JSON.stringify(this.playlists))
-        this.playlists = [...oldVals, ...newVals]
-        this.playlists_next = res.next
-        this.playlists_total = res.total
-
-        this.loading_more = false
+      const params = {
+        limit: this.playlists_limit,
+        offset: this.playlists_offset
       }
-      this.loadMore = false
-    }
-  },
-  watch: {
-    loadMore(newVal, oldVal) {
-      if (newVal) {
-        console.log('new')
-        this.getPlaylists()
-      }
+      const res = await getUserPlaylists(this.id, params)
+      this.playlists = res.items
+      this.playlists_total = res.total
     }
   },
   created() {
     this.getAll()
-  },
-  beforeUnmount() {
-    this.loading = true
   }
 }
 </script>
@@ -194,7 +209,6 @@ export default {
       }
 
       &__details {
-        margin-top: 1rem;
         font-size: 1.4rem;
         color: $color-font-secondary;
       }
@@ -204,8 +218,21 @@ export default {
   &__content {
     padding: $gutter-2x;
 
+    &__top-artists,
     &__playlists {
-      @include gridCards;
+      padding-top: $gutter-2x;
+
+      &__content {
+        @include gridCards;
+      }
+    }
+
+    &__top-songs {
+      padding-top: $gutter-2x;
+
+      &__content {
+        padding-top: $gutter;
+      }
     }
   }
 }

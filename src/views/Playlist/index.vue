@@ -2,30 +2,20 @@
   <div class="playlist-container" v-if="!loading">
     <div class="playlist-container__banner">
       <Banner :item="playlist" :images="playlist.images">
-        <router-link
-          class="playlist-container__banner-details__owner"
-          :to="{ name: 'User', params: { userId: playlist.owner.id } }"
-          >{{ playlist.owner.display_name }}</router-link
-        >
+        <router-link class="playlist-container__banner-details__owner"
+          :to="{ name: 'User', params: { userId: playlist.owner.id } }">{{ playlist.owner.display_name }}</router-link>
         <span class="playlist-container__banner-details__release-year">
           {{
             playlist.followers.total === 0
               ? ''
-              : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${
-                  playlist.followers.total === 1 ? ' follower' : ' followers'
-                }`
+              : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${playlist.followers.total === 1 ? ' follower' : ' followers'
+              }`
           }}
         </span>
-        <span
-          v-if="playlist.tracks.total !== 0"
-          class="playlist-container__banner-details__total-playlist.tracks"
-        >
+        <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__total-playlist.tracks">
           {{ ` • ${playlist.tracks.total} songs` }}
         </span>
-        <span
-          v-if="playlist.tracks.total !== 0"
-          class="playlist-container__banner-details__duration"
-        >
+        <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__duration">
           {{
             ` • ${getFormatTime(
               playlist.tracks.items.reduce((acc, item) => {
@@ -38,13 +28,8 @@
     </div>
     <div class="playlist-container__content">
       <TrackListHeader />
-      <TrackCard
-        v-for="(item, index) in playlist.tracks.items"
-        :item="item.track"
-        :index="index"
-        :show-playlist="false"
-        :show-image="false"
-      />
+      <TrackCard v-for="(item, index) in playlist.tracks.items" :item="item.track" :index="index" :show-playlist="false"
+        :show-image="false" />
     </div>
   </div>
 </template>
@@ -91,9 +76,6 @@ export default {
       },
       immediate: true
     }
-  },
-  beforeUnmount() {
-    this.loading = true
   }
 }
 </script>
@@ -106,6 +88,7 @@ export default {
       color: $color-font-primary;
     }
   }
+
   &__content {
     padding: 1.6rem;
   }

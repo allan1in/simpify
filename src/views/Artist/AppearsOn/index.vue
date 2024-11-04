@@ -75,9 +75,6 @@ export default {
   },
   created() {
     this.getAll()
-  },
-  beforeUnmount() {
-    this.loading = true
   }
 }
 </script>

@@ -2,18 +2,12 @@
   <div class="track-container" v-if="!loading">
     <div class="track-container__banner">
       <Banner :item="track" :images="track.album.images">
-        <router-link
-          class="track-container__banner-details__artist"
-          :to="{ name: 'Artist', params: { artistId: artists[0].id } }"
-          >{{ artists[0].name }}</router-link
-        >
+        <router-link class="track-container__banner-details__artist"
+          :to="{ name: 'Artist', params: { artistId: artists[0].id } }">{{ artists[0].name }}</router-link>
         <span class="track-container__banner-details__album-wrapper">
           <span> • </span>
-          <router-link
-            class="track-container__banner-details__album-wrapper__album"
-            :to="{ name: 'Album', params: { albumId: track.album.id } }"
-            >{{ track.album.name }}</router-link
-          >
+          <router-link class="track-container__banner-details__album-wrapper__album"
+            :to="{ name: 'Album', params: { albumId: track.album.id } }">{{ track.album.name }}</router-link>
         </span>
         <span class="track-container__banner-details__release-year">
           {{ ` • ${track.album.release_date.split('-')[0]}` }}
@@ -84,9 +78,6 @@ export default {
   },
   created() {
     this.getAll()
-  },
-  beforeUnmount() {
-    this.loading = true
   }
 }
 </script>

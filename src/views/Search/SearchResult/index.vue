@@ -29,9 +29,6 @@ export default {
   },
   components: {
     TopBar
-  },
-  beforeUnmount() {
-    this.loading = true
   }
 }
 </script>

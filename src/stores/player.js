@@ -92,11 +92,9 @@ export const usePlayerStore = defineStore('player', {
           console.log('account_error: ' + message)
         })
 
-        this.player.on('playback_error', (message) => {
+        this.player.addListener('playback_error', (message) => {
           console.log('playback_error: ' + message)
-          if (message.message.split(' ').indexOf('401') !== -1) {
-            console.log('playback_error: Bad or expired token')
-          }
+          this.$router.push({ name: 'Login' })
         })
 
         this.player.connect()
@@ -114,15 +112,9 @@ export const usePlayerStore = defineStore('player', {
     async togglePlay() {
       let state = await this.player.getCurrentState()
       if (!state) {
-        console.log('User is not playing music through the Web Playback SDK')
+        // User is not playing music through the Web Playback SDK
         return
       }
-
-      var current_track = state.track_window.current_track
-      var next_track = state.track_window.next_tracks[0]
-
-      console.log('Currently Playing', current_track)
-      console.log('Playing Next', next_track)
       await this.player.togglePlay()
       this.isPause = !this.isPause
     },

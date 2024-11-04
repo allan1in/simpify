@@ -1,24 +1,17 @@
 <template>
   <div class="dashboard-container" v-if="!loading">
-    <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
-      <TitleShowAll
-        :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
-        title="Featured Playlists"
-      />
+    <!-- <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
+      <TitleShowAll :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
+        title="Featured Playlists" />
       <div class="dashboard-container__featured-playlists__content">
         <CardHorizontal v-for="item in playlists" :item="item" />
       </div>
-    </div>
-    <div class="dashboard-container__top-artists" v-if="artists.length !== 0">
-      <TitleShowAll title="Top Artists" />
-      <div class="dashboard-container__top-artists__content">
-        <ArtistCard v-for="item in artists" :item="item" />
-      </div>
-    </div>
+    </div> -->
+
     <div class="dashboard-container__new-releases" v-if="albums.length !== 0">
       <TitleShowAll title="New Releases" />
       <div class="dashboard-container__new-releases__content">
-        <AlbumCard v-for="item in albums" :item="item" />
+        <CardAlbum v-for="item in albums" :item="item" />
       </div>
     </div>
   </div>
@@ -28,11 +21,9 @@
 import Container from '@/components/Container/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
-import ArtistCard from '@/components/CardArtist/index.vue'
-import AlbumCard from '@/components/CardAlbum/index.vue'
+import CardAlbum from '@/components/CardAlbum/index.vue'
 import CardHorizontal from '@/components/CardHorizontal/index.vue'
 import { getFeaturedPlaylists } from '@/api/meta/browse'
-import { getUserTopArtists, getUserTopSongs } from '@/api/meta/user'
 import { getNewReleases, getNextNewReleases } from '@/api/meta/album'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
@@ -43,8 +34,7 @@ export default {
     Container,
     PlaylistCard,
     TitleShowAll,
-    ArtistCard,
-    AlbumCard,
+    CardAlbum,
     CardHorizontal
   },
   data() {
@@ -52,10 +42,6 @@ export default {
       playlists: [],
       playlists_total: 0,
       playlists_limit: 8,
-      artists: [],
-      artists_limit: 8,
-      tracks: [],
-      tracks_limit: 8,
       albums: [],
       albums_limit: 24,
       albums_offset: 0,
@@ -69,7 +55,6 @@ export default {
   methods: {
     async getAll() {
       await this.getPlaylists()
-      await this.getUserTopArtists()
       await this.getNewReleases()
 
       this.loading = false
@@ -82,15 +67,6 @@ export default {
       const res = (await getFeaturedPlaylists(params)).playlists
       this.playlists = res.items
       this.playlists_total = res.total
-    },
-    async getUserTopArtists() {
-      const params = {
-        time_range: 'short_term',
-        limit: this.artists_limit,
-        offset: 0
-      }
-      const res = (await getUserTopArtists(params)).items
-      this.artists = res
     },
     async getNewReleases() {
       if (!this.loading_more && this.albums_next !== null) {
@@ -127,9 +103,6 @@ export default {
   },
   created() {
     this.getAll()
-  },
-  beforeUnmount() {
-    this.loading = true
   }
 }
 </script>
@@ -148,7 +121,6 @@ export default {
     }
   }
 
-  &__top-artists,
   &__new-releases {
     &__content {
       @include gridCards;

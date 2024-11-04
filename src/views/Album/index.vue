@@ -2,16 +2,10 @@
   <div class="album-container" v-if="!loading">
     <div class="album-container__cover">
       <Banner :item="album" :images="album.images">
-        <span
-          v-for="(artist, index) in album.artists"
-          class="album-container__banner-details__artist"
-        >
+        <span v-for="(artist, index) in album.artists" class="album-container__banner-details__artist">
           {{ index === 0 ? '' : ' • ' }}
-          <router-link
-            class="album-container__banner-details__artist__link"
-            :to="{ name: 'Artist', params: { artistId: artist.id } }"
-            >{{ artist.name }}</router-link
-          >
+          <router-link class="album-container__banner-details__artist__link"
+            :to="{ name: 'Artist', params: { artistId: artist.id } }">{{ artist.name }}</router-link>
         </span>
 
         <span class="album-container__banner-details__release-year">
@@ -32,14 +26,16 @@
       </Banner>
     </div>
     <div class="album-container__content">
-      <TrackListHeader :showAlbum="false" />
-      <TrackCard
-        v-for="(item, index) in tracks"
-        :item="item"
-        :index="index"
-        :show-album="false"
-        :show-image="false"
-      />
+      <div class="album-container__content__btn-group">
+        <div class="album-container__content__btn-group__play-wrapper">
+          <ButtonTogglePlay :item="album" />
+        </div>
+      </div>
+      <div class="album-container__content__tracks">
+        <TrackListHeader :showAlbum="false" />
+        <TrackCard v-for="(item, index) in tracks" :item="item" :index="index" :show-album="false" :show-image="false"
+          :context_uri="this.album.uri" />
+      </div>
     </div>
   </div>
 </template>
@@ -52,13 +48,15 @@ import { timeFormatAlbum } from '@/utils/time_format'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import Banner from '@/components/Banner/index.vue'
+import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 
 export default {
   name: 'Album',
   components: {
     TrackListHeader,
     TrackCard,
-    Banner
+    Banner,
+    ButtonTogglePlay
   },
   data() {
     return {
@@ -126,9 +124,6 @@ export default {
         this.getTracks()
       }
     }
-  },
-  beforeUnmount() {
-    this.loading = true
   }
 }
 </script>
@@ -144,6 +139,16 @@ export default {
 
   &__content {
     padding: 1.6rem;
+
+    &__btn-group {
+      padding: 0 $gutter-2x;
+      padding-top: $gutter-2x;
+
+      &__play-wrapper {
+        height: 5.4rem;
+        aspect-ratio: 1 / 1;
+      }
+    }
   }
 }
 </style>

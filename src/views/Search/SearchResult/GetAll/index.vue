@@ -2,7 +2,7 @@
   <main class="all-container" v-if="!loading">
     <div v-if="!loading" class="all-container__content">
       <div v-if="tracks.total" class="all-container__content__songs">
-        <TitleShowAll :router-name="'GetTracks'" :title="'Songs'" />
+        <TitleShowAll :router-name="tracks.total > tracks_limit ? 'GetTracks' : ''" :title="'Songs'" />
         <div class="all-container__content__songs__results">
           <TrackListHeader />
           <TrackCard v-for="(item, index) in tracks.items" :key="index" :item="item" :index="index" />
@@ -110,9 +110,6 @@ export default {
   },
   created() {
     this.getAll()
-  },
-  beforeUnmount() {
-    this.loading = true
   },
   watch: {
     $route(to, from) {

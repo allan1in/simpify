@@ -1,10 +1,10 @@
 <template>
-  <div class="button-toggle-play-container" @click.stop="handleClick">
-    <button class="button-toggle-play-container__icon-wrapper">
+  <button class="button-toggle-play-container" @click.stop="handleClick">
+    <div class="button-toggle-play-container__icon-wrapper">
       <IconPause v-if="item.uri === context?.uri && !isPause" />
       <IconPlay v-else />
-    </button>
-  </div>
+    </div>
+  </button>
 </template>
 
 <script>

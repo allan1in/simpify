@@ -21,6 +21,10 @@ import Playlist from '@/views/Playlist/index.vue'
 import User from '@/views/User/index.vue'
 import Browse from '@/views/Browse/index.vue'
 import FeaturedPlaylists from '@/views/Dashboard/FeaturedPlaylists/index.vue'
+import GetArtistsForUser from '@/views/User/Top/Artists/index.vue'
+import GetTracksForUser from '@/views/User/Top/Tracks/index.vue'
+import UserPlaylists from '@/views/User/Playlists/index.vue'
+import { useAppStore } from '@/stores/app'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -148,17 +152,6 @@ const router = createRouter({
       ]
     },
     {
-      path: '/user/:userId',
-      component: Layout,
-      children: [
-        {
-          path: '',
-          name: 'User',
-          component: User
-        }
-      ]
-    },
-    {
       path: '/browse/:categoryId',
       component: Layout,
       children: [
@@ -166,6 +159,37 @@ const router = createRouter({
           path: '',
           name: 'Browse',
           component: Browse
+        }
+      ]
+    },
+    {
+      path: '/user/:userId',
+      component: Layout,
+      children: [
+        {
+          path: '',
+          name: 'User',
+          component: User
+        },
+        {
+          path: 'top',
+          children: [
+            {
+              path: 'artists',
+              name: 'GetArtistsForUser',
+              component: GetArtistsForUser
+            },
+            {
+              path: 'tracks',
+              name: 'GetTracksForUser',
+              component: GetTracksForUser
+            }
+          ]
+        },
+        {
+          path: 'playlists',
+          name: 'UserPlaylists',
+          component: UserPlaylists
         }
       ]
     },
@@ -178,6 +202,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+  useAppStore().loading = true
   if (localStorage.getItem('access_token') === null) {
     // Has no token
     if (to.path === '/login') {
@@ -201,11 +226,8 @@ router.beforeEach(async (to, from, next) => {
           next()
         } catch (error) {
           // Bad or expired token
-          // window.localStorage.clear()
-          // next('/login')
-          console.log('router: ')
-          console.log(error)
-          next()
+          window.localStorage.clear()
+          next('/login')
         }
       }
     }
