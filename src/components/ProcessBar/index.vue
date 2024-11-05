@@ -1,13 +1,11 @@
 <template>
-  <div ref="process" class="process" @mousedown="handleMouseDown">
-    <div class="process__line">
-      <div
-        ref="position"
-        class="process__line__position"
-        :style="{ left: `calc(${percentage}% - 100%)` }"
-      ></div>
+  <div ref="process" class="process" :class="{ 'disabled__process': disabled }" @mousedown="handleMouseDown">
+    <div class="process__line" :class="{ 'disabled__process__line': disabled }">
+      <div ref="position" class="process__line__position" :style="{ left: `calc(${percentage}% - 100%)` }"
+        :class="{ 'disabled__process__line__position': disabled }"></div>
     </div>
-    <div ref="dot" class="process__dot" :style="{ left: `${percentage}%` }"></div>
+    <div ref="dot" class="process__dot" :class="{ 'disabled__process__dot': disabled }"
+      :style="{ left: `${percentage}%` }"></div>
   </div>
 </template>
 <script>
@@ -17,10 +15,18 @@ export default {
     percentage: {
       type: Number,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      require: false,
+      default: false
     }
   },
   methods: {
     handleMouseDown(event) {
+      if (this.disabled) {
+        return
+      }
       // Prevent default drag events
       event.preventDefault()
 
@@ -69,6 +75,32 @@ export default {
 </script>
 <style lang="scss" scoped>
 $progress-line-color: #4d4d4d;
+
+.disabled__process {
+  opacity: 0.3;
+
+  &:hover &__line__position:nth-child(n),
+  &:active &__line__position:nth-child(n) {
+    background-color: $color-font-primary;
+  }
+
+  &:hover &__dot:nth-child(n),
+  &:active &__dot:nth-child(n) {
+    display: none;
+  }
+
+  &__line:nth-child(n) {
+    cursor: not-allowed;
+  }
+
+  &__line__position:nth-child(n) {
+    cursor: not-allowed;
+  }
+
+  &__dot:nth-child(n) {
+    cursor: not-allowed;
+  }
+}
 
 .process {
   flex: 1;

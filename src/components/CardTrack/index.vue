@@ -104,7 +104,6 @@ export default {
       default: []
     }
   },
-  emits: ['playNewTrack'],
   methods: {
     getFormatTime(time) {
       return timeFormatTrack(time)
@@ -131,7 +130,7 @@ export default {
             uris: [this.item.uri]
           }
         }
-        await startPlayback(data)
+        this.new
       }
     },
     ...mapActions(usePlayerStore, ['togglePlay'])

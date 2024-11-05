@@ -1,17 +1,14 @@
 <template>
   <div class="volume-container">
-    <button class="icon-wrapper" @click="handleMuteClick">
+    <button class="icon-wrapper" @click="handleMuteClick" :class="{ 'not-allowed': disabled }" :disabled="disabled">
       <IconVolumeMuted v-if="isMute || volume == 0" />
       <IconVolumeQuiet v-else-if="volume <= 33" />
       <IconVolumeNormal v-else-if="volume <= 66" />
       <IconVolumeLoud v-else />
     </button>
     <div class="volume-container__progress-wrapper">
-      <ProcessBar
-        :percentage="isMute ? 0 : volume"
-        @update-percentage="updateVolume"
-        @mouse-down="handleMouseDown"
-      />
+      <ProcessBar :percentage="isMute ? 0 : volume" @update-percentage="updateVolume" @mouse-down="handleMouseDown"
+        :disabled="disabled" />
     </div>
   </div>
 </template>
@@ -35,6 +32,13 @@ export default {
   },
   computed: {
     ...mapWritableState(usePlayerStore, ['isMute', 'volume'])
+  },
+  props: {
+    disabled: {
+      type: Boolean,
+      require: false,
+      default: false
+    }
   },
   methods: {
     async updateVolume(newVal) {
@@ -69,6 +73,22 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.not-allowed:nth-child(n) {
+  cursor: not-allowed;
+  opacity: 0.3;
+
+  &:hover {
+    transform: unset;
+    fill: $color-font-secondary;
+  }
+
+  &:active {
+    transform: unset;
+    opacity: 0.3;
+    fill: $color-font-secondary;
+  }
+}
+
 .icon-wrapper {
   display: inline-block;
   fill: $color-font-secondary;

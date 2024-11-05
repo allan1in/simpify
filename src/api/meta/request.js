@@ -43,6 +43,9 @@ service.interceptors.response.use(
       error.config.headers.Authorization = `Bearer ${localStorage.getItem('access_token')}`
       const res = await service.request(error.config)
       return res
+    } else {
+      console.log(error)
+      alert(error.response.data)
     }
 
     return Promise.reject(error)

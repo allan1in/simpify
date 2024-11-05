@@ -10,6 +10,7 @@ export const useUserStore = defineStore('user', {
     display_name: '',
     avatar: '',
     uid: '',
+    product: '',
     access_token: localStorage.getItem('access_token') || ''
   }),
   actions: {
@@ -43,6 +44,7 @@ export const useUserStore = defineStore('user', {
       this.avatar = res.images.length !== 0 ? res.images[0].url : ''
       this.display_name = res.display_name
       this.uid = res.id
+      this.product = res.product
     },
     logout() {
       window.localStorage.clear()
@@ -64,6 +66,9 @@ export const useUserStore = defineStore('user', {
       // const now = new Date()
       // const expiry = new Date(now.getTime() + expires_in * 1000)
       // localStorage.setItem('expires', expiry)
+    },
+    checkProduct(p) {
+      return this.product === p
     }
   }
 })

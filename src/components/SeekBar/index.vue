@@ -1,18 +1,11 @@
 <template>
-  <div
-    class="seek-bar"
-    :class="{ 'seek-bar-large': size === 'large', 'seek-bar-default': size === 'default' }"
-  >
-    <div class="seek-bar__seek">{{ timeFormat(position) }}</div>
+  <div class="seek-bar" :class="{ 'seek-bar-large': size === 'large', 'seek-bar-default': size === 'default' }">
+    <div class="seek-bar__seek" :class="{ 'disabled': disabled }">{{ timeFormat(position) }}</div>
     <div class="seek-bar__process-bar">
-      <ProcessBar
-        :percentage="percentage"
-        @update-percentage="updatePercentage"
-        @mouse-up="handleMouseUp"
-        @mouse-down="stopListenPos"
-      />
+      <ProcessBar :percentage="percentage" @update-percentage="updatePercentage" @mouse-up="handleMouseUp"
+        @mouse-down="stopListenPos" :disabled="disabled" />
     </div>
-    <div class="seek-bar__duration">{{ timeFormat(duration) }}</div>
+    <div class="seek-bar__duration" :class="{ 'disabled': disabled }">{{ timeFormat(duration) }}</div>
   </div>
 </template>
 
@@ -29,7 +22,12 @@ export default {
       type: String,
       require: false,
       default: 'default'
-    }
+    },
+    disabled: {
+      type: Boolean,
+      require: false,
+      default: false
+    },
   },
   components: {
     ProcessBar
@@ -52,10 +50,9 @@ export default {
       return timeFormatTrack(time)
     },
     async handleMouseUp() {
-      await this.player.seek((this.duration * this.percentage) / 100)
-      await this.startListenPos()
+      this.seekPosition()
     },
-    ...mapActions(usePlayerStore, ['startListenPos', 'stopListenPos'])
+    ...mapActions(usePlayerStore, ['startListenPos', 'stopListenPos', 'seekPosition'])
   },
   watch: {
     percentage(newVal, oldVal) {
@@ -66,6 +63,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.disabled {
+  opacity: 0.3;
+}
+
 .seek-bar {
   display: flex;
   justify-content: space-between;
