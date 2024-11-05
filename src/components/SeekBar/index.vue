@@ -1,11 +1,19 @@
 <template>
-  <div class="seek-bar" :class="{ 'seek-bar-large': size === 'large', 'seek-bar-default': size === 'default' }">
-    <div class="seek-bar__seek" :class="{ 'disabled': disabled }">{{ timeFormat(position) }}</div>
+  <div
+    class="seek-bar"
+    :class="{ 'seek-bar-large': size === 'large', 'seek-bar-default': size === 'default' }"
+  >
+    <div class="seek-bar__seek" :class="{ disabled: disabled }">{{ timeFormat(position) }}</div>
     <div class="seek-bar__process-bar">
-      <ProcessBar :percentage="percentage" @update-percentage="updatePercentage" @mouse-up="handleMouseUp"
-        @mouse-down="stopListenPos" :disabled="disabled" />
+      <ProcessBar
+        :percentage="percentage"
+        @update-percentage="updatePercentage"
+        @mouse-up="handleMouseUp"
+        @mouse-down="handleMouseDown"
+        :disabled="disabled"
+      />
     </div>
-    <div class="seek-bar__duration" :class="{ 'disabled': disabled }">{{ timeFormat(duration) }}</div>
+    <div class="seek-bar__duration" :class="{ disabled: disabled }">{{ timeFormat(duration) }}</div>
   </div>
 </template>
 
@@ -27,7 +35,7 @@ export default {
       type: Boolean,
       require: false,
       default: false
-    },
+    }
   },
   components: {
     ProcessBar
@@ -51,6 +59,9 @@ export default {
     },
     async handleMouseUp() {
       this.seekPosition()
+    },
+    handleMouseDown() {
+      this.stopListenPos()
     },
     ...mapActions(usePlayerStore, ['startListenPos', 'stopListenPos', 'seekPosition'])
   },

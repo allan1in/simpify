@@ -8,8 +8,15 @@
         </button>
       </div>
       <div class="track-card__left__num-wrapper">
-        <div class="track-card__left__num-wrapper__playing" v-if="!isPause && current_track.uri === item.uri">
-          <img class="track-card__left__num-wrapper__playing__img" src="/src/assets/images/playing.gif" alt="" />
+        <div
+          class="track-card__left__num-wrapper__playing"
+          v-if="!isPause && current_track.uri === item.uri"
+        >
+          <img
+            class="track-card__left__num-wrapper__playing__img"
+            src="/src/assets/images/playing.gif"
+            alt=""
+          />
         </div>
         <span v-else>{{ index + 1 }}</span>
       </div>
@@ -17,30 +24,51 @@
 
     <div class="track-card__title">
       <div v-if="showImage" class="track-card__title__cover-wrapper">
-        <img class="track-card__title__cover-wrapper__cover" :src="item.album.images[2].url" alt="Album Cover" />
+        <img
+          class="track-card__title__cover-wrapper__cover"
+          :src="item.album.images[2].url"
+          alt="Album Cover"
+        />
       </div>
       <div class="track-card__title__msg-wrapper">
-        <router-link :class="{
-          'track-card__title__msg-wrapper__name-playing':
-            !isPause && current_track.uri === item.uri
-        }" v-if="item.id !== null" :to="{ name: 'Track', params: { trackId: item.id } }"
-          class="track-card__title__msg-wrapper__name">
+        <router-link
+          :class="{
+            'track-card__title__msg-wrapper__name-playing':
+              !isPause && current_track.uri === item.uri
+          }"
+          v-if="item.id !== null"
+          :to="{ name: 'Track', params: { trackId: item.id } }"
+          class="track-card__title__msg-wrapper__name"
+        >
           {{ item.name }}
         </router-link>
         <span v-else class="track-card__title__msg-wrapper__name"> {{ item.name }}</span>
         <div v-if="showArtists" class="track-card__title__msg-wrapper__artists">
-          <router-link v-if="item.id !== null" v-for="(artist, index) in item.artists" :key="artist.id"
-            :to="{ name: 'Artist', params: { artistId: artist.id } }">
+          <router-link
+            v-if="item.id !== null"
+            v-for="(artist, index) in item.artists"
+            :key="artist.id"
+            :to="{ name: 'Artist', params: { artistId: artist.id } }"
+          >
             {{ (index === 0 ? '' : ', ') + artist.name }}
           </router-link>
-          <span v-else class="track-card__title__msg-wrapper__artists" v-for="(artist, index) in item.artists">
-            {{ (index === 0 ? '' : ', ') + artist.name }}</span>
+          <span
+            v-else
+            class="track-card__title__msg-wrapper__artists"
+            v-for="(artist, index) in item.artists"
+          >
+            {{ (index === 0 ? '' : ', ') + artist.name }}</span
+          >
         </div>
       </div>
     </div>
     <div v-if="showAlbum" class="track-card__album-wrapper">
-      <router-link v-if="item.id !== null" :to="{ name: 'Album', params: { albumId: item.album.id } }"
-        class="track-card__album-wrapper__album">{{ item.album.name }}</router-link>
+      <router-link
+        v-if="item.id !== null"
+        :to="{ name: 'Album', params: { albumId: item.album.id } }"
+        class="track-card__album-wrapper__album"
+        >{{ item.album.name }}</router-link
+      >
       <span v-else class="track-card__album-wrapper__album">
         {{ item.album.name }}
       </span>
@@ -58,7 +86,6 @@ import { timeFormatTrack } from '@/utils/time_format'
 import IconPause from '../Icons/IconPause.vue'
 import { mapActions, mapState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
-import { startPlayback } from '@/api/meta/player'
 
 export default {
   name: 'CardTrack',
@@ -115,6 +142,7 @@ export default {
       } else {
         // New track
         let data
+        let url
         if (this.context_uri !== '') {
           data = {
             context_uri: this.context_uri,
@@ -130,10 +158,10 @@ export default {
             uris: [this.item.uri]
           }
         }
-        this.new
+        this.playNewTrack(data, this.item)
       }
     },
-    ...mapActions(usePlayerStore, ['togglePlay'])
+    ...mapActions(usePlayerStore, ['togglePlay', 'playNewTrack'])
   }
 }
 </script>

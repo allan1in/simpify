@@ -1,6 +1,12 @@
 import { defineStore } from 'pinia'
 import { useUserStore } from './user'
-import { setRepeatMode, togglePlaybackShuffle, transferPlayback } from '@/api/meta/player'
+import {
+  setRepeatMode,
+  startPlayback,
+  togglePlaybackShuffle,
+  transferPlayback
+} from '@/api/meta/player'
+import { Howl } from 'howler'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
@@ -127,10 +133,16 @@ export const usePlayerStore = defineStore('player', {
         await this.player.togglePlay()
         this.isPause = !this.isPause
       } else if (useUserStore().checkProduct('free')) {
-        let audio = new Audio(
-          'https://p.scdn.co/mp3-preview/bb67ad217cc9dad6a0e690bba6901f4305ac68af?cid=d1a9c27292924038baac7e70a0ea094e'
-        )
-        audio.play()
+        if (!this.player?.playing) {
+          return
+        }
+        if (this.player.playing()) {
+          this.player.pause()
+          this.isPause = true
+        } else {
+          this.player.play()
+          this.isPause = false
+        }
       }
     },
     nextTrack() {
@@ -175,6 +187,43 @@ export const usePlayerStore = defineStore('player', {
       if (useUserStore().checkProduct('premium')) {
         await this.player.seek((this.duration * this.percentage) / 100)
         await this.startListenPos()
+      } else if (useUserStore().checkProduct('free')) {
+      }
+    },
+    async playNewTrack(data, track) {
+      if (useUserStore().checkProduct('premium')) {
+        await startPlayback(data)
+      } else if (useUserStore().checkProduct('free')) {
+        // Distroy the Howl object already existed
+        if (this.player instanceof Howl) {
+          this.player.unload()
+        }
+        this.current_track = track
+
+        this.player = new Howl({
+          src: [track.preview_url],
+          // Use HTML5 API to get audio file
+          html5: true
+        })
+
+        this.player.play()
+        this.isPause = false
+
+        // Start to render progress bar
+        this.player.on('play', () => {
+          requestAnimationFrame(this.progress)
+        })
+      }
+    },
+    // Refresh progress bar position in free account mode
+    progress() {
+      this.position = this.player.seek() * 1000
+      this.duration = this.player.duration() * 1000
+
+      this.percentage = (this.player.seek() / this.player.duration()) * 100
+
+      if (this.player.playing()) {
+        requestAnimationFrame(this.progress)
       }
     }
   }
