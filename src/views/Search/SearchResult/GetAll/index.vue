@@ -164,7 +164,7 @@ export default {
 
       &__results {
 
-        @include gridCards;
+        @include gridCardsLess;
       }
     }
   }

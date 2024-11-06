@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       playlists: [],
-      playlists_limit: 28,
+      playlists_limit: 48,
       playlists_offset: 0,
       playlists_next: '',
       loadingMore: false

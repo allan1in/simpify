@@ -63,7 +63,7 @@ export default {
       id: this.$route.params.albumId,
       album: {},
       tracks: [],
-      tracks_limit: 14,
+      tracks_limit: 20,
       tracks_offset: 0,
       tracks_next: '',
       loading_more: false

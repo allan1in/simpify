@@ -25,7 +25,7 @@ export default {
     return {
       id: this.$route.params.artistId,
       albums: [],
-      albums_limit: 32,
+      albums_limit: 48,
       albums_offset: 0,
       albums_next: '',
       loadingMore: false

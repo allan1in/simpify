@@ -25,7 +25,7 @@ export default {
     return {
       id: this.$route.params.artistId,
       appearsOn: [],
-      appearsOn_limit: 32,
+      appearsOn_limit: 48,
       appearsOn_offset: 0,
       appearsOn_next: '',
       loadingMore: false

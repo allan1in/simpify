@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       categories: [],
-      categories_limit: 20,
+      categories_limit: 24,
       categories_next: '',
       categories_offset: 0
     }
@@ -117,7 +117,7 @@ export default {
     padding: 1.6rem;
     gap: $gutter-4x;
 
-    @include gridCardsLess;
+    @include gridCardsExtraLess;
 
     &__card {
       aspect-ratio: 7 / 4;

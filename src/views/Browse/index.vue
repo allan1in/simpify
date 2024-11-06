@@ -24,7 +24,7 @@ export default {
     return {
       category: {},
       playlists: [],
-      playlists_limit: 32,
+      playlists_limit: 48,
       playlists_offset: 0,
       playlists_next: '',
       loading_more: false

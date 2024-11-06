@@ -1,10 +1,8 @@
 <template>
   <div class="dashboard-container" v-if="!loading">
     <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
-      <TitleShowAll
-        :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
-        title="Featured Playlists"
-      />
+      <TitleShowAll :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
+        title="Featured Playlists" />
       <div class="dashboard-container__featured-playlists__content">
         <CardHorizontal v-for="item in playlists" :item="item" />
       </div>
@@ -45,7 +43,7 @@ export default {
       playlists_total: 0,
       playlists_limit: 8,
       albums: [],
-      albums_limit: 24,
+      albums_limit: 48,
       albums_offset: 0,
       albums_next: '',
       loading_more: false
@@ -119,7 +117,7 @@ export default {
       padding: 1.6rem;
       gap: $gutter-2x;
 
-      @include gridCardsLess;
+      @include gridCardsExtraLess;
     }
   }
 

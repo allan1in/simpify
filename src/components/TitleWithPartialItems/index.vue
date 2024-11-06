@@ -2,28 +2,13 @@
   <section class="title-with-partial-items">
     <TitleShowAll :router-name="total > limit ? routerName : ''" :title="title" />
     <div class="title-with-partial-items__content">
-      <ArtistCard
-        v-if="artistCardProps"
-        v-for="(item, index) in artistCardProps.items"
-        :key="'artist' + item.id"
-        :item="item"
-        :index="index"
-      />
-      <AlbumCard
-        v-else-if="albumCardProps"
-        v-for="(item, index) in albumCardProps.items"
-        :key="'album' + item.id"
-        :item="item"
-        :index="index"
-        :show-artists="albumCardProps.showArtists"
-        :show-album-type="albumCardProps.showAlbumType"
-      />
-      <PlaylistCard
-        v-else-if="playlistCardProps"
-        v-for="(item, index) in playlistCardProps.items"
-        :key="'playlist' + item.id"
-        :item="item"
-      />
+      <ArtistCard v-if="artistCardProps" v-for="(item, index) in artistCardProps.items" :key="'artist' + item.id"
+        :item="item" :index="index" />
+      <AlbumCard v-else-if="albumCardProps" v-for="(item, index) in albumCardProps.items" :key="'album' + item.id"
+        :item="item" :index="index" :show-artists="albumCardProps.showArtists"
+        :show-album-type="albumCardProps.showAlbumType" />
+      <PlaylistCard v-else-if="playlistCardProps" v-for="(item, index) in playlistCardProps.items"
+        :key="'playlist' + item.id" :item="item" />
     </div>
   </section>
 </template>
@@ -86,7 +71,7 @@ export default {
   padding-top: 2.4rem;
 
   &__content {
-    @include gridCards;
+    @include gridCardsLess;
   }
 }
 </style>

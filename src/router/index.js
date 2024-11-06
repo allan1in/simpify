@@ -23,6 +23,7 @@ import Browse from '@/views/Browse/index.vue'
 import FeaturedPlaylists from '@/views/Dashboard/FeaturedPlaylists/index.vue'
 import GetArtistsForUser from '@/views/User/Top/Artists/index.vue'
 import GetTracksForUser from '@/views/User/Top/Tracks/index.vue'
+import UserPlaylists from '@/views/User/Playlists/index.vue'
 import { useAppStore } from '@/stores/app'
 
 const router = createRouter({
@@ -184,6 +185,11 @@ const router = createRouter({
               component: GetTracksForUser
             }
           ]
+        },
+        {
+          path: 'playlists',
+          name: 'UserPlaylists',
+          component: UserPlaylists
         }
       ]
     },

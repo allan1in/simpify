@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       artists: [],
-      artists_limit: 28,
+      artists_limit: 48,
       artists_offset: 0,
       artists_next: '',
       loadingMore: false

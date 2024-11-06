@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       albums: [],
-      albums_limit: 28,
+      albums_limit: 48,
       albums_offset: 0,
       albums_next: '',
       loadingMore: false
