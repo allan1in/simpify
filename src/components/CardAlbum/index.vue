@@ -2,28 +2,18 @@
   <div class="album-card" @click="$router.push({ name: 'Album', params: { albumId: item.id } })">
     <div class="album-card__img-box">
       <div class="album-card__img-box__img-wrapper">
-        <img
-          :src="item.images[0].url"
-          alt="Album Cover"
-          class="album-card__img-box__img-wrapper__img"
-        />
+        <img :src="item.images[0].url" alt="Album Cover" class="album-card__img-box__img-wrapper__img" />
       </div>
-      <div
-        class="album-card__img-box__toggle-play"
-        :class="{
-          'album-card__img-box__toggle-play-playing': !isPause && item.uri === context.uri
-        }"
-      >
+      <div class="album-card__img-box__toggle-play" :class="{
+        'album-card__img-box__toggle-play-playing': !isPause && item.uri === context.uri
+      }">
         <ButtonTogglePlay :item />
       </div>
     </div>
 
     <div class="album-card__name-wrapper">
-      <router-link
-        :to="{ name: 'Album', params: { albumId: item.id } }"
-        class="album-card__name-wrapper__name"
-        >{{ item.name }}</router-link
-      >
+      <router-link :to="{ name: 'Album', params: { albumId: item.id } }" class="album-card__name-wrapper__name">{{
+        item.name }}</router-link>
     </div>
     <div class="album-card__info-wrapper">
       <div class="album-card__info-wrapper__info">
@@ -35,10 +25,8 @@
         <span v-if="showArtists">
           <span> • </span>
           <!-- Use native a tag because router-link tag can't handle event bubbling easily -->
-          <a
-            @click.stop="$router.push({ name: 'Artist', params: { artistId: artist.id } })"
-            v-for="(artist, index) in item.artists"
-          >
+          <a @click.stop="$router.push({ name: 'Artist', params: { artistId: artist.id } })"
+            v-for="(artist, index) in item.artists">
             {{ (index === 0 ? '' : ', ') + artist.name }}
           </a>
         </span>
@@ -101,6 +89,8 @@ export default {
 
   &__img-box {
     position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
 
     &__img-wrapper {
       width: 100%;
@@ -110,7 +100,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: $color-bg-6;
+      background-color: $color-bg-3;
       box-shadow: 0 0 15px 12px rgba(0, 0, 0, 0.2);
 
       &__img {

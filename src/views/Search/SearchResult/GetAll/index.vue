@@ -2,53 +2,39 @@
   <main class="all-container" v-if="!loading">
     <div v-if="!loading" class="all-container__content">
       <div v-if="tracks_total" class="all-container__content__songs">
-        <TitleShowAll
-          :router-name="tracks_total > tracks_limit ? 'GetTracks' : ''"
-          :title="'Songs'"
-        />
+        <TitleShowAll :router-name="tracks_total > tracks_limit ? 'GetTracks' : ''" :title="'Songs'" />
         <div class="all-container__content__songs__results">
           <TrackListHeader />
-          <TrackCard
-            v-for="(item, index) in tracks"
-            :key="index"
-            :item="item"
-            :index="index"
-            :uris="uris"
-          />
+          <CardTrack v-for="(item, index) in tracks" :key="index" :item="item" :index="index" :uris="uris" />
         </div>
       </div>
-      <TitleWithPartialItems
-        v-if="artists.total"
-        :router-name="'GetArtists'"
-        :title="'Artists'"
-        :limit="artists.limit"
-        :total="artists.total"
-        :artist-card-props="{ items: artists.items }"
-      />
-      <TitleWithPartialItems
-        v-if="albums.total"
-        :router-name="'GetAlbums'"
-        :title="'Albums'"
-        :limit="albums.limit"
-        :total="albums.total"
-        :album-card-props="{ items: albums.items }"
-      />
-      <TitleWithPartialItems
-        v-if="playlists.total"
-        :router-name="'GetPlaylists'"
-        :title="'Playlists'"
-        :limit="playlists.limit"
-        :total="playlists.total"
-        :playlist-card-props="{ items: playlists.items }"
-      />
+      <div v-if="artists_total" class="all-container__content__artists">
+        <TitleShowAll :router-name="artists_total > artists_limit ? 'GetArtists' : ''" :title="'Artists'" />
+        <div class="all-container__content__artists__results">
+          <CardArtist v-for="(item, index) in artists" :key="index" :item="item" :index="index" :uris="uris" />
+        </div>
+      </div>
+      <div v-if="albums_total" class="all-container__content__albums">
+        <TitleShowAll :router-name="albums_total > albums_limit ? 'GetAlbums' : ''" :title="'Albums'" />
+        <div class="all-container__content__albums__results">
+          <CardAlbum v-for="(item, index) in albums" :key="index" :item="item" :index="index" :uris="uris" />
+        </div>
+      </div>
+      <div v-if="playlists_total" class="all-container__content__playlists">
+        <TitleShowAll :router-name="playlists_total > playlists_limit ? 'GetPlaylists' : ''" :title="'Playlists'" />
+        <div class="all-container__content__playlists__results">
+          <CardPlaylist v-for="(item, index) in playlists" :key="index" :item="item" :index="index" :uris="uris" />
+        </div>
+      </div>
     </div>
   </main>
 </template>
 
 <script>
-import AlbumCard from '@/components/CardAlbum/index.vue'
-import ArtistCard from '@/components/CardArtist/index.vue'
-import TrackCard from '@/components/CardTrack/index.vue'
+import CardAlbum from '@/components/CardAlbum/index.vue'
+import CardArtist from '@/components/CardArtist/index.vue'
+import CardTrack from '@/components/CardTrack/index.vue'
+import CardPlaylist from '@/components/CardPlaylist/index.vue'
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import { searchAlbums, searchPlaylists } from '@/api/meta/search'
 import { searchArtists } from '@/api/meta/search'
@@ -62,9 +48,10 @@ import { useAppStore } from '@/stores/app'
 export default {
   name: 'GetAll',
   components: {
-    TrackCard,
-    ArtistCard,
-    AlbumCard,
+    CardTrack,
+    CardArtist,
+    CardAlbum,
+    CardPlaylist,
     TrackListHeader,
     TitleShowAll,
     TitleWithPartialItems
@@ -74,15 +61,19 @@ export default {
       tracks: [],
       tracks_limit: 4,
       tracks_offset: 0,
-      artists: {},
+      tracks_total: 0,
+      artists: [],
       artists_limit: 8,
       artists_offset: 0,
-      albums: {},
+      artists_total: 0,
+      albums: [],
       albums_limit: 8,
       albums_offset: 0,
-      playlists: {},
+      albums_total: 0,
+      playlists: [],
       playlists_limit: 8,
-      playlists_offset: 0
+      playlists_offset: 0,
+      playlists_total: 0
     }
   },
   computed: {
@@ -122,7 +113,8 @@ export default {
         offset: this.artists_offset
       }
       const res = (await searchArtists(params)).artists
-      this.artists = res
+      this.artists = res.items
+      this.artists_total = res.total
     },
     async getAlbums() {
       const params = {
@@ -131,7 +123,8 @@ export default {
         offset: this.albums_offset
       }
       const res = (await searchAlbums(params)).albums
-      this.albums = res
+      this.albums = res.items
+      this.albums_total = res.total
     },
     async getPlaylists() {
       const params = {
@@ -140,7 +133,8 @@ export default {
         offset: this.playlists_offset
       }
       const res = (await searchPlaylists(params)).playlists
-      this.playlists = res
+      this.playlists = res.items
+      this.playlists_total = res.total
     }
   },
   created() {
@@ -162,11 +156,15 @@ export default {
   &__content {
     padding: 1.6rem;
 
-    &__songs {
-      &__title {
-        padding-bottom: 1.6rem;
 
-        @include titleStyles;
+    &__artists,
+    &__albums,
+    &__playlists {
+      padding-top: $gutter-2x;
+
+      &__results {
+
+        @include gridCards;
       }
     }
   }

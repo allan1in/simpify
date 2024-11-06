@@ -1,17 +1,9 @@
 <template>
-  <div
-    class="seek-bar"
-    :class="{ 'seek-bar-large': size === 'large', 'seek-bar-default': size === 'default' }"
-  >
+  <div class="seek-bar" :class="{ 'seek-bar-large': size === 'large', 'seek-bar-default': size === 'default' }">
     <div class="seek-bar__seek" :class="{ disabled: disabled }">{{ timeFormat(position) }}</div>
     <div class="seek-bar__process-bar">
-      <ProcessBar
-        :percentage="percentage"
-        @update-percentage="updatePercentage"
-        @mouse-up="handleMouseUp"
-        @mouse-down="handleMouseDown"
-        :disabled="disabled"
-      />
+      <ProcessBar :percentage="percentage" @update-percentage="updatePercentage" @mouse-up="handleMouseUp"
+        @mouse-down="handleMouseDown" :disabled="disabled" />
     </div>
     <div class="seek-bar__duration" :class="{ disabled: disabled }">{{ timeFormat(duration) }}</div>
   </div>

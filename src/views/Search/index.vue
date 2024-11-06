@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       categories: [],
-      categories_limit: 16,
+      categories_limit: 20,
       categories_next: '',
       categories_offset: 0
     }
@@ -144,7 +144,7 @@ export default {
         bottom: 0;
         width: 45%;
         aspect-ratio: 1 / 1;
-        background-color: $color-bg-1;
+        background-color: $color-bg-3;
         transform: rotate(25deg) translate(18%, -2%);
         border-radius: calc($gutter / 2);
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);

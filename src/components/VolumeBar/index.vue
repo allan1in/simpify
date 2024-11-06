@@ -56,7 +56,7 @@ export default {
       }
       this.isMute = !this.isMute
     },
-    ...mapActions(usePlayerStore, ['setVolume'])
+    ...mapActions(usePlayerStore, ['setVolume', 'setMute'])
   },
   watch: {
     volume(newVal, oldVal) {
@@ -67,7 +67,11 @@ export default {
       }
     },
     isMute(newVal, oldVal) {
-      this.setVolume()
+      if (newVal) {
+        this.setMute()
+      } else {
+        this.setVolume()
+      }
     }
   }
 }

@@ -103,6 +103,12 @@ export default {
         }
 
         let newVals = res.items
+        // Add album images for each track
+        newVals.forEach(item => {
+          item.album = {
+            images: this.album.images
+          }
+        });
         let oldVals = JSON.parse(JSON.stringify(this.tracks))
         this.tracks = [...oldVals, ...newVals]
         this.tracks_next = res.next

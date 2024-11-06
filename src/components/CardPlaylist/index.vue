@@ -73,6 +73,8 @@ export default {
 
   &__img-box {
     position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
 
     &__img-wrapper {
       width: 100%;
@@ -82,7 +84,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: $color-bg-6;
+      background-color: $color-bg-3;
       box-shadow: 0 0 15px 12px rgba(0, 0, 0, 0.2);
 
       &__img {

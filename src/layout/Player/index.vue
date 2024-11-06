@@ -114,7 +114,6 @@ import { mapActions, mapState, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
-import { useUserStore } from '@/stores/user'
 
 export default {
   name: 'Player',

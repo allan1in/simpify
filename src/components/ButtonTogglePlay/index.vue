@@ -27,7 +27,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(usePlayerStore, ['context', 'isPause', 'activeDevice'])
+    ...mapWritableState(usePlayerStore, ['context', 'isPause', 'activeDevice', 'playNewContext'])
   },
   methods: {
     ...mapActions(usePlayerStore, ['togglePlay']),
@@ -35,7 +35,7 @@ export default {
       if (this.item.uri === this.context.uri) {
         this.togglePlay()
       } else {
-        await startPlayback({ context_uri: this.item.uri })
+        this.playNewContext({ context_uri: this.item.uri })
       }
     }
   }

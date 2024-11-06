@@ -23,6 +23,7 @@ export const usePlayerStore = defineStore('player', {
     position: 0,
     current_track: {},
     context: {},
+    index: 0,
     isReady: false
   }),
   actions: {
@@ -116,11 +117,19 @@ export const usePlayerStore = defineStore('player', {
           this.position = res.position
           this.percentage = 100 * (res.position / this.duration)
         })
+      } else if (useUserStore().checkProduct('free')) {
+        // Start to render progress bar
+        this.player.on('play', () => {
+          requestAnimationFrame(this.progress)
+        })
       }
     },
     stopListenPos() {
       if (useUserStore().checkProduct('premium')) {
         this.player.removeListener('progress')
+      } else if (useUserStore().checkProduct('free')) {
+        // Stop to render progress bar
+        this.player.pause()
       }
     },
     async togglePlay() {
@@ -174,13 +183,25 @@ export const usePlayerStore = defineStore('player', {
         await togglePlaybackShuffle({ state: !this.isShuffle })
       }
     },
+    setMute() {
+      if (useUserStore().checkProduct('premium')) {
+        this.player.setVolume(0)
+      } else if (useUserStore().checkProduct('free')) {
+        if (!this.player?.playing) {
+          return
+        }
+        this.player.mute(true)
+      }
+    },
     setVolume() {
       if (useUserStore().checkProduct('premium')) {
-        if (this.isMute) {
-          this.player.setVolume(0)
-        } else {
-          this.player.setVolume(this.volume / 100)
+        this.player.setVolume(this.volume / 100)
+      } else if (useUserStore().checkProduct('free')) {
+        if (!this.player?.playing) {
+          return
         }
+        this.player.mute(false)
+        this.player.volume(this.volume / 100)
       }
     },
     async seekPosition() {
@@ -188,42 +209,68 @@ export const usePlayerStore = defineStore('player', {
         await this.player.seek((this.duration * this.percentage) / 100)
         await this.startListenPos()
       } else if (useUserStore().checkProduct('free')) {
+        this.player.seek((this.percentage * this.duration) / 100 / 1000)
+        this.startListenPos()
+        this.player.play()
       }
     },
     async playNewTrack(data, track) {
       if (useUserStore().checkProduct('premium')) {
         await startPlayback(data)
       } else if (useUserStore().checkProduct('free')) {
-        // Distroy the Howl object already existed
+        // https://github.com/goldfire/howler.js?tab=readme-ov-file#quick-start
+        // Distroy the player already existed
         if (this.player instanceof Howl) {
           this.player.unload()
+          this.isPause = true
+          this.position = 0
+          this.percentage = 0
         }
+
+        // Initialize player infomation
         this.current_track = track
 
         this.player = new Howl({
-          src: [track.preview_url],
-          // Use HTML5 API to get audio file
-          html5: true
+          src: [this.current_track.preview_url],
+          // Streaming audio (for live audio or large files)
+          html5: true,
+          volume: this.volume / 100
         })
 
         this.player.play()
-        this.isPause = false
-
         // Start to render progress bar
         this.player.on('play', () => {
+          this.isPause = false
           requestAnimationFrame(this.progress)
+        })
+
+        this.player.on('pause', () => {
+          this.isPause = true
+        })
+
+        this.player.on('end', () => {
+          this.isPause = true
+          this.position = 0
+          this.percentage = 0
         })
       }
     },
-    // Refresh progress bar position in free account mode
+    // Refresh progress bar position only in free account mode
     progress() {
-      this.position = this.player.seek() * 1000
-      this.duration = this.player.duration() * 1000
-
-      this.percentage = (this.player.seek() / this.player.duration()) * 100
-
       if (this.player.playing()) {
+        this.position = this.player.seek() * 1000
+        this.duration = this.player.duration() * 1000
+
+        this.percentage = (this.player.seek() / this.player.duration()) * 100
+
         requestAnimationFrame(this.progress)
+      }
+    },
+    async playNewContext(data) {
+      if (useUserStore().checkProduct('premium')) {
+        await startPlayback(data)
+      } else {
+        alert('This is only for premium accounts!')
       }
     }
   }
