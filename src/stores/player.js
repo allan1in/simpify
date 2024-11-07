@@ -7,6 +7,7 @@ import {
   transferPlayback
 } from '@/api/meta/player'
 import { Howl } from 'howler'
+import router from '@/router/index'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
@@ -49,7 +50,6 @@ export const usePlayerStore = defineStore('player', {
           // Events
 
           this.player.addListener('ready', async (res) => {
-            console.log('Ready with Device ID', res)
             await transferPlayback({ device_ids: [res.device_id] })
             this.activeDevice = { id: res.device_id }
           })
@@ -63,7 +63,6 @@ export const usePlayerStore = defineStore('player', {
           })
 
           this.player.addListener('player_state_changed', (res) => {
-            console.log('player_state_changed', res)
             if (res === null) {
               return
             } else {
@@ -89,11 +88,11 @@ export const usePlayerStore = defineStore('player', {
           // Errors
 
           this.player.addListener('initialization_error', (message) => {
-            console.log('initialization_error: ' + message)
+            console.log(message)
           })
 
           this.player.addListener('authentication_error', (message) => {
-            console.log('authentication_error: ' + message)
+            console.log(message)
           })
 
           this.player.addListener('account_error', (message) => {
@@ -101,8 +100,9 @@ export const usePlayerStore = defineStore('player', {
           })
 
           this.player.addListener('playback_error', (message) => {
-            console.log('playback_error: ' + message)
-            this.$router.push({ name: 'Login' })
+            console.log(message)
+            localStorage.clear()
+            router.push({ name: 'Login' })
           })
 
           this.player.connect()

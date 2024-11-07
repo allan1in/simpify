@@ -1,0 +1,12 @@
+.fade-slide-from-top {
+  &-enter-active,
+  &-leave-active {
+    transition: all 0.33s ease;
+  }
+
+  &-enter-from,
+  &-leave-to {
+    transform: translateY(-1.6rem);
+    opacity: 0;
+  }
+}

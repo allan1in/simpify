@@ -1,14 +1,16 @@
 <template>
   <div class="drop-down-container">
-    <div @click="handleClick">
+    <div @click.prevent="handleClick">
       <slot></slot>
     </div>
 
-    <div ref="box" v-show="show" class="drop-down-container__box" :style="{ transform: `translateY(${top})` }">
-      <ul class="drop-down-container__box__items-wrapper">
-        <slot name="dropDownItems"></slot>
-      </ul>
-    </div>
+    <Transition name="fade-slide-from-top">
+      <div ref="box" v-show="show" class="drop-down-container__box" :style="{ top: top }">
+        <ul class="drop-down-container__box__items-wrapper">
+          <slot name="dropDownItems"></slot>
+        </ul>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -36,7 +38,7 @@ export default {
           this.show = false
         }
       }
-    },
+    }
   },
   watch: {
     show(newVal, oldVal) {
