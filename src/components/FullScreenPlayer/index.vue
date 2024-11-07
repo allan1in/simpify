@@ -254,7 +254,6 @@ export default {
   }
 
   &__top {
-    overflow: hidden;
     flex-shrink: 0;
     display: flex;
     justify-content: space-between;
@@ -319,6 +318,8 @@ export default {
   }
 
   &__content {
+    height: 0;
+    min-height: 20rem;
     flex-grow: 1;
     display: flex;
     justify-content: start;
