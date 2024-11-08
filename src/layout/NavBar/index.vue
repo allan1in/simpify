@@ -130,7 +130,7 @@ export default {
   methods: {
     async toHome() {
       // Use await to prevent inputCount watcher from working before navigation
-      await this.$router.push({ name: 'Dashboard' })
+      await this.$router.push({ name: 'Home' })
       this.inputContent = ''
     },
     toSearchPage() {
@@ -156,7 +156,7 @@ export default {
       handler(to, from) {
         let path = to.path.split('/')
 
-        if (to.name === 'Dashboard') {
+        if (to.name === 'Home') {
           // Path: '/'
           this.isHome = true
           this.isSearch = false

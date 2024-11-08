@@ -1,11 +1,22 @@
 <template>
-  <main v-if="!loading" class="album-container">
-    <div class="album-container__content">
-      <div class="album-container__content__results">
-        <PlaylistCard v-for="item in playlists" :key="item.id" :item="item" />
+  <template v-if="!loading_skeleton">
+    <main class="album-container">
+      <div class="album-container__content">
+        <div class="album-container__content__results">
+          <PlaylistCard v-for="item in playlists" :key="item.id" :item="item" />
+        </div>
       </div>
-    </div>
-  </main>
+    </main>
+  </template>
+  <template v-else>
+    <main class="album-container">
+      <div class="album-container__content">
+        <div class="album-container__content__results">
+          <PlaylistCard v-for="i in playlists_limit" :loading="loading_skeleton" />
+        </div>
+      </div>
+    </main>
+  </template>
 </template>
 
 <script>
@@ -22,7 +33,8 @@ export default {
       playlists_limit: 48,
       playlists_offset: 0,
       playlists_next: '',
-      loadingMore: false
+      loadingMore: false,
+      loading_skeleton: true
     }
   },
   components: {
@@ -34,7 +46,8 @@ export default {
   methods: {
     async getAll() {
       await this.getPlaylists()
-      this.loading = false
+
+      this.loading_skeleton = false
     },
     async getPlaylists() {
       if (!this.loadingMore && this.playlists_next != null) {
@@ -49,6 +62,9 @@ export default {
           }
           res = (await searchPlaylists(params)).playlists
         } else {
+          if (this.loading_skeleton) {
+            return
+          }
           let path = this.playlists_next
           res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).playlists
         }
@@ -73,6 +89,9 @@ export default {
   },
   created() {
     this.getAll()
+  },
+  mounted() {
+    this.loading = false
   }
 }
 </script>

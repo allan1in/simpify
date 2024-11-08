@@ -1,33 +1,102 @@
 <template>
-  <main class="all-container" v-if="!loading">
-    <div v-if="!loading" class="all-container__content">
-      <div v-if="tracks_total" class="all-container__content__songs">
-        <TitleShowAll :router-name="tracks_total > tracks_limit ? 'GetTracks' : ''" :title="'Songs'" />
-        <div class="all-container__content__songs__results">
-          <TrackListHeader />
-          <CardTrack v-for="(item, index) in tracks" :key="index" :item="item" :index="index" :uris="uris" />
+  <template v-if="!loading_skeleton">
+    <main class="all-container">
+      <div class="all-container__content">
+        <div v-if="tracks_total" class="all-container__content__songs">
+          <TitleShowAll
+            :router-name="tracks_total > tracks_limit ? 'GetTracks' : ''"
+            :title="'Songs'"
+          />
+          <div class="all-container__content__songs__results">
+            <TrackListHeader />
+            <CardTrack
+              v-for="(item, index) in tracks"
+              :key="index"
+              :item="item"
+              :index="index"
+              :uris="uris"
+            />
+          </div>
+        </div>
+        <div v-if="artists_total" class="all-container__content__artists">
+          <TitleShowAll
+            :router-name="artists_total > artists_limit ? 'GetArtists' : ''"
+            :title="'Artists'"
+          />
+          <div class="all-container__content__artists__results">
+            <CardArtist
+              v-for="(item, index) in artists"
+              :key="index"
+              :item="item"
+              :index="index"
+              :uris="uris"
+            />
+          </div>
+        </div>
+        <div v-if="albums_total" class="all-container__content__albums">
+          <TitleShowAll
+            :router-name="albums_total > albums_limit ? 'GetAlbums' : ''"
+            :title="'Albums'"
+          />
+          <div class="all-container__content__albums__results">
+            <CardAlbum
+              v-for="(item, index) in albums"
+              :key="index"
+              :item="item"
+              :index="index"
+              :uris="uris"
+            />
+          </div>
+        </div>
+        <div v-if="playlists_total" class="all-container__content__playlists">
+          <TitleShowAll
+            :router-name="playlists_total > playlists_limit ? 'GetPlaylists' : ''"
+            :title="'Playlists'"
+          />
+          <div class="all-container__content__playlists__results">
+            <CardPlaylist
+              v-for="(item, index) in playlists"
+              :key="index"
+              :item="item"
+              :index="index"
+              :uris="uris"
+            />
+          </div>
         </div>
       </div>
-      <div v-if="artists_total" class="all-container__content__artists">
-        <TitleShowAll :router-name="artists_total > artists_limit ? 'GetArtists' : ''" :title="'Artists'" />
-        <div class="all-container__content__artists__results">
-          <CardArtist v-for="(item, index) in artists" :key="index" :item="item" :index="index" :uris="uris" />
+    </main>
+  </template>
+  <template v-else>
+    <main class="all-container">
+      <div class="all-container__content">
+        <div class="all-container__content__songs">
+          <TitleShowAll title="Songs" :loading="loading_skeleton" />
+          <div class="all-container__content__songs__results">
+            <TrackListHeader :loading="loading_skeleton" />
+            <CardTrack v-for="i in tracks_limit" :loading="loading_skeleton" />
+          </div>
+        </div>
+        <div class="all-container__content__artists">
+          <TitleShowAll title="Artists" :loading="loading_skeleton" />
+          <div class="all-container__content__artists__results">
+            <CardArtist v-for="i in artists_limit" :loading="loading_skeleton" />
+          </div>
+        </div>
+        <div class="all-container__content__albums">
+          <TitleShowAll :title="'Albums'" :loading="loading_skeleton" />
+          <div class="all-container__content__albums__results">
+            <CardAlbum v-for="i in albums_limit" :loading="loading_skeleton" />
+          </div>
+        </div>
+        <div class="all-container__content__playlists">
+          <TitleShowAll :title="'Playlists'" :loading="loading_skeleton" />
+          <div class="all-container__content__playlists__results">
+            <CardPlaylist v-for="i in playlists_limit" :loading="loading_skeleton" />
+          </div>
         </div>
       </div>
-      <div v-if="albums_total" class="all-container__content__albums">
-        <TitleShowAll :router-name="albums_total > albums_limit ? 'GetAlbums' : ''" :title="'Albums'" />
-        <div class="all-container__content__albums__results">
-          <CardAlbum v-for="(item, index) in albums" :key="index" :item="item" :index="index" :uris="uris" />
-        </div>
-      </div>
-      <div v-if="playlists_total" class="all-container__content__playlists">
-        <TitleShowAll :router-name="playlists_total > playlists_limit ? 'GetPlaylists' : ''" :title="'Playlists'" />
-        <div class="all-container__content__playlists__results">
-          <CardPlaylist v-for="(item, index) in playlists" :key="index" :item="item" :index="index" :uris="uris" />
-        </div>
-      </div>
-    </div>
-  </main>
+    </main>
+  </template>
 </template>
 
 <script>
@@ -44,6 +113,7 @@ import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'GetAll',
@@ -54,7 +124,8 @@ export default {
     CardPlaylist,
     TrackListHeader,
     TitleShowAll,
-    TitleWithPartialItems
+    TitleWithPartialItems,
+    Skeleton
   },
   data() {
     return {
@@ -73,7 +144,8 @@ export default {
       playlists: [],
       playlists_limit: 8,
       playlists_offset: 0,
-      playlists_total: 0
+      playlists_total: 0,
+      loading_skeleton: true
     }
   },
   computed: {
@@ -87,15 +159,17 @@ export default {
     }
   },
   methods: {
-    getAll: debounce(async function () {
+    debouncedGetAll() {},
+    async getAll() {
       if (this.$route.params.inputContent) {
         await this.getTracks()
         await this.getArtists()
         await this.getAlbums()
         await this.getPlaylists()
-        this.loading = false
+
+        this.loading_skeleton = false
       }
-    }),
+    },
     async getTracks() {
       const params = {
         q: this.$route.params.inputContent,
@@ -137,14 +211,19 @@ export default {
       this.playlists_total = res.total
     }
   },
-  created() {
-    this.getAll()
+  async created() {
+    this.debouncedGetAll = debounce(this.getAll)
+    await this.debouncedGetAll()
   },
   watch: {
     $route(to, from) {
-      this.loading = true
-      this.getAll()
+      this.loading = false
+      this.loading_skeleton = true
+      this.debouncedGetAll()
     }
+  },
+  mounted() {
+    this.loading = false
   }
 }
 </script>
@@ -156,14 +235,12 @@ export default {
   &__content {
     padding: 1.6rem;
 
-
     &__artists,
     &__albums,
     &__playlists {
       padding-top: $gutter-2x;
 
       &__results {
-
         @include gridCardsLess;
       }
     }

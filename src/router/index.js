@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '@/layout/index.vue'
 import NotFound from '@/views/NotFound.vue'
-import Dashboard from '@/views/Dashboard/index.vue'
+import Home from '@/views/Home/index.vue'
 import Login from '@/views/Login/index.vue'
 import { useUserStore } from '@/stores/user'
 import Search from '@/views/Search/index.vue'
@@ -20,7 +20,7 @@ import Artist from '@/views/Artist/index.vue'
 import Playlist from '@/views/Playlist/index.vue'
 import User from '@/views/User/index.vue'
 import Browse from '@/views/Browse/index.vue'
-import FeaturedPlaylists from '@/views/Dashboard/FeaturedPlaylists/index.vue'
+import FeaturedPlaylists from '@/views/Home/FeaturedPlaylists/index.vue'
 import GetArtistsForUser from '@/views/User/Top/Artists/index.vue'
 import GetTracksForUser from '@/views/User/Top/Tracks/index.vue'
 import UserPlaylists from '@/views/User/Playlists/index.vue'
@@ -40,8 +40,8 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'Dashboard',
-          component: Dashboard
+          name: 'Home',
+          component: Home
         },
         {
           path: '/featured-playlists',

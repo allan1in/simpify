@@ -1,6 +1,6 @@
 <template>
   <template v-if="!loading_skeleton">
-    <div class="featured-playlists-container" v-if="!loading">
+    <div class="featured-playlists-container">
       <TitleShowAll title="Featured Playlists" />
       <div class="featured-playlists-container__content">
         <CardPlaylist v-for="item in playlists" :item="item" />
@@ -61,6 +61,9 @@ export default {
           }
           res = (await getFeaturedPlaylists(params)).playlists
         } else {
+          if (this.loading_skeleton) {
+            return
+          }
           let path = this.playlists_next
           res = (await getNextFeaturedPlaylists(path.slice(path.indexOf('?') + 1))).playlists
         }

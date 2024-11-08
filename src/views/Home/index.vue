@@ -2,8 +2,10 @@
   <div class="dashboard-container" v-if="!loading">
     <template v-if="!loading_skeleton">
       <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
-        <TitleShowAll :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
-          title="Featured Playlists" />
+        <TitleShowAll
+          :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
+          title="Featured Playlists"
+        />
         <div class="dashboard-container__featured-playlists__content">
           <CardHorizontal v-for="item in playlists" :item="item" />
         </div>

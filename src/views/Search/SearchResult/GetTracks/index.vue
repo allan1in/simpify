@@ -1,16 +1,26 @@
 <template>
-  <main v-if="!loading" class="track-container">
-    <div class="track-container__content">
-      <TrackListHeader />
-      <TrackCard
-        v-for="(item, index) in tracks"
-        :key="index"
-        :item="item"
-        :index="index"
-        :uris="uris"
-      />
-    </div>
-  </main>
+  <template v-if="!loading_skeleton">
+    <main class="track-container">
+      <div class="track-container__content">
+        <TrackListHeader />
+        <TrackCard
+          v-for="(item, index) in tracks"
+          :key="index"
+          :item="item"
+          :index="index"
+          :uris="uris"
+        />
+      </div>
+    </main>
+  </template>
+  <template v-else>
+    <main class="track-container">
+      <div class="track-container__content">
+        <TrackListHeader :loading="loading_skeleton" />
+        <TrackCard v-for="i in tracks_limit" :loading="loading_skeleton" />
+      </div>
+    </main>
+  </template>
 </template>
 
 <script>
@@ -29,11 +39,12 @@ export default {
   data() {
     return {
       tracks: [],
-      loading_limit: 20,
-      loading_offset: 0,
-      loading_next: '',
+      tracks_limit: 24,
+      tracks_offset: 0,
+      tracks_next: '',
       loadingMore: false,
-      uris: []
+      uris: [],
+      loading_skeleton: true
     }
   },
   computed: {
@@ -42,22 +53,26 @@ export default {
   methods: {
     async getAll() {
       await this.getTracks()
-      this.loading = false
+
+      this.loading_skeleton = false
     },
     async getTracks() {
-      if (!this.loadingMore && this.loading_next != null) {
+      if (!this.loadingMore && this.tracks_next != null) {
         this.loadingMore = true
         let res
 
-        if (this.loading_next === '') {
+        if (this.tracks_next === '') {
           const params = {
             q: this.$route.params.inputContent,
-            limit: this.loading_limit,
-            offset: this.loading_offset
+            limit: this.tracks_limit,
+            offset: this.tracks_offset
           }
           res = (await searchTracks(params)).tracks
         } else {
-          let path = this.loading_next
+          if (this.loading_skeleton) {
+            return
+          }
+          let path = this.tracks_next
           res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).tracks
         }
 
@@ -68,7 +83,7 @@ export default {
         let oldVals = JSON.parse(JSON.stringify(this.tracks))
 
         this.tracks = [...oldVals, ...newVals]
-        this.loading_next = res.next
+        this.tracks_next = res.next
 
         this.loadingMore = false
       }
@@ -84,6 +99,9 @@ export default {
   },
   created() {
     this.getAll()
+  },
+  mounted() {
+    this.loading = false
   }
 }
 </script>

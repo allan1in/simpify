@@ -1,15 +1,23 @@
 <template>
   <template v-if="!loading_skeleton">
-    <div class="search-container" v-if="!loading">
+    <div class="search-container">
       <div class="search-container__title-wrapper">
         <TitleShowAll title="Browse All" />
       </div>
       <div class="search-container__cards-wrapper">
-        <router-link :to="{ name: 'Browse', params: { categoryId: item.id } }"
-          class="search-container__cards-wrapper__card" v-for="item in categories" :key="item.id">
+        <router-link
+          :to="{ name: 'Browse', params: { categoryId: item.id } }"
+          class="search-container__cards-wrapper__card"
+          v-for="item in categories"
+          :key="item.id"
+        >
           <h2 class="search-container__cards-wrapper__card__name">{{ item.name }}</h2>
-          <img v-if="item.cover" class="search-container__cards-wrapper__card__img" :src="item.cover"
-            :alt="item.name" />
+          <img
+            v-if="item.cover"
+            class="search-container__cards-wrapper__card__img"
+            :src="item.cover"
+            :alt="item.name"
+          />
         </router-link>
       </div>
     </div>
@@ -20,7 +28,7 @@
         <TitleShowAll title="Browse All" :loading="loading_skeleton" />
       </div>
       <div class="search-container__cards-wrapper">
-        <div class="search-container__cards-wrapper__card" v-for="i in categories_limit">
+        <div class="search-container__cards-wrapper__card no-hover" v-for="i in categories_limit">
           <Skeleton />
         </div>
       </div>
@@ -65,7 +73,7 @@ export default {
       this.loading_skeleton = false
     },
     async getNext() {
-      if (this.categories_next !== null) {
+      if (this.categories_next !== null && !this.loading_skeleton) {
         await this.getSeveralCategories()
         await this.getCategoriesCovers()
       }
@@ -131,6 +139,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.no-hover:nth-child(n) {
+  cursor: unset;
+}
+
 .skeleton {
   &__title {
     height: $font-size-title-primary;

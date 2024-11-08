@@ -55,7 +55,7 @@ export default {
     let code = this.$route.query.code
     if (code) {
       await this.login(code)
-      this.$router.push({ name: 'Dashboard' })
+      this.$router.push({ name: 'Home' })
     } else {
       this.redirectToSpotifyAuthorize()
     }

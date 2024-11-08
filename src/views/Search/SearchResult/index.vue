@@ -8,9 +8,7 @@
 </template>
 
 <script>
-import { mapWritableState } from 'pinia'
 import TopBar from './TopBar/index.vue'
-import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'SearchResult',
@@ -23,9 +21,6 @@ export default {
         playlist: undefined
       }
     }
-  },
-  computed: {
-    ...mapWritableState(useAppStore, ['loading'])
   },
   components: {
     TopBar

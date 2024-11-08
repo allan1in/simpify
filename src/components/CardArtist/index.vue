@@ -1,28 +1,56 @@
 <template>
-  <div class="artist-card" @click="$router.push({ name: 'Artist', params: { artistId: item.id } })">
-    <div class="artist-card__img-box">
-      <div class="artist-card__img-box__img-wrapper">
-        <img v-if="item.images[1]" :src="item.images[1].url" alt="Artist Cover"
-          class="artist-card__img-box__img-wrapper__img" />
-        <div v-else class="artist-card__img-box__img-wrapper__icon-wrapper">
-          <IconDefaultArtist />
+  <template v-if="!loading">
+    <div
+      class="artist-card"
+      @click="$router.push({ name: 'Artist', params: { artistId: item.id } })"
+    >
+      <div class="artist-card__img-box">
+        <div class="artist-card__img-box__img-wrapper">
+          <img
+            v-if="item.images[1]"
+            :src="item.images[1].url"
+            alt="Artist Cover"
+            class="artist-card__img-box__img-wrapper__img"
+          />
+          <div v-else class="artist-card__img-box__img-wrapper__icon-wrapper">
+            <IconDefaultArtist />
+          </div>
+        </div>
+        <div
+          class="artist-card__img-box__toggle-play"
+          :class="{
+            'artist-card__img-box__toggle-play-playing': !isPause && item.uri === context.uri
+          }"
+        >
+          <ButtonTogglePlay :item />
         </div>
       </div>
-      <div class="artist-card__img-box__toggle-play" :class="{
-        'artist-card__img-box__toggle-play-playing': !isPause && item.uri === context.uri
-      }">
-        <ButtonTogglePlay :item />
-      </div>
-    </div>
 
-    <div class="artist-card__name-wrapper">
-      <router-link :to="{ name: 'Artist', params: { artistId: item.id } }" class="artist-card__name-wrapper__name">{{
-        item.name }}</router-link>
-      <div class="artist-card__name-wrapper__type">
-        {{ `${item.type.charAt(0).toUpperCase()}${item.type.slice(1)}` }}
+      <div class="artist-card__name-wrapper">
+        <router-link
+          :to="{ name: 'Artist', params: { artistId: item.id } }"
+          class="artist-card__name-wrapper__name"
+          >{{ item.name }}</router-link
+        >
+        <div class="artist-card__name-wrapper__type">
+          {{ `${item.type.charAt(0).toUpperCase()}${item.type.slice(1)}` }}
+        </div>
       </div>
     </div>
-  </div>
+  </template>
+  <template v-else>
+    <div class="artist-card no-hover">
+      <div class="artist-card__img-box">
+        <div class="artist-card__img-box__img-wrapper">
+          <Skeleton />
+        </div>
+      </div>
+      <div class="artist-card__name-wrapper">
+        <Skeleton class="skeleton__name" />
+        <Skeleton class="skeleton__type" />
+      </div>
+    </div>
+  </template>
 </template>
 
 <script>
@@ -30,17 +58,24 @@ import IconDefaultArtist from '@/components/Icons/IconDefaultArtist.vue'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import { mapState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'CardArtist',
   components: {
     IconDefaultArtist,
-    ButtonTogglePlay
+    ButtonTogglePlay,
+    Skeleton
   },
   props: {
     item: {
       type: Object,
       require: true
+    },
+    loading: {
+      type: Boolean,
+      require: false,
+      default: false
     }
   },
   computed: {
@@ -50,6 +85,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.no-hover:nth-child(n) {
+  cursor: unset;
+
+  &:hover {
+    background-color: unset;
+  }
+}
+
+.skeleton {
+  &__name {
+    height: $font-size-text-primary;
+    width: 80%;
+  }
+
+  &__type {
+    height: $font-size-text-secondary;
+    width: 40%;
+    margin-top: calc($font-size-text-secondary * 0.5);
+  }
+}
 .artist-card {
   border-radius: $border-radius-default;
   display: flex;

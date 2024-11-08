@@ -1,12 +1,24 @@
 <template>
-  <div class="browse-container" v-if="!loading">
-    <div class="browse-container__cover">
-      <h1 class="browse-container__cover__title">{{ category.name }}</h1>
+  <template v-if="!loading_skeleton">
+    <div class="browse-container">
+      <div class="browse-container__cover">
+        <h1 class="browse-container__cover__title">{{ category.name }}</h1>
+      </div>
+      <div class="browse-container__content">
+        <PlaylistCard v-for="item in playlists" :item="item" />
+      </div>
     </div>
-    <div class="browse-container__content">
-      <PlaylistCard v-for="item in playlists" :item="item" />
+  </template>
+  <template v-else>
+    <div class="browse-container">
+      <div class="browse-container__cover">
+        <Skeleton class="skeleton" />
+      </div>
+      <div class="browse-container__content">
+        <PlaylistCard v-for="i in playlists_limit" :loading="loading_skeleton" />
+      </div>
     </div>
-  </div>
+  </template>
 </template>
 
 <script>
@@ -14,11 +26,13 @@ import { getCategory, getCategoryPlaylists, getNextCategoryPlaylists } from '@/a
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   nmae: 'Browse',
   components: {
-    PlaylistCard
+    PlaylistCard,
+    Skeleton
   },
   data() {
     return {
@@ -27,7 +41,8 @@ export default {
       playlists_limit: 48,
       playlists_offset: 0,
       playlists_next: '',
-      loading_more: false
+      loading_more: false,
+      loading_skeleton: true
     }
   },
   computed: {
@@ -37,7 +52,8 @@ export default {
     async getAll() {
       await this.getCategory()
       await this.getPlaylists()
-      this.loading = false
+
+      this.loading_skeleton = false
     },
     async getCategory() {
       const res = await getCategory(this.$route.params.categoryId)
@@ -83,12 +99,20 @@ export default {
   },
   created() {
     this.getAll()
+  },
+  mounted() {
+    this.loading = false
   }
 }
 </script>
 
 <style lang="scss" scoped>
 $color-bg-cover: hsl(random(360), 40%, 50%);
+
+.skeleton {
+  height: $font-size-title-large;
+  width: 40%;
+}
 
 .browse-container {
   &__cover {
@@ -102,7 +126,7 @@ $color-bg-cover: hsl(random(360), 40%, 50%);
       text-shadow: 0 0 20px rgba($color-bg-1, 1);
 
       @include respond(phone) {
-        font-size: 4rem;
+        font-size: calc($font-size-title-large * 0.5);
       }
     }
   }

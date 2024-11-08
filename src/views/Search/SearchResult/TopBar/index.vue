@@ -1,86 +1,122 @@
 <template>
-  <section class="top-bar-container">
-    <button v-if="showTags.track || showTags.artist || showTags.album" class="top-bar-container__btn"
-      :class="{ 'btn-active': isActive === $route.params.inputContent }" @click="getAll">
-      All
-    </button>
-    <button v-if="showTags.track" class="top-bar-container__btn" :class="{ 'btn-active': isActive === 'tracks' }"
-      @click="getSongs">
-      Songs
-    </button>
-    <button v-if="showTags.artist" class="top-bar-container__btn" :class="{ 'btn-active': isActive === 'artists' }"
-      @click="getArtists">
-      Artists
-    </button>
-    <button v-if="showTags.album" class="top-bar-container__btn" :class="{ 'btn-active': isActive === 'albums' }"
-      @click="getAlbums">
-      Albums
-    </button>
-    <button v-if="showTags.playlist" class="top-bar-container__btn" :class="{ 'btn-active': isActive === 'playlists' }"
-      @click="getPlaylists">
-      Playlists
-    </button>
-  </section>
+  <template v-if="!loading_skeleton">
+    <section class="top-bar-container">
+      <button
+        v-if="showTags.all"
+        class="top-bar-container__btn"
+        :class="{ 'btn-active': !isActive }"
+        @click="getAll"
+      >
+        All
+      </button>
+      <template v-for="tag in tags">
+        <button
+          v-if="showTags[tag]"
+          class="top-bar-container__btn"
+          :class="{ 'btn-active': isActive === tag }"
+          @click="jumpTo(tag)"
+        >
+          {{ `${tag.charAt(0).toUpperCase()}${tag.slice(1)}` }}
+        </button>
+      </template>
+    </section>
+  </template>
+  <template v-else>
+    <section class="top-bar-container">
+      <Skeleton v-for="i in tags.length + 1" class="skeleton" />
+    </section>
+  </template>
 </template>
 
 <script>
 import { search } from '@/api/meta/search'
+import Skeleton from '@/components/Skeleton/index.vue'
+import { useAppStore } from '@/stores/app'
 import { debounce } from '@/utils/debounce'
+import { mapWritableState } from 'pinia'
 
 export default {
   name: 'TopBar',
   data() {
     return {
-      isActive: '',
-      showTags: {}
+      isActive: undefined,
+      showTags: {},
+      loading_skeleton: true,
+      tags: ['tracks', 'artists', 'albums', 'playlists']
     }
+  },
+  components: {
+    Skeleton
+  },
+  computed: {
+    ...mapWritableState(useAppStore, ['loading'])
   },
   methods: {
     getAll() {
       this.$router.push({ name: 'SearchResult' })
     },
-    getArtists() {
-      this.$router.push({ name: 'GetArtists' })
+    jumpTo(tag) {
+      this.$router.push({ name: `Get${tag.charAt(0).toUpperCase()}${tag.slice(1)}` })
     },
-    getSongs() {
-      this.$router.push({ name: 'GetTracks' })
-    },
-    getAlbums() {
-      this.$router.push({ name: 'GetAlbums' })
-    },
-    getPlaylists() {
-      this.$router.push({ name: 'GetPlaylists' })
-    },
+    debouncedCheck() {},
     // If there is no data of this type, hide the tag
-    checkHasResults: debounce(async function () {
+    async checkHasResults() {
       if (this.$route.params.inputContent) {
+        let type = this.tags
+          .map((tag) => {
+            return tag.slice(0, tag.length - 1)
+          })
+          .join(',')
         const params = {
           q: this.$route.params.inputContent,
-          type: 'album,artist,track,playlist',
+          type: type,
           limit: 1,
           offset: 0
         }
         const res = await search(params)
-        this.showTags.album = res.albums.total === 0 ? false : true
-        this.showTags.artist = res.artists.total === 0 ? false : true
-        this.showTags.track = res.tracks.total === 0 ? false : true
-        this.showTags.playlist = res.playlists.total === 0 ? false : true
+
+        this.tags.forEach((tag) => {
+          this.showTags[tag] = res[tag]?.total === 0 ? false : true
+        })
+
+        Object.keys(this.showTags).forEach((key) => {
+          if (this.showTags[key]) {
+            this.showTags.all = true
+          }
+        })
+
+        this.loading_skeleton = false
       }
-    })
+    }
   },
   watch: {
-    $route: {
-      handler(to, from) {
-        this.checkHasResults()
-        this.isActive = decodeURIComponent(to.path.substr(to.path.lastIndexOf('/') + 1))
-      },
-      immediate: true
+    $route(to, from) {
+      this.loading = false
+      this.loading_skeleton = true
+      this.debouncedCheck()
+      this.isActive = decodeURIComponent(
+        this.$route.fullPath.split('/')[3] ? this.$route.fullPath.split('/')[3] : ''
+      )
     }
+  },
+  async created() {
+    this.loading = false
+    this.debouncedCheck = debounce(this.checkHasResults)
+    await this.debouncedCheck()
+    this.isActive = decodeURIComponent(
+      this.$route.fullPath.split('/')[3] ? this.$route.fullPath.split('/')[3] : ''
+    )
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.skeleton {
+  width: 6.4rem;
+  height: 100%;
+  border-radius: 9999rem;
+}
+
 .btn-active:nth-child(n) {
   background-color: $color-font-primary;
   color: $color-bg-1;
@@ -99,7 +135,7 @@ export default {
   justify-content: start;
   gap: 1.2rem;
   padding: 1.2rem 0;
-  padding-left: 2.4rem;
+  padding-left: $gutter-4x;
   background-color: $color-bg-2;
   border-top-left-radius: $gutter;
   border-top-right-radius: $gutter;
@@ -110,7 +146,7 @@ export default {
     color: $color-font-primary;
     padding: 0.4rem 1.2rem;
     height: 100%;
-    border-radius: 3.2rem;
+    border-radius: 9999rem;
     font-size: $font-size-text-secondary;
 
     &:hover {

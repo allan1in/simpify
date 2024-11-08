@@ -1,11 +1,22 @@
 <template>
-  <main v-if="!loading" class="artist-container">
-    <div class="artist-container__content">
-      <div class="artist-container__content__results">
-        <ArtistCard v-for="item in artists" :key="item.id" :item="item" />
+  <template v-if="!loading_skeleton">
+    <main class="artist-container">
+      <div class="artist-container__content">
+        <div class="artist-container__content__results">
+          <ArtistCard v-for="item in artists" :key="item.id" :item="item" />
+        </div>
       </div>
-    </div>
-  </main>
+    </main>
+  </template>
+  <template v-else>
+    <main class="artist-container">
+      <div class="artist-container__content">
+        <div class="artist-container__content__results">
+          <ArtistCard v-for="i in artists_limit" :loading="loading_skeleton" />
+        </div>
+      </div>
+    </main>
+  </template>
 </template>
 
 <script>
@@ -25,7 +36,8 @@ export default {
       artists_limit: 48,
       artists_offset: 0,
       artists_next: '',
-      loadingMore: false
+      loadingMore: false,
+      loading_skeleton: true
     }
   },
   computed: {
@@ -34,7 +46,8 @@ export default {
   methods: {
     async getAll() {
       await this.getArtists()
-      this.loading = false
+
+      this.loading_skeleton = false
     },
     async getArtists() {
       if (!this.loadingMore && this.artists_next != null) {
@@ -49,6 +62,9 @@ export default {
           }
           res = (await searchArtists(params)).artists
         } else {
+          if (this.loading_skeleton) {
+            return
+          }
           let path = this.artists_next
           res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).artists
         }
@@ -73,6 +89,9 @@ export default {
   },
   created() {
     this.getAll()
+  },
+  mounted() {
+    this.loading = false
   }
 }
 </script>
