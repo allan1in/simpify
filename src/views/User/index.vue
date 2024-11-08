@@ -205,7 +205,7 @@ export default {
 
       &__title {
         font-family: $font-family-title;
-        font-size: 7rem;
+        font-size: $font-size-title-large;
         font-weight: 800;
 
         @include oneLineEllipsis;

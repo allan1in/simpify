@@ -123,13 +123,13 @@ export default {
     padding-top: 1.2rem;
 
     &__name {
-      font-size: 1.6rem;
+      font-size: $font-size-text-primary;
 
       @include oneLineEllipsis;
     }
 
     &__type {
-      font-size: 1.4rem;
+      font-size: $font-size-text-secondary;
       color: $color-font-secondary;
 
       @include oneLineEllipsis;

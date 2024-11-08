@@ -1,26 +1,40 @@
 <template>
   <div class="dashboard-container" v-if="!loading">
-    <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
-      <TitleShowAll
-        :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
-        title="Featured Playlists"
-      />
-      <div class="dashboard-container__featured-playlists__content">
-        <CardHorizontal v-for="item in playlists" :item="item" />
+    <template v-if="!loading_skeleton">
+      <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
+        <TitleShowAll :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
+          title="Featured Playlists" />
+        <div class="dashboard-container__featured-playlists__content">
+          <CardHorizontal v-for="item in playlists" :item="item" />
+        </div>
       </div>
-    </div>
 
-    <div class="dashboard-container__new-releases" v-if="albums.length !== 0">
-      <TitleShowAll title="New Releases" />
-      <div class="dashboard-container__new-releases__content">
-        <CardAlbum v-for="item in albums" :item="item" />
+      <div class="dashboard-container__new-releases" v-if="albums.length !== 0">
+        <TitleShowAll title="New Releases" />
+        <div class="dashboard-container__new-releases__content">
+          <CardAlbum v-for="item in albums" :item="item" />
+        </div>
       </div>
-    </div>
+    </template>
+    <template v-else>
+      <div class="dashboard-container__featured-playlists">
+        <TitleShowAll title="Featured Playlists" :loading="loading_skeleton" />
+        <div class="dashboard-container__featured-playlists__content">
+          <CardHorizontal v-for="i in playlists_limit" :loading="loading_skeleton" />
+        </div>
+      </div>
+
+      <div class="dashboard-container__new-releases">
+        <TitleShowAll title="New Releases" :loading="loading_skeleton" />
+        <div class="dashboard-container__new-releases__content">
+          <CardAlbum v-for="i in albums_limit" :loading="loading_skeleton" />
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
-import Container from '@/components/Container/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
 import CardAlbum from '@/components/CardAlbum/index.vue'
@@ -29,15 +43,16 @@ import { getFeaturedPlaylists } from '@/api/meta/browse'
 import { getNewReleases, getNextNewReleases } from '@/api/meta/album'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'Dashboard',
   components: {
-    Container,
     PlaylistCard,
     TitleShowAll,
     CardAlbum,
-    CardHorizontal
+    CardHorizontal,
+    Skeleton
   },
   data() {
     return {
@@ -48,7 +63,8 @@ export default {
       albums_limit: 48,
       albums_offset: 0,
       albums_next: '',
-      loading_more: false
+      loading_more: false,
+      loading_skeleton: true
     }
   },
   computed: {
@@ -59,7 +75,7 @@ export default {
       await this.getPlaylists()
       await this.getNewReleases()
 
-      this.loading = false
+      this.loading_skeleton = false
     },
     async getPlaylists() {
       const params = {
@@ -75,6 +91,7 @@ export default {
         this.loading_more = true
         let res
 
+        // First time load data
         if (this.albums_next === '') {
           const params = {
             limit: this.albums_limit,
@@ -82,6 +99,9 @@ export default {
           }
           res = (await getNewReleases(params)).albums
         } else {
+          if (this.loading_skeleton) {
+            return
+          }
           let path = this.albums_next
           res = (await getNextNewReleases(path.slice(path.indexOf('?') + 1))).albums
         }
@@ -105,6 +125,9 @@ export default {
   },
   created() {
     this.getAll()
+  },
+  mounted() {
+    this.loading = false
   }
 }
 </script>

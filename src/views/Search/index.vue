@@ -1,16 +1,31 @@
 <template>
-  <div class="search-container" v-if="!loading">
-    <div class="search-container__title-wrapper">
-      <TitleShowAll title="Browse All" />
+  <template v-if="!loading_skeleton">
+    <div class="search-container" v-if="!loading">
+      <div class="search-container__title-wrapper">
+        <TitleShowAll title="Browse All" />
+      </div>
+      <div class="search-container__cards-wrapper">
+        <router-link :to="{ name: 'Browse', params: { categoryId: item.id } }"
+          class="search-container__cards-wrapper__card" v-for="item in categories" :key="item.id">
+          <h2 class="search-container__cards-wrapper__card__name">{{ item.name }}</h2>
+          <img v-if="item.cover" class="search-container__cards-wrapper__card__img" :src="item.cover"
+            :alt="item.name" />
+        </router-link>
+      </div>
     </div>
-    <div class="search-container__cards-wrapper">
-      <router-link :to="{ name: 'Browse', params: { categoryId: item.id } }"
-        class="search-container__cards-wrapper__card" v-for="(item, index) in categories" :key="item.id">
-        <h2 class="search-container__cards-wrapper__card__name">{{ item.name }}</h2>
-        <img v-if="item.cover" class="search-container__cards-wrapper__card__img" :src="item.cover" :alt="item.name" />
-      </router-link>
+  </template>
+  <template v-else>
+    <div class="search-container">
+      <div class="search-container__title-wrapper">
+        <TitleShowAll title="Browse All" :loading="loading_skeleton" />
+      </div>
+      <div class="search-container__cards-wrapper">
+        <div class="search-container__cards-wrapper__card" v-for="i in categories_limit">
+          <Skeleton />
+        </div>
+      </div>
     </div>
-  </div>
+  </template>
 </template>
 
 <script>
@@ -22,18 +37,21 @@ import {
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'Search',
   components: {
-    TitleShowAll
+    TitleShowAll,
+    Skeleton
   },
   data() {
     return {
       categories: [],
       categories_limit: 24,
       categories_next: '',
-      categories_offset: 0
+      categories_offset: 0,
+      loading_skeleton: true
     }
   },
   computed: {
@@ -44,7 +62,7 @@ export default {
       await this.getSeveralCategories()
       await this.getCategoriesCovers()
 
-      this.loading = false
+      this.loading_skeleton = false
     },
     async getNext() {
       if (this.categories_next !== null) {
@@ -105,11 +123,21 @@ export default {
   },
   created() {
     this.getAll()
+  },
+  mounted() {
+    this.loading = false
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.skeleton {
+  &__title {
+    height: $font-size-title-primary;
+    width: 10%;
+  }
+}
+
 .search-container {
   padding: 1.6rem;
 

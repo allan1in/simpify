@@ -62,6 +62,7 @@ export const useUserStore = defineStore('user', {
       localStorage.setItem('refresh_token', refresh_token)
 
       this.access_token = access_token
+      console.log('Refresh token')
       // localStorage.setItem('expires_in', expires_in)
       // const now = new Date()
       // const expiry = new Date(now.getTime() + expires_in * 1000)

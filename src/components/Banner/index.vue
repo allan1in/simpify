@@ -1,12 +1,8 @@
 <template>
   <div class="banner">
     <div class="banner__img-wrapper" :class="{ 'banner__img-wrapper-round': imgShape === 'round' }">
-      <img
-        v-if="images !== null"
-        class="banner__img-wrapper__img"
-        :src="images[0].url"
-        :alt="item.name ? item.name : item.display_name"
-      />
+      <img v-if="images !== null" class="banner__img-wrapper__img" :src="images[0].url"
+        :alt="item.name ? item.name : item.display_name" />
       <div v-else class="banner__img-wrapper__icon">
         <IconDefaultPlaylist />
       </div>
@@ -104,12 +100,12 @@ export default {
     width: 80%;
 
     &__type {
-      font-size: 1.4rem;
+      font-size: $font-size-text-secondary;
     }
 
     &__title {
       font-family: $font-family-title;
-      font-size: 7rem;
+      font-size: $font-size-title-large;
       font-weight: 800;
       line-height: 1.5;
 
@@ -121,7 +117,7 @@ export default {
     }
 
     &__details {
-      font-size: 1.4rem;
+      font-size: $font-size-text-secondary;
       color: $color-font-secondary;
     }
   }

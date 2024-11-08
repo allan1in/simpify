@@ -107,8 +107,6 @@ export const usePlayerStore = defineStore('player', {
 
           this.player.connect()
         }
-      } else if (useUserStore().checkProduct('free')) {
-        this.isReady = true
       }
     },
     startListenPos() {
@@ -230,6 +228,12 @@ export const usePlayerStore = defineStore('player', {
         // Initialize player infomation
         this.current_track = track
 
+        // Some of tracks don't have preview_url
+        if (this.current_track.preview_url === null) {
+          this.isReady = false
+          return
+        }
+
         this.player = new Howl({
           src: [this.current_track.preview_url],
           // Streaming audio (for live audio or large files)
@@ -242,6 +246,9 @@ export const usePlayerStore = defineStore('player', {
         this.player.on('play', () => {
           this.isPause = false
           requestAnimationFrame(this.progress)
+          if (this.current_track.preview_url !== null) {
+            this.isReady = true
+          }
         })
 
         this.player.on('pause', () => {

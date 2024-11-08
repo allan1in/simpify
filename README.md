@@ -66,3 +66,4 @@ npm run lint
 6. theme
 7. i18n
 8. progress bar
+9. add key when use v-for

@@ -1,38 +1,51 @@
 <template>
-  <div class="card-horizontal-container" @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })">
-    <div class="card-horizontal-container__cover-wrapper">
-      <img class="card-horizontal-container__cover-wrapper__cover" :src="item.images[0].url" :alt="item.name" />
-    </div>
-    <div class="card-horizontal-container__info-wrapper">
-      <router-link :to="{ name: 'Playlist', params: { playlistId: item.id } }"
-        class="card-horizontal-container__info-wrapper__info">{{ item.name }}</router-link>
-    </div>
-    <div class="card-horizontal-container__right-wrapper">
-      <div class="card-horizontal-container__right-wrapper__btn-wrapper" :class="{
-        'card-horizontal-container__right-wrapper__btn-wrapper-playing':
-          !isPause && item.uri === context.uri
-      }">
-        <ButtonTogglePlay :item="item" />
+  <template v-if="!loading">
+    <div class="card-horizontal-container" @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })">
+      <div class="card-horizontal-container__cover-wrapper">
+        <img class="card-horizontal-container__cover-wrapper__cover" :src="item.images[0].url" :alt="item.name" />
+      </div>
+      <div class="card-horizontal-container__info-wrapper">
+        <router-link :to="{ name: 'Playlist', params: { playlistId: item.id } }"
+          class="card-horizontal-container__info-wrapper__info">{{ item.name }}</router-link>
+      </div>
+      <div class="card-horizontal-container__right-wrapper">
+        <div class="card-horizontal-container__right-wrapper__btn-wrapper" :class="{
+          'card-horizontal-container__right-wrapper__btn-wrapper-playing':
+            !isPause && item.uri === context.uri
+        }">
+          <ButtonTogglePlay :item="item" />
+        </div>
       </div>
     </div>
-  </div>
+  </template>
+  <template v-else>
+    <Skeleton class="skeleton" />
+  </template>
 </template>
 
 <script>
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import { usePlayerStore } from '@/stores/player'
 import { mapState } from 'pinia'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'CardHorizontal',
   props: {
     item: {
       type: Object,
-      require: true
+      require: false,
+      default: {}
+    },
+    loading: {
+      type: Boolean,
+      require: false,
+      default: false
     }
   },
   components: {
-    ButtonTogglePlay
+    ButtonTogglePlay,
+    Skeleton
   },
   computed: {
     ...mapState(usePlayerStore, ['isPause', 'context'])
@@ -41,6 +54,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.skeleton {
+  width: 100%;
+  aspect-ratio: 6 / 1;
+}
+
 .card-horizontal-container {
   display: flex;
   justify-content: start;
@@ -92,7 +110,7 @@ export default {
     display: flex;
     align-items: center;
     padding: 0 2rem;
-    font-size: 1.4rem;
+    font-size: $font-size-text-secondary;
     font-weight: 700;
 
     &__info {

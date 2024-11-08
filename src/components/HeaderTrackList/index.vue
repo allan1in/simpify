@@ -27,7 +27,7 @@ export default {
   display: flex;
   height: 3.6rem;
   line-height: 3.6rem;
-  font-size: 1.4rem;
+  font-size: $font-size-text-secondary;
   color: $color-font-secondary;
   border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
 

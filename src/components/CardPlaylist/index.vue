@@ -1,30 +1,49 @@
 <template>
-  <div class="playlist-card" @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })">
-    <div class="playlist-card__img-box">
-      <div class="playlist-card__img-box__img-wrapper">
-        <img v-if="item.images?.length" :src="item.images[0].url" alt="Playlist Cover"
-          class="playlist-card__img-box__img-wrapper__img" />
-        <div v-else class="playlist-card__img-box__img-wrapper__icon">
-          <IconDefaultPlaylist />
+  <template v-if="!loading">
+    <div class="playlist-card" @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })">
+      <div class="playlist-card__img-box">
+        <div class="playlist-card__img-box__img-wrapper">
+          <img v-if="item.images?.length" :src="item.images[0].url" alt="Playlist Cover"
+            class="playlist-card__img-box__img-wrapper__img" />
+          <div v-else class="playlist-card__img-box__img-wrapper__icon">
+            <IconDefaultPlaylist />
+          </div>
+        </div>
+        <div class="playlist-card__img-box__toggle-play" :class="{
+          'playlist-card__img-box__toggle-play-playing': !isPause && item.uri === context.uri
+        }">
+          <ButtonTogglePlay :item />
         </div>
       </div>
-      <div class="playlist-card__img-box__toggle-play" :class="{
-        'playlist-card__img-box__toggle-play-playing': !isPause && item.uri === context.uri
-      }">
-        <ButtonTogglePlay :item />
-      </div>
-    </div>
 
-    <div class="playlist-card__name-wrapper">
-      <router-link :to="{ name: 'Playlist', params: { playlistId: item.id } }"
-        class="playlist-card__name-wrapper__name">{{ item.name }}</router-link>
-    </div>
-    <div class="playlist-card__info-wrapper">
-      <div class="playlist-card__info-wrapper__info">
-        <span>{{ 'By ' + item.owner.display_name }}</span>
+      <div class="playlist-card__name-wrapper">
+        <router-link :to="{ name: 'Playlist', params: { playlistId: item.id } }"
+          class="playlist-card__name-wrapper__name">{{ item.name }}</router-link>
+      </div>
+      <div class="playlist-card__info-wrapper">
+        <div class="playlist-card__info-wrapper__info">
+          <span>{{ 'By ' + item.owner.display_name }}</span>
+        </div>
       </div>
     </div>
-  </div>
+  </template>
+  <template v-else>
+    <div class="playlist-card">
+      <div class="playlist-card__img-box">
+        <div class="playlist-card__img-box__img-wrapper">
+          <Skeleton class="skeleton__img" />
+        </div>
+      </div>
+      <div class="playlist-card__name-wrapper">
+        <Skeleton class="skeleton__name" />
+      </div>
+      <div class="playlist-card__info-wrapper">
+        <div class="playlist-card__info-wrapper__info">
+          <Skeleton class="skeleton__info" />
+        </div>
+      </div>
+    </div>
+  </template>
 </template>
 
 <script>
@@ -32,18 +51,26 @@ import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import { usePlayerStore } from '@/stores/player'
 import { mapState } from 'pinia'
 import IconDefaultPlaylist from '../Icons/IconDefaultPlaylist.vue'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'CardPlaylist',
   props: {
     item: {
       type: Object,
-      require: true
+      require: false,
+      default: {}
+    },
+    loading: {
+      type: Boolean,
+      require: false,
+      default: false
     }
   },
   components: {
     ButtonTogglePlay,
-    IconDefaultPlaylist
+    IconDefaultPlaylist,
+    Skeleton
   },
   computed: {
     ...mapState(usePlayerStore, ['isPause', 'context'])
@@ -52,6 +79,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.skeleton {
+  &__name {
+    width: 100%;
+    height: $font-size-text-primary;
+  }
+
+  &__info {
+    width: 80%;
+    height: $font-size-text-secondary;
+    margin-top: calc($font-size-text-secondary * 0.5);
+  }
+}
+
 .playlist-card {
   border-radius: $border-radius-default;
   display: flex;
@@ -124,7 +164,7 @@ export default {
     padding-top: 1.2rem;
 
     &__name {
-      font-size: 1.6rem;
+      font-size: $font-size-text-primary;
 
       @include twoLineEllipsis;
     }
@@ -134,7 +174,7 @@ export default {
     width: 100%;
 
     &__info {
-      font-size: 1.4rem;
+      font-size: $font-size-text-secondary;
       color: $color-font-secondary;
 
       @include twoLineEllipsis;

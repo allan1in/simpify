@@ -174,7 +174,7 @@ export default {
     }
 
     &__title {
-      font-size: 7rem;
+      font-size: $font-size-title-large;
       font-family: $font-family-title;
       font-weight: 800;
       text-shadow: 0 0 15px rgba(0, 0, 0, 0.4);

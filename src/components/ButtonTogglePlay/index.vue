@@ -12,7 +12,6 @@ import { mapActions, mapWritableState } from 'pinia'
 import IconPause from '../Icons/IconPause.vue'
 import IconPlay from '../Icons/IconPlay.vue'
 import { usePlayerStore } from '@/stores/player'
-import { startPlayback } from '@/api/meta/player'
 
 export default {
   name: 'ButtonTogglePlay',

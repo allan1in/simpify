@@ -96,7 +96,7 @@ $color-bg-cover: hsl(random(360), 40%, 50%);
     padding: 4.8rem $gutter-4x;
 
     &__title {
-      font-size: 8rem;
+      font-size: $font-size-title-large;
       font-weight: 800;
       font-family: $font-family-title;
       text-shadow: 0 0 20px rgba($color-bg-1, 1);

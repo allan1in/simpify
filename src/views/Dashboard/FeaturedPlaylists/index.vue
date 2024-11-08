@@ -1,14 +1,23 @@
 <template>
-  <div class="featured-playlists-container" v-if="!loading">
-    <TitleShowAll title="Featured Playlists" />
-    <div class="featured-playlists-container__content">
-      <CardPlaylist v-for="item in playlists" :item="item" />
+  <template v-if="!loading_skeleton">
+    <div class="featured-playlists-container" v-if="!loading">
+      <TitleShowAll title="Featured Playlists" />
+      <div class="featured-playlists-container__content">
+        <CardPlaylist v-for="item in playlists" :item="item" />
+      </div>
     </div>
-  </div>
+  </template>
+  <template v-else>
+    <div class="featured-playlists-container">
+      <TitleShowAll title="Featured Playlists" :loading="loading_skeleton" />
+      <div class="featured-playlists-container__content">
+        <CardPlaylist v-for="i in playlists_limit" :loading="loading_skeleton" />
+      </div>
+    </div>
+  </template>
 </template>
 
 <script>
-import Container from '@/components/Container/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import CardPlaylist from '@/components/CardPlaylist/index.vue'
 import { getFeaturedPlaylists, getNextFeaturedPlaylists } from '@/api/meta/browse'
@@ -18,7 +27,6 @@ import { useAppStore } from '@/stores/app'
 export default {
   name: 'FeaturedPlaylists',
   components: {
-    Container,
     TitleShowAll,
     CardPlaylist
   },
@@ -31,13 +39,15 @@ export default {
       playlists_limit: 48,
       playlists_offset: 0,
       playlists_next: '',
-      loading_more: false
+      loading_more: false,
+      loading_skeleton: true
     }
   },
   methods: {
     async getAll() {
       await this.getPlaylists()
-      this.loading = false
+
+      this.loading_skeleton = false
     },
     async getPlaylists() {
       if (!this.loading_more && this.playlists_next !== null) {
@@ -74,6 +84,9 @@ export default {
   },
   created() {
     this.getAll()
+  },
+  mounted() {
+    this.loading = false
   }
 }
 </script>

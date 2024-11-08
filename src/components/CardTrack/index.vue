@@ -143,7 +143,7 @@ export default {
   padding: 0 2.4rem;
   display: flex;
   height: 5.6rem;
-  font-size: 1.4rem;
+  font-size: $font-size-text-secondary;
   color: $color-font-secondary;
   border-radius: $border-radius-small;
   position: relative;
@@ -177,7 +177,7 @@ export default {
     position: relative;
 
     &__num-wrapper {
-      font-size: 1.6rem;
+      font-size: $font-size-text-primary;
       position: absolute;
       top: 0;
       right: 2.4rem;
@@ -251,7 +251,7 @@ export default {
       padding-right: 1rem;
 
       &__name {
-        font-size: 1.6rem;
+        font-size: $font-size-text-primary;
         color: $color-font-primary;
 
         @include oneLineEllipsis;

@@ -1,43 +1,23 @@
 <template>
   <section class="top-bar-container">
-    <button
-      v-if="showTags.track || showTags.artist || showTags.album"
-      class="top-bar-container__btn"
-      :class="{ 'btn-active': isActive === $route.params.inputContent }"
-      @click="getAll"
-    >
+    <button v-if="showTags.track || showTags.artist || showTags.album" class="top-bar-container__btn"
+      :class="{ 'btn-active': isActive === $route.params.inputContent }" @click="getAll">
       All
     </button>
-    <button
-      v-if="showTags.track"
-      class="top-bar-container__btn"
-      :class="{ 'btn-active': isActive === 'tracks' }"
-      @click="getSongs"
-    >
+    <button v-if="showTags.track" class="top-bar-container__btn" :class="{ 'btn-active': isActive === 'tracks' }"
+      @click="getSongs">
       Songs
     </button>
-    <button
-      v-if="showTags.artist"
-      class="top-bar-container__btn"
-      :class="{ 'btn-active': isActive === 'artists' }"
-      @click="getArtists"
-    >
+    <button v-if="showTags.artist" class="top-bar-container__btn" :class="{ 'btn-active': isActive === 'artists' }"
+      @click="getArtists">
       Artists
     </button>
-    <button
-      v-if="showTags.album"
-      class="top-bar-container__btn"
-      :class="{ 'btn-active': isActive === 'albums' }"
-      @click="getAlbums"
-    >
+    <button v-if="showTags.album" class="top-bar-container__btn" :class="{ 'btn-active': isActive === 'albums' }"
+      @click="getAlbums">
       Albums
     </button>
-    <button
-      v-if="showTags.playlist"
-      class="top-bar-container__btn"
-      :class="{ 'btn-active': isActive === 'playlists' }"
-      @click="getPlaylists"
-    >
+    <button v-if="showTags.playlist" class="top-bar-container__btn" :class="{ 'btn-active': isActive === 'playlists' }"
+      @click="getPlaylists">
       Playlists
     </button>
   </section>
@@ -131,6 +111,7 @@ export default {
     padding: 0.4rem 1.2rem;
     height: 100%;
     border-radius: 3.2rem;
+    font-size: $font-size-text-secondary;
 
     &:hover {
       background-color: $color-bg-6;
