@@ -16,13 +16,13 @@
 
 @mixin transition {
   & {
-    transition: all 0.22s ease-in;
+    transition: all $duratrion-default ease-in;
   }
 }
 
 @mixin transitionSlow {
   & {
-    transition: all 0.5s ease-in;
+    transition: all $duratrion-slow ease-in;
   }
 }
 

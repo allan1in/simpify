@@ -2,8 +2,12 @@
   <footer class="player-bar">
     <div class="player-bar__left">
       <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
-        <img class="player-bar__left__cover-wrapper__cover" :src="current_track.album.images[0].url" alt="track"
-          @click="showFullScreenPlayer = true" />
+        <img
+          class="player-bar__left__cover-wrapper__cover"
+          :src="current_track.album.images[0].url"
+          alt="track"
+          @click="showFullScreenPlayer = true"
+        />
       </div>
       <div class="player-bar__left__msg-wrapper">
         <div class="player-bar__left__msg-wrapper__title" v-if="current_track?.id">
@@ -12,10 +16,14 @@
           }}</router-link>
         </div>
         <div class="player-bar__left__msg-wrapper__artist" v-if="current_track?.artists?.length">
-          <router-link v-for="(artist, index) in current_track.artists" :key="artist.uri" :to="{
-            name: 'Artist',
-            params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
-          }">
+          <router-link
+            v-for="(artist, index) in current_track.artists"
+            :key="artist.uri"
+            :to="{
+              name: 'Artist',
+              params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
+            }"
+          >
             {{ (index === 0 ? '' : ', ') + artist.name }}
           </router-link>
         </div>
@@ -27,25 +35,47 @@
     </div>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
-        <button class="icon-wrapper" :class="{ 'btn-active': isShuffle, 'not-allowed': !isReady }"
-          @click="toggleShuffle" :disabled="!isReady">
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': isShuffle, 'not-allowed': !isReady }"
+          @click="toggleShuffle"
+          :disabled="!isReady"
+        >
           <IconShuffle />
         </button>
-        <button class="icon-wrapper" @click="preTrack" :class="{ 'not-allowed': !isReady }" :disabled="!isReady">
+        <button
+          class="icon-wrapper"
+          @click="preTrack"
+          :class="{ 'not-allowed': !isReady }"
+          :disabled="!isReady"
+        >
           <IconPrevious />
         </button>
-        <button class="player-bar__mid__btn-group__play" @click="togglePlay" :class="{ 'not-allowed': !isReady }"
-          :disabled="!isReady">
+        <button
+          class="player-bar__mid__btn-group__play"
+          @click="togglePlay"
+          :class="{ 'not-allowed': !isReady }"
+          :disabled="!isReady"
+        >
           <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
             <IconPlay v-if="isPause" />
             <IconPause v-else />
           </span>
         </button>
-        <button class="icon-wrapper" @click="nextTrack" :class="{ 'not-allowed': !isReady }" :disabled="!isReady">
+        <button
+          class="icon-wrapper"
+          @click="nextTrack"
+          :class="{ 'not-allowed': !isReady }"
+          :disabled="!isReady"
+        >
           <IconNext />
         </button>
-        <button class="icon-wrapper" :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': !isReady }"
-          @click="setRepeatMode" :disabled="!isReady">
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': !isReady }"
+          @click="setRepeatMode"
+          :disabled="!isReady"
+        >
           <IconRepeatSingle v-if="repeatMode === 2" />
           <IconRepeat v-else />
         </button>
@@ -81,12 +111,20 @@
       <!-- <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
       </button> -->
-      <button class="icon-wrapper player-bar__right__full-screen" @click="toggleFullScreenPlayer"
-        :class="{ 'not-allowed': !isReady }" :disabled="!isReady">
+      <button
+        class="icon-wrapper player-bar__right__full-screen"
+        @click="openFullScreenPlayer"
+        :class="{ 'not-allowed': !isReady }"
+        :disabled="!isReady"
+      >
         <IconFullScreen />
       </button>
-      <button class="icon-wrapper player-bar__right__play-phone" @click="togglePlay"
-        :class="{ 'not-allowed': !isReady }" :disabled="!isReady">
+      <button
+        class="icon-wrapper player-bar__right__play-phone"
+        @click="togglePlay"
+        :class="{ 'not-allowed': !isReady }"
+        :disabled="!isReady"
+      >
         <IconPlay v-if="isPause" />
         <IconPause v-else />
       </button>
@@ -110,7 +148,7 @@ import IconLyrics from '@/components/Icons/IconLyrics.vue'
 import IconMiniPlayer from '@/components/Icons/IconMiniPlayer.vue'
 import IconFullScreen from '@/components/Icons/IconFullScreen.vue'
 import IconInLikeSong from '@/components/Icons/IconInLikeSong.vue'
-import { mapActions, mapState, mapWritableState } from 'pinia'
+import { mapActions, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
@@ -160,21 +198,21 @@ export default {
     ])
   },
   methods: {
-    toggleFullScreenPlayer() {
-      this.showFullScreenPlayer = !this.showFullScreenPlayer
-      this.openFullscreen()
+    async openFullScreenPlayer() {
+      await this.openFullscreen()
+      this.showFullScreenPlayer = true
     },
     /* View in fullscreen */
-    openFullscreen() {
+    async openFullscreen() {
       let element = document.documentElement
       if (element.requestFullscreen) {
-        element.requestFullscreen()
+        await element.requestFullscreen()
       } else if (element.webkitRequestFullscreen) {
         /* Safari */
-        element.webkitRequestFullscreen()
+        await element.webkitRequestFullscreen()
       } else if (element.msRequestFullscreen) {
         /* IE11 */
-        element.msRequestFullscreen()
+        await element.msRequestFullscreen()
       }
     },
     ...mapActions(usePlayerStore, [

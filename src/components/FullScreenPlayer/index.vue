@@ -20,7 +20,7 @@
           'full-screen-container__top__close-wrapper-show': isCursorMove || isCursorOverClose
         }"
         class="full-screen-container__top__close-wrapper"
-        @click="toggleFullScreenPlayer"
+        @click="closeFullScreenPlayer"
         @mouseover="isCursorOverClose = true"
         @mouseout="isCursorOverClose = false"
       >
@@ -95,7 +95,7 @@
           <div class="full-screen-container__player__btns__right__volume">
             <VolumeBar />
           </div>
-          <button class="icon-wrapper" @click="toggleFullScreenPlayer">
+          <button class="icon-wrapper" @click="closeFullScreenPlayer">
             <IconFullScreenClose />
           </button>
         </div>
@@ -155,14 +155,14 @@ export default {
     SeekBar
   },
   methods: {
-    toggleFullScreenPlayer() {
-      this.closeFullscreen()
-      this.showFullScreenPlayer = !this.showFullScreenPlayer
+    async closeFullScreenPlayer() {
+      await this.closeFullscreen()
+      this.showFullScreenPlayer = false
     },
     /* Close fullscreen */
-    closeFullscreen() {
+    async closeFullscreen() {
       if (document.fullscreenElement != null) {
-        document.exitFullscreen()
+        await document.exitFullscreen()
       }
     },
     ...mapActions(usePlayerStore, [
@@ -247,6 +247,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   gap: 4rem;
+  overflow: hidden;
 
   @include respond(phone) {
     gap: 1.6rem;

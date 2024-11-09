@@ -1,7 +1,9 @@
 <template>
   <main class="app-container">
     <RouterView />
-    <FullScreenPlayer v-show="showFullScreenPlayer" />
+    <Transition name="fade">
+      <FullScreenPlayer v-show="showFullScreenPlayer" />
+    </Transition>
   </main>
 </template>
 <script>

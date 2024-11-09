@@ -1,12 +1,24 @@
 .fade-slide-from-top {
   &-enter-active,
   &-leave-active {
-    transition: all 0.33s ease;
+    transition: all $duratrion-slow ease;
   }
 
   &-enter-from,
   &-leave-to {
     transform: translateY(-1.6rem);
     opacity: 0;
+  }
+}
+
+.fade {
+  &-enter-active,
+  &-leave-active {
+    transition: all $duratrion-slow ease;
+  }
+
+  &-enter-from,
+  &-leave-to {
+    transform: translateY(100vh);
   }
 }
