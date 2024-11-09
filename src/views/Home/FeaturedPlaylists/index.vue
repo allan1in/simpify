@@ -3,7 +3,7 @@
     <div class="featured-playlists-container">
       <TitleShowAll title="Featured Playlists" />
       <div class="featured-playlists-container__content">
-        <CardPlaylist v-for="item in playlists" :item="item" />
+        <CardPlaylist v-for="item in playlists" :key="item.id" :item="item" />
       </div>
     </div>
   </template>
@@ -11,7 +11,7 @@
     <div class="featured-playlists-container">
       <TitleShowAll :loading="loading_skeleton" />
       <div class="featured-playlists-container__content">
-        <CardPlaylist v-for="i in playlists_limit" :loading="loading_skeleton" />
+        <CardPlaylist v-for="i in playlists_limit" :key="i" :loading="loading_skeleton" />
       </div>
     </div>
   </template>

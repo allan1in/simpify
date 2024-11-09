@@ -7,14 +7,14 @@
           title="Featured Playlists"
         />
         <div class="dashboard-container__featured-playlists__content">
-          <CardHorizontal v-for="item in playlists" :item="item" />
+          <CardHorizontal v-for="item in playlists" :key="item.id" :item="item" />
         </div>
       </div>
 
       <div class="dashboard-container__new-releases" v-if="albums.length !== 0">
         <TitleShowAll title="New Releases" />
         <div class="dashboard-container__new-releases__content">
-          <CardAlbum v-for="item in albums" :item="item" />
+          <CardAlbum v-for="item in albums" :key="item.id" :item="item" />
         </div>
       </div>
     </template>
@@ -22,14 +22,14 @@
       <div class="dashboard-container__featured-playlists">
         <TitleShowAll :loading="loading_skeleton" />
         <div class="dashboard-container__featured-playlists__content">
-          <CardHorizontal v-for="i in playlists_limit" :loading="loading_skeleton" />
+          <CardHorizontal v-for="i in playlists_limit" :key="i" :loading="loading_skeleton" />
         </div>
       </div>
 
       <div class="dashboard-container__new-releases">
         <TitleShowAll :loading="loading_skeleton" />
         <div class="dashboard-container__new-releases__content">
-          <CardAlbum v-for="i in albums_limit" :loading="loading_skeleton" />
+          <CardAlbum v-for="i in albums_limit" :key="i" :loading="loading_skeleton" />
         </div>
       </div>
     </template>

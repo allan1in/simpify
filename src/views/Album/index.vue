@@ -5,6 +5,7 @@
         <Banner :type="album.type" :title="album.name" :images="album.images">
           <span
             v-for="(artist, index) in album.artists"
+            :key="artist.id"
             class="album-container__banner-details__artist"
           >
             {{ index === 0 ? '' : ' • ' }}
@@ -42,6 +43,7 @@
           <TrackListHeader :showAlbum="false" />
           <TrackCard
             v-for="(item, index) in tracks"
+            :key="item.id"
             :item="item"
             :index="index"
             :show-album="false"
@@ -67,6 +69,7 @@
           <TrackListHeader :showAlbum="false" :loading="loading_skeleton" />
           <TrackCard
             v-for="i in tracks_limit"
+            :key="i"
             :show-album="false"
             :show-image="false"
             :loading="loading_skeleton"

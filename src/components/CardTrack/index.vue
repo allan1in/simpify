@@ -57,6 +57,7 @@
               v-else
               class="track-card__title__msg-wrapper__artists"
               v-for="(artist, index) in item.artists"
+              :key="'not-allowed'+artist.id"
             >
               {{ (index === 0 ? '' : ', ') + artist.name }}</span
             >
@@ -93,7 +94,7 @@
         </div>
         <div class="track-card__title__msg-wrapper">
           <Skeleton class="skeleton__msg" />
-          <Skeleton class="skeleton__artists" v-if="showArtists"/>
+          <Skeleton class="skeleton__artists" v-if="showArtists" />
         </div>
       </div>
       <div class="track-card__album-wrapper" v-if="showAlbum">

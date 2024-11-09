@@ -37,7 +37,7 @@
             :router-name="this.artists_total > this.artists_limit ? 'GetArtistsForUser' : ''"
           />
           <div class="user-container__content__top-artists__content">
-            <CardArtist v-for="item in artists" :item="item" />
+            <CardArtist v-for="item in artists" :key="item.id" :item="item" />
           </div>
         </div>
         <div
@@ -49,7 +49,13 @@
             :router-name="this.tracks_total > this.tracks_limit ? 'GetTracksForUser' : ''"
           />
           <div class="user-container__content__top-songs__content">
-            <CardTrack v-for="(item, index) in tracks" :item="item" :index :uris="uris" />
+            <CardTrack
+              v-for="(item, index) in tracks"
+              :key="item.id"
+              :item="item"
+              :index
+              :uris="uris"
+            />
           </div>
         </div>
         <div class="user-container__content__playlists" v-if="playlists.length !== 0">
@@ -58,7 +64,7 @@
             :router-name="this.playlists_total > this.playlists_limit ? 'UserPlaylists' : ''"
           />
           <div class="user-container__content__playlists__content">
-            <CardPlaylist v-for="item in playlists" :item="item" />
+            <CardPlaylist v-for="item in playlists" :key="item.id" :item="item" />
           </div>
         </div>
       </div>
@@ -73,19 +79,19 @@
         <div class="user-container__content__top-artists" v-if="this.uid === id">
           <TitleShowAll :loading="loading_skeleton" />
           <div class="user-container__content__top-artists__content">
-            <CardArtist v-for="i in artists_limit" :loading="loading_skeleton" />
+            <CardArtist v-for="i in artists_limit" :key="i" :loading="loading_skeleton" />
           </div>
         </div>
         <div class="user-container__content__top-songs" v-if="this.uid === id">
           <TitleShowAll :loading="loading_skeleton" />
           <div class="user-container__content__top-songs__content">
-            <CardTrack v-for="i in tracks_limit" :loading="loading_skeleton" />
+            <CardTrack v-for="i in tracks_limit" :key="i" :loading="loading_skeleton" />
           </div>
         </div>
         <div class="user-container__content__playlists">
           <TitleShowAll :loading="loading_skeleton" />
           <div class="user-container__content__playlists__content">
-            <CardPlaylist v-for="i in playlists_limit" :loading="loading_skeleton" />
+            <CardPlaylist v-for="i in playlists_limit" :key="i" :loading="loading_skeleton" />
           </div>
         </div>
       </div>
@@ -153,8 +159,6 @@ export default {
       await this.getUserTopArtists()
       await this.getUserTopTracks()
       await this.getPlaylists()
-
-      console.log(this.profile)
 
       this.loading_skeleton = false
     },

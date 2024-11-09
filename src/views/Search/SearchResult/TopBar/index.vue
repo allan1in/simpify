@@ -9,7 +9,7 @@
       >
         All
       </button>
-      <template v-for="tag in tags">
+      <template v-for="tag in tags" :key="tag">
         <button
           v-if="showTags[tag]"
           class="top-bar-container__btn"
@@ -23,7 +23,7 @@
   </template>
   <template v-else>
     <section class="top-bar-container">
-      <Skeleton v-for="i in tags.length + 1" class="skeleton" />
+      <Skeleton v-for="i in tags.length + 1" :key="i" class="skeleton" />
     </section>
   </template>
 </template>

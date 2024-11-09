@@ -11,7 +11,7 @@
             <TrackListHeader />
             <CardTrack
               v-for="(item, index) in tracks"
-              :key="index"
+              :key="item.id"
               :item="item"
               :index="index"
               :uris="uris"
@@ -26,7 +26,7 @@
           <div class="all-container__content__artists__results">
             <CardArtist
               v-for="(item, index) in artists"
-              :key="index"
+              :key="item.id"
               :item="item"
               :index="index"
               :uris="uris"
@@ -41,7 +41,7 @@
           <div class="all-container__content__albums__results">
             <CardAlbum
               v-for="(item, index) in albums"
-              :key="index"
+              :key="item.id"
               :item="item"
               :index="index"
               :uris="uris"
@@ -56,7 +56,7 @@
           <div class="all-container__content__playlists__results">
             <CardPlaylist
               v-for="(item, index) in playlists"
-              :key="index"
+              :key="item.id"
               :item="item"
               :index="index"
               :uris="uris"
@@ -73,25 +73,25 @@
           <TitleShowAll :loading="loading_skeleton" />
           <div class="all-container__content__songs__results">
             <TrackListHeader :loading="loading_skeleton" />
-            <CardTrack v-for="i in tracks_limit" :loading="loading_skeleton" />
+            <CardTrack v-for="i in tracks_limit" :key="i" :loading="loading_skeleton" />
           </div>
         </div>
         <div class="all-container__content__artists">
           <TitleShowAll :loading="loading_skeleton" />
           <div class="all-container__content__artists__results">
-            <CardArtist v-for="i in artists_limit" :loading="loading_skeleton" />
+            <CardArtist v-for="i in artists_limit" :key="i" :loading="loading_skeleton" />
           </div>
         </div>
         <div class="all-container__content__albums">
           <TitleShowAll :loading="loading_skeleton" />
           <div class="all-container__content__albums__results">
-            <CardAlbum v-for="i in albums_limit" :loading="loading_skeleton" />
+            <CardAlbum v-for="i in albums_limit" :key="i" :loading="loading_skeleton" />
           </div>
         </div>
         <div class="all-container__content__playlists">
           <TitleShowAll :loading="loading_skeleton" />
           <div class="all-container__content__playlists__results">
-            <CardPlaylist v-for="i in playlists_limit" :loading="loading_skeleton" />
+            <CardPlaylist v-for="i in playlists_limit" :key="i" :loading="loading_skeleton" />
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@
     <main class="artists-container">
       <TitleShowAll title="Top artists this month" />
       <div class="artists-container__content">
-        <CardArtist v-for="item in artists" :item />
+        <CardArtist v-for="item in artists" :key="item.id" :item />
       </div>
     </main>
   </template>
@@ -11,7 +11,7 @@
     <main class="artists-container">
       <TitleShowAll :loading="loading_skeleton" />
       <div class="artists-container__content">
-        <CardArtist v-for="i in artists_limit" :loading="loading_skeleton" />
+        <CardArtist v-for="i in artists_limit" :key="i" :loading="loading_skeleton" />
       </div>
     </main>
   </template>

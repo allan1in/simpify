@@ -4,7 +4,7 @@
       <TitleShowAll title="Top tracks this month" />
       <div class="tracks-container__content">
         <HeaderTrackList />
-        <CardTrack v-for="(item, index) in tracks" :item :index :uris="uris" />
+        <CardTrack v-for="(item, index) in tracks" :key="item.id" :item :index :uris="uris" />
       </div>
     </main>
   </template>
@@ -13,7 +13,7 @@
       <TitleShowAll :loading="loading_skeleton" />
       <div class="tracks-container__content">
         <HeaderTrackList :loading="loading_skeleton" />
-        <CardTrack v-for="i in tracks_limit" :loading="loading_skeleton" />
+        <CardTrack v-for="i in tracks_limit" :key="i" :loading="loading_skeleton" />
       </div>
     </main>
   </template>

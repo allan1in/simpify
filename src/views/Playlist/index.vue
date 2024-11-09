@@ -47,6 +47,7 @@
           <TrackListHeader />
           <TrackCard
             v-for="(item, index) in tracks"
+            :key="item.id"
             :item="item.track"
             :index="index"
             :context_uri="this.playlist.uri"
@@ -68,7 +69,7 @@
         </div>
         <div class="playlist-container__content__tracks">
           <TrackListHeader :loading="loading_skeleton" />
-          <TrackCard v-for="i in tracks_limit" :loading="loading_skeleton" />
+          <TrackCard v-for="i in tracks_limit" :key="i" :loading="loading_skeleton" />
         </div>
       </div>
     </div>

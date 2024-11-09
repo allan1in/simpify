@@ -12,7 +12,7 @@
     <main class="album-container">
       <div class="album-container__content">
         <div class="album-container__content__results">
-          <PlaylistCard v-for="i in playlists_limit" :loading="loading_skeleton" />
+          <PlaylistCard v-for="i in playlists_limit" :key="i" :loading="loading_skeleton" />
         </div>
       </div>
     </main>

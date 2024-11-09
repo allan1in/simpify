@@ -102,25 +102,25 @@
           <TitleShowAll :loading="loading_skeleton" />
           <div class="artist-container__content__popular__content">
             <TrackListHeader :loading="loading_skeleton" />
-            <TrackCard v-for="i in 10" :show-artists="false" :loading="loading_skeleton" />
+            <TrackCard v-for="i in 10" :key="i" :show-artists="false" :loading="loading_skeleton" />
           </div>
         </div>
         <div class="artist-container__content__albums">
           <TitleShowAll :loading="loading_skeleton" />
           <div class="artist-container__content__albums__content">
-            <AlbumCard v-for="i in albums_limit" :loading="loading_skeleton" />
+            <AlbumCard v-for="i in albums_limit" :key="i" :loading="loading_skeleton" />
           </div>
         </div>
         <div class="artist-container__content__singles">
           <TitleShowAll :loading="loading_skeleton" />
           <div class="artist-container__content__singles__content">
-            <AlbumCard v-for="i in singles_limit" :loading="loading_skeleton" />
+            <AlbumCard v-for="i in singles_limit" :key="i" :loading="loading_skeleton" />
           </div>
         </div>
         <div class="artist-container__content__appears-on">
           <TitleShowAll :loading="loading_skeleton" />
           <div class="artist-container__content__appears-on__content">
-            <AlbumCard v-for="i in appearsOn_limit" :loading="loading_skeleton" />
+            <AlbumCard v-for="i in appearsOn_limit" :key="i" :loading="loading_skeleton" />
           </div>
         </div>
       </div>

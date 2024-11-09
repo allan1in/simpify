@@ -5,7 +5,7 @@
         <h1 class="browse-container__cover__title">{{ category.name }}</h1>
       </div>
       <div class="browse-container__content">
-        <PlaylistCard v-for="item in playlists" :item="item" />
+        <PlaylistCard v-for="item in playlists" :key="item.id" :item="item" />
       </div>
     </div>
   </template>
@@ -15,7 +15,7 @@
         <Skeleton class="skeleton" />
       </div>
       <div class="browse-container__content">
-        <PlaylistCard v-for="i in playlists_limit" :loading="loading_skeleton" />
+        <PlaylistCard v-for="i in playlists_limit" :key="i" :loading="loading_skeleton" />
       </div>
     </div>
   </template>

@@ -11,7 +11,7 @@
     <div class="artist-all-appears-on">
       <TitleShowAll :loading="loading_skeleton" />
       <div class="artist-all-appears-on__results">
-        <AlbumCard v-for="i in appearsOn_limit" :loading="loading_skeleton" />
+        <AlbumCard v-for="i in appearsOn_limit" :key="i" :loading="loading_skeleton" />
       </div>
     </div>
   </template>

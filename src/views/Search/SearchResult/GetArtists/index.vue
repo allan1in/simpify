@@ -12,7 +12,7 @@
     <main class="artist-container">
       <div class="artist-container__content">
         <div class="artist-container__content__results">
-          <ArtistCard v-for="i in artists_limit" :loading="loading_skeleton" />
+          <ArtistCard v-for="i in artists_limit" :key="i" :loading="loading_skeleton" />
         </div>
       </div>
     </main>

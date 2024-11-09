@@ -5,7 +5,7 @@
         <TrackListHeader />
         <TrackCard
           v-for="(item, index) in tracks"
-          :key="index"
+          :key="item.id"
           :item="item"
           :index="index"
           :uris="uris"
@@ -17,7 +17,7 @@
     <main class="track-container">
       <div class="track-container__content">
         <TrackListHeader :loading="loading_skeleton" />
-        <TrackCard v-for="i in tracks_limit" :loading="loading_skeleton" />
+        <TrackCard v-for="i in tracks_limit" :key="i" :loading="loading_skeleton" />
       </div>
     </main>
   </template>

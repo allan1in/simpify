@@ -39,6 +39,7 @@
             <a
               @click.stop="$router.push({ name: 'Artist', params: { artistId: artist.id } })"
               v-for="(artist, index) in item.artists"
+              :key="artist.id"
             >
               {{ (index === 0 ? '' : ', ') + artist.name }}
             </a>

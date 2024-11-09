@@ -58,12 +58,10 @@ npm run lint
 
 ## TODO
 
-1. srcset in images
-2. add title attribute
-3. white screen first load
-4. user dont have premirem
-5. skeleton screen
-6. theme
-7. i18n
-8. progress bar
-9. add key when use v-for
+1. add title attribute
+2. white screen first load
+3. user dont have premirem
+4. theme
+5. i18n
+6. progress bar
+7. add key when use v-for
