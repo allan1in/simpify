@@ -1,29 +1,50 @@
 <template>
-  <div class="track-container" v-if="!loading">
-    <div class="track-container__banner">
-      <Banner :item="track" :images="track.album.images">
-        <router-link class="track-container__banner-details__artist"
-          :to="{ name: 'Artist', params: { artistId: artists[0].id } }">{{ artists[0].name }}</router-link>
-        <span class="track-container__banner-details__album-wrapper">
-          <span> • </span>
-          <router-link class="track-container__banner-details__album-wrapper__album"
-            :to="{ name: 'Album', params: { albumId: track.album.id } }">{{ track.album.name }}</router-link>
-        </span>
-        <span class="track-container__banner-details__release-year">
-          {{ ` • ${track.album.release_date.split('-')[0]}` }}
-        </span>
-        <span class="track-container__banner-details__duration">
-          {{ ` • ${getFormatTime(track.duration_ms)}` }}
-        </span>
-      </Banner>
-    </div>
-    <div class="track-container__content">
-      <TitleShowAll title="All Artists" />
-      <div class="track-container__content__artists">
-        <ArtistCard v-for="artist in artists" :key="artist.id" :item="artist" />
+  <template v-if="!loading_skeleton">
+    <div class="track-container">
+      <div class="track-container__banner">
+        <Banner :type="track.type" :title="track.name" :images="track.album.images">
+          <router-link
+            class="track-container__banner-details__artist"
+            :to="{ name: 'Artist', params: { artistId: artists[0].id } }"
+            >{{ artists[0].name }}</router-link
+          >
+          <span class="track-container__banner-details__album-wrapper">
+            <span> • </span>
+            <router-link
+              class="track-container__banner-details__album-wrapper__album"
+              :to="{ name: 'Album', params: { albumId: track.album.id } }"
+              >{{ track.album.name }}</router-link
+            >
+          </span>
+          <span class="track-container__banner-details__release-year">
+            {{ ` • ${track.album.release_date.split('-')[0]}` }}
+          </span>
+          <span class="track-container__banner-details__duration">
+            {{ ` • ${getFormatTime(track.duration_ms)}` }}
+          </span>
+        </Banner>
+      </div>
+      <div class="track-container__content">
+        <TitleShowAll title="All Artists" />
+        <div class="track-container__content__artists">
+          <ArtistCard v-for="artist in artists" :key="artist.id" :item="artist" />
+        </div>
       </div>
     </div>
-  </div>
+  </template>
+  <template v-else>
+    <div class="track-container">
+      <div class="track-container__banner">
+        <Banner :loading="loading_skeleton" />
+      </div>
+      <div class="track-container__content">
+        <TitleShowAll :loading="loading_skeleton" />
+        <div class="track-container__content__artists">
+          <ArtistCard :loading="loading_skeleton" />
+        </div>
+      </div>
+    </div>
+  </template>
 </template>
 
 <script>
@@ -35,18 +56,21 @@ import ArtistCard from '@/components/CardArtist/index.vue'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import Banner from '@/components/Banner/index.vue'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'Track',
   components: {
     TitleShowAll,
     ArtistCard,
-    Banner
+    Banner,
+    Skeleton
   },
   data() {
     return {
       track: {},
-      artists: {}
+      artists: [],
+      loading_skeleton: true
     }
   },
   computed: {
@@ -57,7 +81,7 @@ export default {
       await this.getTrack()
       await this.getArtists()
 
-      this.loading = false
+      this.loading_skeleton = false
     },
     getFormatTime(time) {
       return timeFormatAlbum(time)
@@ -78,6 +102,9 @@ export default {
   },
   created() {
     this.getAll()
+  },
+  mounted() {
+    this.loading = false
   }
 }
 </script>

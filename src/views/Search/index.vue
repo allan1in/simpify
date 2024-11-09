@@ -25,7 +25,7 @@
   <template v-else>
     <div class="search-container">
       <div class="search-container__title-wrapper">
-        <TitleShowAll title="Browse All" :loading="loading_skeleton" />
+        <TitleShowAll :loading="loading_skeleton" />
       </div>
       <div class="search-container__cards-wrapper">
         <div class="search-container__cards-wrapper__card no-hover" v-for="i in categories_limit">

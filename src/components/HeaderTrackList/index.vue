@@ -19,7 +19,7 @@
       <div class="list-header__title">
         <Skeleton class="skeleton__title" />
       </div>
-      <div class="list-header__album">
+      <div class="list-header__album" v-if="showAlbum">
         <Skeleton class="skeleton__album" />
       </div>
       <div class="list-header__duration">

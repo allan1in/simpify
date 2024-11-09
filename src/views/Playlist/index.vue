@@ -1,70 +1,90 @@
 <template>
-  <div class="playlist-container" v-if="!loading">
-    <div class="playlist-container__banner">
-      <Banner :item="playlist" :images="playlist.images">
-        <router-link
-          class="playlist-container__banner-details__owner"
-          :to="{ name: 'User', params: { userId: playlist.owner.id } }"
-          >{{ playlist.owner.display_name }}</router-link
-        >
-        <span class="playlist-container__banner-details__release-year">
-          {{
-            playlist.followers.total === 0
-              ? ''
-              : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${
-                  playlist.followers.total === 1 ? ' follower' : ' followers'
-                }`
-          }}
-        </span>
-        <span
-          v-if="playlist.tracks.total !== 0"
-          class="playlist-container__banner-details__total-playlist.tracks"
-        >
-          {{ ` • ${playlist.tracks.total} songs` }}
-        </span>
-        <span
-          v-if="playlist.tracks.total !== 0"
-          class="playlist-container__banner-details__duration"
-        >
-          {{
-            ` • ${getFormatTime(
-              playlist.tracks.items.reduce((acc, item) => {
-                return acc + (item.track !== null ? item.track.duration_ms : 0)
-              }, 0)
-            )}`
-          }}
-        </span>
-      </Banner>
-    </div>
-    <div class="playlist-container__content">
-      <div class="playlist-container__content__btn-group">
-        <div class="playlist-container__content__btn-group__play-wrapper">
-          <ButtonTogglePlay :item="playlist" />
+  <template v-if="!loading_skeleton">
+    <div class="playlist-container">
+      <div class="playlist-container__banner">
+        <Banner :type="playlist.type" :title="playlist.name" :images="playlist.images">
+          <router-link
+            class="playlist-container__banner-details__owner"
+            :to="{ name: 'User', params: { userId: playlist.owner.id } }"
+            >{{ playlist.owner.display_name }}</router-link
+          >
+          <span class="playlist-container__banner-details__release-year">
+            {{
+              playlist.followers.total === 0
+                ? ''
+                : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${
+                    playlist.followers.total === 1 ? ' follower' : ' followers'
+                  }`
+            }}
+          </span>
+          <span
+            v-if="playlist.tracks.total !== 0"
+            class="playlist-container__banner-details__total-playlist.tracks"
+          >
+            {{ ` • ${playlist.tracks.total} songs` }}
+          </span>
+          <span
+            v-if="playlist.tracks.total !== 0"
+            class="playlist-container__banner-details__duration"
+          >
+            {{
+              ` • ${getFormatTime(
+                playlist.tracks.items.reduce((acc, item) => {
+                  return acc + (item.track !== null ? item.track.duration_ms : 0)
+                }, 0)
+              )}`
+            }}
+          </span>
+        </Banner>
+      </div>
+      <div class="playlist-container__content">
+        <div class="playlist-container__content__btn-group">
+          <div class="playlist-container__content__btn-group__play-wrapper">
+            <ButtonTogglePlay :item="playlist" />
+          </div>
+        </div>
+        <div class="playlist-container__content__tracks">
+          <TrackListHeader />
+          <TrackCard
+            v-for="(item, index) in tracks"
+            :item="item.track"
+            :index="index"
+            :context_uri="this.playlist.uri"
+          />
         </div>
       </div>
-      <div class="playlist-container__content__tracks">
-        <TrackListHeader />
-        <TrackCard
-          v-for="(item, index) in playlist.tracks.items"
-          :item="item.track"
-          :index="index"
-          :show-image="false"
-          :context_uri="this.playlist.uri"
-        />
+    </div>
+  </template>
+  <template v-else>
+    <div class="playlist-container">
+      <div class="playlist-container__banner">
+        <Banner :loading="loading_skeleton" />
+      </div>
+      <div class="playlist-container__content">
+        <div class="playlist-container__content__btn-group">
+          <div class="playlist-container__content__btn-group__play-wrapper">
+            <Skeleton shape="circle" />
+          </div>
+        </div>
+        <div class="playlist-container__content__tracks">
+          <TrackListHeader :loading="loading_skeleton" />
+          <TrackCard v-for="i in tracks_limit" :loading="loading_skeleton" />
+        </div>
       </div>
     </div>
-  </div>
+  </template>
 </template>
 
 <script>
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import TrackCard from '@/components/CardTrack/index.vue'
-import { getPlaylist } from '@/api/meta/playlist'
+import { getNextPlaylistTracks, getPlaylist, getPlaylistTracks } from '@/api/meta/playlist'
 import { timeFormatAlbum } from '@/utils/time_format'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import Banner from '@/components/Banner/index.vue'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'Playlist',
@@ -72,33 +92,76 @@ export default {
     TrackListHeader,
     TrackCard,
     Banner,
-    ButtonTogglePlay
+    ButtonTogglePlay,
+    Skeleton
   },
   data() {
     return {
       id: this.$route.params.playlistId,
-      playlist: {}
+      playlist: {},
+      tracks: [],
+      tracks_limit: 28,
+      tracks_offset: 0,
+      tracks_next: '',
+      loading_skeleton: true
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loading'])
+    ...mapWritableState(useAppStore, ['loading', 'loadMore'])
   },
   methods: {
     getFormatTime(time) {
       return timeFormatAlbum(time)
     },
+    async getAll() {
+      await this.getPlaylist()
+      await this.getPlaylistTracks()
+
+      this.loading_skeleton = false
+    },
     async getPlaylist() {
-      const res = await getPlaylist(this.id)
+      let res = await getPlaylist(this.id)
       this.playlist = res
-      this.loading = false
+    },
+    async getPlaylistTracks() {
+      if (!this.loading_more && this.tracks_next !== null) {
+        this.loading_more = true
+        let res
+
+        if (this.tracks_next === '') {
+          const params = {
+            limit: this.tracks_limit,
+            offset: this.tracks_offset
+          }
+          res = await getPlaylistTracks(this.id, params)
+        } else {
+          let path = this.tracks_next
+          res = await getNextPlaylistTracks(this.id, path.slice(path.indexOf('?') + 1))
+        }
+
+        let newVals = res.items
+        let oldVals = JSON.parse(JSON.stringify(this.tracks))
+        this.tracks = [...oldVals, ...newVals]
+        this.tracks_next = res.next
+
+        this.loading_more = false
+      }
+      this.loadMore = false
     }
   },
   watch: {
     $route: {
       async handler(to, from) {
-        await this.getPlaylist()
+        this.loading = false
+        this.loading_skeleton = true
+        await this.getAll()
       },
       immediate: true
+    },
+    loadMore(newVal, oldVal) {
+      if (newVal) {
+        this.getPlaylistTracks()
+      }
     }
   }
 }

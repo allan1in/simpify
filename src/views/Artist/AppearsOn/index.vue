@@ -1,10 +1,20 @@
 <template>
-  <div class="artist-all-appears-on" v-if="!loading">
-    <TitleShowAll :title="'Appears On'" />
-    <div class="artist-all-appears-on__results">
-      <AlbumCard v-for="item in appearsOn" :key="item.id" :item="item" />
+  <template v-if="!loading_skeleton">
+    <div class="artist-all-appears-on">
+      <TitleShowAll title="Appears On" />
+      <div class="artist-all-appears-on__results">
+        <AlbumCard v-for="item in appearsOn" :key="item.id" :item="item" />
+      </div>
     </div>
-  </div>
+  </template>
+  <template v-else>
+    <div class="artist-all-appears-on">
+      <TitleShowAll :loading="loading_skeleton" />
+      <div class="artist-all-appears-on__results">
+        <AlbumCard v-for="i in appearsOn_limit" :loading="loading_skeleton" />
+      </div>
+    </div>
+  </template>
 </template>
 
 <script>
@@ -28,7 +38,8 @@ export default {
       appearsOn_limit: 48,
       appearsOn_offset: 0,
       appearsOn_next: '',
-      loadingMore: false
+      loadingMore: false,
+      loading_skeleton: true
     }
   },
   computed: {
@@ -38,7 +49,7 @@ export default {
     async getAll() {
       await this.getAppearsOn()
 
-      this.loading = false
+      this.loading_skeleton = false
     },
     async getAppearsOn() {
       if (!this.loadingMore && this.appearsOn_next !== null) {
@@ -50,10 +61,13 @@ export default {
             limit: this.appearsOn_limit,
             offset: this.appearsOn_offset
           }
-          res = (await getAppearsOn(this.id, params))
+          res = await getAppearsOn(this.id, params)
         } else {
+          if (this.loading_skeleton) {
+            return
+          }
           let path = this.appearsOn_next
-          res = (await getNextAppearsOn(this.id, path.slice(path.indexOf('?') + 1)))
+          res = await getNextAppearsOn(this.id, path.slice(path.indexOf('?') + 1))
         }
 
         let newVals = res.items
@@ -75,6 +89,9 @@ export default {
   },
   created() {
     this.getAll()
+  },
+  mounted() {
+    this.loading = false
   }
 }
 </script>

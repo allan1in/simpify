@@ -88,15 +88,15 @@
         </div>
       </div>
       <div class="track-card__title">
-        <div class="track-card__title__cover-wrapper">
+        <div class="track-card__title__cover-wrapper" v-if="showImage">
           <Skeleton />
         </div>
         <div class="track-card__title__msg-wrapper">
           <Skeleton class="skeleton__msg" />
-          <Skeleton class="skeleton__artists" />
+          <Skeleton class="skeleton__artists" v-if="showArtists"/>
         </div>
       </div>
-      <div class="track-card__album-wrapper">
+      <div class="track-card__album-wrapper" v-if="showAlbum">
         <Skeleton class="skeleton__album" />
       </div>
       <div class="track-card__duration-wrapper">

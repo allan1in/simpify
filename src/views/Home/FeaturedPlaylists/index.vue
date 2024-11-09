@@ -9,7 +9,7 @@
   </template>
   <template v-else>
     <div class="featured-playlists-container">
-      <TitleShowAll title="Featured Playlists" :loading="loading_skeleton" />
+      <TitleShowAll :loading="loading_skeleton" />
       <div class="featured-playlists-container__content">
         <CardPlaylist v-for="i in playlists_limit" :loading="loading_skeleton" />
       </div>

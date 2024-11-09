@@ -1,43 +1,80 @@
 <template>
-  <div class="album-container" v-if="!loading">
-    <div class="album-container__cover">
-      <Banner :item="album" :images="album.images">
-        <span v-for="(artist, index) in album.artists" class="album-container__banner-details__artist">
-          {{ index === 0 ? '' : ' • ' }}
-          <router-link class="album-container__banner-details__artist__link"
-            :to="{ name: 'Artist', params: { artistId: artist.id } }">{{ artist.name }}</router-link>
-        </span>
+  <template v-if="!loading_skeleton">
+    <div class="album-container">
+      <div class="album-container__cover">
+        <Banner :type="album.type" :title="album.name" :images="album.images">
+          <span
+            v-for="(artist, index) in album.artists"
+            class="album-container__banner-details__artist"
+          >
+            {{ index === 0 ? '' : ' • ' }}
+            <router-link
+              class="album-container__banner-details__artist__link"
+              :to="{ name: 'Artist', params: { artistId: artist.id } }"
+              >{{ artist.name }}</router-link
+            >
+          </span>
 
-        <span class="album-container__banner-details__release-year">
-          {{ ` • ${album.release_date.split('-')[0]}` }}
-        </span>
-        <span class="album-container__banner-details__total-tracks">
-          {{ ` • ${album.total_tracks} songs` }}
-        </span>
-        <span class="album-container__banner-details__duration">
-          {{
-            ` • ${getFormatTime(
-              tracks.reduce((acc, track) => {
-                return acc + track.duration_ms
-              }, 0)
-            )}`
-          }}
-        </span>
-      </Banner>
-    </div>
-    <div class="album-container__content">
-      <div class="album-container__content__btn-group">
-        <div class="album-container__content__btn-group__play-wrapper">
-          <ButtonTogglePlay :item="album" />
+          <span class="album-container__banner-details__release-year">
+            {{ ` • ${album.release_date.split('-')[0]}` }}
+          </span>
+          <span class="album-container__banner-details__total-tracks">
+            {{ ` • ${album.total_tracks} songs` }}
+          </span>
+          <span class="album-container__banner-details__duration">
+            {{
+              ` • ${getFormatTime(
+                tracks.reduce((acc, track) => {
+                  return acc + track.duration_ms
+                }, 0)
+              )}`
+            }}
+          </span>
+        </Banner>
+      </div>
+      <div class="album-container__content">
+        <div class="album-container__content__btn-group">
+          <div class="album-container__content__btn-group__play-wrapper">
+            <ButtonTogglePlay :item="album" />
+          </div>
+        </div>
+        <div class="album-container__content__tracks">
+          <TrackListHeader :showAlbum="false" />
+          <TrackCard
+            v-for="(item, index) in tracks"
+            :item="item"
+            :index="index"
+            :show-album="false"
+            :show-image="false"
+            :context_uri="this.album.uri"
+          />
         </div>
       </div>
-      <div class="album-container__content__tracks">
-        <TrackListHeader :showAlbum="false" />
-        <TrackCard v-for="(item, index) in tracks" :item="item" :index="index" :show-album="false" :show-image="false"
-          :context_uri="this.album.uri" />
+    </div>
+  </template>
+  <template v-else>
+    <div class="album-container">
+      <div class="album-container__cover">
+        <Banner :loading="loading_skeleton" />
+      </div>
+      <div class="album-container__content">
+        <div class="album-container__content__btn-group">
+          <div class="album-container__content__btn-group__play-wrapper">
+            <Skeleton shape="circle" />
+          </div>
+        </div>
+        <div class="album-container__content__tracks">
+          <TrackListHeader :showAlbum="false" :loading="loading_skeleton" />
+          <TrackCard
+            v-for="i in tracks_limit"
+            :show-album="false"
+            :show-image="false"
+            :loading="loading_skeleton"
+          />
+        </div>
       </div>
     </div>
-  </div>
+  </template>
 </template>
 
 <script>
@@ -49,6 +86,7 @@ import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import Banner from '@/components/Banner/index.vue'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'Album',
@@ -56,7 +94,8 @@ export default {
     TrackListHeader,
     TrackCard,
     Banner,
-    ButtonTogglePlay
+    ButtonTogglePlay,
+    Skeleton
   },
   data() {
     return {
@@ -66,7 +105,8 @@ export default {
       tracks_limit: 20,
       tracks_offset: 0,
       tracks_next: '',
-      loading_more: false
+      loading_more: false,
+      loading_skeleton: true
     }
   },
   computed: {
@@ -80,7 +120,7 @@ export default {
       await this.getAlbum()
       await this.getTracks()
 
-      this.loading = false
+      this.loading_skeleton = false
     },
     async getAlbum() {
       const res = await getAlbum(this.id)
@@ -104,11 +144,11 @@ export default {
 
         let newVals = res.items
         // Add album images for each track
-        newVals.forEach(item => {
+        newVals.forEach((item) => {
           item.album = {
             images: this.album.images
           }
-        });
+        })
         let oldVals = JSON.parse(JSON.stringify(this.tracks))
         this.tracks = [...oldVals, ...newVals]
         this.tracks_next = res.next
@@ -121,6 +161,8 @@ export default {
   watch: {
     $route: {
       async handler(to, from) {
+        this.loading = false
+        this.loading_skeleton = true
         await this.getAll()
       },
       immediate: true

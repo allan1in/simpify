@@ -20,14 +20,14 @@
     </template>
     <template v-else>
       <div class="dashboard-container__featured-playlists">
-        <TitleShowAll title="Featured Playlists" :loading="loading_skeleton" />
+        <TitleShowAll :loading="loading_skeleton" />
         <div class="dashboard-container__featured-playlists__content">
           <CardHorizontal v-for="i in playlists_limit" :loading="loading_skeleton" />
         </div>
       </div>
 
       <div class="dashboard-container__new-releases">
-        <TitleShowAll title="New Releases" :loading="loading_skeleton" />
+        <TitleShowAll :loading="loading_skeleton" />
         <div class="dashboard-container__new-releases__content">
           <CardAlbum v-for="i in albums_limit" :loading="loading_skeleton" />
         </div>

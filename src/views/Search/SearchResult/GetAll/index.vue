@@ -5,7 +5,7 @@
         <div v-if="tracks_total" class="all-container__content__songs">
           <TitleShowAll
             :router-name="tracks_total > tracks_limit ? 'GetTracks' : ''"
-            :title="'Songs'"
+            title="Songs"
           />
           <div class="all-container__content__songs__results">
             <TrackListHeader />
@@ -21,7 +21,7 @@
         <div v-if="artists_total" class="all-container__content__artists">
           <TitleShowAll
             :router-name="artists_total > artists_limit ? 'GetArtists' : ''"
-            :title="'Artists'"
+            title="Artists"
           />
           <div class="all-container__content__artists__results">
             <CardArtist
@@ -36,7 +36,7 @@
         <div v-if="albums_total" class="all-container__content__albums">
           <TitleShowAll
             :router-name="albums_total > albums_limit ? 'GetAlbums' : ''"
-            :title="'Albums'"
+            title="Albums"
           />
           <div class="all-container__content__albums__results">
             <CardAlbum
@@ -51,7 +51,7 @@
         <div v-if="playlists_total" class="all-container__content__playlists">
           <TitleShowAll
             :router-name="playlists_total > playlists_limit ? 'GetPlaylists' : ''"
-            :title="'Playlists'"
+            title="Playlists"
           />
           <div class="all-container__content__playlists__results">
             <CardPlaylist
@@ -70,26 +70,26 @@
     <main class="all-container">
       <div class="all-container__content">
         <div class="all-container__content__songs">
-          <TitleShowAll title="Songs" :loading="loading_skeleton" />
+          <TitleShowAll :loading="loading_skeleton" />
           <div class="all-container__content__songs__results">
             <TrackListHeader :loading="loading_skeleton" />
             <CardTrack v-for="i in tracks_limit" :loading="loading_skeleton" />
           </div>
         </div>
         <div class="all-container__content__artists">
-          <TitleShowAll title="Artists" :loading="loading_skeleton" />
+          <TitleShowAll :loading="loading_skeleton" />
           <div class="all-container__content__artists__results">
             <CardArtist v-for="i in artists_limit" :loading="loading_skeleton" />
           </div>
         </div>
         <div class="all-container__content__albums">
-          <TitleShowAll :title="'Albums'" :loading="loading_skeleton" />
+          <TitleShowAll :loading="loading_skeleton" />
           <div class="all-container__content__albums__results">
             <CardAlbum v-for="i in albums_limit" :loading="loading_skeleton" />
           </div>
         </div>
         <div class="all-container__content__playlists">
-          <TitleShowAll :title="'Playlists'" :loading="loading_skeleton" />
+          <TitleShowAll :loading="loading_skeleton" />
           <div class="all-container__content__playlists__results">
             <CardPlaylist v-for="i in playlists_limit" :loading="loading_skeleton" />
           </div>
@@ -110,7 +110,6 @@ import { searchArtists } from '@/api/meta/search'
 import { searchTracks } from '@/api/meta/search'
 import { debounce } from '@/utils/debounce'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
-import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import Skeleton from '@/components/Skeleton/index.vue'
@@ -124,7 +123,6 @@ export default {
     CardPlaylist,
     TrackListHeader,
     TitleShowAll,
-    TitleWithPartialItems,
     Skeleton
   },
   data() {

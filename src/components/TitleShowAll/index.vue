@@ -1,8 +1,12 @@
 <template>
   <template v-if="!loading">
     <div class="title-show-all" v-if="routerName !== ''">
-      <router-link class="title-show-all__title" :to="{ name: routerName }">{{ title }}</router-link>
-      <router-link class="title-show-all__show-all" :to="{ name: routerName }">Show All</router-link>
+      <router-link class="title-show-all__title" :to="{ name: routerName }">{{
+        title
+      }}</router-link>
+      <router-link class="title-show-all__show-all" :to="{ name: routerName }"
+        >Show All</router-link
+      >
     </div>
     <h1 v-else class="title-simple">
       {{ title }}
@@ -32,7 +36,8 @@ export default {
     },
     title: {
       type: String,
-      require: true
+      require: false,
+      default: ''
     },
     loading: {
       type: Boolean,

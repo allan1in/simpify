@@ -1,53 +1,106 @@
 <template>
-  <div class="banner">
-    <div class="banner__img-wrapper" :class="{ 'banner__img-wrapper-round': imgShape === 'round' }">
-      <img v-if="images !== null" class="banner__img-wrapper__img" :src="images[0].url"
-        :alt="item.name ? item.name : item.display_name" />
-      <div v-else class="banner__img-wrapper__icon">
-        <IconDefaultPlaylist />
+  <template v-if="!loading">
+    <div class="banner">
+      <div
+        class="banner__img-wrapper"
+        :class="{ 'banner__img-wrapper-round': imgShape === 'circle' }"
+      >
+        <img
+          v-if="images !== null && images.length !== 0"
+          class="banner__img-wrapper__img"
+          :src="images[0].url"
+          :alt="title"
+        />
+        <div v-else class="banner__img-wrapper__icon">
+          <IconDefaultPlaylist />
+        </div>
+      </div>
+      <div class="banner__info">
+        <span class="banner__info__type">{{ type }}</span>
+        <h1 class="banner__info__title" :title="title">
+          {{ title }}
+        </h1>
+        <div class="banner__info__details">
+          <slot></slot>
+        </div>
       </div>
     </div>
-    <div class="banner__info">
-      <span class="banner__info__type">{{
-        `${item.type.charAt(0).toUpperCase()}${item.type.slice(1)}`
-      }}</span>
-      <h1 class="banner__info__title" :title="item.name ? item.name : item.display_name">
-        {{ item.name ? item.name : item.display_name }}
-      </h1>
-      <div class="banner__info__details">
-        <slot></slot>
+  </template>
+  <template v-else>
+    <div class="banner">
+      <div
+        class="banner__img-wrapper"
+        :class="{ 'banner__img-wrapper-round': imgShape === 'circle' }"
+      >
+        <Skeleton />
+      </div>
+      <div class="banner__info">
+        <Skeleton class="skeleton__type" />
+        <Skeleton class="skeleton__title" />
+        <Skeleton class="skeleton__info" />
       </div>
     </div>
-  </div>
+  </template>
 </template>
 
 <script>
 import IconDefaultPlaylist from '../Icons/IconDefaultPlaylist.vue'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'Banner',
   components: {
-    IconDefaultPlaylist
+    IconDefaultPlaylist,
+    Skeleton
   },
   props: {
-    item: {
-      type: Object,
-      require: true
+    type: {
+      type: String,
+      require: false,
+      default: ''
+    },
+    title: {
+      type: String,
+      require: false,
+      default: ''
     },
     images: {
       type: Object,
-      require: true
+      require: false,
+      default: {}
     },
     imgShape: {
       type: String,
       require: false,
       default: ''
+    },
+    loading: {
+      type: Boolean,
+      require: false,
+      default: false
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.skeleton {
+  &__type {
+    height: $font-size-text-primary;
+    width: 10%;
+  }
+
+  &__title {
+    height: $font-size-title-large;
+    width: 50%;
+    margin: calc($font-size-title-large * 0.2) 0;
+  }
+
+  &__info {
+    height: $font-size-text-primary;
+    width: 30%;
+  }
+}
 .banner {
   padding: $gutter-4x;
   background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);

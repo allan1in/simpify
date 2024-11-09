@@ -1,10 +1,20 @@
 <template>
-  <div class="artist-all-albums" v-if="!loading">
-    <TitleShowAll :title="'Albums'" />
-    <div class="artist-all-albums__results">
-      <AlbumCard v-for="item in albums" :key="item.id" :item="item" />
+  <template v-if="!loading_skeleton">
+    <div class="artist-all-albums">
+      <TitleShowAll title="Albums" />
+      <div class="artist-all-albums__results">
+        <AlbumCard v-for="item in albums" :key="item.id" :item="item" />
+      </div>
     </div>
-  </div>
+  </template>
+  <template v-else>
+    <div class="artist-all-albums">
+      <TitleShowAll :loading="loading_skeleton" />
+      <div class="artist-all-albums__results">
+        <AlbumCard v-for="i in albums_limit" :loading="loading_skeleton" />
+      </div>
+    </div>
+  </template>
 </template>
 
 <script>
@@ -28,7 +38,8 @@ export default {
       albums_limit: 48,
       albums_offset: 0,
       albums_next: '',
-      loadingMore: false
+      loadingMore: false,
+      loading_skeleton: true
     }
   },
   computed: {
@@ -37,7 +48,8 @@ export default {
   methods: {
     async getAll() {
       await this.getAlbums()
-      this.loading = false
+
+      this.loading_skeleton = false
     },
     async getAlbums() {
       if (!this.loadingMore && this.albums_next !== null) {
@@ -49,10 +61,13 @@ export default {
             limit: this.albums_limit,
             offset: this.albums_offset
           }
-          res = (await getAlbums(this.id, params))
+          res = await getAlbums(this.id, params)
         } else {
+          if (this.loading_skeleton) {
+            return
+          }
           let path = this.albums_next
-          res = (await getNextAlbums(this.id, path.slice(path.indexOf('?') + 1)))
+          res = await getNextAlbums(this.id, path.slice(path.indexOf('?') + 1))
         }
 
         let newVals = res.items
@@ -74,6 +89,9 @@ export default {
   },
   created() {
     this.getAll()
+  },
+  mounted() {
+    this.loading = false
   }
 }
 </script>

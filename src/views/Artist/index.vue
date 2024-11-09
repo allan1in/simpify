@@ -1,41 +1,131 @@
 <template>
-  <div class="artist-container" v-if="!loading">
-    <div class="artist-container__cover" :style="{
-      'background-image': `url(${artist.images?.length !== 0 ? artist.images[0].url : ''})`
-    }">
-      <h1 class="artist-container__cover__title" :title="artist.name">{{ artist.name }}</h1>
-      <div class="artist-container__cover__followers">
-        {{
-          Intl.NumberFormat().format(artist.followers.total) +
-          (artist.followers.total === '1' ? ' follower' : ' followers')
-        }}
-      </div>
-    </div>
-    <div class="artist-container__content">
-      <div class="artist-container__content__btn-group">
-        <div class="artist-container__content__btn-group__play-wrapper">
-          <ButtonTogglePlay :item="artist" />
+  <template v-if="!loading_skeleton">
+    <div class="artist-container">
+      <div
+        class="artist-container__cover"
+        :style="{
+          'background-image': `url(${artist.images?.length !== 0 ? artist.images[0].url : ''})`
+        }"
+      >
+        <h1 class="artist-container__cover__title" :title="artist.name">{{ artist.name }}</h1>
+        <div class="artist-container__cover__followers">
+          {{
+            Intl.NumberFormat().format(artist.followers.total) +
+            (artist.followers.total === '1' ? ' follower' : ' followers')
+          }}
         </div>
       </div>
-      <div v-if="tracks.length !== 0" class="artist-container__content__popular">
-        <TitleShowAll :title="'Popular'" />
-        <div class="artist-container__content__popular__content">
-          <TrackListHeader />
-          <TrackCard v-for="(track, index) in tracks" :key="track.id" :index="index" :showArtists="false" :item="track"
-            :uris="uris" />
+      <div class="artist-container__content">
+        <div class="artist-container__content__btn-group">
+          <div class="artist-container__content__btn-group__play-wrapper">
+            <ButtonTogglePlay :item="artist" />
+          </div>
+        </div>
+        <div v-if="tracks.length !== 0" class="artist-container__content__popular">
+          <TitleShowAll title="Popular" />
+          <div class="artist-container__content__popular__content">
+            <TrackListHeader />
+            <TrackCard
+              v-for="(track, index) in tracks"
+              :key="track.id"
+              :index="index"
+              :showArtists="false"
+              :item="track"
+              :uris="uris"
+            />
+          </div>
+        </div>
+        <div class="artist-container__content__albums" v-if="albums.length !== 0">
+          <TitleShowAll
+            :router-name="albums_total > albums_limit ? 'ArtistAllAlbums' : ''"
+            title="Albums"
+          />
+          <div class="artist-container__content__albums__content">
+            <AlbumCard
+              v-for="(item, index) in albums"
+              :key="item.id"
+              :item="item"
+              :index="index"
+              :show-artists="false"
+              :show-album-type="true"
+            />
+          </div>
+        </div>
+        <div class="artist-container__content__singles" v-if="singles.length !== 0">
+          <TitleShowAll
+            :router-name="singles_total > singles_limit ? 'ArtistAllSingles' : ''"
+            title="Singles"
+          />
+          <div class="artist-container__content__singles__content">
+            <AlbumCard
+              v-for="(item, index) in singles"
+              :key="item.id"
+              :item="item"
+              :index="index"
+              :show-artists="false"
+              :show-album-type="true"
+            />
+          </div>
+        </div>
+        <div class="artist-container__content__appears-on" v-if="appearsOn.length !== 0">
+          <TitleShowAll
+            :router-name="appearsOn_total > appearsOn_limit ? 'ArtistAllAppearsOn' : ''"
+            title="Appears On"
+          />
+          <div class="artist-container__content__appears-on__content">
+            <AlbumCard
+              v-for="(item, index) in appearsOn"
+              :key="item.id"
+              :item="item"
+              :index="index"
+              :show-artists="false"
+              :show-album-type="true"
+            />
+          </div>
         </div>
       </div>
-      <TitleWithPartialItems v-if="albums.length !== 0" :router-name="'ArtistAllAlbums'" :limit="albums_limit"
-        :total="albums_total" :title="'Albums'"
-        :album-card-props="{ items: albums, showAlbumType: true, showArtists: false }" />
-      <TitleWithPartialItems v-if="singles.length !== 0" :router-name="'ArtistAllSingles'" :limit="singles_limit"
-        :total="singles_total" :title="'Singles'"
-        :album-card-props="{ items: singles, showAlbumType: true, showArtists: false }" />
-      <TitleWithPartialItems v-if="appearsOn.length !== 0" :router-name="'ArtistAllAppearsOn'" :limit="appearsOn_limit"
-        :total="appearsOn_total" :title="'Appears On'"
-        :album-card-props="{ items: appearsOn, showAlbumType: true, showArtists: false }" />
     </div>
-  </div>
+  </template>
+  <template v-else>
+    <div class="artist-container">
+      <div class="artist-container__cover">
+        <Skeleton class="skeleton__title" />
+        <Skeleton class="skeleton__info" />
+      </div>
+      <div class="artist-container__content">
+        <div class="artist-container__content__btn-group">
+          <div class="artist-container__content__btn-group__play-wrapper">
+            <Skeleton shape="circle" />
+          </div>
+        </div>
+        <div class="artist-container__content__popular">
+          <TitleShowAll :loading="loading_skeleton" />
+          <div class="artist-container__content__popular__content">
+            <TrackListHeader :loading="loading_skeleton" />
+            <TrackCard v-for="i in 10" :show-artists="false" :loading="loading_skeleton" />
+          </div>
+        </div>
+        <div class="artist-container__content__albums">
+          <TitleShowAll :loading="loading_skeleton" />
+          <div class="artist-container__content__albums__content">
+            <AlbumCard v-for="i in albums_limit" :loading="loading_skeleton" />
+          </div>
+        </div>
+        <div class="artist-container__content__singles">
+          <TitleShowAll :loading="loading_skeleton" />
+          <div class="artist-container__content__singles__content">
+            <AlbumCard v-for="i in singles_limit" :loading="loading_skeleton" />
+          </div>
+        </div>
+        <div class="artist-container__content__appears-on">
+          <TitleShowAll :loading="loading_skeleton" />
+          <div class="artist-container__content__appears-on__content">
+            <AlbumCard v-for="i in appearsOn_limit" :loading="loading_skeleton" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
 </template>
 
 <script>
@@ -44,11 +134,11 @@ import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import { getAlbums, getAppearsOn, getArtist, getSingles, getTopTracks } from '@/api/meta/artist'
 import AlbumCard from '@/components/CardAlbum/index.vue'
 import ArtistCard from '@/components/CardArtist/index.vue'
-import TitleWithPartialItems from '@/components/TitleWithPartialItems/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'Artist',
@@ -57,9 +147,9 @@ export default {
     TrackCard,
     AlbumCard,
     ArtistCard,
-    TitleWithPartialItems,
     TitleShowAll,
-    ButtonTogglePlay
+    ButtonTogglePlay,
+    Skeleton
   },
   data() {
     return {
@@ -78,7 +168,8 @@ export default {
       appearsOn_limit: 8,
       appearsOn_offset: 0,
       appearsOn_total: 0,
-      loading_more: false
+      loading_more: false,
+      loading_skeleton: true
     }
   },
   computed: {
@@ -98,7 +189,8 @@ export default {
       await this.getAlbums()
       await this.getSingles()
       await this.getAppearsOn()
-      this.loading = false
+
+      this.loading_skeleton = false
     },
     async getArtist() {
       const res = await getArtist(this.id)
@@ -139,7 +231,9 @@ export default {
   watch: {
     $route: {
       async handler(to, from) {
+        this.loading = false
         this.id = to.params.artistId
+        this.loading_skeleton = true
         await this.getAll()
       },
       immediate: true
@@ -149,9 +243,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.skeleton {
+  &__title {
+    height: $font-size-title-large;
+    width: 30%;
+  }
+
+  &__info {
+    height: $font-size-text-primary;
+    width: 10%;
+    margin-top: $font-size-text-primary;
+  }
+}
+
 .artist-container {
   &__cover {
-    background-image: url('https://i.scdn.co/image/ab67616d0000b2737c20fb440980c4f2f24346c5');
+    background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 50%;
@@ -214,6 +321,14 @@ export default {
 
     &__popular {
       padding: 1.6rem 0;
+    }
+
+    &__albums,
+    &__singles,
+    &__appears-on {
+      &__content {
+        @include gridCardsLess;
+      }
     }
   }
 }
