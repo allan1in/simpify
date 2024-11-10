@@ -1,7 +1,7 @@
 .fade-slide-from-top {
   &-enter-active,
   &-leave-active {
-    transition: all $duratrion-slow ease;
+    transition: all $duration-slow ease;
   }
 
   &-enter-from,
@@ -11,10 +11,23 @@
   }
 }
 
-.fade {
+.fade-slide-from-bottom {
   &-enter-active,
   &-leave-active {
-    transition: all $duratrion-slow ease;
+    transition: all $duration-slow ease;
+  }
+
+  &-enter-from,
+  &-leave-to {
+    transform: translateY(1.6rem);
+    opacity: 0;
+  }
+}
+
+.slide-from-bottom {
+  &-enter-active,
+  &-leave-active {
+    transition: all $duration-slow ease;
   }
 
   &-enter-from,

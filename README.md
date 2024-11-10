@@ -63,5 +63,3 @@ npm run lint
 3. user dont have premirem
 4. theme
 5. i18n
-6. progress bar
-7. add key when use v-for

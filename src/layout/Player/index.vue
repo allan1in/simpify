@@ -152,6 +152,8 @@ import { mapActions, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
+import { use } from 'chai'
+import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'Player',
@@ -193,9 +195,9 @@ export default {
       'repeatMode',
       'isMute',
       'volume',
-      'showFullScreenPlayer',
       'isReady'
-    ])
+    ]),
+    ...mapWritableState(useAppStore, ['showFullScreenPlayer'])
   },
   methods: {
     async openFullScreenPlayer() {

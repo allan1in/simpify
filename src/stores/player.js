@@ -8,11 +8,11 @@ import {
 } from '@/api/meta/player'
 import { Howl } from 'howler'
 import router from '@/router/index'
+import Message from '@/includes/message'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
     player: null,
-    showFullScreenPlayer: false,
     activeDevice: {},
     volume: 50,
     isShuffle: false,
@@ -277,7 +277,7 @@ export const usePlayerStore = defineStore('player', {
       if (useUserStore().checkProduct('premium')) {
         await startPlayback(data)
       } else {
-        alert('This is only for premium accounts!')
+        Message('Premium accounts only')
       }
     }
   }
