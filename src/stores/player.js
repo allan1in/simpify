@@ -8,7 +8,7 @@ import {
 } from '@/api/meta/player'
 import { Howl } from 'howler'
 import router from '@/router/index'
-import Message from '@/includes/message'
+import Message from '@/components/Message/index'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
