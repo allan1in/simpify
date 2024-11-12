@@ -1,81 +1,67 @@
 <template>
   <footer class="player-bar">
-    <div class="player-bar__left">
-      <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
-        <img
-          class="player-bar__left__cover-wrapper__cover"
-          :src="current_track.album.images[0].url"
-          alt="track"
-          @click="showFullScreenPlayer = true"
-        />
-      </div>
-      <div class="player-bar__left__msg-wrapper">
-        <div class="player-bar__left__msg-wrapper__title" v-if="current_track?.id">
-          <router-link :to="{ name: 'Track', params: { trackId: current_track.id } }">{{
-            current_track.name
-          }}</router-link>
+    <template v-if="!loading">
+      <div class="player-bar__left">
+        <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
+          <img class="player-bar__left__cover-wrapper__cover" :src="current_track.album.images[0].url" alt="track"
+            @click="showFullScreenPlayer = true" />
         </div>
-        <div class="player-bar__left__msg-wrapper__artist" v-if="current_track?.artists?.length">
-          <router-link
-            v-for="(artist, index) in current_track.artists"
-            :key="artist.uri"
-            :to="{
+        <div class="player-bar__left__msg-wrapper">
+          <div class="player-bar__left__msg-wrapper__title" v-if="current_track?.id">
+            <router-link :to="{ name: 'Track', params: { trackId: current_track.id } }">{{
+              current_track.name
+            }}</router-link>
+          </div>
+          <div class="player-bar__left__msg-wrapper__artist" v-if="current_track?.artists?.length">
+            <router-link v-for="(artist, index) in current_track.artists" :key="artist.uri" :to="{
               name: 'Artist',
               params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
-            }"
-          >
-            {{ (index === 0 ? '' : ', ') + artist.name }}
-          </router-link>
+            }">
+              {{ (index === 0 ? '' : ', ') + artist.name }}
+            </router-link>
+          </div>
         </div>
-      </div>
-      <!-- <button class="icon-wrapper" @click="song.isLike = !song.isLike">
+        <!-- <button class="icon-wrapper" @click="song.isLike = !song.isLike">
         <IconInLikeSong v-if="song.isLike" />
         <IconAddToLikeSong v-else />
       </button> -->
-    </div>
+      </div>
+    </template>
+    <template v-else>
+      <div class="player-bar__left">
+        <div class="player-bar__left__cover-wrapper">
+          <Skeleton class="skeleton__img" />
+        </div>
+        <div class="player-bar__left__msg-wrapper">
+          <div class="player-bar__left__msg-wrapper__title">
+            <Skeleton class="skeleton__title" />
+          </div>
+          <div class="player-bar__left__msg-wrapper__artist">
+            <Skeleton class="skeleton__artists" />
+          </div>
+        </div>
+      </div>
+    </template>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
-        <button
-          class="icon-wrapper"
-          :class="{ 'btn-active': isShuffle, 'not-allowed': !isReady }"
-          @click="toggleShuffle"
-          :disabled="!isReady"
-        >
+        <button class="icon-wrapper" :class="{ 'btn-active': isShuffle, 'not-allowed': !isReady || isFreeAccount }"
+          @click="toggleShuffle">
           <IconShuffle />
         </button>
-        <button
-          class="icon-wrapper"
-          @click="preTrack"
-          :class="{ 'not-allowed': !isReady }"
-          :disabled="!isReady"
-        >
+        <button class="icon-wrapper" @click="preTrack" :class="{ 'not-allowed': !isReady || isFreeAccount }">
           <IconPrevious />
         </button>
-        <button
-          class="player-bar__mid__btn-group__play"
-          @click="togglePlay"
-          :class="{ 'not-allowed': !isReady }"
-          :disabled="!isReady"
-        >
+        <button class="player-bar__mid__btn-group__play" @click="togglePlay" :class="{ 'not-allowed': !isReady }">
           <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
             <IconPlay v-if="isPause" />
             <IconPause v-else />
           </span>
         </button>
-        <button
-          class="icon-wrapper"
-          @click="nextTrack"
-          :class="{ 'not-allowed': !isReady }"
-          :disabled="!isReady"
-        >
+        <button class="icon-wrapper" @click="nextTrack" :class="{ 'not-allowed': !isReady || isFreeAccount }">
           <IconNext />
         </button>
-        <button
-          class="icon-wrapper"
-          :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': !isReady }"
-          @click="setRepeatMode"
-          :disabled="!isReady"
-        >
+        <button class="icon-wrapper"
+          :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': !isReady || isFreeAccount }" @click="setRepeatMode">
           <IconRepeatSingle v-if="repeatMode === 2" />
           <IconRepeat v-else />
         </button>
@@ -111,20 +97,12 @@
       <!-- <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
       </button> -->
-      <button
-        class="icon-wrapper player-bar__right__full-screen"
-        @click="openFullScreenPlayer"
-        :class="{ 'not-allowed': !isReady }"
-        :disabled="!isReady"
-      >
+      <button class="icon-wrapper player-bar__right__full-screen" @click="openFullScreenPlayer"
+        :class="{ 'not-allowed': !isReady }" :disabled="!isReady">
         <IconFullScreen />
       </button>
-      <button
-        class="icon-wrapper player-bar__right__play-phone"
-        @click="togglePlay"
-        :class="{ 'not-allowed': !isReady }"
-        :disabled="!isReady"
-      >
+      <button class="icon-wrapper player-bar__right__play-phone" @click="togglePlay"
+        :class="{ 'not-allowed': !isReady }">
         <IconPlay v-if="isPause" />
         <IconPause v-else />
       </button>
@@ -152,8 +130,9 @@ import { mapActions, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
-import { use } from 'chai'
 import { useAppStore } from '@/stores/app'
+import { useUserStore } from '@/stores/user'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'Player',
@@ -174,7 +153,8 @@ export default {
     IconFullScreen,
     IconInLikeSong,
     VolumeBar,
-    SeekBar
+    SeekBar,
+    Skeleton
   },
   data() {
     return {
@@ -195,9 +175,13 @@ export default {
       'repeatMode',
       'isMute',
       'volume',
-      'isReady'
+      'isReady',
+      'loading'
     ]),
-    ...mapWritableState(useAppStore, ['showFullScreenPlayer'])
+    ...mapWritableState(useAppStore, ['showFullScreenPlayer']),
+    isFreeAccount() {
+      return useUserStore().checkProduct('free')
+    }
   },
   methods: {
     async openFullScreenPlayer() {
@@ -235,6 +219,24 @@ export default {
 <style lang="scss" scoped>
 $msg-title-font-size: 1.4rem;
 $msg-artist-font-size: 1.2rem;
+
+.skeleton {
+  &__img {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+  }
+
+  &__title {
+    height: $font-size-text-primary;
+    width: 30%;
+    margin-bottom: calc($font-size-text-primary * 0.5);
+  }
+
+  &__artists {
+    height: $font-size-text-secondary;
+    width: 50%;
+  }
+}
 
 .not-allowed:nth-child(n) {
   cursor: not-allowed;
@@ -309,10 +311,10 @@ $msg-artist-font-size: 1.2rem;
 
     &__msg-wrapper {
       margin: 0 $gutter;
+      width: 100%;
 
       &__title {
         font-size: $msg-title-font-size;
-        cursor: pointer;
 
         &:hover {
           text-decoration: underline;

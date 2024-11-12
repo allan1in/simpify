@@ -1,19 +1,12 @@
 <template>
   <Transition name="slide-from-bottom">
-    <main
-      v-show="showFullScreenPlayer"
-      @mousemove="isCursorMove = true"
-      class="full-screen-container"
-    >
+    <main v-show="showFullScreenPlayer" @mousemove="isCursorMove = true" class="full-screen-container">
       <div class="full-screen-container__top">
         <div class="full-screen-container__top__title">
           <div class="full-screen-container__top__title__icon-wrapper">
             <IconPrimaryLogo />
           </div>
-          <div
-            class="full-screen-container__top__title__text-wrapper"
-            v-if="current_track?.album?.name"
-          >
+          <div class="full-screen-container__top__title__text-wrapper" v-if="current_track?.album?.name">
             <h1 class="full-screen-container__top__title__text-wrapper__from">
               PLAYING FROM ALBUM
             </h1>
@@ -22,63 +15,42 @@
             </h2>
           </div>
         </div>
-        <button
-          :class="{
-            'full-screen-container__top__close-wrapper-show': isCursorMove || isCursorOverClose
-          }"
-          class="full-screen-container__top__close-wrapper"
-          @click="closeFullScreenPlayer"
-          @mouseover="isCursorOverClose = true"
-          @mouseout="isCursorOverClose = false"
-        >
+        <button :class="{
+          'full-screen-container__top__close-wrapper-show': isCursorMove || isCursorOverClose
+        }" class="full-screen-container__top__close-wrapper" @click="closeFullScreenPlayer"
+          @mouseover="isCursorOverClose = true" @mouseout="isCursorOverClose = false">
           <div class="full-screen-container__top__close-wrapper__close">
             <IconClose />
           </div>
         </button>
       </div>
       <div class="full-screen-container__content">
-        <div
-          class="full-screen-container__content__cover-wrapper"
+        <div class="full-screen-container__content__cover-wrapper"
           :class="{ 'full-screen-container__content__cover-wrapper-small': !isCursorMove }"
-          v-if="current_track?.album?.images"
-        >
-          <img
-            class="full-screen-container__content__cover-wrapper__cover"
-            :src="current_track.album.images[0].url"
-            :alt="current_track.name"
-          />
+          v-if="current_track?.album?.images">
+          <img loading="lazy" class="full-screen-container__content__cover-wrapper__cover"
+            :src="current_track.album.images[0].url" :alt="current_track.name" />
         </div>
         <div class="full-screen-container__content__text-wrapper">
           <h1 class="full-screen-container__content__text-wrapper__name" v-if="current_track">
             {{ current_track.name }}
           </h1>
           <h2 class="full-screen-container__content__text-wrapper__artist">
-            <span
-              v-for="(artist, index) in current_track.artists"
-              :key="artist.uri"
-              v-if="current_track?.artists?.length"
-              >{{ (index === 0 ? '' : ', ') + artist.name }}</span
-            >
+            <span v-for="(artist, index) in current_track.artists" :key="artist.uri"
+              v-if="current_track?.artists?.length">{{ (index === 0 ? '' : ', ') + artist.name }}</span>
           </h2>
         </div>
       </div>
-      <div
-        class="full-screen-container__player"
+      <div class="full-screen-container__player"
         :class="{ 'full-screen-container__player-show': isCursorMove || isCursorOverPlayer }"
-        @mouseover="isCursorOverPlayer = true"
-        @mouseout="isCursorOverPlayer = false"
-      >
+        @mouseover="isCursorOverPlayer = true" @mouseout="isCursorOverPlayer = false">
         <div class="full-screen-container__player__seek-bar">
           <SeekBar size="large" />
         </div>
         <div class="full-screen-container__player__btns">
           <div class="full-screen-container__player__btns__left"></div>
           <div class="full-screen-container__player__btns__mid">
-            <button
-              class="icon-wrapper"
-              :class="{ 'btn-active': isShuffle }"
-              @click="toggleShuffle"
-            >
+            <button class="icon-wrapper" :class="{ 'btn-active': isShuffle }" @click="toggleShuffle">
               <IconShuffle />
             </button>
             <button class="icon-wrapper" @click="preTrack">
@@ -93,11 +65,7 @@
             <button class="icon-wrapper" @click="nextTrack">
               <IconNext />
             </button>
-            <button
-              class="icon-wrapper"
-              :class="{ 'btn-active': repeatMode !== 0 }"
-              @click="setRepeatMode"
-            >
+            <button class="icon-wrapper" :class="{ 'btn-active': repeatMode !== 0 }" @click="setRepeatMode">
               <IconRepeatSingle v-if="repeatMode === 2" />
               <IconRepeat v-else />
             </button>

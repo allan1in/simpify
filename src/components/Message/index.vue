@@ -21,7 +21,7 @@ export default {
     },
     remove: {
       type: Function,
-      default: () => {}
+      default: () => { }
     }
   },
   methods: {
@@ -57,6 +57,7 @@ export default {
     color: $color-bg-1;
     font-size: $font-size-text-primary;
     font-weight: 700;
+    user-select: none;
   }
 }
 </style>

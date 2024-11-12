@@ -3,30 +3,21 @@
     <div class="playlist-container">
       <div class="playlist-container__banner">
         <Banner :type="playlist.type" :title="playlist.name" :images="playlist.images">
-          <router-link
-            class="playlist-container__banner-details__owner"
-            :to="{ name: 'User', params: { userId: playlist.owner.id } }"
-            >{{ playlist.owner.display_name }}</router-link
-          >
+          <router-link class="playlist-container__banner-details__owner"
+            :to="{ name: 'User', params: { userId: playlist.owner.id } }">{{ playlist.owner.display_name
+            }}</router-link>
           <span class="playlist-container__banner-details__release-year">
             {{
               playlist.followers.total === 0
                 ? ''
-                : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${
-                    playlist.followers.total === 1 ? ' follower' : ' followers'
-                  }`
+                : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${playlist.followers.total === 1 ? ' follower' : ' followers'
+                }`
             }}
           </span>
-          <span
-            v-if="playlist.tracks.total !== 0"
-            class="playlist-container__banner-details__total-playlist.tracks"
-          >
+          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__total-playlist.tracks">
             {{ ` • ${playlist.tracks.total} songs` }}
           </span>
-          <span
-            v-if="playlist.tracks.total !== 0"
-            class="playlist-container__banner-details__duration"
-          >
+          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__duration">
             {{
               ` • ${getFormatTime(
                 playlist.tracks.items.reduce((acc, item) => {
@@ -45,13 +36,8 @@
         </div>
         <div class="playlist-container__content__tracks">
           <TrackListHeader />
-          <TrackCard
-            v-for="(item, index) in tracks"
-            :key="item.id"
-            :item="item.track"
-            :index="index"
-            :context_uri="this.playlist.uri"
-          />
+          <TrackCard v-for="(item, index) in tracks" :key="item.id" :item="item.track" :index="index"
+            :context_uri="this.playlist.uri" />
         </div>
       </div>
     </div>
@@ -181,8 +167,7 @@ export default {
     padding: 1.6rem;
 
     &__btn-group {
-      padding: 0 $gutter-2x;
-      padding-top: $gutter-2x;
+      padding: $gutter-2x;
 
       &__play-wrapper {
         height: 5.4rem;

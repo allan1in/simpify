@@ -1,85 +1,96 @@
 <template>
   <template v-if="!loading">
-    <div v-if="item !== null" class="track-card">
-      <div class="track-card__left">
-        <div v-if="item.id !== null" class="track-card__left__icon-wrapper">
-          <button class="track-card__left__icon-wrapper__icon" @click="handleTogglePlay">
-            <IconPause v-if="!isPause && item.uri === current_track.uri" />
-            <IconPlay v-else />
-          </button>
-        </div>
-        <div class="track-card__left__num-wrapper">
-          <div
-            class="track-card__left__num-wrapper__playing"
-            v-if="!isPause && current_track.uri === item.uri"
-          >
-            <img
-              class="track-card__left__num-wrapper__playing__img"
-              src="/src/assets/images/playing.gif"
-              alt=""
-            />
+    <template v-if="available">
+      <div v-if="item !== null" class="track-card">
+        <div class="track-card__left">
+          <div class="track-card__left__icon-wrapper">
+            <button class="track-card__left__icon-wrapper__icon" @click="handleTogglePlay">
+              <IconPause v-if="isPlaying" />
+              <IconPlay v-else />
+            </button>
           </div>
-          <span v-else>{{ index + 1 }}</span>
+          <div class="track-card__left__num-wrapper">
+            <div class="track-card__left__num-wrapper__playing" v-if="isPlaying">
+              <img loading="lazy" class="track-card__left__num-wrapper__playing__img"
+                src="/src/assets/images/playing.gif" alt="" />
+            </div>
+            <span v-else>{{ index + 1 }}</span>
+          </div>
         </div>
-      </div>
 
-      <div class="track-card__title">
-        <div v-if="showImage" class="track-card__title__cover-wrapper">
-          <img
-            class="track-card__title__cover-wrapper__cover"
-            :src="item.album.images[2].url"
-            alt="Album Cover"
-          />
-        </div>
-        <div class="track-card__title__msg-wrapper">
-          <router-link
-            :class="{
+        <div class="track-card__title">
+          <div v-if="showImage" class="track-card__title__cover-wrapper">
+            <img loading="lazy" class="track-card__title__cover-wrapper__cover" :src="item.album.images[2].url"
+              alt="Album Cover" />
+          </div>
+          <div class="track-card__title__msg-wrapper">
+            <router-link :class="{
               'track-card__title__msg-wrapper__name-playing':
-                !isPause && current_track.uri === item.uri
-            }"
-            v-if="item.id !== null"
-            :to="{ name: 'Track', params: { trackId: item.id } }"
-            class="track-card__title__msg-wrapper__name"
-          >
-            {{ item.name }}
-          </router-link>
-          <span v-else class="track-card__title__msg-wrapper__name"> {{ item.name }}</span>
-          <div v-if="showArtists" class="track-card__title__msg-wrapper__artists">
-            <router-link
-              v-if="item.id !== null"
-              v-for="(artist, index) in item.artists"
-              :key="artist.id"
-              :to="{ name: 'Artist', params: { artistId: artist.id } }"
-            >
-              {{ (index === 0 ? '' : ', ') + artist.name }}
+                isPlaying
+            }" :to="{ name: 'Track', params: { trackId: item.id } }" class="track-card__title__msg-wrapper__name">
+              {{ item.name }}
             </router-link>
-            <span
-              v-else
-              class="track-card__title__msg-wrapper__artists"
-              v-for="(artist, index) in item.artists"
-              :key="'not-allowed'+artist.id"
-            >
-              {{ (index === 0 ? '' : ', ') + artist.name }}</span
-            >
+            <div v-if="showArtists" class="track-card__title__msg-wrapper__artists">
+              <router-link v-for="(artist, index) in item.artists" :key="artist.id"
+                :to="{ name: 'Artist', params: { artistId: artist.id } }">
+                {{ (index === 0 ? '' : ', ') + artist.name }}
+              </router-link>
+            </div>
           </div>
         </div>
+        <div v-if="showAlbum" class="track-card__album-wrapper">
+          <router-link :to="{ name: 'Album', params: { albumId: item.album.id } }"
+            class="track-card__album-wrapper__album">{{ item.album.name }}</router-link>
+        </div>
+        <div class="track-card__duration-wrapper">
+          <span>{{ getFormatTime(item.duration_ms) }}</span>
+        </div>
       </div>
-      <div v-if="showAlbum" class="track-card__album-wrapper">
-        <router-link
-          v-if="item.id !== null"
-          :to="{ name: 'Album', params: { albumId: item.album.id } }"
-          class="track-card__album-wrapper__album"
-          >{{ item.album.name }}</router-link
-        >
-        <span v-else class="track-card__album-wrapper__album">
-          {{ item.album.name }}
-        </span>
+    </template>
+    <template v-else>
+      <div v-if="item !== null" class="track-card track-card-not-available">
+        <div class="track-card__left">
+          <div class="track-card__left__num-wrapper-not-avialable">
+            <span>{{ index + 1 }}</span>
+          </div>
+        </div>
+
+        <div class="track-card__title">
+          <div v-if="showImage" class="track-card__title__cover-wrapper">
+            <img loading="lazy" class="track-card__title__cover-wrapper__cover" :src="item.album.images[2].url"
+              alt="Album Cover" />
+          </div>
+          <div class="track-card__title__msg-wrapper">
+            <router-link v-if="!!item.id" :class="{
+              'track-card__title__msg-wrapper__name-playing':
+                isPlaying
+            }" :to="{ name: 'Track', params: { trackId: item.id } }" class="track-card__title__msg-wrapper__name">
+              {{ item.name }}
+            </router-link>
+            <span v-else class="track-card__title__msg-wrapper__name"> {{ item.name }}</span>
+            <div v-if="showArtists" class="track-card__title__msg-wrapper__artists-not-available">
+              <template v-for="(artist, index) in item.artists" :key="artist.id">
+                <router-link v-if="!!artist.id" :to="{ name: 'Artist', params: { artistId: artist.id } }">
+                  {{ (index === 0 ? '' : ', ') + artist.name }}
+                </router-link>
+                <span v-else>
+                  {{ (index === 0 ? '' : ', ') + artist.name }}</span>
+              </template>
+            </div>
+          </div>
+        </div>
+        <div v-if="showAlbum" class="track-card__album-wrapper">
+          <router-link v-if="!!item.album.id" :to="{ name: 'Album', params: { albumId: item.album.id } }"
+            class="track-card__album-wrapper__album">{{ item.album.name }}</router-link>
+          <span v-else class="track-card__album-wrapper__album">
+            {{ item.album.name }}
+          </span>
+        </div>
+        <div class="track-card__duration-wrapper">
+          <span>{{ getFormatTime(item.duration_ms) }}</span>
+        </div>
       </div>
-      <div class="track-card__duration-wrapper">
-        <span>{{ getFormatTime(item.duration_ms) }}</span>
-      </div>
-      <div v-if="item.id === null" class="track-card__cover"></div>
-    </div>
+    </template>
   </template>
   <template v-else>
     <div class="track-card no-hover">
@@ -114,6 +125,7 @@ import IconPause from '../Icons/IconPause.vue'
 import { mapActions, mapState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import Skeleton from '@/components/Skeleton/index.vue'
+import { useUserStore } from '@/stores/user'
 
 export default {
   name: 'CardTrack',
@@ -123,7 +135,17 @@ export default {
     Skeleton
   },
   computed: {
-    ...mapState(usePlayerStore, ['current_track', 'isPause'])
+    ...mapState(usePlayerStore, ['current_track', 'isPause']),
+    available() {
+      if (useUserStore().checkProduct('premium')) {
+        return !this.item.restrictions
+      } else if (useUserStore().checkProduct('free')) {
+        return !!this.item.preview_url
+      }
+    },
+    isPlaying() {
+      return !this.isPause && this.current_track.uri === this.item.uri
+    }
   },
   props: {
     item: {
@@ -206,11 +228,11 @@ export default {
   }
 
   &:hover .track-card__left__num-wrapper {
-    display: flex;
+    opacity: 1;
   }
 
   &:hover .track-card__left__icon-wrapper {
-    display: none;
+    opacity: 0;
   }
 }
 
@@ -241,6 +263,7 @@ export default {
     width: 100%;
   }
 }
+
 .track-card {
   margin: 0 1.6rem;
   padding: 0 2.4rem;
@@ -251,8 +274,15 @@ export default {
   border-radius: $border-radius-small;
   position: relative;
 
+  @include transition;
+
   @include respond(phone) {
-    padding: 0;
+    padding: 0 1.6rem;
+    margin: 0;
+  }
+
+  &-not-available {
+    opacity: 0.5;
   }
 
   &:hover {
@@ -260,11 +290,11 @@ export default {
   }
 
   &:hover &__left__num-wrapper {
-    display: none;
+    opacity: 0;
   }
 
   &:hover &__left__icon-wrapper {
-    display: flex;
+    opacity: 1;
   }
 
   &:hover &__title__msg-wrapper__artists {
@@ -279,7 +309,8 @@ export default {
     flex-basis: 3.6rem;
     position: relative;
 
-    &__num-wrapper {
+    &__num-wrapper,
+    &__num-wrapper-not-avialable {
       font-size: $font-size-text-primary;
       position: absolute;
       top: 0;
@@ -287,6 +318,8 @@ export default {
       height: 100%;
       display: flex;
       align-items: center;
+
+      @include transition;
 
       &__playing {
         height: 1.4rem;
@@ -303,8 +336,13 @@ export default {
 
     &__icon-wrapper {
       height: 100%;
-      display: none;
+      opacity: 0;
+      display: flex;
       align-items: center;
+      position: relative;
+      z-index: 100;
+
+      @include transition;
 
       &__icon {
         height: 1.6rem;
@@ -313,10 +351,6 @@ export default {
 
         @include clickAnimation;
       }
-    }
-
-    @include respond(phone) {
-      display: none;
     }
   }
 
@@ -365,8 +399,11 @@ export default {
         }
       }
 
-      &__artists {
+      &__artists,
+      &__artists-not-available {
         font-size: $font-size-text-secondary;
+
+        @include transition;
 
         @include oneLineEllipsis;
       }
@@ -382,6 +419,8 @@ export default {
     &__album {
       font-size: $font-size-text-secondary;
       padding-right: 1rem;
+
+      @include transition;
 
       @include oneLineEllipsis;
     }
@@ -401,16 +440,6 @@ export default {
     @include respond(phone) {
       display: none;
     }
-  }
-
-  &__cover {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 100%;
-    background-color: $color-bg-2;
-    opacity: 0.7;
   }
 }
 </style>

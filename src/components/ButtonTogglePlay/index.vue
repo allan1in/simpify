@@ -1,5 +1,5 @@
 <template>
-  <button class="button-toggle-play-container" @click.stop="handleClick">
+  <button class="button-toggle-play-container" :class="{ 'available': available }" @click.stop.prevent="handleClick">
     <div class="button-toggle-play-container__icon-wrapper">
       <IconPause v-if="item.uri === context?.uri && !isPause" />
       <IconPlay v-else />
@@ -12,6 +12,7 @@ import { mapActions, mapWritableState } from 'pinia'
 import IconPause from '../Icons/IconPause.vue'
 import IconPlay from '../Icons/IconPlay.vue'
 import { usePlayerStore } from '@/stores/player'
+import { useUserStore } from '@/stores/user';
 
 export default {
   name: 'ButtonTogglePlay',
@@ -26,7 +27,10 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(usePlayerStore, ['context', 'isPause', 'activeDevice', 'playNewContext'])
+    ...mapWritableState(usePlayerStore, ['context', 'isPause', 'activeDevice', 'playNewContext']),
+    available() {
+      return useUserStore().checkProduct('premium')
+    }
   },
   methods: {
     ...mapActions(usePlayerStore, ['togglePlay']),
@@ -42,6 +46,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.available:nth-child(n) {
+  cursor: pointer;
+
+  @include clickAnimation;
+}
+
 .button-toggle-play-container {
   height: 100%;
   width: 100%;
@@ -51,7 +61,20 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  @include clickAnimation;
+  overflow: hidden;
+  position: relative;
+
+  cursor: not-allowed;
+
+  &:hover ::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($color-font-primary, 0.2);
+  }
 
   &__icon-wrapper {
     height: 40%;

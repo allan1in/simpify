@@ -1,12 +1,9 @@
 <template>
   <template v-if="!loading_skeleton">
     <div class="artist-container">
-      <div
-        class="artist-container__cover"
-        :style="{
-          'background-image': `url(${artist.images?.length !== 0 ? artist.images[0].url : ''})`
-        }"
-      >
+      <div class="artist-container__cover" :style="{
+        'background-image': `url(${artist.images?.length !== 0 ? artist.images[0].url : ''})`
+      }">
         <h1 class="artist-container__cover__title" :title="artist.name">{{ artist.name }}</h1>
         <div class="artist-container__cover__followers">
           {{
@@ -25,62 +22,30 @@
           <TitleShowAll title="Popular" />
           <div class="artist-container__content__popular__content">
             <TrackListHeader />
-            <TrackCard
-              v-for="(track, index) in tracks"
-              :key="track.id"
-              :index="index"
-              :showArtists="false"
-              :item="track"
-              :uris="uris"
-            />
+            <TrackCard v-for="(track, index) in tracks" :key="track.id" :index="index" :showArtists="false"
+              :item="track" :uris="uris" />
           </div>
         </div>
         <div class="artist-container__content__albums" v-if="albums.length !== 0">
-          <TitleShowAll
-            :router-name="albums_total > albums_limit ? 'ArtistAllAlbums' : ''"
-            title="Albums"
-          />
+          <TitleShowAll :router-name="albums_total > albums_limit ? 'ArtistAllAlbums' : ''" title="Albums" />
           <div class="artist-container__content__albums__content">
-            <AlbumCard
-              v-for="(item, index) in albums"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :show-artists="false"
-              :show-album-type="true"
-            />
+            <AlbumCard v-for="(item, index) in albums" :key="item.id" :item="item" :index="index" :show-artists="false"
+              :show-album-type="true" />
           </div>
         </div>
         <div class="artist-container__content__singles" v-if="singles.length !== 0">
-          <TitleShowAll
-            :router-name="singles_total > singles_limit ? 'ArtistAllSingles' : ''"
-            title="Singles"
-          />
+          <TitleShowAll :router-name="singles_total > singles_limit ? 'ArtistAllSingles' : ''" title="Singles" />
           <div class="artist-container__content__singles__content">
-            <AlbumCard
-              v-for="(item, index) in singles"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :show-artists="false"
-              :show-album-type="true"
-            />
+            <AlbumCard v-for="(item, index) in singles" :key="item.id" :item="item" :index="index" :show-artists="false"
+              :show-album-type="true" />
           </div>
         </div>
         <div class="artist-container__content__appears-on" v-if="appearsOn.length !== 0">
-          <TitleShowAll
-            :router-name="appearsOn_total > appearsOn_limit ? 'ArtistAllAppearsOn' : ''"
-            title="Appears On"
-          />
+          <TitleShowAll :router-name="appearsOn_total > appearsOn_limit ? 'ArtistAllAppearsOn' : ''"
+            title="Appears On" />
           <div class="artist-container__content__appears-on__content">
-            <AlbumCard
-              v-for="(item, index) in appearsOn"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :show-artists="false"
-              :show-album-type="true"
-            />
+            <AlbumCard v-for="(item, index) in appearsOn" :key="item.id" :item="item" :index="index"
+              :show-artists="false" :show-album-type="true" />
           </div>
         </div>
       </div>
@@ -310,8 +275,7 @@ export default {
     padding: 1.6rem;
 
     &__btn-group {
-      padding: 0 $gutter-2x;
-      padding-top: $gutter-2x;
+      padding: $gutter-2x;
 
       &__play-wrapper {
         height: 5.4rem;

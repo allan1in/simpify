@@ -1,9 +1,12 @@
 .message-box {
   position: fixed;
   bottom: 0;
-  left: 0;
-  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: max-content;
+  max-width: 90%;
   display: flex;
   justify-content: center;
   transition: all $duration-slow ease;
+  z-index: 9999;
 }
