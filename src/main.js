@@ -13,11 +13,14 @@ import { createPinia } from 'pinia'
 import router from './router'
 import App from './App.vue'
 
+import i18n from '@/includes/i18n'
+
 // https://github.com/KingSora/OverlayScrollbars?tab=readme-ov-file#consuming-plugins
 OverlayScrollbars.plugin(ClickScrollPlugin)
 
 const app = createApp(App)
 
+app.use(i18n)
 app.use(createPinia())
 app.use(router)
 

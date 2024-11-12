@@ -4,7 +4,7 @@
       <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
         <TitleShowAll
           :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
-          title="Featured Playlists"
+          :title="$t('home.featured_playlists')"
         />
         <div class="dashboard-container__featured-playlists__content">
           <CardHorizontal v-for="item in playlists" :key="item.id" :item="item" />
@@ -12,7 +12,7 @@
       </div>
 
       <div class="dashboard-container__new-releases" v-if="albums.length !== 0">
-        <TitleShowAll title="New Releases" />
+        <TitleShowAll :title="$t('home.new_releases')" />
         <div class="dashboard-container__new-releases__content">
           <CardAlbum v-for="item in albums" :key="item.id" :item="item" />
         </div>

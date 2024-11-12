@@ -5,7 +5,7 @@
         title
       }}</router-link>
       <router-link class="title-show-all__show-all" :to="{ name: routerName }"
-        >Show All</router-link
+        >{{ $t('title_show_all.show_all') }}</router-link
       >
     </div>
     <h1 v-else class="title-simple">

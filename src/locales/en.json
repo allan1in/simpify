@@ -1,0 +1,12 @@
+{
+  "home": {
+    "featured_playlists": "Featured Playlists",
+    "new_releases": "New Releases"
+  },
+  "title_show_all": {
+    "show_all": "show all"
+  },
+  "nav_bar": {
+    "input_message": "What do you want to play?"
+  }
+}

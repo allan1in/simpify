@@ -16,49 +16,89 @@
     <div class="nav-bar__mid-wrapper">
       <div class="nav-bar__mid-wrapper__mid">
         <button class="nav-bar__mid-wrapper__mid__home-btn" @click="toHome">
-          <span class="nav-bar__mid-wrapper__mid__home-btn__wrapper" :class="{ 'btn-active': isHome }">
+          <span
+            class="nav-bar__mid-wrapper__mid__home-btn__wrapper"
+            :class="{ 'btn-active': isHome }"
+          >
             <IconHomeActive v-if="isHome" />
             <IconHome v-else />
           </span>
         </button>
         <div class="nav-bar__mid-wrapper__mid__search">
-          <input class="nav-bar__mid-wrapper__mid__search__input" type="text" placeholder="What do you want to play?"
-            @click="toSearchPage" @focus="toSearchPage" @input="getSearchResult" v-model="inputContent" />
+          <input
+            class="nav-bar__mid-wrapper__mid__search__input"
+            type="text"
+            :placeholder="$t('nav_bar.input_message')"
+            @click="toSearchPage"
+            @focus="toSearchPage"
+            @input="getSearchResult"
+            v-model="inputContent"
+          />
           <div class="nav-bar__mid-wrapper__mid__search__icon-wrapper">
             <IconSearch />
           </div>
-          <button v-if="inputContent.length === 0" class="nav-bar__mid-wrapper__mid__search__btn-wrapper"
-            :class="{ 'btn-active': isSearch }" @click="toSearchPage">
+          <button
+            v-if="inputContent.length === 0"
+            class="nav-bar__mid-wrapper__mid__search__btn-wrapper"
+            :class="{ 'btn-active': isSearch }"
+            @click="toSearchPage"
+          >
             <IconBrowseActive v-if="isSearch" />
             <IconBrowse v-else />
           </button>
-          <button v-else
+          <button
+            v-else
             class="nav-bar__mid-wrapper__mid__search__btn-wrapper nav-bar__mid-wrapper__mid__search__btn-wrapper__clear-border"
-            @click="inputContent = ''">
+            @click="inputContent = ''"
+          >
             <IconClose />
           </button>
         </div>
       </div>
     </div>
-    <DropDown class="nav-bar__right" top="5.6rem">
-      <button class="nav-bar__right__photo-wrapper">
-        <img v-if="avatar.length !== 0" class="nav-bar__right__photo-wrapper__photo" :src="avatar" :alt="display_name"
-          :title="display_name" />
-        <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
-          <span class="nav-bar__right__photo-wrapper__photo-default-wrapper__default">{{
-            display_name.charAt(0).toLocaleUpperCase() }}</span>
+    <div class="nav-bar__right">
+      <DropDown top="5.6rem">
+        <div class="nav-bar__right__language">
+          <button class="nav-bar__right__language__language-wrapper">
+            <IconLanguage />
+          </button>
         </div>
-      </button>
-      <template #dropDownItems>
-        <DropDownItem
-          toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account">
-          Account</DropDownItem>
-        <DropDownItem :to="{ name: 'User', params: { userId: uid } }">Profile</DropDownItem>
-        <DropDownItem toExternal="https://www.spotify.com/us/premium/?ref=web_loggedin_upgrade_menu">Upgrade to Premium
-        </DropDownItem>
-        <DropDownItem :topLine="true" @click.prevent="logout">Log out</DropDownItem>
-      </template>
-    </DropDown>
+
+        <template #dropDownItems>
+          <DropDownItem @click="changeLocale('en')">English</DropDownItem>
+          <DropDownItem @click="changeLocale('zh')">简体中文 </DropDownItem>
+        </template>
+      </DropDown>
+      <DropDown top="5.6rem">
+        <button class="nav-bar__right__photo-wrapper">
+          <img
+            v-if="avatar.length !== 0"
+            class="nav-bar__right__photo-wrapper__photo"
+            :src="avatar"
+            :alt="display_name"
+            :title="display_name"
+          />
+          <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
+            <span class="nav-bar__right__photo-wrapper__photo-default-wrapper__default">{{
+              display_name.charAt(0).toLocaleUpperCase()
+            }}</span>
+          </div>
+        </button>
+        <template #dropDownItems>
+          <DropDownItem
+            toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account"
+          >
+            Account</DropDownItem
+          >
+          <DropDownItem :to="{ name: 'User', params: { userId: uid } }">Profile</DropDownItem>
+          <DropDownItem
+            toExternal="https://www.spotify.com/us/premium/?ref=web_loggedin_upgrade_menu"
+            >Upgrade to Premium
+          </DropDownItem>
+          <DropDownItem :topLine="true" @click.prevent="logout">Log out</DropDownItem>
+        </template>
+      </DropDown>
+    </div>
   </nav>
 </template>
 
@@ -77,6 +117,7 @@ import DropDownItem from '@/components/DropDownItem/index.vue'
 import IconArrowRight from '@/components/Icons/IconArrowRight.vue'
 import IconArrowLeft from '@/components/Icons/IconArrowLeft.vue'
 import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
+import IconLanguage from '@/components/Icons/IconLanguage.vue'
 
 export default {
   name: 'NavBar',
@@ -92,7 +133,8 @@ export default {
     DropDownItem,
     IconArrowLeft,
     IconArrowRight,
-    IconDefaultUser
+    IconDefaultUser,
+    IconLanguage
   },
   computed: {
     ...mapState(useUserStore, ['avatar', 'display_name', 'uid'])
@@ -125,7 +167,11 @@ export default {
         })
       }
     },
-    ...mapActions(useUserStore, ['logout'])
+    ...mapActions(useUserStore, ['logout']),
+    changeLocale(lang) {
+      // https://vue-i18n.intlify.dev/guide/essentials/scope.html#locale-changing
+      this.$i18n.locale = lang
+    }
   },
   watch: {
     // Set data values by route
@@ -302,7 +348,7 @@ export default {
             cursor: text;
           }
 
-          &:focus+div {
+          &:focus + div {
             fill: $color-font-primary;
           }
         }
@@ -347,6 +393,32 @@ export default {
 
   &__right {
     z-index: 1;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: $gutter;
+    height: 100%;
+
+    &__language {
+      height: $height-nav;
+      width: $height-nav;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &__language-wrapper {
+        display: block;
+        height: 50%;
+        width: 50%;
+        fill: $color-font-secondary;
+
+        &:hover {
+          fill: $color-font-primary;
+        }
+
+        @include clickAnimation;
+      }
+    }
 
     &__photo-wrapper {
       height: $height-nav;
