@@ -4,9 +4,9 @@
       <div class="list-header__num-wrapper">
         <div class="list-header__num-wrapper__num">#</div>
       </div>
-      <div class="list-header__title">Title</div>
-      <div v-if="showAlbum" class="list-header__album">Album</div>
-      <div class="list-header__duration">Duration</div>
+      <div class="list-header__title">{{ $t('header_track_list.title') }}</div>
+      <div v-if="showAlbum" class="list-header__album">{{ $t('header_track_list.album') }}</div>
+      <div class="list-header__duration">{{ $t('header_track_list.duration') }}</div>
     </div>
   </template>
   <template v-else>
@@ -74,6 +74,7 @@ export default {
     width: 90%;
   }
 }
+
 .list-header {
   margin: 1.6rem;
   padding: 0 2.4rem;

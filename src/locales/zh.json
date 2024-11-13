@@ -7,6 +7,67 @@
     "show_all": "显示全部"
   },
   "nav_bar": {
-    "input_message": "想听点儿什么？"
+    "input_message": "想播放什么？"
+  },
+  "top_bar":{
+    "all":"全部",
+    "artists":"艺人",
+    "tracks":"歌曲",
+    "albums":"专辑",
+    "playlists":"歌单"
+  },
+  "get_all":{
+    "artists":"艺人",
+    "songs":"歌曲",
+    "albums":"专辑",
+    "playlists":"歌单"
+  },
+  "header_track_list":{
+    "title":"标题",
+    "album":"专辑",
+    "duration":"时长"
+  },
+  "user":{
+    "account":"账号",
+    "profile":"个人资料",
+    "upgrade":"升级 Premium",
+    "log_out":"退出"
+  },
+  "playlist":{
+    "type":"歌单",
+    "follower":"位粉丝",
+    "song":"首歌曲",
+    "duration":{
+      "hr":"时",
+      "min":"分",
+      "sec":"秒"
+    }
+  },
+  "artist":{
+    "follower":"位粉丝",
+    "popular":"热门",
+    "albums":"专辑",
+    "singles":"单曲",
+    "appears_on":"参与的专辑"
+  },
+  "album":{
+    "type":"专辑",
+    "song":"首歌曲",
+    "duration":{
+      "hr":"时",
+      "min":"分",
+      "sec":"秒"
+    }
+  },
+  "track":{
+    "type":"歌曲",
+    "duration":{
+      "hr":"时",
+      "min":"分",
+      "sec":"秒"
+    }
+  },
+  "card_playlist":{
+    "by":"创建者："
   }
 }

@@ -16,41 +16,25 @@
     <div class="nav-bar__mid-wrapper">
       <div class="nav-bar__mid-wrapper__mid">
         <button class="nav-bar__mid-wrapper__mid__home-btn" @click="toHome">
-          <span
-            class="nav-bar__mid-wrapper__mid__home-btn__wrapper"
-            :class="{ 'btn-active': isHome }"
-          >
+          <span class="nav-bar__mid-wrapper__mid__home-btn__wrapper" :class="{ 'btn-active': isHome }">
             <IconHomeActive v-if="isHome" />
             <IconHome v-else />
           </span>
         </button>
         <div class="nav-bar__mid-wrapper__mid__search">
-          <input
-            class="nav-bar__mid-wrapper__mid__search__input"
-            type="text"
-            :placeholder="$t('nav_bar.input_message')"
-            @click="toSearchPage"
-            @focus="toSearchPage"
-            @input="getSearchResult"
-            v-model="inputContent"
-          />
+          <input class="nav-bar__mid-wrapper__mid__search__input" type="text" :placeholder="$t('nav_bar.input_message')"
+            @click="toSearchPage" @focus="toSearchPage" @input="getSearchResult" v-model="inputContent" />
           <div class="nav-bar__mid-wrapper__mid__search__icon-wrapper">
             <IconSearch />
           </div>
-          <button
-            v-if="inputContent.length === 0"
-            class="nav-bar__mid-wrapper__mid__search__btn-wrapper"
-            :class="{ 'btn-active': isSearch }"
-            @click="toSearchPage"
-          >
+          <button v-if="inputContent.length === 0" class="nav-bar__mid-wrapper__mid__search__btn-wrapper"
+            :class="{ 'btn-active': isSearch }" @click="toSearchPage">
             <IconBrowseActive v-if="isSearch" />
             <IconBrowse v-else />
           </button>
-          <button
-            v-else
+          <button v-else
             class="nav-bar__mid-wrapper__mid__search__btn-wrapper nav-bar__mid-wrapper__mid__search__btn-wrapper__clear-border"
-            @click="inputContent = ''"
-          >
+            @click="inputContent = ''">
             <IconClose />
           </button>
         </div>
@@ -71,13 +55,8 @@
       </DropDown>
       <DropDown top="5.6rem">
         <button class="nav-bar__right__photo-wrapper">
-          <img
-            v-if="avatar.length !== 0"
-            class="nav-bar__right__photo-wrapper__photo"
-            :src="avatar"
-            :alt="display_name"
-            :title="display_name"
-          />
+          <img v-if="avatar.length !== 0" class="nav-bar__right__photo-wrapper__photo" :src="avatar" :alt="display_name"
+            :title="display_name" />
           <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
             <span class="nav-bar__right__photo-wrapper__photo-default-wrapper__default">{{
               display_name.charAt(0).toLocaleUpperCase()
@@ -86,16 +65,13 @@
         </button>
         <template #dropDownItems>
           <DropDownItem
-            toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account"
-          >
-            Account</DropDownItem
-          >
-          <DropDownItem :to="{ name: 'User', params: { userId: uid } }">Profile</DropDownItem>
-          <DropDownItem
-            toExternal="https://www.spotify.com/us/premium/?ref=web_loggedin_upgrade_menu"
-            >Upgrade to Premium
+            toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account">
+            {{ $t('user.account') }}</DropDownItem>
+          <DropDownItem :to="{ name: 'User', params: { userId: uid } }">{{ $t('user.profile') }}</DropDownItem>
+          <DropDownItem toExternal="https://www.spotify.com/us/premium/?ref=web_loggedin_upgrade_menu">{{
+            $t('user.upgrade') }}
           </DropDownItem>
-          <DropDownItem :topLine="true" @click.prevent="logout">Log out</DropDownItem>
+          <DropDownItem :topLine="true" @click.prevent="logout">{{ $t('user.log_out') }}</DropDownItem>
         </template>
       </DropDown>
     </div>
@@ -348,7 +324,7 @@ export default {
             cursor: text;
           }
 
-          &:focus + div {
+          &:focus+div {
             fill: $color-font-primary;
           }
         }

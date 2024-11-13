@@ -1,7 +1,7 @@
 <template>
   <template v-if="!loading_skeleton">
     <div class="artist-all-appears-on">
-      <TitleShowAll title="Appears On" />
+      <TitleShowAll :title="$t('artist.appears_on')" />
       <div class="artist-all-appears-on__results">
         <AlbumCard v-for="item in appearsOn" :key="item.id" :item="item" />
       </div>

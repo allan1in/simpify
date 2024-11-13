@@ -2,25 +2,22 @@
   <template v-if="!loading_skeleton">
     <div class="track-container">
       <div class="track-container__banner">
-        <Banner :type="track.type" :title="track.name" :images="track.album.images">
-          <router-link
-            class="track-container__banner-details__artist"
-            :to="{ name: 'Artist', params: { artistId: artists[0].id } }"
-            >{{ artists[0].name }}</router-link
-          >
+        <Banner :type="$t('track.type')" :title="track.name" :images="track.album.images">
+          <router-link class="track-container__banner-details__artist"
+            :to="{ name: 'Artist', params: { artistId: artists[0].id } }">{{ artists[0].name }}</router-link>
           <span class="track-container__banner-details__album-wrapper">
             <span> • </span>
-            <router-link
-              class="track-container__banner-details__album-wrapper__album"
-              :to="{ name: 'Album', params: { albumId: track.album.id } }"
-              >{{ track.album.name }}</router-link
-            >
+            <router-link class="track-container__banner-details__album-wrapper__album"
+              :to="{ name: 'Album', params: { albumId: track.album.id } }">{{ track.album.name }}</router-link>
           </span>
           <span class="track-container__banner-details__release-year">
             {{ ` • ${track.album.release_date.split('-')[0]}` }}
           </span>
           <span class="track-container__banner-details__duration">
-            {{ ` • ${getFormatTime(track.duration_ms)}` }}
+            {{ ` •
+            ${duration.hr ? `${duration.hr} ${$t('track.duration.hr')} ` : ''}${duration.min ?
+                `${duration.min} ${$t('track.duration.min')} ` :
+                ''}${duration.sec ? `${duration.sec} ${$t('track.duration.sec')} ` : ''}` }}
           </span>
         </Banner>
       </div>
@@ -74,7 +71,10 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loading'])
+    ...mapWritableState(useAppStore, ['loading']),
+    duration() {
+      return timeFormatAlbum(this.track.duration_ms)
+    }
   },
   methods: {
     async getAll() {
@@ -82,9 +82,6 @@ export default {
       await this.getArtists()
 
       this.loading_skeleton = false
-    },
-    getFormatTime(time) {
-      return timeFormatAlbum(time)
     },
     async getTrack() {
       const res = await getTrack(this.$route.params.trackId)

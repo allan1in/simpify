@@ -19,9 +19,9 @@
       <div class="artist-card__name-wrapper">
         <router-link :to="{ name: 'Artist', params: { artistId: item.id } }" class="artist-card__name-wrapper__name">{{
           item.name }}</router-link>
-        <div class="artist-card__name-wrapper__type">
+        <!-- <div class="artist-card__name-wrapper__type">
           {{ `${item.type.charAt(0).toUpperCase()}${item.type.slice(1)}` }}
-        </div>
+        </div> -->
       </div>
     </div>
   </template>

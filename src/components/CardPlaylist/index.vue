@@ -22,7 +22,7 @@
       </div>
       <div class="playlist-card__info-wrapper">
         <div class="playlist-card__info-wrapper__info">
-          <span>{{ 'By ' + item.owner.display_name }}</span>
+          <span>{{ `${$t('card_playlist.by')}${item.owner.display_name}` }}</span>
         </div>
       </div>
     </div>

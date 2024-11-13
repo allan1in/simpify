@@ -20,9 +20,9 @@
       <div class="album-card__info-wrapper">
         <div class="album-card__info-wrapper__info">
           <span>{{ item.release_date.split('-')[0] }}</span>
-          <span v-if="showAlbumType">{{
+          <!-- <span v-if="showAlbumType">{{
             ` • ${item.album_type.charAt(0).toUpperCase()}${item.album_type.slice(1)}`
-          }}</span>
+          }}</span> -->
 
           <span v-if="showArtists">
             <span> • </span>
@@ -73,11 +73,6 @@ export default {
       type: Boolean,
       require: false,
       default: true
-    },
-    showAlbumType: {
-      type: Boolean,
-      require: false,
-      default: false
     },
     loading: {
       type: Boolean,

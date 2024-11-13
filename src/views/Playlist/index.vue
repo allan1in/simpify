@@ -2,28 +2,25 @@
   <template v-if="!loading_skeleton">
     <div class="playlist-container">
       <div class="playlist-container__banner">
-        <Banner :type="playlist.type" :title="playlist.name" :images="playlist.images">
+        <Banner :type="$t('playlist.type')" :title="playlist.name" :images="playlist.images">
           <router-link class="playlist-container__banner-details__owner"
             :to="{ name: 'User', params: { userId: playlist.owner.id } }">{{ playlist.owner.display_name
             }}</router-link>
-          <span class="playlist-container__banner-details__release-year">
+          <span v-if="playlist.followers.total !== 0" class="playlist-container__banner-details__followers">
             {{
-              playlist.followers.total === 0
-                ? ''
-                : ` • ${Intl.NumberFormat().format(playlist.followers.total)}${playlist.followers.total === 1 ? ' follower' : ' followers'
-                }`
+              ` • ${Intl.NumberFormat().format(playlist.followers.total)} ${$t('playlist.follower',
+                playlist.followers.total)}`
             }}
           </span>
-          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__total-playlist.tracks">
-            {{ ` • ${playlist.tracks.total} songs` }}
+          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__total-tracks">
+            {{ ` • ${playlist.tracks.total} ${$t('playlist.song', playlist.tracks.total)}` }}
           </span>
           <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__duration">
             {{
-              ` • ${getFormatTime(
-                playlist.tracks.items.reduce((acc, item) => {
-                  return acc + (item.track !== null ? item.track.duration_ms : 0)
-                }, 0)
-              )}`
+              ` •
+            ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${duration.min ?
+                `${duration.min} ${$t('playlist.duration.min')} ` :
+                ''}${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
             }}
           </span>
         </Banner>
@@ -94,12 +91,16 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loading', 'loadMore'])
+    ...mapWritableState(useAppStore, ['loading', 'loadMore']),
+    duration() {
+      return timeFormatAlbum(
+        this.playlist.tracks.items.reduce((acc, item) => {
+          return acc + (item.track !== null ? item.track.duration_ms : 0)
+        }, 0)
+      )
+    }
   },
   methods: {
-    getFormatTime(time) {
-      return timeFormatAlbum(time)
-    },
     async getAll() {
       await this.getPlaylist()
       await this.getPlaylistTracks()

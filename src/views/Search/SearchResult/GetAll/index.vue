@@ -3,64 +3,30 @@
     <main class="all-container">
       <div class="all-container__content">
         <div v-if="tracks_total" class="all-container__content__songs">
-          <TitleShowAll
-            :router-name="tracks_total > tracks_limit ? 'GetTracks' : ''"
-            title="Songs"
-          />
+          <TitleShowAll :router-name="tracks_total > tracks_limit ? 'GetTracks' : ''" :title="$t('get_all.songs')" />
           <div class="all-container__content__songs__results">
             <TrackListHeader />
-            <CardTrack
-              v-for="(item, index) in tracks"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :uris="uris"
-            />
+            <CardTrack v-for="(item, index) in tracks" :key="item.id" :item="item" :index="index" :uris="uris" />
           </div>
         </div>
         <div v-if="artists_total" class="all-container__content__artists">
-          <TitleShowAll
-            :router-name="artists_total > artists_limit ? 'GetArtists' : ''"
-            title="Artists"
-          />
+          <TitleShowAll :router-name="artists_total > artists_limit ? 'GetArtists' : ''"
+            :title="$t('get_all.artists')" />
           <div class="all-container__content__artists__results">
-            <CardArtist
-              v-for="(item, index) in artists"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :uris="uris"
-            />
+            <CardArtist v-for="(item, index) in artists" :key="item.id" :item="item" :index="index" :uris="uris" />
           </div>
         </div>
         <div v-if="albums_total" class="all-container__content__albums">
-          <TitleShowAll
-            :router-name="albums_total > albums_limit ? 'GetAlbums' : ''"
-            title="Albums"
-          />
+          <TitleShowAll :router-name="albums_total > albums_limit ? 'GetAlbums' : ''" :title="$t('get_all.albums')" />
           <div class="all-container__content__albums__results">
-            <CardAlbum
-              v-for="(item, index) in albums"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :uris="uris"
-            />
+            <CardAlbum v-for="(item, index) in albums" :key="item.id" :item="item" :index="index" :uris="uris" />
           </div>
         </div>
         <div v-if="playlists_total" class="all-container__content__playlists">
-          <TitleShowAll
-            :router-name="playlists_total > playlists_limit ? 'GetPlaylists' : ''"
-            title="Playlists"
-          />
+          <TitleShowAll :router-name="playlists_total > playlists_limit ? 'GetPlaylists' : ''"
+            :title="$t('get_all.playlists')" />
           <div class="all-container__content__playlists__results">
-            <CardPlaylist
-              v-for="(item, index) in playlists"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :uris="uris"
-            />
+            <CardPlaylist v-for="(item, index) in playlists" :key="item.id" :item="item" :index="index" :uris="uris" />
           </div>
         </div>
       </div>
@@ -157,7 +123,7 @@ export default {
     }
   },
   methods: {
-    debouncedGetAll() {},
+    debouncedGetAll() { },
     async getAll() {
       if (this.$route.params.inputContent) {
         await this.getTracks()

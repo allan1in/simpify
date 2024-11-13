@@ -2,7 +2,7 @@
   <template v-if="!loading_skeleton">
     <div class="album-container">
       <div class="album-container__cover">
-        <Banner :type="album.type" :title="album.name" :images="album.images">
+        <Banner :type="$t('album.type')" :title="album.name" :images="album.images">
           <span v-for="(artist, index) in album.artists" :key="artist.id"
             class="album-container__banner-details__artist">
             {{ index === 0 ? '' : ' • ' }}
@@ -13,16 +13,15 @@
           <span class="album-container__banner-details__release-year">
             {{ ` • ${album.release_date.split('-')[0]}` }}
           </span>
-          <span class="album-container__banner-details__total-tracks">
-            {{ ` • ${album.total_tracks} songs` }}
+          <span v-if="album.total_tracks !== 0" class="album-container__banner-details__total-tracks">
+            {{ ` • ${album.total_tracks} ${$t('album.song', album.total_tracks)}` }}
           </span>
           <span class="album-container__banner-details__duration">
             {{
-              ` • ${getFormatTime(
-                tracks.reduce((acc, track) => {
-                  return acc + track.duration_ms
-                }, 0)
-              )}`
+              ` •
+            ${duration.hr ? `${duration.hr} ${$t('album.duration.hr')} ` : ''}${duration.min ?
+                `${duration.min} ${$t('album.duration.min')} ` :
+                ''}${duration.sec ? `${duration.sec} ${$t('album.duration.sec')} ` : ''}`
             }}
           </span>
         </Banner>
@@ -95,12 +94,16 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loadMore', 'loading'])
+    ...mapWritableState(useAppStore, ['loadMore', 'loading']),
+    duration() {
+      return timeFormatAlbum(
+        this.tracks.reduce((acc, track) => {
+          return acc + track.duration_ms
+        }, 0)
+      )
+    }
   },
   methods: {
-    getFormatTime(time) {
-      return timeFormatAlbum(time)
-    },
     async getAll() {
       await this.getAlbum()
       await this.getTracks()
