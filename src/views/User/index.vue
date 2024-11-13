@@ -3,26 +3,23 @@
     <div class="user-container">
       <div class="user-container__banner">
         <Banner
-          type="Profile"
+          :type="$t('profile.type')"
           :title="profile.display_name"
           :images="profile.images"
           imgShape="circle"
+          default-icon="user"
         >
           <span class="user-container__banner__details__playlists" v-if="playlists_total">
             {{
-              `${Intl.NumberFormat().format(playlists_total)} Public ${
-                playlists_total > 1 ? ' Playlists' : 'Playlist'
-              }`
+              `${Intl.NumberFormat().format(playlists_total)} ${$t('profile.playlist', playlists_total)}
+              `
             }}
           </span>
           <span class="user-container__banner__details__followers" v-if="profile.followers.total">
             {{
-              profile.followers.total === 0
-                ? ''
-                : ` • ${
-                    Intl.NumberFormat().format(profile.followers.total) +
-                    (profile.followers.total > 1 ? ' Followers' : ' Follower')
-                  }`
+              ` • ${Intl.NumberFormat().format(
+                profile.followers.total
+              )} ${$t('profile.follower', profile.followers.total)}`
             }}
           </span>
         </Banner>
@@ -33,7 +30,7 @@
           v-if="this.uid === id && artists.length !== 0"
         >
           <TitleShowAll
-            title="Top artists this month"
+            :title="$t('profile.top_artists')"
             :router-name="this.artists_total > this.artists_limit ? 'GetArtistsForUser' : ''"
           />
           <div class="user-container__content__top-artists__content">
@@ -45,7 +42,7 @@
           v-if="this.uid === id && tracks.length !== 0"
         >
           <TitleShowAll
-            title="Top tracks this month"
+            :title="$t('profile.top_tracks')"
             :router-name="this.tracks_total > this.tracks_limit ? 'GetTracksForUser' : ''"
           />
           <div class="user-container__content__top-songs__content">
@@ -60,7 +57,7 @@
         </div>
         <div class="user-container__content__playlists" v-if="playlists.length !== 0">
           <TitleShowAll
-            title="Public Playlists"
+            :title="$t('profile.public_playlists')"
             :router-name="this.playlists_total > this.playlists_limit ? 'UserPlaylists' : ''"
           />
           <div class="user-container__content__playlists__content">

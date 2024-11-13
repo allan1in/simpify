@@ -5,6 +5,14 @@ export const useAppStore = defineStore('app', {
     loading: true,
     loadMore: false,
     showFullScreenPlayer: false,
-    showMessage: false
-  })
+    showMessage: false,
+    language: localStorage.getItem('language') || 'en'
+  }),
+  actions: {
+    setLanguage(language) {
+      this.language = language
+
+      localStorage.setItem('language', language)
+    }
+  }
 })

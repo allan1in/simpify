@@ -11,7 +11,8 @@ export const useUserStore = defineStore('user', {
     avatar: '',
     uid: '',
     product: '',
-    access_token: localStorage.getItem('access_token') || ''
+    access_token: localStorage.getItem('access_token') || '',
+    country: ''
   }),
   actions: {
     async login(code) {
@@ -45,6 +46,7 @@ export const useUserStore = defineStore('user', {
       this.display_name = res.display_name
       this.uid = res.id
       this.product = res.product
+      this.country = res.country
     },
     logout() {
       window.localStorage.clear()

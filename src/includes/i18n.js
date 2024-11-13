@@ -5,7 +5,7 @@ import zh from '@/locales/zh.json'
 // https://vue-i18n.intlify.dev/guide/essentials/started.html#creating-the-i18n-instance
 export default createI18n({
   // https://www.science.co.il/language/Locale-codes.php
-  locale: 'zh',
+  locale: localStorage.getItem('language'),
   fallbackLocale: 'en',
   messages: {
     en,

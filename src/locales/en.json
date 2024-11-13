@@ -9,65 +9,76 @@
   "nav_bar": {
     "input_message": "What do you want to play?"
   },
-  "top_bar":{
-    "all":"All",
-    "tracks":"Songs",
-    "artists":"Artists",
-    "albums":"Albums",
-    "playlists":"Playlists"
+  "top_bar": {
+    "all": "All",
+    "tracks": "Songs",
+    "artists": "Artists",
+    "albums": "Albums",
+    "playlists": "Playlists"
   },
-  "get_all":{
-    "songs":"Songs",
-    "artists":"Artists",
-    "albums":"Albums",
-    "playlists":"Playlists"
+  "get_all": {
+    "songs": "Songs",
+    "artists": "Artists",
+    "albums": "Albums",
+    "playlists": "Playlists"
   },
-  "header_track_list":{
-    "title":"Title",
-    "album":"Album",
-    "duration":"Duration"
+  "header_track_list": {
+    "title": "Title",
+    "album": "Album",
+    "duration": "Duration"
   },
-  "user":{
-    "account":"Account",
-    "profile":"Profile",
-    "upgrade":"Upgrade to Premium",
-    "log_out":"Log out"
+  "user": {
+    "account": "Account",
+    "profile": "Profile",
+    "upgrade": "Upgrade to Premium",
+    "log_out": "Log out"
   },
-  "playlist":{
-    "type":"Playlist",
-    "follower":"follower | followers",
-    "song":"song | songs",
-    "duration":{
-      "hr":"hr",
-      "min":"min",
-      "sec":"sec"
+  "playlist": {
+    "type": "Playlist",
+    "follower": "follower | followers",
+    "song": "song | songs",
+    "duration": {
+      "hr": "hr",
+      "min": "min",
+      "sec": "sec"
     }
   },
-  "artist":{
-    "follower":"follower | followers",
-    "popular":"Popular",
-    "albums":"Albums",
-    "singles":"Singles",
-    "appears_on":"Appears on"
+  "artist": {
+    "follower": "follower | followers",
+    "popular": "Popular",
+    "albums": "Albums",
+    "singles": "Singles",
+    "appears_on": "Appears on"
   },
-  "album":{
-    "type":"Album",
-    "song":"song | songs",
-    "duration":{
-      "hr":"hr",
-      "min":"min",
-      "sec":"sec"
+  "album": {
+    "type": "Album",
+    "song": "song | songs",
+    "duration": {
+      "hr": "hr",
+      "min": "min",
+      "sec": "sec"
     }
   },
-  "track":{
-    "type":"Song",
-    "duration":{
-      "hr":"hr",
-      "min":"min",
-      "sec":"sec"
+  "track": {
+    "type": "Song",
+    "duration": {
+      "hr": "hr",
+      "min": "min",
+      "sec": "sec"
     }
   },
-  "card_playlist":{
-    "by":"By "
+  "card_playlist": {
+    "by": "By "
+  },
+  "search": {
+    "browse_all": "Browse All"
+  },
+  "profile": {
+    "type": "Profile",
+    "follower": "follower | followers",
+    "playlist": "public playlist | puclic playlists",
+    "top_artists": "Top artists this month",
+    "top_tracks": "Top tracks this month",
+    "public_playlists": "Public Playlists"
   }
 }

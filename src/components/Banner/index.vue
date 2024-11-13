@@ -12,7 +12,8 @@
           :alt="title"
         />
         <div v-else class="banner__img-wrapper__icon">
-          <IconDefaultPlaylist />
+          <IconDefaultUser v-if="defaultIcon === 'user'" />
+          <IconDefaultPlaylist v-else />
         </div>
       </div>
       <div class="banner__info">
@@ -46,38 +47,39 @@
 <script>
 import IconDefaultPlaylist from '../Icons/IconDefaultPlaylist.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
+import IconDefaultUser from '../Icons/IconDefaultUser.vue'
 
 export default {
   name: 'Banner',
   components: {
     IconDefaultPlaylist,
-    Skeleton
+    Skeleton,
+    IconDefaultUser
   },
   props: {
     type: {
       type: String,
-      require: false,
       default: ''
     },
     title: {
       type: String,
-      require: false,
       default: ''
     },
     images: {
       type: Object,
-      require: false,
       default: {}
     },
     imgShape: {
       type: String,
-      require: false,
       default: ''
     },
     loading: {
       type: Boolean,
-      require: false,
       default: false
+    },
+    defaultIcon: {
+      type: String,
+      default: ''
     }
   }
 }

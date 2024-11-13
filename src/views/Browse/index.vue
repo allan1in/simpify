@@ -24,9 +24,10 @@
 <script>
 import { getCategory, getCategoryPlaylists, getNextCategoryPlaylists } from '@/api/meta/browse.js'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
-import { mapWritableState } from 'pinia'
+import { mapState, mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import Skeleton from '@/components/Skeleton/index.vue'
+import { useUserStore } from '@/stores/user'
 
 export default {
   nmae: 'Browse',
@@ -46,7 +47,8 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loadMore', 'loading'])
+    ...mapWritableState(useAppStore, ['loadMore', 'loading', 'language']),
+    ...mapState(useUserStore, ['country'])
   },
   methods: {
     async getAll() {
@@ -56,7 +58,9 @@ export default {
       this.loading_skeleton = false
     },
     async getCategory() {
-      const res = await getCategory(this.$route.params.categoryId)
+      const res = await getCategory(this.$route.params.categoryId, {
+        locale: `${this.language}_${this.country}`
+      })
       this.category = res
     },
     async getPlaylists() {
@@ -95,6 +99,9 @@ export default {
       if (newVal) {
         this.getPlaylists()
       }
+    },
+    language(newVal, oldVal) {
+      this.$router.go(0)
     }
   },
   created() {

@@ -2,7 +2,7 @@
   <template v-if="!loading_skeleton">
     <div class="search-container">
       <div class="search-container__title-wrapper">
-        <TitleShowAll title="Browse All" />
+        <TitleShowAll :title="$t('search.browse_all')" />
       </div>
       <div class="search-container__cards-wrapper">
         <router-link
@@ -43,9 +43,10 @@ import {
   getNextSeveralCategories
 } from '@/api/meta/browse'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
-import { mapWritableState } from 'pinia'
+import { mapState, mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import Skeleton from '@/components/Skeleton/index.vue'
+import { useUserStore } from '@/stores/user'
 
 export default {
   name: 'Search',
@@ -63,7 +64,8 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loading', 'loadMore'])
+    ...mapWritableState(useAppStore, ['loading', 'loadMore', 'language']),
+    ...mapState(useUserStore, ['country'])
   },
   methods: {
     async getAll() {
@@ -87,7 +89,8 @@ export default {
         if (this.categories_next === '') {
           const params = {
             limit: this.categories_limit,
-            offset: this.categories_offset
+            offset: this.categories_offset,
+            locale: `${this.language}_${this.country}`
           }
           res = (await getSeveralCategories(params)).categories
         } else {
@@ -127,6 +130,9 @@ export default {
       if (newVal) {
         this.getNext()
       }
+    },
+    language(newVal, oldVal) {
+      this.$router.go(0)
     }
   },
   created() {

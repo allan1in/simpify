@@ -1,7 +1,7 @@
 <template>
   <template v-if="!loading_skeleton">
     <main class="tracks-container">
-      <TitleShowAll title="Top tracks this month" />
+      <TitleShowAll :title="$t('profile.top_tracks')" />
       <div class="tracks-container__content">
         <HeaderTrackList />
         <CardTrack v-for="(item, index) in tracks" :key="item.id" :item :index :uris="uris" />
