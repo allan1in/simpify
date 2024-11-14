@@ -1,24 +1,16 @@
 <template>
   <template v-if="!loading">
     <div class="banner">
-      <div
-        class="banner__img-wrapper"
-        :class="{ 'banner__img-wrapper-round': imgShape === 'circle' }"
-      >
-        <img
-          v-if="images !== null && images.length !== 0"
-          class="banner__img-wrapper__img"
-          :src="images[0].url"
-          :alt="title"
-        />
+      <div class="banner__img-wrapper" :class="{ 'banner__img-wrapper-round': classImgRound }">
+        <img v-if="showImg" class="banner__img-wrapper__img" :src="images[0].url" :alt="title" />
         <div v-else class="banner__img-wrapper__icon">
-          <IconDefaultUser v-if="defaultIcon === 'user'" />
+          <IconDefaultUser v-if="showTypeUser" />
           <IconDefaultPlaylist v-else />
         </div>
       </div>
       <div class="banner__info">
         <span class="banner__info__type">{{ type }}</span>
-        <h1 class="banner__info__title" :title="title">
+        <h1 class="banner__info__title" :title>
           {{ title }}
         </h1>
         <div class="banner__info__details">
@@ -29,10 +21,7 @@
   </template>
   <template v-else>
     <div class="banner">
-      <div
-        class="banner__img-wrapper"
-        :class="{ 'banner__img-wrapper-round': imgShape === 'circle' }"
-      >
+      <div class="banner__img-wrapper" :class="{ 'banner__img-wrapper-round': classImgRound }">
         <Skeleton />
       </div>
       <div class="banner__info">
@@ -55,6 +44,17 @@ export default {
     IconDefaultPlaylist,
     Skeleton,
     IconDefaultUser
+  },
+  computed: {
+    classImgRound() {
+      return this.imgShape === 'circle'
+    },
+    showTypeUser() {
+      return this.defaultIcon === 'user'
+    },
+    showImg() {
+      return this.images !== null && this.images.length !== 0
+    }
   },
   props: {
     type: {

@@ -3,32 +3,36 @@
     <div class="album-card" @click="$router.push({ name: 'Album', params: { albumId: item.id } })">
       <div class="album-card__img-box">
         <div class="album-card__img-box__img-wrapper">
-          <img loading="lazy" :src="item.images[0].url" alt="Album Cover"
-            class="album-card__img-box__img-wrapper__img" />
+          <img
+            loading="lazy"
+            :src="item.images[0].url"
+            alt="Album Cover"
+            class="album-card__img-box__img-wrapper__img"
+          />
         </div>
-        <div class="album-card__img-box__toggle-play" :class="{
-          'album-card__img-box__toggle-play-playing': !isPause && item.uri === context.uri
-        }">
+        <div class="album-card__img-box__toggle-play">
           <ButtonTogglePlay :item />
         </div>
       </div>
 
       <div class="album-card__name-wrapper">
-        <router-link :to="{ name: 'Album', params: { albumId: item.id } }" class="album-card__name-wrapper__name">{{
-          item.name }}</router-link>
+        <router-link
+          :to="{ name: 'Album', params: { albumId: item.id } }"
+          class="album-card__name-wrapper__name"
+          >{{ item.name }}</router-link
+        >
       </div>
       <div class="album-card__info-wrapper">
         <div class="album-card__info-wrapper__info">
           <span>{{ item.release_date.split('-')[0] }}</span>
-          <!-- <span v-if="showAlbumType">{{
-            ` • ${item.album_type.charAt(0).toUpperCase()}${item.album_type.slice(1)}`
-          }}</span> -->
-
           <span v-if="showArtists">
             <span> • </span>
-            <!-- Use native a tag because router-link tag can't handle event bubbling easily -->
-            <a @click.stop="$router.push({ name: 'Artist', params: { artistId: artist.id } })"
-              v-for="(artist, index) in item.artists" :key="artist.id">
+            <!-- Use native tag a because router-link tag can't handle event bubbling easily -->
+            <a
+              @click.stop="$router.push({ name: 'Artist', params: { artistId: artist.id } })"
+              v-for="(artist, index) in item.artists"
+              :key="artist.id"
+            >
               {{ (index === 0 ? '' : ', ') + artist.name }}
             </a>
           </span>
@@ -66,18 +70,14 @@ export default {
   props: {
     item: {
       type: Object,
-      require: false,
-      default: {}
+      require: true
     },
     showArtists: {
       type: Boolean,
-      require: false,
       default: true
     },
     loading: {
-      type: Boolean,
-      require: false,
-      default: false
+      type: Boolean
     }
   },
   components: {
@@ -165,11 +165,6 @@ export default {
       transform: translateY(1rem);
 
       @include transition;
-
-      &-playing {
-        transform: translateY(0);
-        opacity: 1;
-      }
     }
   }
 

@@ -1,12 +1,21 @@
 <template>
   <template v-if="!loading_skeleton">
     <section class="top-bar-container">
-      <button v-if="showTags.all" class="top-bar-container__btn" :class="{ 'btn-active': !isActive }" @click="getAll">
-        All
+      <button
+        v-if="showTags.all"
+        class="top-bar-container__btn"
+        :class="{ 'btn-active': !isActive }"
+        @click="getAll"
+      >
+        {{ $t('top_bar.all') }}
       </button>
       <template v-for="tag in tags" :key="tag">
-        <button v-if="showTags[tag]" class="top-bar-container__btn" :class="{ 'btn-active': isActive === tag }"
-          @click="jumpTo(tag)">
+        <button
+          v-if="showTags[tag]"
+          class="top-bar-container__btn"
+          :class="{ 'btn-active': isActive === tag }"
+          @click="jumpTo(tag)"
+        >
           {{ $t(`top_bar.${tag}`) }}
         </button>
       </template>
@@ -49,7 +58,7 @@ export default {
     jumpTo(tag) {
       this.$router.push({ name: `Get${tag.charAt(0).toUpperCase()}${tag.slice(1)}` })
     },
-    debouncedCheck() { },
+    debouncedCheck() {},
     // If there is no data of this type, hide the tag
     async checkHasResults() {
       if (this.$route.params.inputContent) {
