@@ -31,7 +31,7 @@ export default {
 <style lang="scss" scoped>
 .search-container {
   &__search-content {
-    min-height: calc($height-content - $height-nav-secondary);
+    min-height: $height-content;
   }
 }
 </style>

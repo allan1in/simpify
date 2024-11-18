@@ -1,8 +1,7 @@
 <template>
   <div ref="resizeBox" class="my-library">
     <div class="my-library__resize-handle" @mousedown="handleMouseDown">
-      <div class="my-library__resize-handle__line">
-      </div>
+      <div class="my-library__resize-handle__line"></div>
     </div>
     <div class="my-library__container">
       <div class="my-library__container__title">
@@ -20,25 +19,39 @@
           </button>
         </div>
       </div>
+      <div class="my-library__container__top-bar">
+        <template v-for="tag in tags" :key="tag">
+          <TagButton
+            @handle-click="changeTag(tag)"
+            :text="$t(`top_bar.${tag}`)"
+            :isActive="isActive === tag"
+          />
+        </template>
+      </div>
+      <div class="my-library__container__search"></div>
     </div>
   </div>
 </template>
 
 <script>
-import IconLibrary from '@/components/Icons/IconLibrary.vue';
-import IconPlus from '@/components/Icons/IconPlus.vue';
+import IconLibrary from '@/components/Icons/IconLibrary.vue'
+import IconPlus from '@/components/Icons/IconPlus.vue'
+import TagButton from '@/components/TagButton/index.vue'
 
 export default {
   name: 'MyLibrary',
   data() {
     return {
       maxWidth: 360,
-      minWidth: 72
+      minWidth: 72,
+      tags: ['all', 'playlists', 'albums', 'artists'],
+      isActive: 'all'
     }
   },
   components: {
     IconLibrary,
-    IconPlus
+    IconPlus,
+    TagButton
   },
   methods: {
     handleMouseDown(event) {
@@ -64,6 +77,9 @@ export default {
         document.onmousemove = null
         document.onmouseup = null
       }
+    },
+    changeTag(tag) {
+      this.isActive = tag
     }
   }
 }
@@ -160,14 +176,14 @@ export default {
 
         &__create-playlist {
           border-radius: 50%;
-          padding: 0.6rem;
+          padding: 0.8rem;
 
           @include clickAnimation;
 
           @include transitionFast;
 
           &:hover {
-            background-color: $color-bg-4;
+            background-color: $color-bg-3;
           }
 
           &:hover &__icon-wrapper {
@@ -175,7 +191,7 @@ export default {
           }
 
           &__icon-wrapper {
-            height: 1.6rem;
+            height: $font-size-text-primary;
             aspect-ratio: 1 / 1;
             fill: $color-font-secondary;
 
@@ -183,6 +199,14 @@ export default {
           }
         }
       }
+    }
+
+    &__top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      gap: 1.2rem;
+      padding: 1.2rem 0;
     }
   }
 }
