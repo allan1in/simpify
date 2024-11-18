@@ -26,6 +26,12 @@
   }
 }
 
+@mixin transitionFast {
+  & {
+    transition: all $duration-fast ease-in;
+  }
+}
+
 @mixin oneLineEllipsis {
   & {
     display: -webkit-box;

@@ -2,14 +2,11 @@
   <main class="app-container">
     <NavBar class="app-container__nav" />
     <section class="app-container__mid-wrapper" id="mid-wrapper">
-      <!-- <MyLibrary /> -->
+      <MyLibrary />
       <div class="app-container__mid-wrapper__main-view">
         <MyOverlayScrollbars os-element="main">
           <div class="app-container__mid-wrapper__main-view__container">
-            <div
-              class="app-container__mid-wrapper__main-view__container__content"
-              v-show="!loading"
-            >
+            <div class="app-container__mid-wrapper__main-view__container__content" v-show="!loading">
               <RouterView />
             </div>
             <Loading :loading="loading" />
