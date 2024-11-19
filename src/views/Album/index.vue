@@ -3,25 +3,34 @@
     <div class="album-container">
       <div class="album-container__cover">
         <Banner :type="$t('album.type')" :title="album.name" :images="album.images">
-          <span v-for="(artist, index) in album.artists" :key="artist.id"
-            class="album-container__banner-details__artist">
+          <span
+            v-for="(artist, index) in album.artists"
+            :key="artist.id"
+            class="album-container__banner-details__artist"
+          >
             {{ index === 0 ? '' : ' • ' }}
-            <router-link class="album-container__banner-details__artist__link"
-              :to="{ name: 'Artist', params: { artistId: artist.id } }">{{ artist.name }}</router-link>
+            <router-link
+              class="album-container__banner-details__artist__link"
+              :to="{ name: 'Artist', params: { artistId: artist.id } }"
+              >{{ artist.name }}</router-link
+            >
           </span>
 
           <span class="album-container__banner-details__release-year">
             {{ ` • ${album.release_date.split('-')[0]}` }}
           </span>
-          <span v-if="album.total_tracks !== 0" class="album-container__banner-details__total-tracks">
+          <span
+            v-if="album.total_tracks !== 0"
+            class="album-container__banner-details__total-tracks"
+          >
             {{ ` • ${album.total_tracks} ${$t('album.song', album.total_tracks)}` }}
           </span>
           <span class="album-container__banner-details__duration">
             {{
               ` •
-            ${duration.hr ? `${duration.hr} ${$t('album.duration.hr')} ` : ''}${duration.min ?
-                `${duration.min} ${$t('album.duration.min')} ` :
-                ''}${duration.sec ? `${duration.sec} ${$t('album.duration.sec')} ` : ''}`
+            ${duration.hr ? `${duration.hr} ${$t('album.duration.hr')} ` : ''}${
+              duration.min ? `${duration.min} ${$t('album.duration.min')} ` : ''
+            }${duration.sec ? `${duration.sec} ${$t('album.duration.sec')} ` : ''}`
             }}
           </span>
         </Banner>
@@ -34,8 +43,15 @@
         </div>
         <div class="album-container__content__tracks">
           <TrackListHeader :showAlbum="false" />
-          <TrackCard v-for="(item, index) in tracks" :key="item.id" :item="item" :index="index" :show-album="false"
-            :show-image="false" :context_uri="this.album.uri" />
+          <TrackCard
+            v-for="(item, index) in tracks"
+            :key="item.id"
+            :item="item"
+            :index="index"
+            :show-album="false"
+            :show-image="false"
+            :context_uri="this.album.uri"
+          />
         </div>
       </div>
     </div>
@@ -53,8 +69,13 @@
         </div>
         <div class="album-container__content__tracks">
           <TrackListHeader :showAlbum="false" :loading="loading_skeleton" />
-          <TrackCard v-for="i in tracks_limit" :key="i" :show-album="false" :show-image="false"
-            :loading="loading_skeleton" />
+          <TrackCard
+            v-for="i in tracks_limit"
+            :key="i"
+            :show-album="false"
+            :show-image="false"
+            :loading="loading_skeleton"
+          />
         </div>
       </div>
     </div>
@@ -186,7 +207,7 @@ export default {
     }
 
     &__tracks {
-      @include respondContainer(phone) {
+      @include respondContainer(main-view, phone) {
         margin: $gutter-1-5x 0;
       }
     }

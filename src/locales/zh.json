@@ -62,6 +62,7 @@
   },
   "track": {
     "type": "歌曲",
+    "all_artists": "所有创作者",
     "duration": {
       "hr": "时",
       "min": "分",
@@ -81,5 +82,11 @@
     "top_artists": "本月热门艺人",
     "top_tracks": "本月热门曲目",
     "public_playlists": "公开歌单"
+  },
+  "my_library": {
+    "title": "音乐库"
+  },
+  "fullscreen_player": {
+    "title": "正在播放来自专辑"
   }
 }

@@ -85,7 +85,7 @@ export default {
   color: $color-font-secondary;
   border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
 
-  @include respondContainer(phone) {
+  @include respondContainer(main-view, phone) {
     display: none;
   }
 

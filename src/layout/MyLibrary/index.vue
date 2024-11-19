@@ -2,13 +2,16 @@
   <ResizeBox>
     <div class="my-library__container">
       <div class="my-library__container__title">
-        <div class="my-library__container__title__left">
+        <div class="my-library__container__title__left" @click.prevent="isCollasped = !isCollasped">
           <div class="my-library__container__title__left__icon-wrapper">
-            <IconLibrary />
+            <IconLibrary v-show="!isCollasped" />
+            <IconLibraryCollasped v-show="isCollasped" />
           </div>
-          <span class="my-library__container__title__left__text">音乐库</span>
+          <span v-show="!isCollasped" class="my-library__container__title__left__text">{{
+            $t('my_library.title')
+          }}</span>
         </div>
-        <div class="my-library__container__title__right">
+        <div v-show="!isCollasped" class="my-library__container__title__right">
           <button class="my-library__container__title__right__create-playlist">
             <div class="my-library__container__title__right__create-playlist__icon-wrapper">
               <IconPlus />
@@ -16,10 +19,9 @@
           </button>
         </div>
       </div>
-      <TagBar :tags="tags" :isActive @handle-click-tag="changeTag" />
+      <TagBar v-show="!isCollasped" :tags="tags" :isActive @handle-click-tag="changeTag" />
     </div>
   </ResizeBox>
-
 </template>
 
 <script>
@@ -27,6 +29,9 @@ import IconLibrary from '@/components/Icons/IconLibrary.vue'
 import IconPlus from '@/components/Icons/IconPlus.vue'
 import ResizeBox from './ResizeBox/index.vue'
 import TagBar from './TagBar/index.vue'
+import { mapWritableState } from 'pinia'
+import { useAppStore } from '@/stores/app'
+import IconLibraryCollasped from '@/components/Icons/IconLibraryCollasped.vue'
 
 export default {
   name: 'MyLibrary',
@@ -36,15 +41,25 @@ export default {
       isActive: 'liked_songs'
     }
   },
+  computed: {
+    ...mapWritableState(useAppStore, ['isCollasped'])
+  },
   components: {
     IconLibrary,
     IconPlus,
     ResizeBox,
-    TagBar
+    TagBar,
+    IconLibraryCollasped
   },
   methods: {
     changeTag(tag) {
       this.isActive = tag
+    }
+  },
+  watch: {
+    isCollasped: {
+      handler(newVal, oldVal) {},
+      immediate: true
     }
   }
 }
@@ -54,6 +69,9 @@ export default {
 .my-library__container {
   padding: 1.6rem 1.6rem 0 1.6rem;
   overflow: hidden;
+
+  container-type: inline-size;
+  container-name: my-library;
 
   &__title {
     display: flex;
@@ -99,7 +117,7 @@ export default {
 
       &__create-playlist {
         border-radius: 50%;
-        padding: 0.8rem;
+        padding: 0.5rem;
 
         @include clickAnimation;
 
@@ -114,7 +132,7 @@ export default {
         }
 
         &__icon-wrapper {
-          height: $font-size-text-primary;
+          height: 1.4rem;
           aspect-ratio: 1 / 1;
           fill: $color-font-secondary;
 

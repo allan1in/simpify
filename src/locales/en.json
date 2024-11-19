@@ -62,6 +62,7 @@
   },
   "track": {
     "type": "Song",
+    "all_artists": "All Artists",
     "duration": {
       "hr": "hr",
       "min": "min",
@@ -81,5 +82,11 @@
     "top_artists": "Top artists this month",
     "top_tracks": "Top tracks this month",
     "public_playlists": "Public Playlists"
+  },
+  "my_library": {
+    "title": "Your Library"
+  },
+  "fullscreen_player": {
+    "title": "PLAYING FROM ALBUM"
   }
 }

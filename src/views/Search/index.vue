@@ -5,11 +5,19 @@
         <TitleShowAll :title="$t('search.browse_all')" />
       </div>
       <div class="search-container__cards-wrapper">
-        <router-link :to="{ name: 'Browse', params: { categoryId: item.id } }"
-          class="search-container__cards-wrapper__card" v-for="item in categories" :key="item.id">
+        <router-link
+          :to="{ name: 'Browse', params: { categoryId: item.id } }"
+          class="search-container__cards-wrapper__card"
+          v-for="item in categories"
+          :key="item.id"
+        >
           <h2 class="search-container__cards-wrapper__card__name">{{ item.name }}</h2>
-          <img v-if="item.cover" class="search-container__cards-wrapper__card__img" :src="item.cover"
-            :alt="item.name" />
+          <img
+            v-if="item.cover"
+            class="search-container__cards-wrapper__card__img"
+            :src="item.cover"
+            :alt="item.name"
+          />
         </router-link>
       </div>
     </div>
@@ -169,6 +177,7 @@ export default {
 
       &__name {
         padding: $gutter-1-5x;
+        width: 70%;
 
         @include titleStyles;
       }
