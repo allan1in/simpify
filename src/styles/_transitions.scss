@@ -35,3 +35,15 @@
     transform: translateY(100vh);
   }
 }
+
+.fade {
+  &-enter-active,
+  &-leave-active {
+    transition: all $duration-default ease;
+  }
+
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
+  }
+}

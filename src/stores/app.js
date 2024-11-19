@@ -6,7 +6,8 @@ export const useAppStore = defineStore('app', {
     loadMore: false,
     showFullScreenPlayer: false,
     showMessage: false,
-    language: localStorage.getItem('language') || 'en'
+    language: localStorage.getItem('language') || 'en',
+    myLibWidth: 0
   }),
   actions: {
     setLanguage(language) {

@@ -14,7 +14,8 @@
     "artists": "艺人",
     "tracks": "歌曲",
     "albums": "专辑",
-    "playlists": "歌单"
+    "playlists": "歌单",
+    "liked_songs": "喜欢的歌曲"
   },
   "get_all": {
     "artists": "艺人",
