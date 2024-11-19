@@ -46,7 +46,7 @@ import TagButton from '@/components/TagButton/index.vue'
 import IconArrowRight from '@/components/Icons/IconArrowRight.vue'
 import IconArrowLeft from '@/components/Icons/IconArrowLeft.vue'
 import { mapWritableState } from 'pinia'
-import { useAppStore } from '@/stores/app'
+import { useLibraryStore } from '@/stores/library'
 
 export default {
   name: 'TagBar',
@@ -74,7 +74,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['myLibWidth'])
+    ...mapWritableState(useLibraryStore, ['myLibWidth'])
   },
   methods: {
     handleMouseEnter() {

@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import { useAppStore } from '@/stores/app'
+import { useLibraryStore } from '@/stores/library'
 import { mapWritableState } from 'pinia'
 
 export default {
@@ -19,7 +19,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['myLibWidth', 'isCollasped'])
+    ...mapWritableState(useLibraryStore, ['myLibWidth', 'isCollasped'])
   },
   methods: {
     handleMouseDown(event) {
@@ -53,22 +53,23 @@ export default {
     }
   },
   watch: {
-    isCollasped: {
-      handler(newVal, oldVal) {
-        if (newVal) {
-          this.$nextTick(() => {
-            this.$refs.resizeBox.style.width = this.collapsedWidth + 'px'
-            this.myLibWidth = this.collapsedWidth + 'px'
-          })
-        } else {
-          this.$nextTick(() => {
-            this.$refs.resizeBox.style.width = this.minWidth + 'px'
-            this.myLibWidth = this.minWidth + 'px'
-          })
-        }
-      },
-      immediate: true
+    isCollasped(newVal, oldVal) {
+      if (newVal) {
+        this.$nextTick(() => {
+          this.$refs.resizeBox.style.width = this.collapsedWidth + 'px'
+        })
+      } else {
+        this.$nextTick(() => {
+          this.$refs.resizeBox.style.width = this.myLibWidth + 'px'
+        })
+      }
     }
+  },
+  created() {
+    this.$nextTick(() => {
+      this.myLibWidth = this.minWidth
+      this.$refs.resizeBox.style.width = this.myLibWidth + 'px'
+    })
   }
 }
 </script>
@@ -77,7 +78,6 @@ export default {
   background-color: $color-bg-2;
   border-radius: $border-radius-default;
   position: relative;
-  width: 42rem;
 
   &__resize-handle {
     width: $gutter;
