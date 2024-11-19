@@ -66,6 +66,10 @@ export default {
       flex: 4;
       height: inherit;
       overflow: hidden;
+      min-width: 42rem;
+
+      container-type: inline-size;
+      container-name: main-view;
 
       &__container {
         min-height: $height-content;

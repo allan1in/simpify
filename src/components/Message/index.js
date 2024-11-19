@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import Message from './index.vue'
-import variables from '@/styles/variables.module.scss'
+import variables from '@/styles/export/variables.module.scss'
 
 const createInstance = (config = {}) => {
   // The distance between bottom and the first message-box

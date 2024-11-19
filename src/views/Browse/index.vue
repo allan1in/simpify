@@ -132,14 +132,14 @@ $color-bg-cover: hsl(random(360), 40%, 50%);
       font-family: $font-family-title;
       text-shadow: 0 0 20px rgba($color-bg-1, 1);
 
-      @include respond(phone) {
+      @include respondContainer(phone) {
         font-size: calc($font-size-title-large * 0.5);
       }
     }
   }
 
   &__content {
-    padding: 1.6rem;
+    padding: $gutter-1-5x;
 
     @include gridCards;
   }

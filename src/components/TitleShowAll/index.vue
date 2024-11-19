@@ -4,9 +4,8 @@
       <router-link class="title-show-all__title" :to="{ name: routerName }">{{
         title
       }}</router-link>
-      <router-link class="title-show-all__show-all" :to="{ name: routerName }"
-        >{{ $t('title_show_all.show_all') }}</router-link
-      >
+      <router-link class="title-show-all__show-all" :to="{ name: routerName }">{{ $t('title_show_all.show_all')
+        }}</router-link>
     </div>
     <h1 v-else class="title-simple">
       {{ title }}
@@ -65,10 +64,10 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1.6rem;
+  padding: 0 $gutter-1-5x;
 
   &__title {
-    margin: 1.6rem 0;
+    margin: $gutter-1-5x 0;
 
     @include titleStyles;
   }
@@ -82,7 +81,7 @@ export default {
 
 .title-simple {
   display: block;
-  padding: 1.6rem;
+  padding: $gutter-1-5x;
 
   @include titleStyles;
 }

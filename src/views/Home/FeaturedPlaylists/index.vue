@@ -96,7 +96,7 @@ export default {
 
 <style lang="scss" scoped>
 .featured-playlists-container {
-  padding: 1.6rem;
+  padding: $gutter-1-5x;
 
   &__content {
     @include gridCards;

@@ -197,12 +197,12 @@ export default {
   min-height: inherit;
 
   &__content {
-    padding: 1.6rem;
+    padding: $gutter-1-5x;
 
     &__artists,
     &__albums,
     &__playlists {
-      padding-top: $gutter-2x;
+      padding-top: $gutter-1-5x;
 
       &__results {
         @include gridCardsLess;

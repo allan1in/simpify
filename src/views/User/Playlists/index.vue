@@ -97,7 +97,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .playlists-container {
-  padding: $gutter-2x;
+  padding: $gutter-1-5x;
 
   &__content {
     @include gridCards;

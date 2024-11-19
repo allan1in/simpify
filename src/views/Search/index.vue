@@ -5,19 +5,11 @@
         <TitleShowAll :title="$t('search.browse_all')" />
       </div>
       <div class="search-container__cards-wrapper">
-        <router-link
-          :to="{ name: 'Browse', params: { categoryId: item.id } }"
-          class="search-container__cards-wrapper__card"
-          v-for="item in categories"
-          :key="item.id"
-        >
+        <router-link :to="{ name: 'Browse', params: { categoryId: item.id } }"
+          class="search-container__cards-wrapper__card" v-for="item in categories" :key="item.id">
           <h2 class="search-container__cards-wrapper__card__name">{{ item.name }}</h2>
-          <img
-            v-if="item.cover"
-            class="search-container__cards-wrapper__card__img"
-            :src="item.cover"
-            :alt="item.name"
-          />
+          <img v-if="item.cover" class="search-container__cards-wrapper__card__img" :src="item.cover"
+            :alt="item.name" />
         </router-link>
       </div>
     </div>
@@ -157,12 +149,9 @@ export default {
 }
 
 .search-container {
-  padding: 1.6rem;
+  padding: $gutter-1-5x;
 
   &__cards-wrapper {
-    padding: 1.6rem;
-    gap: $gutter-4x;
-
     @include gridCardsExtraLess;
 
     &__card {
@@ -172,13 +161,14 @@ export default {
       overflow: hidden;
       cursor: pointer;
       background: linear-gradient(-65deg, $color-bg-4 20%, $color-bg-3 70%);
+      margin: $gutter-1-5x;
 
       &:hover {
         text-decoration: none;
       }
 
       &__name {
-        padding: 1.6rem;
+        padding: $gutter-1-5x;
 
         @include titleStyles;
       }

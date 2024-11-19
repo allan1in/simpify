@@ -3,7 +3,7 @@ import './assets/fonts/fonts.scss'
 // https://github.com/KingSora/OverlayScrollbars/blob/master/packages/overlayscrollbars-vue/README.md#usage
 import 'overlayscrollbars/overlayscrollbars.css'
 // Customize scrollbar styles
-import './styles/os-scroll.css'
+import './styles/components/os-scroll.css'
 // OverlayScrollbars plugins
 import { OverlayScrollbars, ClickScrollPlugin } from 'overlayscrollbars'
 

@@ -22,8 +22,10 @@ $font-size-text-secondary: 1.4rem;
 
 // PADDING OR MARGIN
 $gutter: 0.8rem;
+$gutter-1-5x: calc(1.5 * $gutter);
 $gutter-2x: calc(2 * $gutter);
-$gutter-4x: calc(2 * $gutter-2x);
+$gutter-3x: calc(3 * $gutter);
+$gutter-4x: calc(4 * $gutter);
 
 // HEIGHT
 $height-player: 7.2rem;

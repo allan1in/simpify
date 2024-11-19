@@ -110,7 +110,7 @@ export default {
         padding: 0.8rem 3.2rem;
         color: $color-bg-1;
         text-align: center;
-        font-size: 1.6rem;
+        font-size: $font-size-text-primary;
         border-radius: 3.2rem;
         font-weight: bold;
 

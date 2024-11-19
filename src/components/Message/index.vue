@@ -50,7 +50,7 @@ export default {
 <style lang="scss" scoped>
 .message-container {
   background-color: $color-font-primary;
-  padding: $gutter-2x;
+  padding: $gutter-1-5x;
   border-radius: $gutter;
 
   &__content {

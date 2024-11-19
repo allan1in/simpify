@@ -1,18 +1,10 @@
 <template>
   <template v-if="!loading">
-    <div
-      class="artist-card"
-      @click="$router.push({ name: 'Artist', params: { artistId: item.id } })"
-    >
+    <div class="artist-card" @click="$router.push({ name: 'Artist', params: { artistId: item.id } })">
       <div class="artist-card__img-box">
         <div class="artist-card__img-box__img-wrapper">
-          <img
-            loading="lazy"
-            v-if="item.images[1]?.url"
-            :src="item.images[1].url"
-            alt="Artist Cover"
-            class="artist-card__img-box__img-wrapper__img"
-          />
+          <img loading="lazy" v-if="item.images[1]?.url" :src="item.images[1].url" alt="Artist Cover"
+            class="artist-card__img-box__img-wrapper__img" />
           <div v-else class="artist-card__img-box__img-wrapper__icon-wrapper">
             <IconDefaultArtist />
           </div>
@@ -23,11 +15,8 @@
       </div>
 
       <div class="artist-card__name-wrapper">
-        <router-link
-          :to="{ name: 'Artist', params: { artistId: item.id } }"
-          class="artist-card__name-wrapper__name"
-          >{{ item.name }}</router-link
-        >
+        <router-link :to="{ name: 'Artist', params: { artistId: item.id } }" class="artist-card__name-wrapper__name">{{
+          item.name }}</router-link>
         <!-- <div class="artist-card__name-wrapper__type">
           {{ `${item.type.charAt(0).toUpperCase()}${item.type.slice(1)}` }}
         </div> -->
@@ -107,7 +96,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.6rem;
+  padding: $gutter-1-5x;
   cursor: pointer;
   position: relative;
 

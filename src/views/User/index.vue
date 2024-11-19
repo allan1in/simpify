@@ -2,17 +2,12 @@
   <template v-if="!loading_skeleton">
     <div class="user-container">
       <div class="user-container__banner">
-        <Banner
-          :type="$t('profile.type')"
-          :title="profile.display_name"
-          :images="profile.images"
-          imgShape="circle"
-          default-icon="user"
-        >
+        <Banner :type="$t('profile.type')" :title="profile.display_name" :images="profile.images" imgShape="circle"
+          default-icon="user">
           <span class="user-container__banner__details__playlists" v-if="playlists_total">
             {{
               `${Intl.NumberFormat().format(playlists_total)} ${$t('profile.playlist', playlists_total)}
-              `
+            `
             }}
           </span>
           <span class="user-container__banner__details__followers" v-if="profile.followers.total">
@@ -25,41 +20,23 @@
         </Banner>
       </div>
       <div class="user-container__content">
-        <div
-          class="user-container__content__top-artists"
-          v-if="this.uid === id && artists.length !== 0"
-        >
-          <TitleShowAll
-            :title="$t('profile.top_artists')"
-            :router-name="this.artists_total > this.artists_limit ? 'GetArtistsForUser' : ''"
-          />
+        <div class="user-container__content__top-artists" v-if="this.uid === id && artists.length !== 0">
+          <TitleShowAll :title="$t('profile.top_artists')"
+            :router-name="this.artists_total > this.artists_limit ? 'GetArtistsForUser' : ''" />
           <div class="user-container__content__top-artists__content">
             <CardArtist v-for="item in artists" :key="item.id" :item="item" />
           </div>
         </div>
-        <div
-          class="user-container__content__top-songs"
-          v-if="this.uid === id && tracks.length !== 0"
-        >
-          <TitleShowAll
-            :title="$t('profile.top_tracks')"
-            :router-name="this.tracks_total > this.tracks_limit ? 'GetTracksForUser' : ''"
-          />
+        <div class="user-container__content__top-songs" v-if="this.uid === id && tracks.length !== 0">
+          <TitleShowAll :title="$t('profile.top_tracks')"
+            :router-name="this.tracks_total > this.tracks_limit ? 'GetTracksForUser' : ''" />
           <div class="user-container__content__top-songs__content">
-            <CardTrack
-              v-for="(item, index) in tracks"
-              :key="item.id"
-              :item="item"
-              :index
-              :uris="uris"
-            />
+            <CardTrack v-for="(item, index) in tracks" :key="item.id" :item="item" :index :uris="uris" />
           </div>
         </div>
         <div class="user-container__content__playlists" v-if="playlists.length !== 0">
-          <TitleShowAll
-            :title="$t('profile.public_playlists')"
-            :router-name="this.playlists_total > this.playlists_limit ? 'UserPlaylists' : ''"
-          />
+          <TitleShowAll :title="$t('profile.public_playlists')"
+            :router-name="this.playlists_total > this.playlists_limit ? 'UserPlaylists' : ''" />
           <div class="user-container__content__playlists__content">
             <CardPlaylist v-for="item in playlists" :key="item.id" :item="item" />
           </div>
@@ -210,11 +187,11 @@ export default {
 <style lang="scss" scoped>
 .user-container {
   &__content {
-    padding: $gutter-2x;
+    padding: $gutter-1-5x;
 
     &__top-artists,
     &__playlists {
-      padding-top: $gutter-2x;
+      padding-top: $gutter-1-5x;
 
       &__content {
         @include gridCards;
@@ -222,7 +199,7 @@ export default {
     }
 
     &__top-songs {
-      padding-top: $gutter-2x;
+      padding-top: $gutter-1-5x;
 
       &__content {
         padding-top: $gutter;

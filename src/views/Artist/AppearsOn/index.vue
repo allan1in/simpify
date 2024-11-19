@@ -98,7 +98,7 @@ export default {
 
 <style lang="scss" scoped>
 .artist-all-appears-on {
-  padding: 1.6rem;
+  padding: $gutter-1-5x;
 
   &__results {
     @include gridCards;

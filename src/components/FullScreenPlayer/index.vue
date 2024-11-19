@@ -381,7 +381,7 @@ export default {
         @include oneLineEllipsis;
 
         @include respond(phone) {
-          font-size: 1.6rem;
+          font-size: $font-size-text-primary;
         }
       }
     }

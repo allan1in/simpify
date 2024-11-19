@@ -14,7 +14,6 @@ export default {
     name: "ResizeBox",
     data() {
         return {
-            maxWidth: 1360,
             minWidth: 72
         }
     },
@@ -31,10 +30,7 @@ export default {
 
             document.onmousemove = (e) => {
                 preWidth = this.$refs.resizeBox.offsetWidth
-
-                if (e.clientX > boxLeft + this.maxWidth) {
-                    newWidth = this.maxWidth
-                } else if (e.clientX < boxLeft + this.minWidth) {
+                if (e.clientX < boxLeft + this.minWidth) {
                     newWidth = this.minWidth
                 } else {
                     newWidth = e.clientX - boxLeft
@@ -58,7 +54,7 @@ export default {
     background-color: $color-bg-2;
     border-radius: $border-radius-default;
     position: relative;
-    width: 1360px;
+    width: 360px;
 
     &__resize-handle {
         width: $gutter;

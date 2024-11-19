@@ -38,6 +38,7 @@
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    word-break: break-all;
   }
 }
 
@@ -47,6 +48,7 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    word-break: break-all;
   }
 }
 
@@ -109,6 +111,44 @@
   }
 }
 
+@mixin respondContainer($breackpoint) {
+  @if $breackpoint == phone {
+    & {
+      @container main-view (max-width: 600px) {
+        // <= 600px
+        @content;
+      }
+    }
+  }
+
+  @if $breackpoint == tab-port {
+    & {
+      @container main-view (max-width: 768px) {
+        // <= 768px
+        @content;
+      }
+    }
+  }
+
+  @if $breackpoint == tab-land {
+    & {
+      @container main-view (max-width: 1024px) {
+        // <= 1024px
+        @content;
+      }
+    }
+  }
+
+  @if $breackpoint == desktop {
+    & {
+      @container main-view (min-width: 1440px) {
+        // >= 1440px
+        @content;
+      }
+    }
+  }
+}
+
 // https://sass-lang.com/documentation/at-rules/mixin/#keyword-arguments
 @mixin gridCards() {
   & {
@@ -116,17 +156,17 @@
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
-  @include respond(desktop) {
+  @include respondContainer(desktop) {
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 
-  @include respond(tab-land) {
+  @include respondContainer(tab-land) {
     & {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 
-  @include respond(phone) {
+  @include respondContainer(phone) {
     & {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -138,11 +178,11 @@
     display: grid;
     grid-template-columns: repeat(8, minmax(0, 1fr));
 
-    @include respond(tab-land) {
+    @include respondContainer(tab-land) {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
-    @include respond(phone) {
+    @include respondContainer(phone) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
@@ -153,11 +193,11 @@
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
 
-    @include respond(tab-land) {
+    @include respondContainer(tab-land) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    @include respond(phone) {
+    @include respondContainer(phone) {
       grid-template-columns: repeat(1, minmax(0, 1fr));
     }
   }

@@ -105,7 +105,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.6rem;
+  padding: $gutter-1-5x;
   cursor: pointer;
 
   @include transition;

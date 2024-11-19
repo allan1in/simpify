@@ -22,6 +22,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 $color-font-primary-lighter: #a7a7a7;
+
 .not-found-container {
   background-color: $color-bg-2;
   height: 100vh;
@@ -42,20 +43,20 @@ $color-font-primary-lighter: #a7a7a7;
     }
 
     &__title {
-      margin-bottom: 1.6rem;
+      margin-bottom: $gutter-1-5x;
       font-size: 4.8rem;
     }
 
     &__describe {
       margin-bottom: 4rem;
       color: $color-font-primary-lighter;
-      font-size: 1.6rem;
+      font-size: $font-size-text-primary;
     }
 
     &__home {
       background-color: $color-font-primary;
       color: $color-bg-1;
-      font-size: 1.6rem;
+      font-size: $font-size-text-primary;
       padding: 1.4rem 3.2rem;
       font-weight: bold;
       border-radius: 3rem;

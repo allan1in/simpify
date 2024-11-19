@@ -3,12 +3,8 @@
     <div class="album-card" @click="$router.push({ name: 'Album', params: { albumId: item.id } })">
       <div class="album-card__img-box">
         <div class="album-card__img-box__img-wrapper">
-          <img
-            loading="lazy"
-            :src="item.images[0].url"
-            alt="Album Cover"
-            class="album-card__img-box__img-wrapper__img"
-          />
+          <img loading="lazy" :src="item.images[0].url" alt="Album Cover"
+            class="album-card__img-box__img-wrapper__img" />
         </div>
         <div class="album-card__img-box__toggle-play">
           <ButtonTogglePlay :item />
@@ -16,11 +12,8 @@
       </div>
 
       <div class="album-card__name-wrapper">
-        <router-link
-          :to="{ name: 'Album', params: { albumId: item.id } }"
-          class="album-card__name-wrapper__name"
-          >{{ item.name }}</router-link
-        >
+        <router-link :to="{ name: 'Album', params: { albumId: item.id } }" class="album-card__name-wrapper__name">{{
+          item.name }}</router-link>
       </div>
       <div class="album-card__info-wrapper">
         <div class="album-card__info-wrapper__info">
@@ -28,11 +21,8 @@
           <span v-if="showArtists">
             <span> • </span>
             <!-- Use native tag a because router-link tag can't handle event bubbling easily -->
-            <a
-              @click.stop="$router.push({ name: 'Artist', params: { artistId: artist.id } })"
-              v-for="(artist, index) in item.artists"
-              :key="artist.id"
-            >
+            <a @click.stop="$router.push({ name: 'Artist', params: { artistId: artist.id } })"
+              v-for="(artist, index) in item.artists" :key="artist.id">
               {{ (index === 0 ? '' : ', ') + artist.name }}
             </a>
           </span>
@@ -117,7 +107,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.6rem;
+  padding: $gutter-1-5x;
   cursor: pointer;
 
   @include transition;

@@ -101,10 +101,10 @@ export default {
   min-height: inherit;
 
   &__content {
-    padding: 1.6rem;
+    padding: $gutter-1-5x;
 
     &__msg {
-      padding-bottom: 1.6rem;
+      padding-bottom: $gutter-1-5x;
     }
 
     &__results {

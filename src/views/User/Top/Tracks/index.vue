@@ -75,6 +75,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tracks-container {
-  padding: $gutter-2x;
+  padding: $gutter-1-5x;
 }
 </style>

@@ -103,13 +103,14 @@ export default {
     width: 30%;
   }
 }
+
 .banner {
-  padding: $gutter-4x;
+  padding: $gutter-3x;
   background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
   display: flex;
   align-items: end;
   justify-content: start;
-  gap: $gutter-4x;
+  gap: $gutter-3x;
 
   @include respond(phone) {
     flex-direction: column;
@@ -152,7 +153,6 @@ export default {
   }
 
   &__info {
-    width: 80%;
 
     &__type {
       font-size: $font-size-text-secondary;
@@ -174,6 +174,8 @@ export default {
     &__details {
       font-size: $font-size-text-secondary;
       color: $color-font-secondary;
+
+      @include twoLineEllipsis;
     }
   }
 }

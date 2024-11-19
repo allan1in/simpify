@@ -122,7 +122,7 @@ export default {
   }
 
   &__content {
-    padding: 1.6rem;
+    padding: $gutter-1-5x;
 
     &__artists {
       @include gridCards;

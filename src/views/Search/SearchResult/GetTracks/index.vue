@@ -3,13 +3,7 @@
     <main class="track-container">
       <div class="track-container__content">
         <TrackListHeader />
-        <TrackCard
-          v-for="(item, index) in tracks"
-          :key="item.id"
-          :item="item"
-          :index="index"
-          :uris="uris"
-        />
+        <TrackCard v-for="(item, index) in tracks" :key="item.id" :item="item" :index="index" :uris="uris" />
       </div>
     </main>
   </template>
@@ -111,10 +105,10 @@ export default {
   min-height: inherit;
 
   &__content {
-    padding: 1.6rem;
+    padding: $gutter-1-5x;
 
     &__msg {
-      padding-bottom: 1.6rem;
+      padding-bottom: $gutter-1-5x;
 
       &__total {
         @include titleStyles;

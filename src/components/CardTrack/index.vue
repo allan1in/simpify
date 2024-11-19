@@ -11,12 +11,8 @@
           </div>
           <div class="track-card__left__num-wrapper">
             <div class="track-card__left__num-wrapper__playing" v-if="isPlaying">
-              <img
-                loading="lazy"
-                class="track-card__left__num-wrapper__playing__img"
-                src="/src/assets/images/playing.gif"
-                alt=""
-              />
+              <img loading="lazy" class="track-card__left__num-wrapper__playing__img"
+                src="/src/assets/images/playing.gif" alt="" />
             </div>
             <span v-else>{{ index + 1 }}</span>
           </div>
@@ -24,40 +20,26 @@
 
         <div class="track-card__title">
           <div v-if="showImage" class="track-card__title__cover-wrapper">
-            <img
-              loading="lazy"
-              class="track-card__title__cover-wrapper__cover"
-              :src="item.album.images[2].url"
-              alt="Album Cover"
-            />
+            <img loading="lazy" class="track-card__title__cover-wrapper__cover" :src="item.album.images[2].url"
+              alt="Album Cover" />
           </div>
           <div class="track-card__title__msg-wrapper">
-            <router-link
-              :class="{
-                'track-card__title__msg-wrapper__name-playing': isPlaying
-              }"
-              :to="{ name: 'Track', params: { trackId: item.id } }"
-              class="track-card__title__msg-wrapper__name"
-            >
+            <router-link :class="{
+              'track-card__title__msg-wrapper__name-playing': isPlaying
+            }" :to="{ name: 'Track', params: { trackId: item.id } }" class="track-card__title__msg-wrapper__name">
               {{ item.name }}
             </router-link>
             <div v-if="showArtists" class="track-card__title__msg-wrapper__artists">
-              <router-link
-                v-for="(artist, index) in item.artists"
-                :key="artist.id"
-                :to="{ name: 'Artist', params: { artistId: artist.id } }"
-              >
+              <router-link v-for="(artist, index) in item.artists" :key="artist.id"
+                :to="{ name: 'Artist', params: { artistId: artist.id } }">
                 {{ (index === 0 ? '' : ', ') + artist.name }}
               </router-link>
             </div>
           </div>
         </div>
         <div v-if="showAlbum" class="track-card__album-wrapper">
-          <router-link
-            :to="{ name: 'Album', params: { albumId: item.album.id } }"
-            class="track-card__album-wrapper__album"
-            >{{ item.album.name }}</router-link
-          >
+          <router-link :to="{ name: 'Album', params: { albumId: item.album.id } }"
+            class="track-card__album-wrapper__album">{{ item.album.name }}</router-link>
         </div>
         <div class="track-card__duration-wrapper">
           <span>{{ getFormatTime(item.duration_ms) }}</span>
@@ -74,31 +56,19 @@
 
         <div class="track-card__title">
           <div v-if="showImage" class="track-card__title__cover-wrapper">
-            <img
-              loading="lazy"
-              class="track-card__title__cover-wrapper__cover"
-              :src="item.album.images[2].url"
-              alt="Album Cover"
-            />
+            <img loading="lazy" class="track-card__title__cover-wrapper__cover" :src="item.album.images[2].url"
+              alt="Album Cover" />
           </div>
           <div class="track-card__title__msg-wrapper">
-            <router-link
-              v-if="!!item.id"
-              :class="{
-                'track-card__title__msg-wrapper__name-playing': isPlaying
-              }"
-              :to="{ name: 'Track', params: { trackId: item.id } }"
-              class="track-card__title__msg-wrapper__name"
-            >
+            <router-link v-if="!!item.id" :class="{
+              'track-card__title__msg-wrapper__name-playing': isPlaying
+            }" :to="{ name: 'Track', params: { trackId: item.id } }" class="track-card__title__msg-wrapper__name">
               {{ item.name }}
             </router-link>
             <span v-else class="track-card__title__msg-wrapper__name"> {{ item.name }}</span>
             <div v-if="showArtists" class="track-card__title__msg-wrapper__artists-not-available">
               <template v-for="(artist, index) in item.artists" :key="artist.id">
-                <router-link
-                  v-if="!!artist.id"
-                  :to="{ name: 'Artist', params: { artistId: artist.id } }"
-                >
+                <router-link v-if="!!artist.id" :to="{ name: 'Artist', params: { artistId: artist.id } }">
                   {{ (index === 0 ? '' : ', ') + artist.name }}
                 </router-link>
                 <span v-else> {{ (index === 0 ? '' : ', ') + artist.name }}</span>
@@ -107,12 +77,8 @@
           </div>
         </div>
         <div v-if="showAlbum" class="track-card__album-wrapper">
-          <router-link
-            v-if="!!item.album.id"
-            :to="{ name: 'Album', params: { albumId: item.album.id } }"
-            class="track-card__album-wrapper__album"
-            >{{ item.album.name }}</router-link
-          >
+          <router-link v-if="!!item.album.id" :to="{ name: 'Album', params: { albumId: item.album.id } }"
+            class="track-card__album-wrapper__album">{{ item.album.name }}</router-link>
           <span v-else class="track-card__album-wrapper__album">
             {{ item.album.name }}
           </span>
@@ -296,7 +262,7 @@ export default {
 }
 
 .track-card {
-  margin: 0 1.6rem;
+  margin: 0 $gutter-1-5x;
   padding: 0 2.4rem;
   display: flex;
   height: 5.6rem;
@@ -306,11 +272,6 @@ export default {
   position: relative;
 
   @include transition;
-
-  @include respond(phone) {
-    padding: 0 1.6rem;
-    margin: 0;
-  }
 
   &-not-available {
     opacity: 0.5;
@@ -456,7 +417,7 @@ export default {
       @include oneLineEllipsis;
     }
 
-    @include respond(phone) {
+    @include respondContainer(phone) {
       display: none;
     }
   }
@@ -468,7 +429,7 @@ export default {
     height: 100%;
     font-size: $font-size-text-secondary;
 
-    @include respond(phone) {
+    @include respondContainer(phone) {
       display: none;
     }
   }

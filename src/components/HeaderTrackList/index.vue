@@ -76,7 +76,7 @@ export default {
 }
 
 .list-header {
-  margin: 1.6rem;
+  margin: $gutter-1-5x;
   padding: 0 2.4rem;
   display: flex;
   height: 3.6rem;
@@ -85,7 +85,7 @@ export default {
   color: $color-font-secondary;
   border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
 
-  @include respond(phone) {
+  @include respondContainer(phone) {
     display: none;
   }
 

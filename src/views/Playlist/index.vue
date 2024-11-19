@@ -165,14 +165,20 @@ export default {
   }
 
   &__content {
-    padding: 1.6rem;
+    padding: $gutter-1-5x;
 
     &__btn-group {
-      padding: $gutter-2x;
+      padding: $gutter-1-5x;
 
       &__play-wrapper {
         height: 5.4rem;
         aspect-ratio: 1 / 1;
+      }
+    }
+
+    &__tracks {
+      @include respondContainer(phone) {
+        margin: $gutter-1-5x 0;
       }
     }
   }
