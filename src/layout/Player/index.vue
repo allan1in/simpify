@@ -3,8 +3,20 @@
     <template v-if="!loading">
       <div class="player-bar__left">
         <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
-          <img class="player-bar__left__cover-wrapper__cover" :src="current_track.album.images[0].url" alt="track"
-            @click="showFullScreenPlayer = true" />
+          <div class="player-bar__left__cover-wrapper__arrow">
+            <div
+              class="player-bar__left__cover-wrapper__arrow__wrapper"
+              @click="showFullScreenPlayer = !showFullScreenPlayer"
+            >
+              <IconArrowUp v-show="!showFullScreenPlayer" />
+              <IconArrowDown v-show="showFullScreenPlayer" />
+            </div>
+          </div>
+          <img
+            class="player-bar__left__cover-wrapper__cover"
+            :src="current_track.album.images[0].url"
+            alt="track"
+          />
         </div>
         <div class="player-bar__left__msg-wrapper">
           <div class="player-bar__left__msg-wrapper__title" v-if="current_track?.id">
@@ -13,10 +25,14 @@
             }}</router-link>
           </div>
           <div class="player-bar__left__msg-wrapper__artist" v-if="current_track?.artists?.length">
-            <router-link v-for="(artist, index) in current_track.artists" :key="artist.uri" :to="{
-              name: 'Artist',
-              params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
-            }">
+            <router-link
+              v-for="(artist, index) in current_track.artists"
+              :key="artist.uri"
+              :to="{
+                name: 'Artist',
+                params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
+              }"
+            >
               {{ (index === 0 ? '' : ', ') + artist.name }}
             </router-link>
           </div>
@@ -44,24 +60,42 @@
     </template>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
-        <button class="icon-wrapper" :class="{ 'btn-active': isShuffle, 'not-allowed': !isReady || isFreeAccount }"
-          @click="toggleShuffle">
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': isShuffle, 'not-allowed': !isReady || isFreeAccount }"
+          @click="toggleShuffle"
+        >
           <IconShuffle />
         </button>
-        <button class="icon-wrapper" @click="preTrack" :class="{ 'not-allowed': !isReady || isFreeAccount }">
+        <button
+          class="icon-wrapper"
+          @click="preTrack"
+          :class="{ 'not-allowed': !isReady || isFreeAccount }"
+        >
           <IconPrevious />
         </button>
-        <button class="player-bar__mid__btn-group__play" @click="togglePlay" :class="{ 'not-allowed': !isReady }">
+        <button
+          class="player-bar__mid__btn-group__play"
+          @click="togglePlay"
+          :class="{ 'not-allowed': !isReady }"
+        >
           <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
             <IconPlay v-if="isPause" />
             <IconPause v-else />
           </span>
         </button>
-        <button class="icon-wrapper" @click="nextTrack" :class="{ 'not-allowed': !isReady || isFreeAccount }">
+        <button
+          class="icon-wrapper"
+          @click="nextTrack"
+          :class="{ 'not-allowed': !isReady || isFreeAccount }"
+        >
           <IconNext />
         </button>
-        <button class="icon-wrapper"
-          :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': !isReady || isFreeAccount }" @click="setRepeatMode">
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': !isReady || isFreeAccount }"
+          @click="setRepeatMode"
+        >
           <IconRepeatSingle v-if="repeatMode === 2" />
           <IconRepeat v-else />
         </button>
@@ -97,12 +131,19 @@
       <!-- <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
       </button> -->
-      <button class="icon-wrapper player-bar__right__full-screen" @click="openFullScreenPlayer"
-        :class="{ 'not-allowed': !isReady }" :disabled="!isReady">
+      <button
+        class="icon-wrapper player-bar__right__full-screen"
+        @click="openFullScreenPlayer"
+        :class="{ 'not-allowed': !isReady }"
+        :disabled="!isReady"
+      >
         <IconFullScreen />
       </button>
-      <button class="icon-wrapper player-bar__right__play-phone" @click="togglePlay"
-        :class="{ 'not-allowed': !isReady }">
+      <button
+        class="icon-wrapper player-bar__right__play-phone"
+        @click="togglePlay"
+        :class="{ 'not-allowed': !isReady }"
+      >
         <IconPlay v-if="isPause" />
         <IconPause v-else />
       </button>
@@ -133,6 +174,8 @@ import SeekBar from '@/components/SeekBar/index.vue'
 import { useAppStore } from '@/stores/app'
 import { useUserStore } from '@/stores/user'
 import Skeleton from '@/components/Skeleton/index.vue'
+import IconArrowDown from '@/components/Icons/IconArrowDown.vue'
+import IconArrowUp from '@/components/Icons/IconArrowUp.vue'
 
 export default {
   name: 'Player',
@@ -154,7 +197,9 @@ export default {
     IconInLikeSong,
     VolumeBar,
     SeekBar,
-    Skeleton
+    Skeleton,
+    IconArrowDown,
+    IconArrowUp
   },
   data() {
     return {
@@ -316,10 +361,6 @@ $msg-artist-font-size: 1.2rem;
       &__title {
         font-size: $msg-title-font-size;
 
-        &:hover {
-          text-decoration: underline;
-        }
-
         @include oneLineEllipsis;
       }
 
@@ -335,6 +376,33 @@ $msg-artist-font-size: 1.2rem;
       height: 80%;
       aspect-ratio: 1 / 1;
       margin: 0 $gutter;
+      position: relative;
+
+      &:hover &__arrow {
+        display: block;
+      }
+
+      &__arrow {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0.6rem;
+        cursor: pointer;
+        border-radius: 50%;
+        background-color: $color-bg-3;
+        opacity: 0.8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        display: none;
+
+        &__wrapper {
+          height: 1.2rem;
+          width: 1.2rem;
+          fill: $color-font-secondary;
+        }
+      }
 
       &__cover {
         width: 100%;
