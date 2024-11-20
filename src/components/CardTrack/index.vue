@@ -153,10 +153,11 @@
 import IconPlay from '@/components/Icons/IconPlay.vue'
 import { timeFormatTrack } from '@/utils/time_format'
 import IconPause from '../Icons/IconPause.vue'
-import { mapActions, mapState } from 'pinia'
+import { mapState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import Skeleton from '@/components/Skeleton/index.vue'
 import { useUserStore } from '@/stores/user'
+import { useLibraryStore } from '@/stores/library'
 
 export default {
   name: 'CardTrack',
@@ -167,6 +168,7 @@ export default {
   },
   computed: {
     ...mapState(usePlayerStore, ['current_track', 'isPause']),
+    ...mapState(useLibraryStore, ['isCollasped']),
     available() {
       if (useUserStore().checkProduct('premium')) {
         return !this.item?.restrictions
@@ -189,32 +191,26 @@ export default {
     },
     showArtists: {
       type: Boolean,
-      require: false,
       default: true
     },
     showImage: {
       type: Boolean,
-      require: false,
       default: true
     },
     showAlbum: {
       type: Boolean,
-      require: false,
       default: true
     },
     context_uri: {
       type: String,
-      require: false,
       default: undefined
     },
     uris: {
       type: Array,
-      require: false,
       default: undefined
     },
     loading: {
       type: Boolean,
-      require: false,
       default: false
     }
   },
@@ -223,31 +219,8 @@ export default {
       return timeFormatTrack(time)
     },
     async handleTogglePlay() {
-      // Current track
-      if (this.current_track.uri === this.item.uri) {
-        this.togglePlay()
-      } else {
-        // New track
-        let data
-        if (this.context_uri) {
-          data = {
-            context_uri: this.context_uri,
-            offset: { position: this.index }
-          }
-        } else if (this.uris) {
-          data = {
-            uris: this.uris,
-            offset: { position: this.index }
-          }
-        } else {
-          data = {
-            uris: [this.item.uri]
-          }
-        }
-        this.playNewTrack(data, this.item)
-      }
-    },
-    ...mapActions(usePlayerStore, ['togglePlay', 'playNewTrack'])
+      usePlayerStore().trackTogglePlay(this.item, this.context_uri, this.uris, this.index)
+    }
   }
 }
 </script>
@@ -296,7 +269,6 @@ export default {
 }
 
 .track-card {
-  margin: 0 $gutter-1-5x;
   padding: 0 2.4rem;
   display: flex;
   height: 5.6rem;
@@ -366,7 +338,7 @@ export default {
       display: flex;
       align-items: center;
       position: relative;
-      z-index: 100;
+      z-index: 1;
 
       @include transition;
 
@@ -451,7 +423,7 @@ export default {
       @include oneLineEllipsis;
     }
 
-    @include respondContainer(main-view, phone) {
+    @include respondContainer(phone) {
       display: none;
     }
   }
@@ -463,7 +435,7 @@ export default {
     height: 100%;
     font-size: $font-size-text-secondary;
 
-    @include respondContainer(main-view, phone) {
+    @include respondContainer(phone) {
       display: none;
     }
   }

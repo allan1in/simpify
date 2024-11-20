@@ -17,15 +17,40 @@
               <IconPlus />
             </div>
           </button>
-          <button class="my-library__container__title__right__arrow">
+          <button
+            class="my-library__container__title__right__arrow"
+            @click.prevent="isShowMore = !isShowMore"
+          >
             <div class="my-library__container__title__right__arrow__wrapper">
-              <IconArrowRightLonger />
-              <!-- <IconArrowLeftLonger/> -->
+              <IconArrowRightLonger v-show="!isShowMore" />
+              <IconArrowLeftLonger v-show="isShowMore" />
             </div>
           </button>
         </div>
       </div>
-      <TagBar v-show="!isCollasped" :tags="tags" :isActive @handle-click-tag="changeTag" />
+      <div v-show="!isCollasped" class="my-library__container__tag-bar">
+        <TagBar :tags="tags" :isActive @handle-click-tag="changeTag" />
+      </div>
+
+      <div
+        class="my-library__container__content"
+        :class="{ 'my-library__container__content-collasped': isCollasped }"
+      >
+        <MyOverlayScrollbars os-element="div">
+          <div class="my-library__container__content__liked-songs">
+            <HeaderTrackList
+              class="my-library__container__content__liked-songs__header"
+              :loading="loading_skeleton"
+            />
+            <CardTrack
+              v-for="(item, index) in likedSongs"
+              :item="item.track"
+              :loading="loading_skeleton"
+              :index
+            />
+          </div>
+        </MyOverlayScrollbars>
+      </div>
     </div>
   </ResizeBox>
 </template>
@@ -40,17 +65,23 @@ import IconLibraryCollasped from '@/components/Icons/IconLibraryCollasped.vue'
 import IconArrowLeftLonger from '@/components/Icons/IconArrowLeftLonger.vue'
 import IconArrowRightLonger from '@/components/Icons/IconArrowRightLonger.vue'
 import { useLibraryStore } from '@/stores/library'
+import CardTrack from '@/components/CardTrack/index.vue'
+import { getUserlikedSongs } from '@/api/meta/user'
+import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
+import HeaderTrackList from '@/components/HeaderTrackList/index.vue'
 
 export default {
   name: 'MyLibrary',
   data() {
     return {
       tags: ['liked_songs', 'playlists', 'albums', 'artists'],
-      isActive: 'liked_songs'
+      isActive: 'liked_songs',
+      loading_skeleton: true,
+      likedSongs: {}
     }
   },
   computed: {
-    ...mapWritableState(useLibraryStore, ['isCollasped', 'myLibWidth'])
+    ...mapWritableState(useLibraryStore, ['isCollasped', 'myLibWidth', 'isShowMore'])
   },
   components: {
     IconLibrary,
@@ -59,25 +90,37 @@ export default {
     TagBar,
     IconLibraryCollasped,
     IconArrowLeftLonger,
-    IconArrowRightLonger
+    IconArrowRightLonger,
+    CardTrack,
+    MyOverlayScrollbars,
+    HeaderTrackList
   },
   methods: {
     changeTag(tag) {
       this.isActive = tag
+    },
+    async getUserlikedSongs() {
+      const res = await getUserlikedSongs()
+      this.likedSongs = res.items
+
+      this.loading_skeleton = false
     }
+  },
+  created() {
+    this.getUserlikedSongs()
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .my-library__container {
-  padding: 1.6rem 1.6rem 0 1.6rem;
   overflow: hidden;
 
   container-type: inline-size;
-  container-name: my-library;
+  container-name: container-box;
 
   &__title {
+    padding: $gutter-2x;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -168,6 +211,29 @@ export default {
 
           @include transitionFast;
         }
+      }
+    }
+  }
+
+  &__tag-bar {
+    padding: 0 $gutter-2x $gutter-1-5x $gutter-2x;
+  }
+
+  &__content {
+    height: calc($height-content - 12rem);
+
+    &-collasped:nth-child(n) {
+      height: calc($height-content - 5.6rem);
+    }
+
+    &__liked-songs {
+      padding: 0 $gutter-2x $gutter-2x $gutter-2x;
+
+      &__header {
+        position: sticky;
+        top: 0;
+        left: 0;
+        z-index: 10;
       }
     }
   }

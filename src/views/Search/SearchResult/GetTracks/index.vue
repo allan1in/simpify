@@ -1,7 +1,7 @@
 <template>
   <template v-if="!loading_skeleton">
     <main class="track-container">
-      <div class="track-container__content">
+      <div class="track-container__results">
         <TrackListHeader />
         <TrackCard v-for="(item, index) in tracks" :key="item.id" :item="item" :index="index" :uris="uris" />
       </div>
@@ -9,7 +9,7 @@
   </template>
   <template v-else>
     <main class="track-container">
-      <div class="track-container__content">
+      <div class="track-container__results">
         <TrackListHeader :loading="loading_skeleton" />
         <TrackCard v-for="i in tracks_limit" :key="i" :loading="loading_skeleton" />
       </div>
@@ -104,8 +104,10 @@ export default {
 .track-container {
   min-height: inherit;
 
-  &__content {
+  &__results {
     padding: $gutter-1-5x;
+    margin: 0 $gutter-1-5x;
+
 
     &__msg {
       padding-bottom: $gutter-1-5x;

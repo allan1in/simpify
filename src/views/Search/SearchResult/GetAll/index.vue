@@ -3,30 +3,64 @@
     <main class="all-container">
       <div class="all-container__content">
         <div v-if="tracks_total" class="all-container__content__songs">
-          <TitleShowAll :router-name="tracks_total > tracks_limit ? 'GetTracks' : ''" :title="$t('get_all.songs')" />
+          <TitleShowAll
+            :router-name="tracks_total > tracks_limit ? 'GetTracks' : ''"
+            :title="$t('get_all.songs')"
+          />
           <div class="all-container__content__songs__results">
             <TrackListHeader />
-            <CardTrack v-for="(item, index) in tracks" :key="item.id" :item="item" :index="index" :uris="uris" />
+            <CardTrack
+              v-for="(item, index) in tracks"
+              :key="item.id"
+              :item="item"
+              :index="index"
+              :uris="uris"
+            />
           </div>
         </div>
         <div v-if="artists_total" class="all-container__content__artists">
-          <TitleShowAll :router-name="artists_total > artists_limit ? 'GetArtists' : ''"
-            :title="$t('get_all.artists')" />
+          <TitleShowAll
+            :router-name="artists_total > artists_limit ? 'GetArtists' : ''"
+            :title="$t('get_all.artists')"
+          />
           <div class="all-container__content__artists__results">
-            <CardArtist v-for="(item, index) in artists" :key="item.id" :item="item" :index="index" :uris="uris" />
+            <CardArtist
+              v-for="(item, index) in artists"
+              :key="item.id"
+              :item="item"
+              :index="index"
+              :uris="uris"
+            />
           </div>
         </div>
         <div v-if="albums_total" class="all-container__content__albums">
-          <TitleShowAll :router-name="albums_total > albums_limit ? 'GetAlbums' : ''" :title="$t('get_all.albums')" />
+          <TitleShowAll
+            :router-name="albums_total > albums_limit ? 'GetAlbums' : ''"
+            :title="$t('get_all.albums')"
+          />
           <div class="all-container__content__albums__results">
-            <CardAlbum v-for="(item, index) in albums" :key="item.id" :item="item" :index="index" :uris="uris" />
+            <CardAlbum
+              v-for="(item, index) in albums"
+              :key="item.id"
+              :item="item"
+              :index="index"
+              :uris="uris"
+            />
           </div>
         </div>
         <div v-if="playlists_total" class="all-container__content__playlists">
-          <TitleShowAll :router-name="playlists_total > playlists_limit ? 'GetPlaylists' : ''"
-            :title="$t('get_all.playlists')" />
+          <TitleShowAll
+            :router-name="playlists_total > playlists_limit ? 'GetPlaylists' : ''"
+            :title="$t('get_all.playlists')"
+          />
           <div class="all-container__content__playlists__results">
-            <CardPlaylist v-for="(item, index) in playlists" :key="item.id" :item="item" :index="index" :uris="uris" />
+            <CardPlaylist
+              v-for="(item, index) in playlists"
+              :key="item.id"
+              :item="item"
+              :index="index"
+              :uris="uris"
+            />
           </div>
         </div>
       </div>
@@ -123,7 +157,7 @@ export default {
     }
   },
   methods: {
-    debouncedGetAll() { },
+    debouncedGetAll() {},
     async getAll() {
       if (this.$route.params.inputContent) {
         await this.getTracks()
@@ -141,7 +175,7 @@ export default {
         offset: this.tracks_offset
       }
       const res = (await searchTracks(params)).tracks
-      this.tracks = res.items
+      this.tracks = res.items.filter((item) => !!item)
       this.tracks_total = res.total
     },
     async getArtists() {
@@ -151,7 +185,7 @@ export default {
         offset: this.artists_offset
       }
       const res = (await searchArtists(params)).artists
-      this.artists = res.items
+      this.artists = res.items.filter((item) => !!item)
       this.artists_total = res.total
     },
     async getAlbums() {
@@ -161,7 +195,7 @@ export default {
         offset: this.albums_offset
       }
       const res = (await searchAlbums(params)).albums
-      this.albums = res.items
+      this.albums = res.items.filter((item) => !!item)
       this.albums_total = res.total
     },
     async getPlaylists() {
@@ -171,7 +205,7 @@ export default {
         offset: this.playlists_offset
       }
       const res = (await searchPlaylists(params)).playlists
-      this.playlists = res.items
+      this.playlists = res.items.filter((item) => !!item)
       this.playlists_total = res.total
     }
   },
@@ -198,6 +232,10 @@ export default {
 
   &__content {
     padding: $gutter-1-5x;
+
+    &__songs__results {
+      margin: 0 $gutter-1-5x;
+    }
 
     &__artists,
     &__albums,

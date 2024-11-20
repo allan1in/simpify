@@ -1,9 +1,5 @@
 <template>
-  <button
-    class="button-toggle-play-container"
-    :class="{ available: available }"
-    @click.stop.prevent="handleClick"
-  >
+  <button class="button-toggle-play-container" :class="{ available: available }" @click.stop.prevent="handleClick">
     <div class="button-toggle-play-container__icon-wrapper">
       <IconPause v-if="showIconPause" />
       <IconPlay v-else />

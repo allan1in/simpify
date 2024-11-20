@@ -25,7 +25,6 @@ export default {
   props: {
     top: {
       type: String,
-      require: false,
       default: 0
     }
   },

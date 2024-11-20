@@ -44,3 +44,11 @@ export function getUserTopSongs(params) {
     params
   })
 }
+
+export function getUserlikedSongs(params) {
+  return request({
+    url: `/me/tracks`,
+    method: 'get',
+    params
+  })
+}

@@ -1,19 +1,10 @@
 <template>
   <template v-if="!loading_skeleton">
     <section class="top-bar-container">
-      <TagButton
-        v-if="showTags.all"
-        @handle-click="getAll"
-        :text="$t('top_bar.all')"
-        :isActive="!isActive"
-      />
+      <TagButton v-if="showTags.all" @handle-click="getAll" :text="$t('top_bar.all')" :isActive="!isActive" />
       <template v-for="tag in tags" :key="tag">
-        <TagButton
-          v-if="showTags[tag]"
-          @handle-click="jumpTo(tag)"
-          :text="$t(`top_bar.${tag}`)"
-          :isActive="isActive === tag"
-        />
+        <TagButton v-if="showTags[tag]" @handle-click="jumpTo(tag)" :text="$t(`top_bar.${tag}`)"
+          :isActive="isActive === tag" />
       </template>
     </section>
   </template>
@@ -56,7 +47,7 @@ export default {
     jumpTo(tag) {
       this.$router.push({ name: `Get${tag.charAt(0).toUpperCase()}${tag.slice(1)}` })
     },
-    debouncedCheck() {},
+    debouncedCheck() { },
     // If there is no data of this type, hide the tag
     async checkHasResults() {
       if (this.$route.params.inputContent) {
@@ -124,7 +115,7 @@ export default {
   justify-content: start;
   gap: 1.2rem;
   padding: 1.2rem 0;
-  padding-left: $gutter-4x;
+  padding-left: $gutter-3x;
   background-color: $color-bg-2;
   border-top-left-radius: $gutter;
   border-top-right-radius: $gutter;

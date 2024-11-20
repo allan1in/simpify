@@ -19,7 +19,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useLibraryStore, ['myLibWidth', 'isCollasped'])
+    ...mapWritableState(useLibraryStore, ['myLibWidth', 'isCollasped', 'isShowMore'])
   },
   methods: {
     handleMouseDown(event) {
@@ -31,11 +31,16 @@ export default {
       document.onmousemove = (e) => {
         newWidth = e.clientX - boxLeft
 
-        if (newWidth < this.minWidth) {
+        if (newWidth <= this.minWidth) {
+          // Change the arrow to point to the right
+          this.isShowMore = false
+
           if (newWidth > this.minWidth / 2) {
+            // Open resizable box
             this.isCollasped = false
             return
           } else {
+            // Close resizable box
             this.isCollasped = true
             return
           }
@@ -44,6 +49,12 @@ export default {
         // Update new Width
         this.$refs.resizeBox.style.width = newWidth + 'px'
         this.myLibWidth = newWidth
+
+        // Has reached the maximum width
+        if (this.$refs.resizeBox.offsetWidth !== newWidth) {
+          // Change the arrow to point to the left
+          this.isShowMore = true
+        }
       }
 
       document.onmouseup = () => {
@@ -61,6 +72,19 @@ export default {
       } else {
         this.$nextTick(() => {
           this.$refs.resizeBox.style.width = this.myLibWidth + 'px'
+        })
+      }
+    },
+    isShowMore(newVal, oldVal) {
+      if (newVal) {
+        this.$nextTick(() => {
+          this.$refs.resizeBox.style.width = '100%'
+          this.myLibWidth = this.$refs.resizeBox.offsetWidth
+        })
+      } else {
+        this.$nextTick(() => {
+          this.$refs.resizeBox.style.width = this.minWidth + 'px'
+          this.myLibWidth = this.minWidth
         })
       }
     }

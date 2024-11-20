@@ -3,15 +3,10 @@
     <div class="playlist-container">
       <div class="playlist-container__banner">
         <Banner :type="$t('playlist.type')" :title="playlist.name" :images="playlist.images">
-          <router-link
-            class="playlist-container__banner-details__owner"
-            :to="{ name: 'User', params: { userId: playlist.owner.id } }"
-            >{{ playlist.owner.display_name }}</router-link
-          >
-          <span
-            v-if="playlist.followers.total !== 0"
-            class="playlist-container__banner-details__followers"
-          >
+          <router-link class="playlist-container__banner-details__owner"
+            :to="{ name: 'User', params: { userId: playlist.owner.id } }">{{ playlist.owner.display_name
+            }}</router-link>
+          <span v-if="playlist.followers.total !== 0" class="playlist-container__banner-details__followers">
             {{
               ` • ${Intl.NumberFormat().format(playlist.followers.total)} ${$t(
                 'playlist.follower',
@@ -19,21 +14,15 @@
               )}`
             }}
           </span>
-          <span
-            v-if="playlist.tracks.total !== 0"
-            class="playlist-container__banner-details__total-tracks"
-          >
+          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__total-tracks">
             {{ ` • ${playlist.tracks.total} ${$t('playlist.song', playlist.tracks.total)}` }}
           </span>
-          <span
-            v-if="playlist.tracks.total !== 0"
-            class="playlist-container__banner-details__duration"
-          >
+          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__duration">
             {{
               ` •
-            ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${
-              duration.min ? `${duration.min} ${$t('playlist.duration.min')} ` : ''
-            }${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
+            ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${duration.min ? `${duration.min}
+            ${$t('playlist.duration.min')} ` : ''
+              }${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
             }}
           </span>
         </Banner>
@@ -46,13 +35,8 @@
         </div>
         <div class="playlist-container__content__tracks">
           <TrackListHeader />
-          <TrackCard
-            v-for="(item, index) in tracks"
-            :key="item.id"
-            :item="item.track"
-            :index="index"
-            :context_uri="this.playlist.uri"
-          />
+          <TrackCard v-for="(item, index) in tracks" :key="item.id" :item="item.track" :index="index"
+            :context_uri="this.playlist.uri" />
         </div>
       </div>
     </div>
@@ -195,7 +179,7 @@ export default {
     }
 
     &__tracks {
-      @include respondContainer(main-view, phone) {
+      @include respondContainer(phone) {
         margin: $gutter-1-5x 0;
       }
     }

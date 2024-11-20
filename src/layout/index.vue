@@ -69,7 +69,7 @@ export default {
       min-width: 42rem;
 
       container-type: inline-size;
-      container-name: main-view;
+      container-name: container-box;
 
       &__container {
         min-height: $height-content;

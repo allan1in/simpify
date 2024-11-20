@@ -1,12 +1,9 @@
 <template>
   <template v-if="!loading_skeleton">
     <div class="artist-container">
-      <div
-        class="artist-container__cover"
-        :style="{
-          'background-image': `url(${artist.images?.length !== 0 ? artist.images[0].url : ''})`
-        }"
-      >
+      <div class="artist-container__cover" :style="{
+        'background-image': `url(${artist.images?.length !== 0 ? artist.images[0].url : ''})`
+      }">
         <h1 class="artist-container__cover__title" :title="artist.name">{{ artist.name }}</h1>
         <div class="artist-container__cover__followers" v-if="artist.followers.total !== 0">
           {{
@@ -24,59 +21,32 @@
           <TitleShowAll :title="$t('artist.popular')" />
           <div class="artist-container__content__popular__content">
             <TrackListHeader />
-            <TrackCard
-              v-for="(track, index) in tracks"
-              :key="track.id"
-              :index="index"
-              :showArtists="false"
-              :item="track"
-              :uris="uris"
-            />
+            <TrackCard v-for="(track, index) in tracks" :key="track.id" :index="index" :showArtists="false"
+              :item="track" :uris="uris" />
           </div>
         </div>
         <div class="artist-container__content__albums" v-if="albums.length !== 0">
-          <TitleShowAll
-            :router-name="albums_total > albums_limit ? 'ArtistAllAlbums' : ''"
-            :title="$t('artist.albums')"
-          />
+          <TitleShowAll :router-name="albums_total > albums_limit ? 'ArtistAllAlbums' : ''"
+            :title="$t('artist.albums')" />
           <div class="artist-container__content__albums__content">
-            <AlbumCard
-              v-for="(item, index) in albums"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :show-artists="false"
-            />
+            <AlbumCard v-for="(item, index) in albums" :key="item.id" :item="item" :index="index"
+              :show-artists="false" />
           </div>
         </div>
         <div class="artist-container__content__singles" v-if="singles.length !== 0">
-          <TitleShowAll
-            :router-name="singles_total > singles_limit ? 'ArtistAllSingles' : ''"
-            :title="$t('artist.singles')"
-          />
+          <TitleShowAll :router-name="singles_total > singles_limit ? 'ArtistAllSingles' : ''"
+            :title="$t('artist.singles')" />
           <div class="artist-container__content__singles__content">
-            <AlbumCard
-              v-for="(item, index) in singles"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :show-artists="false"
-            />
+            <AlbumCard v-for="(item, index) in singles" :key="item.id" :item="item" :index="index"
+              :show-artists="false" />
           </div>
         </div>
         <div class="artist-container__content__appears-on" v-if="appearsOn.length !== 0">
-          <TitleShowAll
-            :router-name="appearsOn_total > appearsOn_limit ? 'ArtistAllAppearsOn' : ''"
-            :title="$t('artist.appears_on')"
-          />
+          <TitleShowAll :router-name="appearsOn_total > appearsOn_limit ? 'ArtistAllAppearsOn' : ''"
+            :title="$t('artist.appears_on')" />
           <div class="artist-container__content__appears-on__content">
-            <AlbumCard
-              v-for="(item, index) in appearsOn"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :show-artists="false"
-            />
+            <AlbumCard v-for="(item, index) in appearsOn" :key="item.id" :item="item" :index="index"
+              :show-artists="false" />
           </div>
         </div>
       </div>
@@ -287,7 +257,7 @@ export default {
       z-index: 10;
       line-height: 1.4;
 
-      @include respondContainer(main-view, phone) {
+      @include respondContainer(phone) {
         font-size: 4rem;
         margin: -0.6rem;
         padding: 0.6rem;
@@ -317,6 +287,10 @@ export default {
 
     &__popular {
       padding: $gutter-1-5x 0;
+
+      &__content {
+        margin: 0 $gutter-1-5x;
+      }
     }
 
     &__albums,

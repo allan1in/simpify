@@ -220,7 +220,6 @@ export default {
 
   &__top-bar {
     white-space: nowrap;
-    padding: 2.4rem 0;
     width: max-content;
     position: relative;
     top: 0;
