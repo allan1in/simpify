@@ -1,9 +1,11 @@
 <template>
-  <div class="dashboard-container" v-if="!loading">
+  <div class="dashboard-container" www90>
     <template v-if="!loading_skeleton">
       <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
-        <TitleShowAll :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
-          :title="$t('home.featured_playlists')" />
+        <TitleShowAll
+          :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
+          :title="$t('home.featured_playlists')"
+        />
         <div class="dashboard-container__featured-playlists__content">
           <CardHorizontal v-for="item in playlists" :key="item.id" :item="item" />
         </div>
@@ -41,12 +43,13 @@ import CardAlbum from '@/components/CardAlbum/index.vue'
 import CardHorizontal from '@/components/CardHorizontal/index.vue'
 import { getFeaturedPlaylists } from '@/api/meta/browse'
 import { getNewReleases, getNextNewReleases } from '@/api/meta/album'
-import { mapWritableState } from 'pinia'
-import { useAppStore } from '@/stores/app'
 import Skeleton from '@/components/Skeleton/index.vue'
+import { mapState } from 'pinia'
+import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'Dashboard',
+  inject: ['bottom'],
   components: {
     PlaylistCard,
     TitleShowAll,
@@ -63,12 +66,9 @@ export default {
       albums_limit: 48,
       albums_offset: 0,
       albums_next: '',
-      loading_more: false,
-      loading_skeleton: true
+      loading_skeleton: true,
+      loading_more: false
     }
-  },
-  computed: {
-    ...mapWritableState(useAppStore, ['loading', 'loadMore'])
   },
   methods: {
     async getAll() {
@@ -111,23 +111,20 @@ export default {
         this.albums = [...oldVals, ...newVals]
 
         this.albums_next = res.next
-        this.loadMore = false
+
+        this.loading_more = false
       }
-      this.loading_more = false
     }
   },
   watch: {
-    loadMore(newVal, oldVal) {
-      if (newVal) {
+    bottom(newVal, oldVal) {
+      if (newVal <= 0) {
         this.getNewReleases()
       }
     }
   },
   created() {
     this.getAll()
-  },
-  mounted() {
-    this.loading = false
   }
 }
 </script>

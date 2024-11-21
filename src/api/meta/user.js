@@ -52,3 +52,10 @@ export function getUserlikedSongs(params) {
     params
   })
 }
+
+export function getNextUserlikedSongs(path) {
+  return request({
+    url: `/me/tracks?${path}`,
+    method: 'get'
+  })
+}

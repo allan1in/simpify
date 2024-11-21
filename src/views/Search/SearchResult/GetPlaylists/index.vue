@@ -22,26 +22,22 @@
 <script>
 import { searchPlaylists, searchNextPage } from '@/api/meta/search'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
-import { useAppStore } from '@/stores/app'
-import { mapWritableState } from 'pinia'
 
 export default {
   name: 'GetPlaylists',
+  inject: ['bottom'],
   data() {
     return {
       playlists: [],
       playlists_limit: 48,
       playlists_offset: 0,
       playlists_next: '',
-      loadingMore: false,
-      loading_skeleton: true
+      loading_skeleton: true,
+      loading_more: false
     }
   },
   components: {
     PlaylistCard
-  },
-  computed: {
-    ...mapWritableState(useAppStore, ['loadMore', 'loading'])
   },
   methods: {
     async getAll() {
@@ -50,8 +46,8 @@ export default {
       this.loading_skeleton = false
     },
     async getPlaylists() {
-      if (!this.loadingMore && this.playlists_next != null) {
-        this.loadingMore = true
+      if (!this.loading_more && this.playlists_next != null) {
+        this.loading_more = true
         let res
 
         if (this.playlists_next === '') {
@@ -75,23 +71,19 @@ export default {
         this.playlists = [...oldVals, ...newVals]
         this.playlists_next = res.next
 
-        this.loadingMore = false
+        this.loading_more = false
       }
-      this.loadMore = false
     }
   },
   watch: {
-    loadMore(newVal, oldVal) {
-      if (newVal) {
+    bottom(newVal, oldVal) {
+      if (newVal <= 0) {
         this.getPlaylists()
       }
     }
   },
   created() {
     this.getAll()
-  },
-  mounted() {
-    this.loading = false
   }
 }
 </script>

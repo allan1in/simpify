@@ -76,7 +76,7 @@
 @mixin respond($breackpoint) {
   @if $breackpoint == phone {
     & {
-      @media only screen and (max-width: 600px) {
+      @media only screen and (max-width: 60rem) {
         // <= 600px
         @content;
       }
@@ -85,7 +85,7 @@
 
   @if $breackpoint == tab-port {
     & {
-      @media only screen and (max-width: 768px) {
+      @media only screen and (max-width: 76.8rem) {
         // <= 768px
         @content;
       }
@@ -94,7 +94,7 @@
 
   @if $breackpoint == tab-land {
     & {
-      @media only screen and (max-width: 1024px) {
+      @media only screen and (max-width: 102.4rem) {
         // <= 1024px
         @content;
       }
@@ -103,7 +103,7 @@
 
   @if $breackpoint == desktop {
     & {
-      @media only screen and (min-width: 1440px) {
+      @media only screen and (min-width: 144rem) {
         // >= 1440px
         @content;
       }
@@ -112,9 +112,27 @@
 }
 
 @mixin respondContainer($breackpoint) {
+  @if $breackpoint == collasped {
+    & {
+      @container container-box (max-width: 7.2rem) {
+        // <= 72px
+        @content;
+      }
+    }
+  }
+
   @if $breackpoint == phone {
     & {
-      @container container-box (max-width: 600px) {
+      @container container-box (max-width: 60rem) {
+        // <= 600px
+        @content;
+      }
+    }
+  }
+
+  @if $breackpoint == phone {
+    & {
+      @container container-box (max-width: 60rem) {
         // <= 600px
         @content;
       }
@@ -123,7 +141,7 @@
 
   @if $breackpoint == tab-port {
     & {
-      @container container-box (max-width: 768px) {
+      @container container-box (max-width: 76.8rem) {
         // <= 768px
         @content;
       }
@@ -132,7 +150,7 @@
 
   @if $breackpoint == tab-land {
     & {
-      @container container-box (max-width: 1024px) {
+      @container container-box (max-width: 102.4rem) {
         // <= 1024px
         @content;
       }
@@ -141,7 +159,7 @@
 
   @if $breackpoint == desktop {
     & {
-      @container container-box (min-width: 1440px) {
+      @container container-box (min-width: 144rem) {
         // >= 1440px
         @content;
       }

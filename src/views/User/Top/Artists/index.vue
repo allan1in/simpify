@@ -17,8 +17,6 @@
   </template>
 </template>
 <script>
-import { useAppStore } from '@/stores/app'
-import { mapWritableState } from 'pinia'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import CardArtist from '@/components/CardArtist/index.vue'
 import { getUserTopArtists } from '@/api/meta/user'
@@ -28,9 +26,6 @@ export default {
   components: {
     TitleShowAll,
     CardArtist
-  },
-  computed: {
-    ...mapWritableState(useAppStore, ['loading'])
   },
   data() {
     return {
@@ -56,9 +51,6 @@ export default {
   },
   created() {
     this.getAll()
-  },
-  mounted() {
-    this.loading = false
   }
 }
 </script>

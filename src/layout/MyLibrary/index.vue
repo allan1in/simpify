@@ -36,19 +36,8 @@
         class="my-library__container__content"
         :class="{ 'my-library__container__content-collasped': isCollasped }"
       >
-        <MyOverlayScrollbars os-element="div">
-          <div class="my-library__container__content__liked-songs">
-            <HeaderTrackList
-              class="my-library__container__content__liked-songs__header"
-              :loading="loading_skeleton"
-            />
-            <CardTrack
-              v-for="(item, index) in likedSongs"
-              :item="item.track"
-              :loading="loading_skeleton"
-              :index
-            />
-          </div>
+        <MyOverlayScrollbars os-element="div" @scroll="updateBottom">
+          <LikedSongs v-if="isActive === 'liked_songs'" />
         </MyOverlayScrollbars>
       </div>
     </div>
@@ -65,19 +54,22 @@ import IconLibraryCollasped from '@/components/Icons/IconLibraryCollasped.vue'
 import IconArrowLeftLonger from '@/components/Icons/IconArrowLeftLonger.vue'
 import IconArrowRightLonger from '@/components/Icons/IconArrowRightLonger.vue'
 import { useLibraryStore } from '@/stores/library'
-import CardTrack from '@/components/CardTrack/index.vue'
-import { getUserlikedSongs } from '@/api/meta/user'
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
-import HeaderTrackList from '@/components/HeaderTrackList/index.vue'
+import LikedSongs from './LikedSongs/index.vue'
+import { computed } from 'vue'
 
 export default {
   name: 'MyLibrary',
+  provide() {
+    return {
+      bottom: computed(() => this.bottom)
+    }
+  },
   data() {
     return {
       tags: ['liked_songs', 'playlists', 'albums', 'artists'],
       isActive: 'liked_songs',
-      loading_skeleton: true,
-      likedSongs: {}
+      bottom: undefined
     }
   },
   computed: {
@@ -91,23 +83,16 @@ export default {
     IconLibraryCollasped,
     IconArrowLeftLonger,
     IconArrowRightLonger,
-    CardTrack,
     MyOverlayScrollbars,
-    HeaderTrackList
+    LikedSongs
   },
   methods: {
     changeTag(tag) {
       this.isActive = tag
     },
-    async getUserlikedSongs() {
-      const res = await getUserlikedSongs()
-      this.likedSongs = res.items
-
-      this.loading_skeleton = false
+    updateBottom(bottom) {
+      this.bottom = bottom
     }
-  },
-  created() {
-    this.getUserlikedSongs()
   }
 }
 </script>
@@ -216,7 +201,7 @@ export default {
   }
 
   &__tag-bar {
-    padding: 0 $gutter-2x $gutter-1-5x $gutter-2x;
+    padding: 0 $gutter-2x $gutter-2x $gutter-2x;
   }
 
   &__content {
@@ -228,6 +213,10 @@ export default {
 
     &__liked-songs {
       padding: 0 $gutter-2x $gutter-2x $gutter-2x;
+
+      @include respondContainer(collasped) {
+        padding: 0 $gutter $gutter $gutter;
+      }
 
       &__header {
         position: sticky;

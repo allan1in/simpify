@@ -23,11 +23,11 @@
   /* The border radius of the scrollbar handle*/
   --os-handle-border-radius: 0;
   /* The background of the scrollbar handle*/
-  --os-handle-bg: #5a5a5a;
+  --os-handle-bg: #5a5a5ab3;
   /* The :hover background of the scrollbar handle*/
-  --os-handle-bg-hover: #898989;
+  --os-handle-bg-hover: #898989b3;
   /* The :active background of the scrollbar handle*/
-  --os-handle-bg-active: #b8b8b8;
+  --os-handle-bg-active: #b8b8b8b3;
   /* The border of the scrollbar handle*/
   --os-handle-border: none;
   /* The :hover border of the scrollbar handle*/

@@ -53,6 +53,8 @@ export const usePlayerStore = defineStore('player', {
           this.player.addListener('ready', async (res) => {
             await transferPlayback({ device_ids: [res.device_id] })
             this.activeDevice = { id: res.device_id }
+            this.isReady = true
+            this.loading = false
           })
 
           this.player.addListener('not_ready', (res) => {
@@ -81,7 +83,6 @@ export const usePlayerStore = defineStore('player', {
 
               this.context = res.context
             }
-            this.isReady = true
             this.loading = false
           })
 
@@ -98,13 +99,11 @@ export const usePlayerStore = defineStore('player', {
           })
 
           this.player.addListener('account_error', (message) => {
-            console.error(message)
+            console.log(message)
           })
 
           this.player.addListener('playback_error', (message) => {
             console.log(message)
-            localStorage.clear()
-            router.push({ name: 'Login' })
           })
 
           this.player.connect()

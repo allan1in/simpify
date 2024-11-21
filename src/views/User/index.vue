@@ -2,8 +2,13 @@
   <template v-if="!loading_skeleton">
     <div class="user-container">
       <div class="user-container__banner">
-        <Banner :type="$t('profile.type')" :title="profile.display_name" :images="profile.images" imgShape="circle"
-          default-icon="user">
+        <Banner
+          :type="$t('profile.type')"
+          :title="profile.display_name"
+          :images="profile.images"
+          imgShape="circle"
+          default-icon="user"
+        >
           <span class="user-container__banner__details__playlists" v-if="playlists_total">
             {{
               `${Intl.NumberFormat().format(playlists_total)} ${$t('profile.playlist', playlists_total)}
@@ -20,23 +25,41 @@
         </Banner>
       </div>
       <div class="user-container__content">
-        <div class="user-container__content__top-artists" v-if="this.uid === id && artists.length !== 0">
-          <TitleShowAll :title="$t('profile.top_artists')"
-            :router-name="this.artists_total > this.artists_limit ? 'GetArtistsForUser' : ''" />
+        <div
+          class="user-container__content__top-artists"
+          v-if="this.uid === id && artists.length !== 0"
+        >
+          <TitleShowAll
+            :title="$t('profile.top_artists')"
+            :router-name="this.artists_total > this.artists_limit ? 'GetArtistsForUser' : ''"
+          />
           <div class="user-container__content__top-artists__content">
             <CardArtist v-for="item in artists" :key="item.id" :item="item" />
           </div>
         </div>
-        <div class="user-container__content__top-songs" v-if="this.uid === id && tracks.length !== 0">
-          <TitleShowAll :title="$t('profile.top_tracks')"
-            :router-name="this.tracks_total > this.tracks_limit ? 'GetTracksForUser' : ''" />
+        <div
+          class="user-container__content__top-songs"
+          v-if="this.uid === id && tracks.length !== 0"
+        >
+          <TitleShowAll
+            :title="$t('profile.top_tracks')"
+            :router-name="this.tracks_total > this.tracks_limit ? 'GetTracksForUser' : ''"
+          />
           <div class="user-container__content__top-songs__content">
-            <CardTrack v-for="(item, index) in tracks" :key="item.id" :item="item" :index :uris="uris" />
+            <CardTrack
+              v-for="(item, index) in tracks"
+              :key="item.id"
+              :item="item"
+              :index
+              :uris="uris"
+            />
           </div>
         </div>
         <div class="user-container__content__playlists" v-if="playlists.length !== 0">
-          <TitleShowAll :title="$t('profile.public_playlists')"
-            :router-name="this.playlists_total > this.playlists_limit ? 'UserPlaylists' : ''" />
+          <TitleShowAll
+            :title="$t('profile.public_playlists')"
+            :router-name="this.playlists_total > this.playlists_limit ? 'UserPlaylists' : ''"
+          />
           <div class="user-container__content__playlists__content">
             <CardPlaylist v-for="item in playlists" :key="item.id" :item="item" />
           </div>
@@ -82,8 +105,7 @@ import {
 } from '@/api/meta/user'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
-import { mapState, mapWritableState } from 'pinia'
-import { useAppStore } from '@/stores/app'
+import { mapState } from 'pinia'
 import { useUserStore } from '@/stores/user'
 import CardArtist from '@/components/CardArtist/index.vue'
 import CardTrack from '@/components/CardTrack/index.vue'
@@ -117,7 +139,6 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loading']),
     ...mapState(useUserStore, ['uid']),
     uris() {
       let uris = []
@@ -174,7 +195,6 @@ export default {
     $route: {
       async handler(to, from) {
         this.id = this.$route.params.userId
-        this.loading = false
         this.loading_skeleton = true
         await this.getAll()
       },
@@ -194,7 +214,7 @@ export default {
       padding-top: $gutter-1-5x;
 
       &__content {
-        @include gridCards;
+        @include gridCardsLess;
       }
     }
 

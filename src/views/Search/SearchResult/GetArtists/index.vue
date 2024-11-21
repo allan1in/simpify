@@ -22,11 +22,10 @@
 <script>
 import ArtistCard from '@/components/CardArtist/index.vue'
 import { searchArtists, searchNextPage } from '@/api/meta/search'
-import { mapWritableState } from 'pinia'
-import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'GetArtists',
+  inject: ['bottom'],
   components: {
     ArtistCard
   },
@@ -36,12 +35,9 @@ export default {
       artists_limit: 48,
       artists_offset: 0,
       artists_next: '',
-      loadingMore: false,
-      loading_skeleton: true
+      loading_skeleton: true,
+      loading_more: false
     }
-  },
-  computed: {
-    ...mapWritableState(useAppStore, ['loading', 'loadMore'])
   },
   methods: {
     async getAll() {
@@ -50,8 +46,8 @@ export default {
       this.loading_skeleton = false
     },
     async getArtists() {
-      if (!this.loadingMore && this.artists_next != null) {
-        this.loadingMore = true
+      if (!this.loading_more && this.artists_next != null) {
+        this.loading_more = true
         let res
 
         if (this.artists_next === '') {
@@ -75,23 +71,19 @@ export default {
         this.artists = [...oldVals, ...newVals]
         this.artists_next = res.next
 
-        this.loadingMore = false
+        this.loading_more = false
       }
-      this.loadMore = false
     }
   },
   watch: {
-    loadMore(newVal, oldVal) {
-      if (newVal) {
+    bottom(newVal, oldVal) {
+      if (newVal <= 0) {
         this.getArtists()
       }
     }
   },
   created() {
     this.getAll()
-  },
-  mounted() {
-    this.loading = false
   }
 }
 </script>

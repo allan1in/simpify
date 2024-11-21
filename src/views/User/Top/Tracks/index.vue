@@ -19,8 +19,6 @@
   </template>
 </template>
 <script>
-import { useAppStore } from '@/stores/app'
-import { mapWritableState } from 'pinia'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import HeaderTrackList from '@/components/HeaderTrackList/index.vue'
 import CardTrack from '@/components/CardTrack/index.vue'
@@ -34,7 +32,6 @@ export default {
     CardTrack
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loading']),
     uris() {
       let uris = []
       this.tracks.forEach((item) => {
@@ -67,9 +64,6 @@ export default {
   },
   created() {
     this.getAll()
-  },
-  mounted() {
-    this.loading = false
   }
 }
 </script>

@@ -50,6 +50,7 @@ import { useUserStore } from '@/stores/user'
 
 export default {
   name: 'Search',
+  inject: ['bottom'],
   components: {
     TitleShowAll,
     Skeleton
@@ -64,7 +65,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loading', 'loadMore', 'language']),
+    ...mapWritableState(useAppStore, ['language']),
     ...mapState(useUserStore, ['country'])
   },
   methods: {
@@ -79,7 +80,6 @@ export default {
         await this.getSeveralCategories()
         await this.getCategoriesCovers()
       }
-      this.loadMore = false
     },
     async getSeveralCategories() {
       if (!this.loading_more && this.categories_next !== null) {
@@ -107,7 +107,6 @@ export default {
 
         this.loading_more = false
       }
-      this.loadMore = false
     },
     async getCategoriesCovers() {
       this.categories.forEach(async (item, index) => {
@@ -126,8 +125,8 @@ export default {
     }
   },
   watch: {
-    loadMore(newVal, oldVal) {
-      if (newVal) {
+    bottom(newVal, oldVal) {
+      if (newVal <= 0) {
         this.getNext()
       }
     },
@@ -137,9 +136,6 @@ export default {
   },
   created() {
     this.getAll()
-  },
-  mounted() {
-    this.loading = false
   }
 }
 </script>

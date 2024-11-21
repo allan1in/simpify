@@ -3,10 +3,15 @@
     <div class="playlist-container">
       <div class="playlist-container__banner">
         <Banner :type="$t('playlist.type')" :title="playlist.name" :images="playlist.images">
-          <router-link class="playlist-container__banner-details__owner"
-            :to="{ name: 'User', params: { userId: playlist.owner.id } }">{{ playlist.owner.display_name
-            }}</router-link>
-          <span v-if="playlist.followers.total !== 0" class="playlist-container__banner-details__followers">
+          <router-link
+            class="playlist-container__banner-details__owner"
+            :to="{ name: 'User', params: { userId: playlist.owner.id } }"
+            >{{ playlist.owner.display_name }}</router-link
+          >
+          <span
+            v-if="playlist.followers.total !== 0"
+            class="playlist-container__banner-details__followers"
+          >
             {{
               ` • ${Intl.NumberFormat().format(playlist.followers.total)} ${$t(
                 'playlist.follower',
@@ -14,15 +19,24 @@
               )}`
             }}
           </span>
-          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__total-tracks">
+          <span
+            v-if="playlist.tracks.total !== 0"
+            class="playlist-container__banner-details__total-tracks"
+          >
             {{ ` • ${playlist.tracks.total} ${$t('playlist.song', playlist.tracks.total)}` }}
           </span>
-          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__duration">
+          <span
+            v-if="playlist.tracks.total !== 0"
+            class="playlist-container__banner-details__duration"
+          >
             {{
               ` •
-            ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${duration.min ? `${duration.min}
-            ${$t('playlist.duration.min')} ` : ''
-              }${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
+            ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${
+              duration.min
+                ? `${duration.min}
+            ${$t('playlist.duration.min')} `
+                : ''
+            }${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
             }}
           </span>
         </Banner>
@@ -35,8 +49,13 @@
         </div>
         <div class="playlist-container__content__tracks">
           <TrackListHeader />
-          <TrackCard v-for="(item, index) in tracks" :key="item.id" :item="item.track" :index="index"
-            :context_uri="this.playlist.uri" />
+          <TrackCard
+            v-for="(item, index) in tracks"
+            :key="item.id"
+            :item="item.track"
+            :index="index"
+            :context_uri="this.playlist.uri"
+          />
         </div>
       </div>
     </div>
@@ -66,14 +85,13 @@ import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import TrackCard from '@/components/CardTrack/index.vue'
 import { getNextPlaylistTracks, getPlaylist, getPlaylistTracks } from '@/api/meta/playlist'
 import { timeFormatAlbum } from '@/utils/time_format'
-import { mapWritableState } from 'pinia'
-import { useAppStore } from '@/stores/app'
 import Banner from '@/components/Banner/index.vue'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'Playlist',
+  inject: ['bottom'],
   components: {
     TrackListHeader,
     TrackCard,
@@ -89,11 +107,11 @@ export default {
       tracks_limit: 28,
       tracks_offset: 0,
       tracks_next: '',
-      loading_skeleton: true
+      loading_skeleton: true,
+      loading_more: false
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loading', 'loadMore']),
     duration() {
       return timeFormatAlbum(
         this.playlist.tracks.items.reduce((acc, item) => {
@@ -136,20 +154,18 @@ export default {
 
         this.loading_more = false
       }
-      this.loadMore = false
     }
   },
   watch: {
     $route: {
       async handler(to, from) {
-        this.loading = false
         this.loading_skeleton = true
         await this.getAll()
       },
       immediate: true
     },
-    loadMore(newVal, oldVal) {
-      if (newVal) {
+    bottom(newVal, oldVal) {
+      if (newVal <= 0) {
         this.getPlaylistTracks()
       }
     }

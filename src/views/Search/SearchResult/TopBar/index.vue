@@ -1,10 +1,19 @@
 <template>
   <template v-if="!loading_skeleton">
     <section class="top-bar-container">
-      <TagButton v-if="showTags.all" @handle-click="getAll" :text="$t('top_bar.all')" :isActive="!isActive" />
+      <TagButton
+        v-if="showTags.all"
+        @handle-click="getAll"
+        :text="$t('top_bar.all')"
+        :isActive="!isActive"
+      />
       <template v-for="tag in tags" :key="tag">
-        <TagButton v-if="showTags[tag]" @handle-click="jumpTo(tag)" :text="$t(`top_bar.${tag}`)"
-          :isActive="isActive === tag" />
+        <TagButton
+          v-if="showTags[tag]"
+          @handle-click="jumpTo(tag)"
+          :text="$t(`top_bar.${tag}`)"
+          :isActive="isActive === tag"
+        />
       </template>
     </section>
   </template>
@@ -18,9 +27,7 @@
 <script>
 import { search } from '@/api/meta/search'
 import Skeleton from '@/components/Skeleton/index.vue'
-import { useAppStore } from '@/stores/app'
 import { debounce } from '@/utils/debounce'
-import { mapWritableState } from 'pinia'
 import TagButton from '@/components/TagButton/index.vue'
 
 export default {
@@ -37,9 +44,6 @@ export default {
     Skeleton,
     TagButton
   },
-  computed: {
-    ...mapWritableState(useAppStore, ['loading'])
-  },
   methods: {
     getAll() {
       this.$router.push({ name: 'SearchResult' })
@@ -47,7 +51,7 @@ export default {
     jumpTo(tag) {
       this.$router.push({ name: `Get${tag.charAt(0).toUpperCase()}${tag.slice(1)}` })
     },
-    debouncedCheck() { },
+    debouncedCheck() {},
     // If there is no data of this type, hide the tag
     async checkHasResults() {
       if (this.$route.params.inputContent) {
@@ -80,7 +84,6 @@ export default {
   },
   watch: {
     async $route(to, from) {
-      this.loading = false
       this.loading_skeleton = true
       await this.debouncedCheck()
       this.isActive = decodeURIComponent(
@@ -89,7 +92,6 @@ export default {
     }
   },
   async created() {
-    this.loading = false
     this.debouncedCheck = debounce(this.checkHasResults)
     await this.debouncedCheck()
     this.isActive = decodeURIComponent(

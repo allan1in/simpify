@@ -3,7 +3,13 @@
     <main class="track-container">
       <div class="track-container__results">
         <TrackListHeader />
-        <TrackCard v-for="(item, index) in tracks" :key="item.id" :item="item" :index="index" :uris="uris" />
+        <TrackCard
+          v-for="(item, index) in tracks"
+          :key="item.id"
+          :item="item"
+          :index="index"
+          :uris="uris"
+        />
       </div>
     </main>
   </template>
@@ -21,11 +27,10 @@
 import TrackCard from '@/components/CardTrack/index.vue'
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import { searchTracks, searchNextPage } from '@/api/meta/search'
-import { useAppStore } from '@/stores/app'
-import { mapWritableState } from 'pinia'
 
 export default {
   name: 'GetTracks',
+  inject: ['bottom'],
   components: {
     TrackCard,
     TrackListHeader
@@ -36,13 +41,10 @@ export default {
       tracks_limit: 24,
       tracks_offset: 0,
       tracks_next: '',
-      loadingMore: false,
       uris: [],
-      loading_skeleton: true
+      loading_skeleton: true,
+      loading_more: false
     }
-  },
-  computed: {
-    ...mapWritableState(useAppStore, ['loading', 'loadMore'])
   },
   methods: {
     async getAll() {
@@ -51,8 +53,8 @@ export default {
       this.loading_skeleton = false
     },
     async getTracks() {
-      if (!this.loadingMore && this.tracks_next != null) {
-        this.loadingMore = true
+      if (!this.loading_more && this.tracks_next != null) {
+        this.loading_more = true
         let res
 
         if (this.tracks_next === '') {
@@ -79,23 +81,19 @@ export default {
         this.tracks = [...oldVals, ...newVals]
         this.tracks_next = res.next
 
-        this.loadingMore = false
+        this.loading_more = false
       }
-      this.loadMore = false
     }
   },
   watch: {
-    loadMore(newVal, oldVal) {
-      if (newVal) {
+    bottom(newVal, oldVal) {
+      if (newVal <= 0) {
         this.getTracks()
       }
     }
   },
   created() {
     this.getAll()
-  },
-  mounted() {
-    this.loading = false
   }
 }
 </script>
@@ -107,7 +105,6 @@ export default {
   &__results {
     padding: $gutter-1-5x;
     margin: 0 $gutter-1-5x;
-
 
     &__msg {
       padding-bottom: $gutter-1-5x;

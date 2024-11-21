@@ -4,9 +4,12 @@
     <section class="app-container__mid-wrapper" id="mid-wrapper">
       <MyLibrary />
       <div class="app-container__mid-wrapper__main-view">
-        <MyOverlayScrollbars os-element="main">
+        <MyOverlayScrollbars os-element="main" @scroll="updateBottom">
           <div class="app-container__mid-wrapper__main-view__container">
-            <div class="app-container__mid-wrapper__main-view__container__content" v-show="!loading">
+            <div
+              class="app-container__mid-wrapper__main-view__container__content"
+              v-show="!loading"
+            >
               <RouterView />
             </div>
             <Loading :loading="loading" />
@@ -28,9 +31,15 @@ import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import Loading from '@/components/Loading/index.vue'
 import { mapState } from 'pinia'
 import { useAppStore } from '@/stores/app'
+import { computed } from 'vue'
 
 export default {
   name: 'Layout',
+  data() {
+    return {
+      bottom: undefined
+    }
+  },
   components: {
     NavBar,
     MyLibrary,
@@ -41,6 +50,16 @@ export default {
   },
   computed: {
     ...mapState(useAppStore, ['loading'])
+  },
+  provide() {
+    return {
+      bottom: computed(() => this.bottom)
+    }
+  },
+  methods: {
+    updateBottom(bottom) {
+      this.bottom = bottom
+    }
   }
 }
 </script>

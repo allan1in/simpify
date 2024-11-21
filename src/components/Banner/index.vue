@@ -89,7 +89,7 @@ export default {
 .skeleton {
   &__type {
     height: $font-size-text-primary;
-    width: 10%;
+    width: 30%;
   }
 
   &__title {
@@ -100,7 +100,7 @@ export default {
 
   &__info {
     height: $font-size-text-primary;
-    width: 30%;
+    width: 40%;
   }
 }
 
@@ -153,6 +153,7 @@ export default {
   }
 
   &__info {
+    width: 100%;
 
     &__type {
       font-size: $font-size-text-secondary;

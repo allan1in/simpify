@@ -79,7 +79,6 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loading']),
     duration() {
       return timeFormatAlbum(this.track.duration_ms)
     }
@@ -105,11 +104,14 @@ export default {
       this.artists = res
     }
   },
-  created() {
-    this.getAll()
-  },
-  mounted() {
-    this.loading = false
+  watch: {
+    $route: {
+      handler(to, from) {
+        this.loading_skeleton = true
+        this.getAll()
+      },
+      immediate: true
+    }
   }
 }
 </script>

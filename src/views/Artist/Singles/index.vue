@@ -21,11 +21,10 @@
 import AlbumCard from '@/components/CardAlbum/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import { getSingles, getNextSingles } from '@/api/meta/artist'
-import { mapWritableState } from 'pinia'
-import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'ArtistAllSingles',
+  inject: ['bottom'],
   components: {
     AlbumCard,
     TitleShowAll,
@@ -38,12 +37,9 @@ export default {
       singles_limit: 48,
       singles_offset: 0,
       singles_next: '',
-      loadingMore: false,
-      loading_skeleton: true
+      loading_skeleton: true,
+      loading_more: false
     }
-  },
-  computed: {
-    ...mapWritableState(useAppStore, ['loadMore', 'loading'])
   },
   methods: {
     async getAll() {
@@ -52,8 +48,8 @@ export default {
       this.loading_skeleton = false
     },
     async getSingles() {
-      if (!this.loadingMore && this.singles_next !== null) {
-        this.loadingMore = true
+      if (!this.loading_more && this.singles_next !== null) {
+        this.loading_more = true
         let res
 
         if (this.singles_next === '') {
@@ -75,14 +71,13 @@ export default {
         this.singles = [...oldVals, ...newVals]
         this.singles_next = res.next
 
-        this.loadingMore = false
+        this.loading_more = false
       }
-      this.loadMore = false
     }
   },
   watch: {
-    loadMore(newVal, oldVal) {
-      if (newVal) {
+    bottom(newVal, oldVal) {
+      if (newVal <= 0) {
         this.getSingles()
       }
     }

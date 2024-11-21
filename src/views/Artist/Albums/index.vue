@@ -21,11 +21,10 @@
 import AlbumCard from '@/components/CardAlbum/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import { getAlbums, getNextAlbums } from '@/api/meta/artist'
-import { mapWritableState } from 'pinia'
-import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'ArtistAllAlbums',
+  inject: ['bottom'],
   components: {
     AlbumCard,
     TitleShowAll,
@@ -38,12 +37,9 @@ export default {
       albums_limit: 48,
       albums_offset: 0,
       albums_next: '',
-      loadingMore: false,
-      loading_skeleton: true
+      loading_skeleton: true,
+      loading_more: false
     }
-  },
-  computed: {
-    ...mapWritableState(useAppStore, ['loadMore', 'loading'])
   },
   methods: {
     async getAll() {
@@ -52,8 +48,8 @@ export default {
       this.loading_skeleton = false
     },
     async getAlbums() {
-      if (!this.loadingMore && this.albums_next !== null) {
-        this.loadingMore = true
+      if (!this.loading_more && this.albums_next !== null) {
+        this.loading_more = true
         let res
 
         if (this.albums_next === '') {
@@ -75,23 +71,19 @@ export default {
         this.albums = [...oldVals, ...newVals]
         this.albums_next = res.next
 
-        this.loadingMore = false
+        this.loading_more = false
       }
-      this.loadMore = false
     }
   },
   watch: {
-    loadMore(newVal, oldVal) {
-      if (newVal) {
+    bottom(newVal, oldVal) {
+      if (newVal <= 0) {
         this.getAlbums()
       }
     }
   },
   created() {
     this.getAll()
-  },
-  mounted() {
-    this.loading = false
   }
 }
 </script>

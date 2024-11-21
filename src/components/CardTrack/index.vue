@@ -1,8 +1,8 @@
 <template>
   <template v-if="!loading">
-    <template v-if="available">
-      <div v-if="item !== null" class="track-card">
-        <div class="track-card__left">
+    <div class="track-card" :class="{ 'track-card-not-available': !available }">
+      <div v-if="showNumber" class="track-card__left">
+        <template v-if="available">
           <div class="track-card__left__icon-wrapper">
             <button class="track-card__left__icon-wrapper__icon" @click="handleTogglePlay">
               <IconPause v-if="isPlaying" />
@@ -20,112 +20,82 @@
             </div>
             <span v-else>{{ index + 1 }}</span>
           </div>
-        </div>
+        </template>
 
-        <div class="track-card__title">
-          <div v-if="showImage" class="track-card__title__cover-wrapper">
-            <img
-              loading="lazy"
-              class="track-card__title__cover-wrapper__cover"
-              :src="item.album.images[2].url"
-              alt="Album Cover"
-            />
+        <template v-else>
+          <div class="track-card__left__num-wrapper-not-avialable">
+            <span>{{ index + 1 }}</span>
           </div>
-          <div class="track-card__title__msg-wrapper">
-            <router-link
-              :class="{
-                'track-card__title__msg-wrapper__name-playing': isPlaying
-              }"
-              :to="{ name: 'Track', params: { trackId: item.id } }"
-              class="track-card__title__msg-wrapper__name"
-            >
-              {{ item.name }}
-            </router-link>
-            <div v-if="showArtists" class="track-card__title__msg-wrapper__artists">
+        </template>
+      </div>
+      <div class="track-card__title">
+        <router-link
+          v-if="showImage"
+          :to="{ name: 'Track', params: { trackId: item.id } }"
+          class="track-card__title__cover-wrapper"
+        >
+          <template v-if="!showNumber">
+            <div class="track-card__title__cover-wrapper__icon-wrapper">
+              <button
+                class="track-card__title__cover-wrapper__icon-wrapper__icon"
+                @click.prevent="handleTogglePlay"
+              >
+                <IconPause v-if="isPlaying" />
+                <IconPlay v-else />
+              </button>
+            </div>
+          </template>
+          <img
+            loading="lazy"
+            class="track-card__title__cover-wrapper__cover"
+            :src="item.album.images[2].url"
+            alt="Album Cover"
+          />
+        </router-link>
+        <div class="track-card__title__msg-wrapper">
+          <router-link
+            v-if="!!item.id"
+            :class="{
+              'track-card__title__msg-wrapper__name-playing': isPlaying
+            }"
+            :to="{ name: 'Track', params: { trackId: item.id } }"
+            class="track-card__title__msg-wrapper__name"
+          >
+            {{ item.name }}
+          </router-link>
+          <span v-else class="track-card__title__msg-wrapper__name"> {{ item.name }}</span>
+          <div v-if="showArtists" class="track-card__title__msg-wrapper__artists">
+            <template v-for="(artist, index) in item.artists" :key="artist.id">
               <router-link
-                v-for="(artist, index) in item.artists"
-                :key="artist.id"
+                v-if="!!artist.id"
                 :to="{ name: 'Artist', params: { artistId: artist.id } }"
               >
                 {{ (index === 0 ? '' : ', ') + artist.name }}
               </router-link>
-            </div>
+              <span v-else> {{ (index === 0 ? '' : ', ') + artist.name }}</span>
+            </template>
           </div>
-        </div>
-        <div v-if="showAlbum" class="track-card__album-wrapper">
-          <router-link
-            :to="{ name: 'Album', params: { albumId: item.album.id } }"
-            class="track-card__album-wrapper__album"
-            >{{ item.album.name }}</router-link
-          >
-        </div>
-        <div class="track-card__duration-wrapper">
-          <span>{{ getFormatTime(item.duration_ms) }}</span>
         </div>
       </div>
-    </template>
-    <template v-else>
-      <div v-if="item !== null" class="track-card track-card-not-available">
-        <div class="track-card__left">
-          <div class="track-card__left__num-wrapper-not-avialable">
-            <span>{{ index + 1 }}</span>
-          </div>
-        </div>
-
-        <div class="track-card__title">
-          <div v-if="showImage" class="track-card__title__cover-wrapper">
-            <img
-              loading="lazy"
-              class="track-card__title__cover-wrapper__cover"
-              :src="item.album.images[2].url"
-              alt="Album Cover"
-            />
-          </div>
-          <div class="track-card__title__msg-wrapper">
-            <router-link
-              v-if="!!item.id"
-              :class="{
-                'track-card__title__msg-wrapper__name-playing': isPlaying
-              }"
-              :to="{ name: 'Track', params: { trackId: item.id } }"
-              class="track-card__title__msg-wrapper__name"
-            >
-              {{ item.name }}
-            </router-link>
-            <span v-else class="track-card__title__msg-wrapper__name"> {{ item.name }}</span>
-            <div v-if="showArtists" class="track-card__title__msg-wrapper__artists-not-available">
-              <template v-for="(artist, index) in item.artists" :key="artist.id">
-                <router-link
-                  v-if="!!artist.id"
-                  :to="{ name: 'Artist', params: { artistId: artist.id } }"
-                >
-                  {{ (index === 0 ? '' : ', ') + artist.name }}
-                </router-link>
-                <span v-else> {{ (index === 0 ? '' : ', ') + artist.name }}</span>
-              </template>
-            </div>
-          </div>
-        </div>
-        <div v-if="showAlbum" class="track-card__album-wrapper">
-          <router-link
-            v-if="!!item.album.id"
-            :to="{ name: 'Album', params: { albumId: item.album.id } }"
-            class="track-card__album-wrapper__album"
-            >{{ item.album.name }}</router-link
-          >
-          <span v-else class="track-card__album-wrapper__album">
-            {{ item.album.name }}
-          </span>
-        </div>
-        <div class="track-card__duration-wrapper">
-          <span>{{ getFormatTime(item.duration_ms) }}</span>
-        </div>
+      <div v-if="showAlbum" class="track-card__album-wrapper">
+        <router-link
+          v-if="!!item.album?.id"
+          :to="{ name: 'Album', params: { albumId: item.album.id } }"
+          class="track-card__album-wrapper__album"
+          >{{ item.album.name }}</router-link
+        >
+        <span v-else class="track-card__album-wrapper__album">
+          {{ item.album?.name }}
+        </span>
       </div>
-    </template>
+      <div class="track-card__duration-wrapper">
+        <span>{{ getFormatTime(item.duration_ms) }}</span>
+      </div>
+    </div>
   </template>
   <template v-else>
     <div class="track-card no-hover">
-      <div class="track-card__left">
+      <div v-if="showNumber" class="track-card__left">
         <div class="track-card__left__num-wrapper">
           <Skeleton class="skeleton__num" />
         </div>
@@ -156,7 +126,6 @@ import IconPause from '../Icons/IconPause.vue'
 import { mapState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import Skeleton from '@/components/Skeleton/index.vue'
-import { useUserStore } from '@/stores/user'
 import { useLibraryStore } from '@/stores/library'
 
 export default {
@@ -170,9 +139,9 @@ export default {
     ...mapState(usePlayerStore, ['current_track', 'isPause']),
     ...mapState(useLibraryStore, ['isCollasped']),
     available() {
-      if (useUserStore().checkProduct('premium')) {
+      if (this.item?.restrictions) {
         return !this.item?.restrictions
-      } else if (useUserStore().checkProduct('free')) {
+      } else {
         return !!this.item?.preview_url
       }
     },
@@ -188,6 +157,10 @@ export default {
     index: {
       type: Number,
       require: true
+    },
+    showNumber: {
+      type: Boolean,
+      default: true
     },
     showArtists: {
       type: Boolean,
@@ -269,15 +242,20 @@ export default {
 }
 
 .track-card {
-  padding: 0 2.4rem;
+  padding-left: 0.6rem;
   display: flex;
   height: 5.6rem;
   font-size: $font-size-text-secondary;
   color: $color-font-secondary;
   border-radius: $border-radius-small;
   position: relative;
+  transition-property: opacity, background-color, color;
+  transition-duration: $duration-default;
+  transition-timing-function: ease;
 
-  @include transition;
+  @include respondContainer(collasped) {
+    padding: 0;
+  }
 
   &-not-available {
     opacity: 0.5;
@@ -299,12 +277,16 @@ export default {
     color: $color-font-primary;
   }
 
+  &:hover &__title__cover-wrapper__icon-wrapper {
+    opacity: 1;
+  }
+
   &:hover &__album-wrapper__album {
     color: $color-font-primary;
   }
 
   &__left {
-    flex-basis: 3.6rem;
+    flex-basis: 5.6rem;
     position: relative;
 
     &__num-wrapper,
@@ -312,7 +294,7 @@ export default {
       font-size: $font-size-text-primary;
       position: absolute;
       top: 0;
-      right: 2.4rem;
+      right: 2.8rem;
       height: 100%;
       display: flex;
       align-items: center;
@@ -337,8 +319,10 @@ export default {
       opacity: 0;
       display: flex;
       align-items: center;
-      position: relative;
       z-index: 1;
+      position: absolute;
+      top: 0;
+      right: 2.4rem;
 
       @include transition;
 
@@ -350,6 +334,10 @@ export default {
         @include clickAnimation;
       }
     }
+
+    @include respondContainer(collasped) {
+      display: none;
+    }
   }
 
   &__title {
@@ -360,18 +348,45 @@ export default {
     align-items: center;
 
     &__cover-wrapper {
+      display: block;
       height: 80%;
       aspect-ratio: 1 / 1;
       overflow: hidden;
-      border-radius: $border-radius-small;
       margin-right: 1.2rem;
       flex-shrink: 0;
       background-color: $color-bg-3;
+      position: relative;
+
+      @include respondContainer(collasped) {
+        height: 100%;
+        padding: $gutter;
+        background-color: unset;
+        margin-right: 0;
+      }
+
+      &__icon-wrapper {
+        width: 1.8rem;
+        aspect-ratio: 1 / 1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        z-index: 1;
+
+        &__icon {
+          display: block;
+          width: 100%;
+          height: 100%;
+          fill: $color-font-primary;
+        }
+      }
 
       &__cover {
         height: 100%;
         width: 100%;
         object-fit: cover;
+        border-radius: $border-radius-small;
       }
     }
 
@@ -385,6 +400,10 @@ export default {
       height: 80%;
       width: 100%;
       padding-right: 1rem;
+
+      @include respondContainer(collasped) {
+        display: none;
+      }
 
       &__name {
         font-size: $font-size-text-primary;
@@ -414,6 +433,10 @@ export default {
     align-items: center;
     height: 100%;
 
+    @include respondContainer(collasped) {
+      display: none;
+    }
+
     &__album {
       font-size: $font-size-text-secondary;
       padding-right: 1rem;
@@ -436,6 +459,10 @@ export default {
     font-size: $font-size-text-secondary;
 
     @include respondContainer(phone) {
+      display: none;
+    }
+
+    @include respondContainer(collasped) {
       display: none;
     }
   }

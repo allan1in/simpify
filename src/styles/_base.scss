@@ -15,15 +15,15 @@ html {
   // 1rem = 10px
   font-size: 62.5%;
 
-  @include respond(phone) {
-    font-size: 37.5%;
-    // 6px
-  }
+  // @include respond(phone) {
+  //   font-size: 37.5%;
+  //   // 6px
+  // }
 
-  @include respond(tab-land) {
-    font-size: 50%;
-    // 8px
-  }
+  // @include respond(tab-land) {
+  //   font-size: 50%;
+  //   // 8px
+  // }
 }
 
 body {

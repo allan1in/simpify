@@ -22,26 +22,22 @@
 <script>
 import { searchAlbums, searchNextPage } from '@/api/meta/search'
 import AlbumCard from '@/components/CardAlbum/index.vue'
-import { useAppStore } from '@/stores/app'
-import { mapWritableState } from 'pinia'
 
 export default {
   name: 'GetAlbums',
+  inject: ['bottom'],
   data() {
     return {
       albums: [],
       albums_limit: 48,
       albums_offset: 0,
       albums_next: '',
-      loadingMore: false,
-      loading_skeleton: true
+      loading_skeleton: true,
+      loading_more: false
     }
   },
   components: {
     AlbumCard
-  },
-  computed: {
-    ...mapWritableState(useAppStore, ['loading', 'loadMore'])
   },
   methods: {
     async getAll() {
@@ -50,8 +46,8 @@ export default {
       this.loading_skeleton = false
     },
     async getAlbums() {
-      if (!this.loadingMore && this.albums_next != null) {
-        this.loadingMore = true
+      if (!this.loading_more && this.albums_next != null) {
+        this.loading_more = true
         let res
 
         if (this.albums_next === '') {
@@ -69,29 +65,25 @@ export default {
           res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).albums
         }
 
-        let newVals = res.items
+        let newVals = res.items.filter((item) => item !== null)
         let oldVals = JSON.parse(JSON.stringify(this.albums))
 
         this.albums = [...oldVals, ...newVals]
         this.albums_next = res.next
 
-        this.loadingMore = false
+        this.loading_more = false
       }
-      this.loadMore = false
     }
   },
   watch: {
-    loadMore(newVal, oldVal) {
-      if (newVal) {
+    bottom(newVal, oldVal) {
+      if (newVal <= 0) {
         this.getAlbums()
       }
     }
   },
   created() {
     this.getAll()
-  },
-  mounted() {
-    this.loading = false
   }
 }
 </script>

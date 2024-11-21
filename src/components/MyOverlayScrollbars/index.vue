@@ -38,17 +38,10 @@ export default {
   },
   methods: {
     onScroll(instance, event) {
-      /*  When the distance between the scroll bar and the bottom of 
-          the track is less than variable bottom, the loading method will 
-          be triggered.
-      */
-      let bottom = 300
-      let trigger =
-        Math.ceil(event.srcElement.clientHeight + event.srcElement.scrollTop) >=
-        event.srcElement.scrollHeight - bottom
-      if (trigger) {
-        this.loadMore = true
-      }
+      let bottom =
+        event.srcElement.scrollHeight -
+        Math.ceil(event.srcElement.clientHeight + event.srcElement.scrollTop)
+      this.$emit('scroll', bottom)
     }
   }
 }

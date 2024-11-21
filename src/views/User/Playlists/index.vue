@@ -25,12 +25,10 @@ import { getNextUserPlaylists, getUserPlaylists } from '@/api/meta/user'
 
 export default {
   name: 'GetPlaylistsForUser',
+  inject: ['bottom'],
   components: {
     TitleShowAll,
     CardPlaylist
-  },
-  computed: {
-    ...mapWritableState(useAppStore, ['loading', 'loadMore'])
   },
   data() {
     return {
@@ -40,8 +38,8 @@ export default {
       playlists_limit: 40,
       playlists_offset: 0,
       playlists_total: 0,
-      loading_more: false,
-      loading_skeleton: true
+      loading_skeleton: true,
+      loading_more: false
     }
   },
   methods: {
@@ -77,21 +75,17 @@ export default {
 
         this.loading_more = false
       }
-      this.loadMore = false
     }
   },
   watch: {
-    loadMore(newVal, oldVal) {
-      if (newVal) {
+    bottom(newVal, oldVal) {
+      if (newVal <= 0) {
         this.getPlaylists()
       }
     }
   },
   created() {
     this.getAll()
-  },
-  mounted() {
-    this.loading = false
   }
 }
 </script>

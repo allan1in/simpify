@@ -110,8 +110,6 @@ import { searchArtists } from '@/api/meta/search'
 import { searchTracks } from '@/api/meta/search'
 import { debounce } from '@/utils/debounce'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
-import { mapWritableState } from 'pinia'
-import { useAppStore } from '@/stores/app'
 import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
@@ -147,7 +145,6 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppStore, ['loading']),
     uris() {
       let uris = []
       this.tracks.forEach((item) => {
@@ -215,13 +212,9 @@ export default {
   },
   watch: {
     $route(to, from) {
-      this.loading = false
       this.loading_skeleton = true
       this.debouncedGetAll()
     }
-  },
-  mounted() {
-    this.loading = false
   }
 }
 </script>

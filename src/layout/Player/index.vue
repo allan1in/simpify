@@ -62,7 +62,7 @@
       <div class="player-bar__mid__btn-group">
         <button
           class="icon-wrapper"
-          :class="{ 'btn-active': isShuffle, 'not-allowed': !isReady || isFreeAccount }"
+          :class="{ 'btn-active': isShuffle, 'not-allowed': notAvaliable || isFreeAccount }"
           @click="toggleShuffle"
         >
           <IconShuffle />
@@ -70,14 +70,14 @@
         <button
           class="icon-wrapper"
           @click="preTrack"
-          :class="{ 'not-allowed': !isReady || isFreeAccount }"
+          :class="{ 'not-allowed': notAvaliable || isFreeAccount }"
         >
           <IconPrevious />
         </button>
         <button
           class="player-bar__mid__btn-group__play"
           @click="togglePlay"
-          :class="{ 'not-allowed': !isReady }"
+          :class="{ 'not-allowed': notAvaliable }"
         >
           <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
             <IconPlay v-if="isPause" />
@@ -87,20 +87,20 @@
         <button
           class="icon-wrapper"
           @click="nextTrack"
-          :class="{ 'not-allowed': !isReady || isFreeAccount }"
+          :class="{ 'not-allowed': notAvaliable || isFreeAccount }"
         >
           <IconNext />
         </button>
         <button
           class="icon-wrapper"
-          :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': !isReady || isFreeAccount }"
+          :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': notAvaliable || isFreeAccount }"
           @click="setRepeatMode"
         >
           <IconRepeatSingle v-if="repeatMode === 2" />
           <IconRepeat v-else />
         </button>
       </div>
-      <SeekBar class="player-bar__mid__seek-bar" :disabled="!isReady" />
+      <SeekBar class="player-bar__mid__seek-bar" :disabled="notAvaliable" />
     </div>
     <div class="player-bar__right">
       <!-- <button
@@ -127,22 +127,22 @@
       >
         <IconConnectToDevice />
       </button> -->
-      <VolumeBar class="player-bar__right__volume-bar" :disabled="!isReady" />
+      <VolumeBar class="player-bar__right__volume-bar" :disabled="notAvaliable" />
       <!-- <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
       </button> -->
       <button
         class="icon-wrapper player-bar__right__full-screen"
         @click="openFullScreenPlayer"
-        :class="{ 'not-allowed': !isReady }"
-        :disabled="!isReady"
+        :class="{ 'not-allowed': notAvaliable }"
+        :disabled="notAvaliable"
       >
         <IconFullScreen />
       </button>
       <button
         class="icon-wrapper player-bar__right__play-phone"
         @click="togglePlay"
-        :class="{ 'not-allowed': !isReady }"
+        :class="{ 'not-allowed': notAvaliable }"
       >
         <IconPlay v-if="isPause" />
         <IconPause v-else />
@@ -226,6 +226,9 @@ export default {
     ...mapWritableState(useAppStore, ['showFullScreenPlayer']),
     isFreeAccount() {
       return useUserStore().checkProduct('free')
+    },
+    notAvaliable() {
+      return !this.isReady || !Object.keys(this.current_track).length
     }
   },
   methods: {

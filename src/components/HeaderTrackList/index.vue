@@ -1,7 +1,7 @@
 <template>
   <template v-if="!loading">
     <div class="list-header">
-      <div class="list-header__num-wrapper">
+      <div v-if="showNumber" class="list-header__num-wrapper">
         <div class="list-header__num-wrapper__num">#</div>
       </div>
       <div class="list-header__title">{{ $t('header_track_list.title') }}</div>
@@ -37,12 +37,14 @@ export default {
   props: {
     showAlbum: {
       type: Boolean,
-      require: false,
+      default: true
+    },
+    showNumber: {
+      type: Boolean,
       default: true
     },
     loading: {
       type: Boolean,
-      require: false,
       default: false
     }
   },
@@ -76,8 +78,8 @@ export default {
 }
 
 .list-header {
+  padding-left: 0.6rem;
   margin-bottom: $gutter-1-5x;
-  padding: 0 2.4rem;
   display: flex;
   height: 3.6rem;
   line-height: 3.6rem;
@@ -91,14 +93,14 @@ export default {
   }
 
   &__num-wrapper {
-    flex-basis: 3.6rem;
+    flex-basis: 5.6rem;
     position: relative;
 
     &__num {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      right: 2.4rem;
+      right: 2.8rem;
     }
   }
 

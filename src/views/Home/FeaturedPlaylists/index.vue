@@ -21,17 +21,13 @@
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import CardPlaylist from '@/components/CardPlaylist/index.vue'
 import { getFeaturedPlaylists, getNextFeaturedPlaylists } from '@/api/meta/browse'
-import { mapWritableState } from 'pinia'
-import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'FeaturedPlaylists',
+  inject: ['bottom'],
   components: {
     TitleShowAll,
     CardPlaylist
-  },
-  computed: {
-    ...mapWritableState(useAppStore, ['loading', 'loadMore'])
   },
   data() {
     return {
@@ -39,8 +35,8 @@ export default {
       playlists_limit: 48,
       playlists_offset: 0,
       playlists_next: '',
-      loading_more: false,
-      loading_skeleton: true
+      loading_skeleton: true,
+      loading_more: false
     }
   },
   methods: {
@@ -73,23 +69,20 @@ export default {
         this.playlists = [...oldVals, ...newVals]
 
         this.playlists_next = res.next
+
         this.loading_more = false
       }
-      this.loadMore = false
     }
   },
   watch: {
-    loadMore(newVal, oldVal) {
-      if (newVal) {
-        this.getPlaylists()
+    bottom(newVal, oldVal) {
+      if (newVal <= 0) {
+        this.getAll()
       }
     }
   },
   created() {
     this.getAll()
-  },
-  mounted() {
-    this.loading = false
   }
 }
 </script>
