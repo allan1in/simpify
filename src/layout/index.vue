@@ -6,10 +6,7 @@
       <div class="app-container__mid-wrapper__main-view">
         <MyOverlayScrollbars os-element="main" @scroll="updateBottom">
           <div class="app-container__mid-wrapper__main-view__container">
-            <div
-              class="app-container__mid-wrapper__main-view__container__content"
-              v-show="!loading"
-            >
+            <div class="app-container__mid-wrapper__main-view__container__content" v-show="!loading">
               <RouterView />
             </div>
             <Loading :loading="loading" />
@@ -86,9 +83,12 @@ export default {
       height: inherit;
       overflow: hidden;
       min-width: 42rem;
-
       container-type: inline-size;
       container-name: container-box;
+
+      @include respond(phone) {
+        min-width: 50%;
+      }
 
       &__container {
         min-height: $height-content;

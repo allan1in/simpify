@@ -13,7 +13,7 @@ import Message from '@/components/Message/index'
 export const usePlayerStore = defineStore('player', {
   state: () => ({
     player: null,
-    activeDevice: {},
+    activeDevice: null,
     volume: 50,
     isShuffle: false,
     isPause: true,
@@ -22,8 +22,8 @@ export const usePlayerStore = defineStore('player', {
     percentage: 0,
     duration: 0,
     position: 0,
-    current_track: {},
-    context: {},
+    current_track: null,
+    context: null,
     index: 0,
     isReady: false,
     loading: true
@@ -135,7 +135,7 @@ export const usePlayerStore = defineStore('player', {
     },
     async togglePlay() {
       if (useUserStore().checkProduct('premium')) {
-        if (this.isReady) {
+        if (this.isReady && !!this.current_track) {
           let state = await this.player.getCurrentState()
           if (!state) {
             // User is not playing music through the Web Playback SDK
@@ -144,7 +144,7 @@ export const usePlayerStore = defineStore('player', {
           await this.player.togglePlay()
           this.isPause = !this.isPause
         } else {
-          Message('Loading now...')
+          Message('No track is playing.')
         }
       } else if (useUserStore().checkProduct('free')) {
         if (this.isReady) {
@@ -165,7 +165,7 @@ export const usePlayerStore = defineStore('player', {
     },
     async trackTogglePlay(item, context_uri, uris, position) {
       // Current track
-      if (this.current_track.uri === item.uri) {
+      if (this.current_track?.uri === item.uri) {
         await this.togglePlay()
       } else {
         // New track
@@ -189,7 +189,7 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async nextTrack() {
-      if (useUserStore().checkProduct('premium') && this.isReady) {
+      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         this.loading = true
         await this.player.nextTrack()
       } else if (useUserStore().checkProduct('free')) {
@@ -201,7 +201,7 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async preTrack() {
-      if (useUserStore().checkProduct('premium') && this.isReady) {
+      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         this.loading = true
         await this.player.previousTrack()
       } else if (useUserStore().checkProduct('free')) {
@@ -209,7 +209,7 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async setRepeatMode() {
-      if (useUserStore().checkProduct('premium') && this.isReady) {
+      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         if (this.repeatMode === 0) {
           await setRepeatMode({ state: 'context' })
           this.repeatMode = 1
@@ -225,14 +225,14 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async toggleShuffle() {
-      if (useUserStore().checkProduct('premium') && this.isReady) {
+      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await togglePlaybackShuffle({ state: !this.isShuffle })
       } else if (useUserStore().checkProduct('free')) {
         Message('This is only for premium accounts.')
       }
     },
     async setMute() {
-      if (useUserStore().checkProduct('premium') && this.isReady) {
+      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await this.player.setVolume(0)
       } else if (useUserStore().checkProduct('free')) {
         if (!this.player?.playing) {
@@ -242,7 +242,7 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async setVolume() {
-      if (useUserStore().checkProduct('premium') && this.isReady) {
+      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await this.player.setVolume(this.volume / 100)
       } else if (useUserStore().checkProduct('free')) {
         if (!this.player?.playing) {
@@ -253,7 +253,7 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async seekPosition() {
-      if (useUserStore().checkProduct('premium') && this.isReady) {
+      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await this.player.seek((this.duration * this.percentage) / 100)
         await this.startListenPos()
       } else if (useUserStore().checkProduct('free')) {
