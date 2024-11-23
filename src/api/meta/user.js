@@ -59,3 +59,18 @@ export function getNextUserlikedSongs(path) {
     method: 'get'
   })
 }
+
+export function getCurrentUserPlaylists(params) {
+  return request({
+    url: `/me/playlists`,
+    method: 'get',
+    params
+  })
+}
+
+export function getNextCurrentUserPlaylists(path) {
+  return request({
+    url: `/me/playlists?${path}`,
+    method: 'get'
+  })
+}

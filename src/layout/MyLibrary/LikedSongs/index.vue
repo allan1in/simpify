@@ -1,10 +1,6 @@
 <template>
   <div class="my-library__container__content__liked-songs">
-    <HeaderTrackList
-      class="my-library__container__content__liked-songs__header"
-      :loading="loading_skeleton"
-      :show-number="false"
-    />
+    <HeaderTrackList :loading="loading_skeleton" :show-number="false" />
     <CardTrack
       v-for="(item, index) in tracks"
       :item="item.track"
@@ -93,4 +89,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.my-library__container__content__liked-songs__header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+</style>

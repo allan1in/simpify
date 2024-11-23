@@ -31,15 +31,15 @@
       <div v-show="!isCollasped" class="my-library__container__tag-bar">
         <TagBar :tags="tags" :isActive @handle-click-tag="changeTag" />
       </div>
-
-      <div
-        class="my-library__container__content"
-        :class="{ 'my-library__container__content-collasped': isCollasped }"
-      >
-        <MyOverlayScrollbars os-element="div" @scroll="updateBottom">
-          <LikedSongs v-if="isActive === 'liked_songs'" />
-        </MyOverlayScrollbars>
-      </div>
+      <MyOverlayScrollbars os-element="div" @scroll="updateBottom">
+        <div
+          class="my-library__container__content"
+          :class="{ 'my-library__container__content-collasped': isCollasped }"
+        >
+          <LikedSongs v-show="isActive === 'liked_songs'" />
+          <Playlists v-show="isActive === 'playlists'" />
+        </div>
+      </MyOverlayScrollbars>
     </div>
   </ResizeBox>
 </template>
@@ -57,6 +57,7 @@ import { useLibraryStore } from '@/stores/library'
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import LikedSongs from './LikedSongs/index.vue'
 import { computed } from 'vue'
+import Playlists from './Playlists/index.vue'
 
 export default {
   name: 'MyLibrary',
@@ -84,7 +85,8 @@ export default {
     IconArrowLeftLonger,
     IconArrowRightLonger,
     MyOverlayScrollbars,
-    LikedSongs
+    LikedSongs,
+    Playlists
   },
   methods: {
     changeTag(tag) {
@@ -100,9 +102,10 @@ export default {
 <style lang="scss" scoped>
 .my-library__container {
   overflow: hidden;
-
   container-type: inline-size;
   container-name: container-box;
+  overflow: hidden;
+  border-radius: $border-radius-default;
 
   &__title {
     padding: $gutter-2x;
@@ -205,19 +208,18 @@ export default {
   }
 
   &__content {
-    height: calc($height-content - 12rem);
+    height: calc($height-content - 10.4rem);
+    padding: 0 $gutter;
+
+    @include respondContainer(collasped) {
+      padding: 0 $gutter $gutter $gutter;
+    }
 
     &-collasped:nth-child(n) {
       height: calc($height-content - 5.6rem);
     }
 
     &__liked-songs {
-      padding: 0 $gutter-2x $gutter-2x $gutter-2x;
-
-      @include respondContainer(collasped) {
-        padding: 0 $gutter $gutter $gutter;
-      }
-
       &__header {
         position: sticky;
         top: 0;

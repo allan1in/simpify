@@ -11,7 +11,7 @@
   </template>
   <template v-else>
     <div class="list-header">
-      <div class="list-header__num-wrapper">
+      <div v-if="showNumber" class="list-header__num-wrapper">
         <div class="list-header__num-wrapper__num">
           <Skeleton class="skeleton__name" />
         </div>
@@ -78,7 +78,6 @@ export default {
 }
 
 .list-header {
-  padding-left: 0.6rem;
   margin-bottom: $gutter-1-5x;
   display: flex;
   height: 3.6rem;
@@ -93,7 +92,7 @@ export default {
   }
 
   &__num-wrapper {
-    flex-basis: 5.6rem;
+    flex-basis: 6.4rem;
     position: relative;
 
     &__num {

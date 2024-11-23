@@ -94,14 +94,14 @@ export default {
       this.myLibWidth = this.minWidth
       this.$refs.resizeBox.style.width = this.myLibWidth + 'px'
 
-      const resizeObserver = new ResizeObserver(entries => {
+      const resizeObserver = new ResizeObserver((entries) => {
         for (const entry of entries) {
           if (entry.target.offsetWidth < this.minWidth) {
             this.isCollasped = true
           }
         }
-      });
-      resizeObserver.observe(this.$refs.resizeBox);
+      })
+      resizeObserver.observe(this.$refs.resizeBox)
     })
   }
 }
@@ -109,8 +109,8 @@ export default {
 <style lang="scss" scoped>
 .my-library {
   background-color: $color-bg-2;
-  border-radius: $border-radius-default;
   position: relative;
+  border-radius: $border-radius-default;
 
   &__resize-handle {
     width: $gutter;

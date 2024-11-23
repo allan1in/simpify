@@ -1,6 +1,9 @@
 <template>
   <template v-if="!loading">
-    <div class="track-card" :class="{ 'track-card-not-available': !available }">
+    <div
+      class="track-card"
+      :class="[{ 'track-card-not-available': !available }, { 'track-card-current': isCurrent }]"
+    >
       <div v-if="showNumber" class="track-card__left">
         <template v-if="available">
           <div class="track-card__left__icon-wrapper">
@@ -30,14 +33,15 @@
       </div>
       <div class="track-card__title">
         <router-link
-          v-if="showImage"
+          v-if="showImage && !!item?.id"
           :to="{ name: 'Track', params: { trackId: item.id } }"
           class="track-card__title__cover-wrapper"
+          :class="{ 'track-card__title__cover-wrapper-hide-number': !showNumber }"
         >
           <template v-if="!showNumber">
-            <div class="track-card__title__cover-wrapper__icon-wrapper">
+            <div class="track-card__title__cover-wrapper__icon">
               <button
-                class="track-card__title__cover-wrapper__icon-wrapper__icon"
+                class="track-card__title__cover-wrapper__icon__wrapper"
                 @click.prevent="handleTogglePlay"
               >
                 <IconPause v-if="isPlaying" />
@@ -54,9 +58,9 @@
         </router-link>
         <div class="track-card__title__msg-wrapper">
           <router-link
-            v-if="!!item.id"
+            v-if="!!item?.id"
             :class="{
-              'track-card__title__msg-wrapper__name-playing': isPlaying
+              'track-card__title__msg-wrapper__name-playing': isCurrent
             }"
             :to="{ name: 'Track', params: { trackId: item.id } }"
             class="track-card__title__msg-wrapper__name"
@@ -101,7 +105,11 @@
         </div>
       </div>
       <div class="track-card__title">
-        <div class="track-card__title__cover-wrapper" v-if="showImage">
+        <div
+          class="track-card__title__cover-wrapper"
+          :class="{ 'track-card__title__cover-wrapper-hide-number': !showNumber }"
+          v-if="showImage"
+        >
           <Skeleton />
         </div>
         <div class="track-card__title__msg-wrapper">
@@ -147,16 +155,19 @@ export default {
     },
     isPlaying() {
       return !this.isPause && this.current_track.uri === this.item.uri
+    },
+    isCurrent() {
+      return this.current_track?.uri === this.item.uri
     }
   },
   props: {
     item: {
       type: Object,
-      require: true
+      default: {}
     },
     index: {
       type: Number,
-      require: true
+      default: 0
     },
     showNumber: {
       type: Boolean,
@@ -211,6 +222,10 @@ export default {
   &:hover .track-card__left__icon-wrapper {
     opacity: 0;
   }
+
+  &:hover .track-card__title__cover-wrapper__icon-wrapper {
+    opacity: 0;
+  }
 }
 
 .skeleton {
@@ -242,7 +257,6 @@ export default {
 }
 
 .track-card {
-  padding-left: 0.6rem;
   display: flex;
   height: 5.6rem;
   font-size: $font-size-text-secondary;
@@ -277,7 +291,7 @@ export default {
     color: $color-font-primary;
   }
 
-  &:hover &__title__cover-wrapper__icon-wrapper {
+  &:hover &__title__cover-wrapper__icon {
     opacity: 1;
   }
 
@@ -285,8 +299,12 @@ export default {
     color: $color-font-primary;
   }
 
+  &-current {
+    background-color: $color-bg-5;
+  }
+
   &__left {
-    flex-basis: 5.6rem;
+    flex-basis: 6.4rem;
     position: relative;
 
     &__num-wrapper,
@@ -347,38 +365,56 @@ export default {
     justify-content: start;
     align-items: center;
 
+    @include respondContainer(collasped) {
+      justify-content: center;
+    }
+
     &__cover-wrapper {
       display: block;
-      height: 80%;
+      height: 70%;
       aspect-ratio: 1 / 1;
       overflow: hidden;
-      margin-right: 1.2rem;
+      margin-right: $gutter;
       flex-shrink: 0;
       background-color: $color-bg-3;
       position: relative;
 
       @include respondContainer(collasped) {
-        height: 100%;
-        padding: $gutter;
-        background-color: unset;
         margin-right: 0;
       }
 
-      &__icon-wrapper {
-        width: 1.8rem;
-        aspect-ratio: 1 / 1;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0;
-        z-index: 1;
+      &-hide-number {
+        margin-left: $gutter;
 
-        &__icon {
+        @include respondContainer(collasped) {
+          margin-left: 0;
+        }
+      }
+
+      &__icon {
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        background-color: rgba($color-bg-1, 0.5);
+        border-radius: $border-radius-small;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        @include transition;
+
+        &__wrapper {
           display: block;
-          width: 100%;
-          height: 100%;
+          height: 40%;
+          aspect-ratio: 1 / 1;
           fill: $color-font-primary;
+
+          @include clickAnimation;
         }
       }
 

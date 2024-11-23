@@ -121,6 +121,16 @@ export default {
     }
   },
   methods: {
+    reset() {
+      this.id = this.$route.params.playlistId
+      this.playlist = {}
+      this.tracks = []
+      this.tracks_limit = 28
+      this.tracks_offset = 0
+      this.tracks_next = ''
+      this.loading_skeleton = true
+      this.loading_more = false
+    },
     async getAll() {
       await this.getPlaylist()
       await this.getPlaylistTracks()
@@ -147,7 +157,7 @@ export default {
           res = await getNextPlaylistTracks(this.id, path.slice(path.indexOf('?') + 1))
         }
 
-        let newVals = res.items
+        let newVals = res.items.filter((item) => item.track !== null)
         let oldVals = JSON.parse(JSON.stringify(this.tracks))
         this.tracks = [...oldVals, ...newVals]
         this.tracks_next = res.next
@@ -159,7 +169,7 @@ export default {
   watch: {
     $route: {
       async handler(to, from) {
-        this.loading_skeleton = true
+        this.reset()
         await this.getAll()
       },
       immediate: true
@@ -195,9 +205,8 @@ export default {
     }
 
     &__tracks {
-      @include respondContainer(phone) {
-        margin: $gutter-1-5x 0;
-      }
+      padding: 0 $gutter-1-5x;
+      margin: $gutter-1-5x 0;
     }
   }
 }
