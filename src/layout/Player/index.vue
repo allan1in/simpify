@@ -381,7 +381,7 @@ $msg-artist-font-size: 1.2rem;
       aspect-ratio: 1 / 1;
       margin: 0 $gutter;
       position: relative;
-      border-radius: $border-radius-default;
+      border-radius: $border-radius-small;
       overflow: hidden;
 
       &:hover &__arrow {

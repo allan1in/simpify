@@ -1,7 +1,11 @@
 <template>
-  <button class="button-toggle-play-container" :class="{ available: available }" @click.stop.prevent="handleClick">
+  <button
+    class="button-toggle-play-container"
+    :class="{ available: available }"
+    @click.stop.prevent="handleClick"
+  >
     <div class="button-toggle-play-container__icon-wrapper">
-      <IconPause v-if="showIconPause" />
+      <IconPause v-if="isPlaying" />
       <IconPlay v-else />
     </div>
   </button>
@@ -26,22 +30,32 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(usePlayerStore, ['context', 'isPause', 'activeDevice', 'playNewContext']),
+    ...mapWritableState(usePlayerStore, ['context', 'current_track', 'isPause', 'activeDevice']),
     available() {
-      return this.checkProduct('premium')
+      return this.item.type === 'track' || this.checkProduct('premium')
     },
-    showIconPause() {
-      return this.item?.uri === this.context?.uri && !this.isPause
+    isPlaying() {
+      return !this.isPause && this.isCurrent
+    },
+    isCurrent() {
+      if (this.item.type === 'track') {
+        return this.item?.uri === this.current_track?.uri
+      }
+      return this.item?.uri === this.context?.uri
     }
   },
   methods: {
-    ...mapActions(usePlayerStore, ['togglePlay']),
+    ...mapActions(usePlayerStore, ['togglePlay', 'playNewContext', 'playNewTrack']),
     ...mapActions(useUserStore, ['checkProduct']),
     async handleClick() {
-      if (this.item?.uri === this.context?.uri) {
+      if (this.isCurrent) {
         this.togglePlay()
       } else {
-        this.playNewContext({ context_uri: this.item?.uri })
+        if (this.item.type === 'track') {
+          this.playNewTrack({ uris: [this.item?.uri] })
+        } else {
+          this.playNewContext({ context_uri: this.item?.uri })
+        }
       }
     }
   }

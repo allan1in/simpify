@@ -29,10 +29,25 @@
           </span>
         </Banner>
       </div>
+
       <div class="track-container__content">
-        <TitleShowAll :title="$t('track.all_artists')" />
+        <div class="track-container__content__btn-group">
+          <div class="track-container__content__btn-group__play-wrapper">
+            <ButtonTogglePlay :item="track" />
+          </div>
+          <div
+            class="track-container__content__btn-group__add-wrapper"
+            @click.prevent="handleClickSaveButton"
+          >
+            <IconInLikeSong v-show="isSaved" />
+            <IconAddToLikeSong v-show="!isSaved" />
+          </div>
+        </div>
         <div class="track-container__content__artists">
-          <ArtistCard v-for="artist in artists" :key="artist.id" :item="artist" />
+          <TitleShowAll :title="$t('track.all_artists')" />
+          <div class="track-container__content__artists__results">
+            <ArtistCard v-for="artist in artists" :key="artist.id" :item="artist" />
+          </div>
         </div>
       </div>
     </div>
@@ -43,9 +58,19 @@
         <Banner :loading="loading_skeleton" />
       </div>
       <div class="track-container__content">
-        <TitleShowAll :loading="loading_skeleton" />
+        <div class="track-container__content__btn-group">
+          <div class="track-container__content__btn-group__play-wrapper">
+            <Skeleton shape="circle" />
+          </div>
+          <div class="track-container__content__btn-group__add-wrapper">
+            <Skeleton shape="circle" />
+          </div>
+        </div>
         <div class="track-container__content__artists">
-          <ArtistCard :loading="loading_skeleton" />
+          <TitleShowAll :loading="loading_skeleton" />
+          <div class="track-container__content__artists__results">
+            <ArtistCard :loading="loading_skeleton" />
+          </div>
         </div>
       </div>
     </div>
@@ -55,13 +80,15 @@
 <script>
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import { timeFormatAlbum } from '@/utils/time_format'
-import { getTrack } from '@/api/meta/track'
+import { checkUserSavedTracks, deleteUserSavedTracks, getTrack, saveTracks } from '@/api/meta/track'
 import { getSeveralArtists } from '@/api/meta/artist'
 import ArtistCard from '@/components/CardArtist/index.vue'
-import { mapWritableState } from 'pinia'
-import { useAppStore } from '@/stores/app'
 import Banner from '@/components/Banner/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
+import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
+import IconAddToLikeSong from '@/components/Icons/IconAddToLikeSong.vue'
+import IconInLikeSong from '@/components/Icons/IconInLikeSong.vue'
+import Message from '@/components/Message/index'
 
 export default {
   name: 'Track',
@@ -69,12 +96,17 @@ export default {
     TitleShowAll,
     ArtistCard,
     Banner,
-    Skeleton
+    Skeleton,
+    ButtonTogglePlay,
+    IconAddToLikeSong,
+    IconInLikeSong
   },
   data() {
     return {
+      id: this.$route.params.trackId,
       track: {},
       artists: [],
+      isSaved: undefined,
       loading_skeleton: true
     }
   },
@@ -84,14 +116,22 @@ export default {
     }
   },
   methods: {
+    reset() {
+      this.id = this.$route.params.trackId
+      this.track = {}
+      this.artists = []
+      this.isSaved = undefined
+      this.loading_skeleton = true
+    },
     async getAll() {
       await this.getTrack()
       await this.getArtists()
+      await this.checkUserSavedTrack()
 
       this.loading_skeleton = false
     },
     async getTrack() {
-      const res = await getTrack(this.$route.params.trackId)
+      const res = await getTrack(this.id)
       this.track = res
     },
     async getArtists() {
@@ -102,13 +142,33 @@ export default {
       }
       const res = (await getSeveralArtists(params)).artists
       this.artists = res
+    },
+    async checkUserSavedTrack() {
+      let params = { ids: this.id }
+      const res = await checkUserSavedTracks(params)
+      this.isSaved = res[0]
+    },
+    async handleClickSaveButton() {
+      if (this.isSaved) {
+        await deleteUserSavedTracks({ ids: this.id })
+        await this.checkUserSavedTrack()
+        if (!this.isSaved) {
+          Message('Removed from Liked Songs')
+        }
+      } else {
+        await saveTracks({ ids: this.id })
+        await this.checkUserSavedTrack()
+        if (this.isSaved) {
+          Message('Added to Liked Songs')
+        }
+      }
     }
   },
   watch: {
     $route: {
-      handler(to, from) {
-        this.loading_skeleton = true
-        this.getAll()
+      async handler(to, from) {
+        this.reset()
+        await this.getAll()
       },
       immediate: true
     }
@@ -134,7 +194,29 @@ export default {
   &__content {
     padding: $gutter-1-5x;
 
-    &__artists {
+    &__btn-group {
+      padding: $gutter-1-5x;
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      gap: $gutter-4x;
+
+      &__play-wrapper {
+        height: 5.6rem;
+        aspect-ratio: 1 / 1;
+      }
+
+      &__add-wrapper {
+        height: 2.4rem;
+        aspect-ratio: 1 / 1;
+        fill: $color-font-secondary;
+        cursor: pointer;
+
+        @include clickAnimation;
+      }
+    }
+
+    &__artists__results {
       @include gridCards;
     }
   }

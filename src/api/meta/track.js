@@ -6,3 +6,27 @@ export function getTrack(id) {
     method: 'get'
   })
 }
+
+export function checkUserSavedTracks(params) {
+  return request({
+    url: `/me/tracks/contains`,
+    method: 'get',
+    params
+  })
+}
+
+export function saveTracks(params) {
+  return request({
+    url: `/me/tracks`,
+    method: 'put',
+    params
+  })
+}
+
+export function deleteUserSavedTracks(params) {
+  return request({
+    url: `/me/tracks`,
+    method: 'delete',
+    params
+  })
+}
