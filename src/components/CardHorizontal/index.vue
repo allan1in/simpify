@@ -1,19 +1,32 @@
 <template>
   <template v-if="!loading">
-    <div class="card-horizontal-container" @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })">
-      <div class="card-horizontal-container__cover-wrapper">
-        <img loading="lazy" class="card-horizontal-container__cover-wrapper__cover" :src="item.images[0].url"
-          :alt="item.name" />
+    <div
+      class="card-library-container"
+      @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })"
+    >
+      <div class="card-library-container__cover-wrapper">
+        <img
+          loading="lazy"
+          class="card-library-container__cover-wrapper__cover"
+          :src="item.images[0].url"
+          :alt="item.name"
+        />
       </div>
-      <div class="card-horizontal-container__info-wrapper">
-        <router-link :to="{ name: 'Playlist', params: { playlistId: item.id } }"
-          class="card-horizontal-container__info-wrapper__info">{{ item.name }}</router-link>
+      <div class="card-library-container__info-wrapper">
+        <router-link
+          :to="{ name: 'Playlist', params: { playlistId: item.id } }"
+          class="card-library-container__info-wrapper__info"
+          >{{ item.name }}</router-link
+        >
       </div>
-      <div class="card-horizontal-container__right-wrapper">
-        <div class="card-horizontal-container__right-wrapper__btn-wrapper" :class="{
-          'card-horizontal-container__right-wrapper__btn-wrapper-playing':
-            !isPause && item.uri === context.uri
-        }">
+      <div class="card-library-container__right-wrapper">
+        <div
+          class="card-library-container__right-wrapper__btn-wrapper"
+          :class="{
+            'card-library-container__right-wrapper__btn-wrapper-playing':
+              !isPause && item.uri === context.uri
+          }"
+        >
           <ButtonTogglePlay :item="item" />
         </div>
       </div>
@@ -31,7 +44,7 @@ import { mapState } from 'pinia'
 import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
-  name: 'CardHorizontal',
+  name: 'CardLibrary',
   props: {
     item: {
       type: Object,
@@ -57,14 +70,14 @@ export default {
 <style lang="scss" scoped>
 .skeleton {
   width: 100%;
-  aspect-ratio: 6 / 1;
+  height: 5.6rem;
 }
 
-.card-horizontal-container {
+.card-library-container {
   display: flex;
   justify-content: start;
   width: 100%;
-  aspect-ratio: 6 / 1;
+  height: 5.6rem;
   border-radius: $border-radius-small;
   overflow: hidden;
   cursor: pointer;

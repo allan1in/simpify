@@ -1,7 +1,7 @@
 <template>
   <template v-if="!loading">
     <div class="list-header">
-      <div v-if="showNumber" class="list-header__num-wrapper">
+      <div class="list-header__num-wrapper">
         <div class="list-header__num-wrapper__num">#</div>
       </div>
       <div class="list-header__title">{{ $t('header_track_list.title') }}</div>
@@ -11,7 +11,7 @@
   </template>
   <template v-else>
     <div class="list-header">
-      <div v-if="showNumber" class="list-header__num-wrapper">
+      <div class="list-header__num-wrapper">
         <div class="list-header__num-wrapper__num">
           <Skeleton class="skeleton__name" />
         </div>
@@ -36,10 +36,6 @@ export default {
   name: 'HeaderTrackList',
   props: {
     showAlbum: {
-      type: Boolean,
-      default: true
-    },
-    showNumber: {
       type: Boolean,
       default: true
     },

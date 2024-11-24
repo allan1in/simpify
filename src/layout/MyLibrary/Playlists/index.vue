@@ -1,19 +1,18 @@
 <template>
   <div class="my-library__container__content__playlists">
-    <CardPlaylistHorizontal v-for="item in playlists" :loading="loading_skeleton" :item="item" />
+    <CardPlaylistLibrary v-for="item in playlists" :item />
   </div>
 </template>
 
 <script>
 import { getCurrentUserPlaylists, getNextCurrentUserPlaylists } from '@/api/meta/user'
-import CardPlaylistHorizontal from '@/components/CardPlaylistHorizontal/index.vue'
+import CardPlaylistLibrary from '@/components/CardPlaylistLibrary/index.vue'
 
 export default {
   name: 'Playlists',
   inject: ['bottom'],
   data() {
     return {
-      loading_skeleton: true,
       playlists: [],
       playlists_limit: 20,
       playlists_offset: 0,
@@ -21,13 +20,11 @@ export default {
     }
   },
   components: {
-    CardPlaylistHorizontal
+    CardPlaylistLibrary
   },
   methods: {
     async getAll() {
       await this.getCurrentUserPlaylists()
-
-      this.loading_skeleton = false
     },
     async getCurrentUserPlaylists() {
       if (!this.loading_more && this.playlists_next !== null) {

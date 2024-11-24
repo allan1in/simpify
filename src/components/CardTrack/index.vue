@@ -1,10 +1,7 @@
 <template>
   <template v-if="!loading">
-    <div
-      class="track-card"
-      :class="[{ 'track-card-not-available': !available }, { 'track-card-current': isCurrent }]"
-    >
-      <div v-if="showNumber" class="track-card__left">
+    <div class="track-card" :class="{ 'track-card-not-available': !available }">
+      <div class="track-card__left">
         <template v-if="available">
           <div class="track-card__left__icon-wrapper">
             <button class="track-card__left__icon-wrapper__icon" @click="handleTogglePlay">
@@ -36,19 +33,7 @@
           v-if="showImage && !!item?.id"
           :to="{ name: 'Track', params: { trackId: item.id } }"
           class="track-card__title__cover-wrapper"
-          :class="{ 'track-card__title__cover-wrapper-hide-number': !showNumber }"
         >
-          <template v-if="!showNumber">
-            <div class="track-card__title__cover-wrapper__icon">
-              <button
-                class="track-card__title__cover-wrapper__icon__wrapper"
-                @click.prevent="handleTogglePlay"
-              >
-                <IconPause v-if="isPlaying" />
-                <IconPlay v-else />
-              </button>
-            </div>
-          </template>
           <img
             loading="lazy"
             class="track-card__title__cover-wrapper__cover"
@@ -99,17 +84,13 @@
   </template>
   <template v-else>
     <div class="track-card no-hover">
-      <div v-if="showNumber" class="track-card__left">
+      <div class="track-card__left">
         <div class="track-card__left__num-wrapper">
           <Skeleton class="skeleton__num" />
         </div>
       </div>
       <div class="track-card__title">
-        <div
-          class="track-card__title__cover-wrapper"
-          :class="{ 'track-card__title__cover-wrapper-hide-number': !showNumber }"
-          v-if="showImage"
-        >
+        <div class="track-card__title__cover-wrapper" v-if="showImage">
           <Skeleton />
         </div>
         <div class="track-card__title__msg-wrapper">
@@ -131,7 +112,7 @@
 import IconPlay from '@/components/Icons/IconPlay.vue'
 import { timeFormatTrack } from '@/utils/time_format'
 import IconPause from '../Icons/IconPause.vue'
-import { mapState } from 'pinia'
+import { mapActions, mapState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import Skeleton from '@/components/Skeleton/index.vue'
 import { useLibraryStore } from '@/stores/library'
@@ -154,7 +135,7 @@ export default {
       }
     },
     isPlaying() {
-      return !this.isPause && this.current_track.uri === this.item.uri
+      return !this.isPause && this.isCurrent
     },
     isCurrent() {
       return this.current_track?.uri === this.item.uri
@@ -168,10 +149,6 @@ export default {
     index: {
       type: Number,
       default: 0
-    },
-    showNumber: {
-      type: Boolean,
-      default: true
     },
     showArtists: {
       type: Boolean,
@@ -199,11 +176,34 @@ export default {
     }
   },
   methods: {
+    ...mapActions(usePlayerStore, ['togglePlay', 'playNewTrack']),
     getFormatTime(time) {
       return timeFormatTrack(time)
     },
     async handleTogglePlay() {
-      usePlayerStore().trackTogglePlay(this.item, this.context_uri, this.uris, this.index)
+      // Current track
+      if (this.isCurrent) {
+        await this.togglePlay()
+      } else {
+        // New track
+        let data
+        if (this.context_uri) {
+          data = {
+            context_uri: this.context_uri,
+            offset: { position: this.index }
+          }
+        } else if (this.uris) {
+          data = {
+            uris: this.uris,
+            offset: { position: this.index }
+          }
+        } else {
+          data = {
+            uris: [this.item.uri]
+          }
+        }
+        await this.playNewTrack(data, this.item)
+      }
     }
   }
 }
@@ -220,10 +220,6 @@ export default {
   }
 
   &:hover .track-card__left__icon-wrapper {
-    opacity: 0;
-  }
-
-  &:hover .track-card__title__cover-wrapper__icon-wrapper {
     opacity: 0;
   }
 }
@@ -291,16 +287,8 @@ export default {
     color: $color-font-primary;
   }
 
-  &:hover &__title__cover-wrapper__icon {
-    opacity: 1;
-  }
-
   &:hover &__album-wrapper__album {
     color: $color-font-primary;
-  }
-
-  &-current {
-    background-color: $color-bg-5;
   }
 
   &__left {
@@ -381,41 +369,6 @@ export default {
 
       @include respondContainer(collasped) {
         margin-right: 0;
-      }
-
-      &-hide-number {
-        margin-left: $gutter;
-
-        @include respondContainer(collasped) {
-          margin-left: 0;
-        }
-      }
-
-      &__icon {
-        height: 100%;
-        width: 100%;
-        opacity: 0;
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: block;
-        background-color: rgba($color-bg-1, 0.5);
-        border-radius: $border-radius-small;
-        z-index: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        @include transition;
-
-        &__wrapper {
-          display: block;
-          height: 40%;
-          aspect-ratio: 1 / 1;
-          fill: $color-font-primary;
-
-          @include clickAnimation;
-        }
       }
 
       &__cover {

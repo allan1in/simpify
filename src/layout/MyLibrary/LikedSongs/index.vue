@@ -1,28 +1,18 @@
 <template>
   <div class="my-library__container__content__liked-songs">
-    <HeaderTrackList :loading="loading_skeleton" :show-number="false" />
-    <CardTrack
-      v-for="(item, index) in tracks"
-      :item="item.track"
-      :loading="loading_skeleton"
-      :index
-      :show-number="false"
-      :uris="uris"
-    />
+    <CardTrackLibrary v-for="(item, index) in tracks" :item="item.track" :index :uris />
   </div>
 </template>
 
 <script>
 import { getNextUserlikedSongs, getUserlikedSongs } from '@/api/meta/user'
-import CardTrack from '@/components/CardTrack/index.vue'
-import HeaderTrackList from '@/components/HeaderTrackList/index.vue'
+import CardTrackLibrary from '@/components/CardTrackLibrary/index.vue'
 
 export default {
   name: 'LikedSongs',
   inject: ['bottom'],
   data() {
     return {
-      loading_skeleton: true,
       tracks: [],
       tracks_limit: 20,
       tracks_offset: 0,
@@ -30,8 +20,7 @@ export default {
     }
   },
   components: {
-    CardTrack,
-    HeaderTrackList
+    CardTrackLibrary
   },
   computed: {
     uris() {
@@ -45,8 +34,6 @@ export default {
   methods: {
     async getAll() {
       await this.getUserlikedSongs()
-
-      this.loading_skeleton = false
     },
     async getUserlikedSongs() {
       if (!this.loading_more && this.tracks_next !== null) {
@@ -89,10 +76,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.my-library__container__content__liked-songs__header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-</style>
+<style lang="scss" scoped></style>

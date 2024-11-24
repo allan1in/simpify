@@ -31,15 +31,19 @@
       <div v-show="!isCollasped" class="my-library__container__tag-bar">
         <TagBar :tags="tags" :isActive @handle-click-tag="changeTag" />
       </div>
-      <MyOverlayScrollbars os-element="div" @scroll="updateBottom">
-        <div
-          class="my-library__container__content"
-          :class="{ 'my-library__container__content-collasped': isCollasped }"
-        >
-          <LikedSongs v-show="isActive === 'liked_songs'" />
-          <Playlists v-show="isActive === 'playlists'" />
-        </div>
-      </MyOverlayScrollbars>
+      <div
+        class="my-library__container__content"
+        :class="{ 'my-library__container__content-collasped': isCollasped }"
+      >
+        <MyOverlayScrollbars os-element="div" @scroll="updateBottom">
+          <div class="my-library__container__content__wrapper">
+            <LikedSongs v-if="isActive === 'liked_songs'" />
+            <Playlists v-if="isActive === 'playlists'" />
+            <Albums v-if="isActive === 'albums'" />
+            <Artists v-if="isActive === 'artists'" />
+          </div>
+        </MyOverlayScrollbars>
+      </div>
     </div>
   </ResizeBox>
 </template>
@@ -58,6 +62,8 @@ import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
 import LikedSongs from './LikedSongs/index.vue'
 import { computed } from 'vue'
 import Playlists from './Playlists/index.vue'
+import Albums from './Albums/index.vue'
+import Artists from './Artists/index.vue'
 
 export default {
   name: 'MyLibrary',
@@ -86,7 +92,9 @@ export default {
     IconArrowRightLonger,
     MyOverlayScrollbars,
     LikedSongs,
-    Playlists
+    Playlists,
+    Albums,
+    Artists
   },
   methods: {
     changeTag(tag) {
@@ -209,23 +217,13 @@ export default {
 
   &__content {
     height: calc($height-content - 10.4rem);
-    padding: 0 $gutter;
-
-    @include respondContainer(collasped) {
-      padding: 0 $gutter $gutter $gutter;
-    }
 
     &-collasped:nth-child(n) {
       height: calc($height-content - 5.6rem);
     }
 
-    &__liked-songs {
-      &__header {
-        position: sticky;
-        top: 0;
-        left: 0;
-        z-index: 10;
-      }
+    &__wrapper {
+      padding: 0 $gutter $gutter $gutter;
     }
   }
 }

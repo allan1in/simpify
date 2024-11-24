@@ -4,13 +4,19 @@
       <div class="player-bar__left">
         <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
           <div class="player-bar__left__cover-wrapper__arrow">
-            <div class="player-bar__left__cover-wrapper__arrow__wrapper"
-              @click="showFullScreenPlayer = !showFullScreenPlayer">
+            <div
+              class="player-bar__left__cover-wrapper__arrow__wrapper"
+              @click="showFullScreenPlayer = !showFullScreenPlayer"
+            >
               <IconArrowUp v-show="!showFullScreenPlayer" />
               <IconArrowDown v-show="showFullScreenPlayer" />
             </div>
           </div>
-          <img class="player-bar__left__cover-wrapper__cover" :src="current_track.album.images[0].url" alt="track" />
+          <img
+            class="player-bar__left__cover-wrapper__cover"
+            :src="current_track.album.images[0].url"
+            alt="track"
+          />
         </div>
         <div class="player-bar__left__msg-wrapper">
           <div class="player-bar__left__msg-wrapper__title" v-if="current_track?.id">
@@ -19,10 +25,14 @@
             }}</router-link>
           </div>
           <div class="player-bar__left__msg-wrapper__artist" v-if="current_track?.artists?.length">
-            <router-link v-for="(artist, index) in current_track.artists" :key="artist.uri" :to="{
-              name: 'Artist',
-              params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
-            }">
+            <router-link
+              v-for="(artist, index) in current_track.artists"
+              :key="artist.uri"
+              :to="{
+                name: 'Artist',
+                params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
+              }"
+            >
               {{ (index === 0 ? '' : ', ') + artist.name }}
             </router-link>
           </div>
@@ -50,25 +60,42 @@
     </template>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
-        <button class="icon-wrapper" :class="{ 'btn-active': isShuffle, 'not-allowed': notAvaliable || isFreeAccount }"
-          @click="toggleShuffle">
+        <button
+          class="icon-wrapper"
+          :class="{ 'btn-active': isShuffle, 'not-allowed': notAvaliable || isFreeAccount }"
+          @click="toggleShuffle"
+        >
           <IconShuffle />
         </button>
-        <button class="icon-wrapper" @click="preTrack" :class="{ 'not-allowed': notAvaliable || isFreeAccount }">
+        <button
+          class="icon-wrapper"
+          @click="preTrack"
+          :class="{ 'not-allowed': notAvaliable || isFreeAccount }"
+        >
           <IconPrevious />
         </button>
-        <button class="player-bar__mid__btn-group__play" @click="togglePlay" :class="{ 'not-allowed': notAvaliable }">
+        <button
+          class="player-bar__mid__btn-group__play"
+          @click="togglePlay"
+          :class="{ 'not-allowed': notAvaliable }"
+        >
           <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
             <IconPlay v-if="isPause" />
             <IconPause v-else />
           </span>
         </button>
-        <button class="icon-wrapper" @click="nextTrack" :class="{ 'not-allowed': notAvaliable || isFreeAccount }">
+        <button
+          class="icon-wrapper"
+          @click="nextTrack"
+          :class="{ 'not-allowed': notAvaliable || isFreeAccount }"
+        >
           <IconNext />
         </button>
-        <button class="icon-wrapper"
+        <button
+          class="icon-wrapper"
           :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': notAvaliable || isFreeAccount }"
-          @click="setRepeatMode">
+          @click="setRepeatMode"
+        >
           <IconRepeatSingle v-if="repeatMode === 2" />
           <IconRepeat v-else />
         </button>
@@ -104,12 +131,19 @@
       <!-- <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
         <IconMiniPlayer />
       </button> -->
-      <button class="icon-wrapper player-bar__right__full-screen" @click="openFullScreenPlayer"
-        :class="{ 'not-allowed': notAvaliable }" :disabled="notAvaliable">
+      <button
+        class="icon-wrapper player-bar__right__full-screen"
+        @click="openFullScreenPlayer"
+        :class="{ 'not-allowed': notAvaliable }"
+        :disabled="notAvaliable"
+      >
         <IconFullScreen />
       </button>
-      <button class="icon-wrapper player-bar__right__play-phone" @click="togglePlay"
-        :class="{ 'not-allowed': notAvaliable }">
+      <button
+        class="icon-wrapper player-bar__right__play-phone"
+        @click="togglePlay"
+        :class="{ 'not-allowed': notAvaliable }"
+      >
         <IconPlay v-if="isPause" />
         <IconPause v-else />
       </button>
@@ -342,10 +376,13 @@ $msg-artist-font-size: 1.2rem;
     }
 
     &__cover-wrapper {
+      flex-shrink: 0;
       height: 80%;
       aspect-ratio: 1 / 1;
       margin: 0 $gutter;
       position: relative;
+      border-radius: $border-radius-default;
+      overflow: hidden;
 
       &:hover &__arrow {
         display: block;

@@ -74,3 +74,36 @@ export function getNextCurrentUserPlaylists(path) {
     method: 'get'
   })
 }
+
+export function getCurrentUserAlbums(params) {
+  return request({
+    url: `/me/albums`,
+    method: 'get',
+    params
+  })
+}
+
+export function getNextCurrentUserAlbums(path) {
+  return request({
+    url: `/me/albums?${path}`,
+    method: 'get'
+  })
+}
+
+export function getCurrentUserArtists(params) {
+  return request({
+    url: `/me/following`,
+    method: 'get',
+    params: {
+      type: 'artist',
+      limit: params.limit
+    }
+  })
+}
+
+export function getNextCurrentUserArtists(path) {
+  return request({
+    url: `/me/following?${path}`,
+    method: 'get'
+  })
+}

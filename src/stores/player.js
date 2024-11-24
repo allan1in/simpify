@@ -7,7 +7,6 @@ import {
   transferPlayback
 } from '@/api/meta/player'
 import { Howl } from 'howler'
-import router from '@/router/index'
 import Message from '@/components/Message/index'
 
 export const usePlayerStore = defineStore('player', {
@@ -161,31 +160,6 @@ export const usePlayerStore = defineStore('player', {
         } else {
           Message('No track is playing.')
         }
-      }
-    },
-    async trackTogglePlay(item, context_uri, uris, position) {
-      // Current track
-      if (this.current_track?.uri === item.uri) {
-        await this.togglePlay()
-      } else {
-        // New track
-        let data
-        if (context_uri) {
-          data = {
-            context_uri: context_uri,
-            offset: { position }
-          }
-        } else if (uris) {
-          data = {
-            uris: uris,
-            offset: { position }
-          }
-        } else {
-          data = {
-            uris: [item.uri]
-          }
-        }
-        await this.playNewTrack(data, item)
       }
     },
     async nextTrack() {

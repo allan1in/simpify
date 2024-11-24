@@ -241,12 +241,12 @@ export default {
   &__title {
     height: $font-size-title-large;
     width: 30%;
+    margin: calc($font-size-title-large * 0.2) 0;
   }
 
   &__info {
     height: $font-size-text-primary;
     width: 10%;
-    margin-top: $font-size-text-primary;
   }
 }
 
