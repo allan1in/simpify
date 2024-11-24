@@ -36,3 +36,27 @@ export function getNextNewReleases(path) {
     url: `/browse/new-releases?${path}`
   })
 }
+
+export function checkUserSavedAlbums(params) {
+  return request({
+    url: `/me/albums/contains`,
+    method: 'get',
+    params
+  })
+}
+
+export function saveAlbums(params) {
+  return request({
+    url: `/me/albums`,
+    method: 'put',
+    params
+  })
+}
+
+export function deleteUserSavedAlbums(params) {
+  return request({
+    url: `/me/albums`,
+    method: 'delete',
+    params
+  })
+}

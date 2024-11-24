@@ -19,6 +19,14 @@
           <div class="artist-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="artist" />
           </div>
+          <div class="artist-container__content__btn-group__follow-wrapper">
+            <button
+              class="artist-container__content__btn-group__follow-wrapper__btn"
+              @click="handleClickFollowButton"
+            >
+              {{ isFollowed ? 'Following' : 'Follow' }}
+            </button>
+          </div>
         </div>
         <div v-if="tracks.length !== 0" class="artist-container__content__popular">
           <TitleShowAll :title="$t('artist.popular')" />
@@ -93,6 +101,9 @@
           <div class="artist-container__content__btn-group__play-wrapper">
             <Skeleton shape="circle" />
           </div>
+          <div class="artist-container__content__btn-group__follow-wrapper">
+            <Skeleton class="skeleton__button" />
+          </div>
         </div>
         <div class="artist-container__content__popular">
           <TitleShowAll :loading="loading_skeleton" />
@@ -127,7 +138,16 @@
 <script>
 import TrackCard from '@/components/CardTrack/index.vue'
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
-import { getAlbums, getAppearsOn, getArtist, getSingles, getTopTracks } from '@/api/meta/artist'
+import {
+  checkUserSavedArtists,
+  deleteUserSavedArtists,
+  getAlbums,
+  getAppearsOn,
+  getArtist,
+  getSingles,
+  getTopTracks,
+  saveArtists
+} from '@/api/meta/artist'
 import AlbumCard from '@/components/CardAlbum/index.vue'
 import ArtistCard from '@/components/CardArtist/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
@@ -135,6 +155,7 @@ import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
+import Message from '@/components/Message'
 
 export default {
   name: 'Artist',
@@ -164,7 +185,8 @@ export default {
       appearsOn_limit: 8,
       appearsOn_offset: 0,
       appearsOn_total: 0,
-      loading_skeleton: true
+      loading_skeleton: true,
+      isFollowed: null
     }
   },
   computed: {
@@ -184,6 +206,7 @@ export default {
       await this.getAlbums()
       await this.getSingles()
       await this.getAppearsOn()
+      await this.checkUserSavedArtist()
 
       this.loading_skeleton = false
     },
@@ -221,6 +244,26 @@ export default {
       const res = await getAppearsOn(this.id, params)
       this.appearsOn = res.items
       this.appearsOn_total = res.total
+    },
+    async checkUserSavedArtist() {
+      let params = { ids: this.artist.id }
+      const res = await checkUserSavedArtists(params)
+      this.isFollowed = res[0]
+    },
+    async handleClickFollowButton() {
+      if (this.isFollowed) {
+        await deleteUserSavedArtists({ ids: this.artist.id })
+        await this.checkUserSavedArtist()
+        if (!this.isFollowed) {
+          Message('Removed from Your Library.')
+        }
+      } else {
+        await saveArtists({ ids: this.artist.id })
+        await this.checkUserSavedArtist()
+        if (this.isFollowed) {
+          Message('Added to Your Library.')
+        }
+      }
     }
   },
   watch: {
@@ -247,6 +290,12 @@ export default {
   &__info {
     height: $font-size-text-primary;
     width: 10%;
+  }
+
+  &__button {
+    height: 3.2rem;
+    width: 7.2rem;
+    border-radius: 1.6rem;
   }
 }
 
@@ -306,10 +355,38 @@ export default {
 
     &__btn-group {
       padding: $gutter-1-5x;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      gap: $gutter-4x;
 
       &__play-wrapper {
-        height: 5.4rem;
-        width: 5.4rem;
+        height: 5.6rem;
+        width: 5.6rem;
+      }
+
+      &__follow-wrapper {
+        &__btn {
+          border: 1px solid $color-bg-7;
+          padding: 0 $gutter-2x;
+          height: 3.2rem;
+          font-size: $font-size-text-secondary;
+          font-weight: 700;
+          border-radius: 1.6rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          @include clickAnimation;
+
+          &:hover {
+            border-color: $color-font-primary;
+          }
+
+          &:active {
+            border-color: $color-bg-7;
+          }
+        }
       }
     }
 

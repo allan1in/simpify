@@ -25,7 +25,8 @@ export const usePlayerStore = defineStore('player', {
     context: null,
     index: 0,
     isReady: false,
-    loading: true
+    loading: true,
+    isSaved: null
   }),
   actions: {
     initPlayer() {
@@ -82,7 +83,6 @@ export const usePlayerStore = defineStore('player', {
 
               this.context = res.context
             }
-            this.loading = false
           })
 
           this.startListenPos()

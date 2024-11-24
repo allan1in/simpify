@@ -29,7 +29,6 @@
           </span>
         </Banner>
       </div>
-
       <div class="track-container__content">
         <div class="track-container__content__btn-group">
           <div class="track-container__content__btn-group__play-wrapper">
@@ -39,8 +38,8 @@
             class="track-container__content__btn-group__add-wrapper"
             @click.prevent="handleClickSaveButton"
           >
-            <IconInLikeSong v-show="isSaved" />
-            <IconAddToLikeSong v-show="!isSaved" />
+            <IconSaved v-show="isSaved" />
+            <IconAddTo v-show="!isSaved" />
           </div>
         </div>
         <div class="track-container__content__artists">
@@ -86,9 +85,11 @@ import ArtistCard from '@/components/CardArtist/index.vue'
 import Banner from '@/components/Banner/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
-import IconAddToLikeSong from '@/components/Icons/IconAddToLikeSong.vue'
-import IconInLikeSong from '@/components/Icons/IconInLikeSong.vue'
+import IconAddTo from '@/components/Icons/IconAddTo.vue'
+import IconSaved from '@/components/Icons/IconSaved.vue'
 import Message from '@/components/Message/index'
+import { mapWritableState } from 'pinia'
+import { usePlayerStore } from '@/stores/player'
 
 export default {
   name: 'Track',
@@ -98,8 +99,8 @@ export default {
     Banner,
     Skeleton,
     ButtonTogglePlay,
-    IconAddToLikeSong,
-    IconInLikeSong
+    IconAddTo,
+    IconSaved
   },
   data() {
     return {
@@ -113,7 +114,11 @@ export default {
   computed: {
     duration() {
       return timeFormatAlbum(this.track.duration_ms)
-    }
+    },
+    ...mapWritableState(usePlayerStore, {
+      isSavedGlobal: 'isSaved',
+      currrent_track: 'current_track'
+    })
   },
   methods: {
     reset() {
@@ -153,13 +158,13 @@ export default {
         await deleteUserSavedTracks({ ids: this.id })
         await this.checkUserSavedTrack()
         if (!this.isSaved) {
-          Message('Removed from Liked Songs')
+          Message('Removed from Your Liked Songs.')
         }
       } else {
         await saveTracks({ ids: this.id })
         await this.checkUserSavedTrack()
         if (this.isSaved) {
-          Message('Added to Liked Songs')
+          Message('Added to Your Liked Songs.')
         }
       }
     }
@@ -171,6 +176,18 @@ export default {
         await this.getAll()
       },
       immediate: true
+    },
+    isSavedGlobal(newVal, oldVal) {
+      // Update data isSaved in this page
+      if (this.currrent_track?.id === this.track.id) {
+        this.isSaved = newVal
+      }
+    },
+    isSaved(newVal, oldVal) {
+      // Update data isSaved in player store
+      if (this.currrent_track?.id === this.track.id) {
+        this.isSavedGlobal = newVal
+      }
     }
   }
 }

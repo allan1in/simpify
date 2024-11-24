@@ -43,6 +43,13 @@
           <div class="album-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="album" />
           </div>
+          <div
+            class="album-container__content__btn-group__add-wrapper"
+            @click.prevent="handleClickSaveButton"
+          >
+            <IconSaved v-show="isSaved" />
+            <IconAddTo v-show="!isSaved" />
+          </div>
         </div>
         <div class="album-container__content__tracks">
           <TrackListHeader :showAlbum="false" />
@@ -69,6 +76,9 @@
           <div class="album-container__content__btn-group__play-wrapper">
             <Skeleton shape="circle" />
           </div>
+          <div class="album-container__content__btn-group__add-wrapper">
+            <Skeleton shape="circle" />
+          </div>
         </div>
         <div class="album-container__content__tracks">
           <TrackListHeader :showAlbum="false" :loading="loading_skeleton" />
@@ -88,11 +98,21 @@
 <script>
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import TrackCard from '@/components/CardTrack/index.vue'
-import { getAlbum, getTracks, getNextTracks } from '@/api/meta/album'
+import {
+  getAlbum,
+  getTracks,
+  getNextTracks,
+  deleteUserSavedAlbums,
+  saveAlbums,
+  checkUserSavedAlbums
+} from '@/api/meta/album'
 import { timeFormatAlbum } from '@/utils/time_format'
 import Banner from '@/components/Banner/index.vue'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
+import IconSaved from '@/components/Icons/IconSaved.vue'
+import IconAddTo from '@/components/Icons/IconAddTo.vue'
+import Message from '@/components/Message/index'
 
 export default {
   name: 'Album',
@@ -102,7 +122,9 @@ export default {
     TrackCard,
     Banner,
     ButtonTogglePlay,
-    Skeleton
+    Skeleton,
+    IconAddTo,
+    IconSaved
   },
   data() {
     return {
@@ -113,7 +135,8 @@ export default {
       tracks_offset: 0,
       tracks_next: '',
       loading_skeleton: true,
-      loading_more: false
+      loading_more: false,
+      isSaved: null
     }
   },
   computed: {
@@ -139,6 +162,7 @@ export default {
     async getAll() {
       await this.getAlbum()
       await this.getTracks()
+      await this.checkUserSavedAlbum()
 
       this.loading_skeleton = false
     },
@@ -175,6 +199,26 @@ export default {
 
         this.loading_more = false
       }
+    },
+    async checkUserSavedAlbum() {
+      let params = { ids: this.id }
+      const res = await checkUserSavedAlbums(params)
+      this.isSaved = res[0]
+    },
+    async handleClickSaveButton() {
+      if (this.isSaved) {
+        await deleteUserSavedAlbums({ ids: this.id })
+        await this.checkUserSavedAlbum()
+        if (!this.isSaved) {
+          Message('Removed from Your Library.')
+        }
+      } else {
+        await saveAlbums({ ids: this.id })
+        await this.checkUserSavedAlbum()
+        if (this.isSaved) {
+          Message('Added to Your Library.')
+        }
+      }
     }
   },
   watch: {
@@ -209,10 +253,23 @@ export default {
 
     &__btn-group {
       padding: $gutter-1-5x;
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      gap: $gutter-4x;
 
       &__play-wrapper {
         height: 5.4rem;
         aspect-ratio: 1 / 1;
+      }
+
+      &__add-wrapper {
+        height: 2.4rem;
+        aspect-ratio: 1 / 1;
+        fill: $color-font-secondary;
+        cursor: pointer;
+
+        @include clickAnimation;
       }
     }
 

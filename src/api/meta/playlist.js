@@ -21,3 +21,33 @@ export function getNextPlaylistTracks(id, path) {
     url: `/playlists/${id}/tracks?${path}`
   })
 }
+
+export function checkUserSavedPlaylists(id) {
+  return request({
+    url: `/playlists/${id}/followers/contains`,
+    method: 'get',
+    params: {
+      playlist_id: id
+    }
+  })
+}
+
+export function savePlaylists(id) {
+  return request({
+    url: `/playlists/${id}/followers`,
+    method: 'put',
+    params: {
+      playlist_id: id
+    }
+  })
+}
+
+export function deleteUserSavedPlaylists(id) {
+  return request({
+    url: `/playlists/${id}/followers`,
+    method: 'delete',
+    params: {
+      playlist_id: id
+    }
+  })
+}

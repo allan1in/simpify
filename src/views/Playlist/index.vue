@@ -46,6 +46,14 @@
           <div class="playlist-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="playlist" />
           </div>
+          <div class="playlist-container__content__btn-group__follow-wrapper">
+            <button
+              class="playlist-container__content__btn-group__follow-wrapper__btn"
+              @click="handleClickFollowButton"
+            >
+              {{ isFollowed ? 'Following' : 'Follow' }}
+            </button>
+          </div>
         </div>
         <div class="playlist-container__content__tracks">
           <TrackListHeader />
@@ -70,6 +78,9 @@
           <div class="playlist-container__content__btn-group__play-wrapper">
             <Skeleton shape="circle" />
           </div>
+          <div class="playlist-container__content__btn-group__follow-wrapper">
+            <Skeleton class="skeleton__button" />
+          </div>
         </div>
         <div class="playlist-container__content__tracks">
           <TrackListHeader :loading="loading_skeleton" />
@@ -83,11 +94,19 @@
 <script>
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import TrackCard from '@/components/CardTrack/index.vue'
-import { getNextPlaylistTracks, getPlaylist, getPlaylistTracks } from '@/api/meta/playlist'
+import {
+  checkUserSavedPlaylists,
+  deleteUserSavedPlaylists,
+  getNextPlaylistTracks,
+  getPlaylist,
+  getPlaylistTracks,
+  savePlaylists
+} from '@/api/meta/playlist'
 import { timeFormatAlbum } from '@/utils/time_format'
 import Banner from '@/components/Banner/index.vue'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
+import Message from '@/components/Message'
 
 export default {
   name: 'Playlist',
@@ -108,7 +127,8 @@ export default {
       tracks_offset: 0,
       tracks_next: '',
       loading_skeleton: true,
-      loading_more: false
+      loading_more: false,
+      isFollowed: null
     }
   },
   computed: {
@@ -134,6 +154,7 @@ export default {
     async getAll() {
       await this.getPlaylist()
       await this.getPlaylistTracks()
+      await this.checkUserSavedPlaylist()
 
       this.loading_skeleton = false
     },
@@ -164,6 +185,25 @@ export default {
 
         this.loading_more = false
       }
+    },
+    async checkUserSavedPlaylist() {
+      const res = await checkUserSavedPlaylists(this.playlist.id)
+      this.isFollowed = res[0]
+    },
+    async handleClickFollowButton() {
+      if (this.isFollowed) {
+        await deleteUserSavedPlaylists(this.playlist.id)
+        await this.checkUserSavedPlaylist()
+        if (!this.isFollowed) {
+          Message('Removed from Your Library.')
+        }
+      } else {
+        await savePlaylists(this.playlist.id)
+        await this.checkUserSavedPlaylist()
+        if (this.isFollowed) {
+          Message('Added to Your Library.')
+        }
+      }
     }
   },
   watch: {
@@ -184,6 +224,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.skeleton {
+  &__button {
+    height: 3.2rem;
+    width: 7.2rem;
+    border-radius: 1.6rem;
+  }
+}
+
 .playlist-container {
   &__banner-details {
     &__owner {
@@ -197,10 +245,38 @@ export default {
 
     &__btn-group {
       padding: $gutter-1-5x;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      gap: $gutter-4x;
 
       &__play-wrapper {
         height: 5.4rem;
         aspect-ratio: 1 / 1;
+      }
+
+      &__follow-wrapper {
+        &__btn {
+          border: 1px solid $color-bg-7;
+          padding: 0 $gutter-2x;
+          height: 3.2rem;
+          font-size: $font-size-text-secondary;
+          font-weight: 700;
+          border-radius: 1.6rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          @include clickAnimation;
+
+          &:hover {
+            border-color: $color-font-primary;
+          }
+
+          &:active {
+            border-color: $color-bg-7;
+          }
+        }
       }
     }
 

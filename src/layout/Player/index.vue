@@ -37,10 +37,12 @@
             </router-link>
           </div>
         </div>
-        <!-- <button class="icon-wrapper" @click="song.isLike = !song.isLike">
-        <IconInLikeSong v-if="song.isLike" />
-        <IconAddToLikeSong v-else />
-      </button> -->
+        <div class="player-bar__left__save-btn">
+          <button class="icon-wrapper" v-if="current_track" @click="handleClickSaveButton">
+            <IconSaved v-if="isSaved" />
+            <IconAddTo v-else />
+          </button>
+        </div>
       </div>
     </template>
     <template v-else>
@@ -48,13 +50,16 @@
         <div class="player-bar__left__cover-wrapper">
           <Skeleton class="skeleton__img" />
         </div>
-        <div class="player-bar__left__msg-wrapper">
+        <div class="player-bar__left__msg-wrapper skeleton__msg-wrapper">
           <div class="player-bar__left__msg-wrapper__title">
             <Skeleton class="skeleton__title" />
           </div>
           <div class="player-bar__left__msg-wrapper__artist">
             <Skeleton class="skeleton__artists" />
           </div>
+        </div>
+        <div class="icon-wrapper player-bar__left__save-btn">
+          <Skeleton shape="circle" />
         </div>
       </div>
     </template>
@@ -152,7 +157,7 @@
 </template>
 
 <script>
-import IconAddToLikeSong from '@/components/Icons/IconAddToLikeSong.vue'
+import IconAddTo from '@/components/Icons/IconAddTo.vue'
 import IconNext from '@/components/Icons/IconNext.vue'
 import IconPause from '@/components/Icons/IconPause.vue'
 import IconPlay from '@/components/Icons/IconPlay.vue'
@@ -166,7 +171,7 @@ import IconConnectToDevice from '@/components/Icons/IconConnectToDevice.vue'
 import IconLyrics from '@/components/Icons/IconLyrics.vue'
 import IconMiniPlayer from '@/components/Icons/IconMiniPlayer.vue'
 import IconFullScreen from '@/components/Icons/IconFullScreen.vue'
-import IconInLikeSong from '@/components/Icons/IconInLikeSong.vue'
+import IconSaved from '@/components/Icons/IconSaved.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import VolumeBar from '@/components/VolumeBar/index.vue'
@@ -176,6 +181,8 @@ import { useUserStore } from '@/stores/user'
 import Skeleton from '@/components/Skeleton/index.vue'
 import IconArrowDown from '@/components/Icons/IconArrowDown.vue'
 import IconArrowUp from '@/components/Icons/IconArrowUp.vue'
+import { checkUserSavedTracks, deleteUserSavedTracks, saveTracks } from '@/api/meta/track'
+import Message from '@/components/Message/index'
 
 export default {
   name: 'Player',
@@ -187,14 +194,14 @@ export default {
     IconShuffle,
     IconRepeat,
     IconRepeatSingle,
-    IconAddToLikeSong,
+    IconAddTo,
     IconNowPlayingView,
     IconQueen,
     IconConnectToDevice,
     IconLyrics,
     IconMiniPlayer,
     IconFullScreen,
-    IconInLikeSong,
+    IconSaved,
     VolumeBar,
     SeekBar,
     Skeleton,
@@ -221,7 +228,8 @@ export default {
       'isMute',
       'volume',
       'isReady',
-      'loading'
+      'loading',
+      'isSaved'
     ]),
     ...mapWritableState(useAppStore, ['showFullScreenPlayer']),
     isFreeAccount() {
@@ -249,6 +257,26 @@ export default {
         await element.msRequestFullscreen()
       }
     },
+    async checkUserSavedTrack() {
+      let params = { ids: this.current_track?.id }
+      const res = await checkUserSavedTracks(params)
+      this.isSaved = res[0]
+    },
+    async handleClickSaveButton() {
+      if (this.isSaved) {
+        await deleteUserSavedTracks({ ids: this.current_track?.id })
+        await this.checkUserSavedTrack()
+        if (!this.isSaved) {
+          Message('Removed from Liked Songs')
+        }
+      } else {
+        await saveTracks({ ids: this.current_track?.id })
+        await this.checkUserSavedTrack()
+        if (this.isSaved) {
+          Message('Added to Liked Songs')
+        }
+      }
+    },
     ...mapActions(usePlayerStore, [
       'initPlayer',
       'togglePlay',
@@ -257,6 +285,12 @@ export default {
       'setRepeatMode',
       'toggleShuffle'
     ])
+  },
+  watch: {
+    async 'current_track.id'(newVal, oldVal) {
+      await this.checkUserSavedTrack()
+      this.loading = false
+    }
   },
   created() {
     this.initPlayer()
@@ -276,13 +310,17 @@ $msg-artist-font-size: 1.2rem;
 
   &__title {
     height: $font-size-text-primary;
-    width: 30%;
+    width: 100%;
     margin-bottom: calc($font-size-text-primary * 0.5);
   }
 
   &__artists {
     height: $font-size-text-secondary;
-    width: 50%;
+    width: 80%;
+  }
+
+  &__msg-wrapper {
+    width: 20%;
   }
 }
 
@@ -359,7 +397,6 @@ $msg-artist-font-size: 1.2rem;
 
     &__msg-wrapper {
       margin: 0 $gutter;
-      width: 100%;
 
       &__title {
         font-size: $msg-title-font-size;
@@ -415,6 +452,10 @@ $msg-artist-font-size: 1.2rem;
         object-fit: cover;
         cursor: pointer;
       }
+    }
+
+    &__save-btn {
+      flex-shrink: 0;
     }
   }
 

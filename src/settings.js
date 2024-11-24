@@ -6,6 +6,19 @@ export default {
 
   authorizationEndpoint: 'https://accounts.spotify.com/authorize',
   tokenEndpoint: 'https://accounts.spotify.com/api/token',
-  scope:
-    'user-read-private user-read-email user-top-read app-remote-control streaming user-read-playback-state user-modify-playback-state user-read-currently-playing user-library-read user-library-modify playlist-read-private user-follow-read'
+  scope: `user-read-private
+   user-read-email 
+   user-top-read 
+   app-remote-control 
+   streaming 
+   user-read-playback-state 
+   user-modify-playback-state 
+   user-read-currently-playing 
+   user-library-read 
+   user-library-modify 
+   playlist-read-private 
+   user-follow-read 
+   user-follow-modify
+   playlist-modify-public 
+   playlist-modify-private`
 }

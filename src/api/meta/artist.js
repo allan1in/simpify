@@ -78,3 +78,36 @@ export function getNextAppearsOn(id, path) {
     method: 'get'
   })
 }
+
+export function checkUserSavedArtists(params) {
+  return request({
+    url: `/me/following/contains`,
+    method: 'get',
+    params: {
+      type: 'artist',
+      ids: params.ids
+    }
+  })
+}
+
+export function saveArtists(params) {
+  return request({
+    url: `/me/following`,
+    method: 'put',
+    params: {
+      type: 'artist',
+      ids: params.ids
+    }
+  })
+}
+
+export function deleteUserSavedArtists(params) {
+  return request({
+    url: `/me/following`,
+    method: 'delete',
+    params: {
+      type: 'artist',
+      ids: params.ids
+    }
+  })
+}
