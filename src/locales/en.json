@@ -42,14 +42,18 @@
       "hr": "hr",
       "min": "min",
       "sec": "sec"
-    }
+    },
+    "follow": "Follow",
+    "following": "Following"
   },
   "artist": {
     "follower": "follower | followers",
     "popular": "Popular",
     "albums": "Albums",
     "singles": "Singles",
-    "appears_on": "Appears on"
+    "appears_on": "Appears on",
+    "follow": "Follow",
+    "following": "Following"
   },
   "album": {
     "type": "Album",
@@ -88,5 +92,14 @@
   },
   "fullscreen_player": {
     "title": "PLAYING FROM ALBUM"
+  },
+  "message": {
+    "removed_from_lib": "Removed from Your Library.",
+    "added_to_lib": "Added to Your Library.",
+    "removed_from_liked_songs": "Removed from Liked Songs.",
+    "added_to_liked_songs": "Added to Liked Songs.",
+    "only_for_premium": "Please Upgrade to a Premium Account to Use This Feature.",
+    "loading": "Loading now...",
+    "no_track_playing": "No track is playing."
   }
 }

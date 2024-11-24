@@ -42,14 +42,18 @@
       "hr": "时",
       "min": "分",
       "sec": "秒"
-    }
+    },
+    "follow": "关注",
+    "following": "关注中"
   },
   "artist": {
     "follower": "位粉丝",
     "popular": "热门",
     "albums": "专辑",
     "singles": "单曲",
-    "appears_on": "参与的专辑"
+    "appears_on": "参与的专辑",
+    "follow": "关注",
+    "following": "关注中"
   },
   "album": {
     "type": "专辑",
@@ -88,5 +92,14 @@
   },
   "fullscreen_player": {
     "title": "正在播放来自专辑"
+  },
+  "message": {
+    "removed_from_lib": "已从音乐库中删除。",
+    "added_to_lib": "已添加到音乐库。",
+    "removed_from_liked_songs": "已从喜欢的歌曲中删除。",
+    "added_to_liked_songs": "已添加到喜欢的歌曲。",
+    "only_for_premium": "请升级到 Premium 账户以使用此功能。",
+    "loading": "加载中...",
+    "no_track_playing": "没有正在播放的歌曲。"
   }
 }

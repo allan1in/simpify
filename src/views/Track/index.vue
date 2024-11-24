@@ -158,13 +158,13 @@ export default {
         await deleteUserSavedTracks({ ids: this.id })
         await this.checkUserSavedTrack()
         if (!this.isSaved) {
-          Message('Removed from Your Liked Songs.')
+          Message(`${this.$t('message.removed_from_liked_songs')}`)
         }
       } else {
         await saveTracks({ ids: this.id })
         await this.checkUserSavedTrack()
         if (this.isSaved) {
-          Message('Added to Your Liked Songs.')
+          Message(`${this.$t('message.added_to_liked_songs')}`)
         }
       }
     }

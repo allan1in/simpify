@@ -210,13 +210,13 @@ export default {
         await deleteUserSavedAlbums({ ids: this.id })
         await this.checkUserSavedAlbum()
         if (!this.isSaved) {
-          Message('Removed from Your Library.')
+          Message(`${this.$t('message.removed_from_lib')}`)
         }
       } else {
         await saveAlbums({ ids: this.id })
         await this.checkUserSavedAlbum()
         if (this.isSaved) {
-          Message('Added to Your Library.')
+          Message(`${this.$t('message.added_to_lib')}`)
         }
       }
     }

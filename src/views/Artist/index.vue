@@ -24,7 +24,7 @@
               class="artist-container__content__btn-group__follow-wrapper__btn"
               @click="handleClickFollowButton"
             >
-              {{ isFollowed ? 'Following' : 'Follow' }}
+              {{ isFollowed ? $t('artist.following') : $t('artist.follow') }}
             </button>
           </div>
         </div>
@@ -255,13 +255,13 @@ export default {
         await deleteUserSavedArtists({ ids: this.artist.id })
         await this.checkUserSavedArtist()
         if (!this.isFollowed) {
-          Message('Removed from Your Library.')
+          Message(`${this.$t('message.removed_from_lib')}`)
         }
       } else {
         await saveArtists({ ids: this.artist.id })
         await this.checkUserSavedArtist()
         if (this.isFollowed) {
-          Message('Added to Your Library.')
+          Message(`${this.$t('message.added_to_lib')}`)
         }
       }
     }

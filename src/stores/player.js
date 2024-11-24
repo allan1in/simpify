@@ -8,6 +8,7 @@ import {
 } from '@/api/meta/player'
 import { Howl } from 'howler'
 import Message from '@/components/Message/index'
+import i18n from '@/includes/i18n'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
@@ -143,7 +144,7 @@ export const usePlayerStore = defineStore('player', {
           await this.player.togglePlay()
           this.isPause = !this.isPause
         } else {
-          Message('No track is playing.')
+          Message(`${i18n.global.t('message.no_track_playing')}`)
         }
       } else if (useUserStore().checkProduct('free')) {
         if (this.isReady) {
@@ -158,7 +159,7 @@ export const usePlayerStore = defineStore('player', {
             this.isPause = false
           }
         } else {
-          Message('No track is playing.')
+          Message(`${i18n.global.t('message.no_track_playing')}`)
         }
       }
     },
@@ -168,9 +169,9 @@ export const usePlayerStore = defineStore('player', {
         await this.player.nextTrack()
       } else if (useUserStore().checkProduct('free')) {
         if (this.isReady) {
-          Message('This is only for premium accounts.')
+          Message(`${i18n.global.t('message.only_for_premium')}`)
         } else {
-          Message('This is only for premium accounts.')
+          Message(`${i18n.global.t('message.only_for_premium')}`)
         }
       }
     },
@@ -179,7 +180,7 @@ export const usePlayerStore = defineStore('player', {
         this.loading = true
         await this.player.previousTrack()
       } else if (useUserStore().checkProduct('free')) {
-        Message('This is only for premium accounts.')
+        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async setRepeatMode() {
@@ -195,14 +196,14 @@ export const usePlayerStore = defineStore('player', {
           this.repeatMode = 0
         }
       } else if (useUserStore().checkProduct('free')) {
-        Message('This is only for premium accounts.')
+        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async toggleShuffle() {
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await togglePlaybackShuffle({ state: !this.isShuffle })
       } else if (useUserStore().checkProduct('free')) {
-        Message('This is only for premium accounts.')
+        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async setMute() {
@@ -240,7 +241,7 @@ export const usePlayerStore = defineStore('player', {
         if (this.isReady) {
           await startPlayback(data)
         } else {
-          Message('Loading now...')
+          Message(`${i18n.global.t('message.loading')}`)
         }
       } else if (useUserStore().checkProduct('free')) {
         this.loading = true
@@ -306,10 +307,10 @@ export const usePlayerStore = defineStore('player', {
         if (this.isReady) {
           await startPlayback(data)
         } else {
-          Message('Loading now...')
+          Message(`${i18n.global.t('message.loading')}`)
         }
       } else if (useUserStore().checkProduct('free')) {
-        Message('This is only for premium accounts.')
+        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     }
   }
