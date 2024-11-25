@@ -25,10 +25,17 @@
         />
       </div>
       <img
+        v-if="item.images !== null"
         class="card-playlist-library-contanier__cover__img"
         :src="item.images[0]?.url"
         :alt="item.name"
       />
+      <div
+        v-if="item.images === null"
+        class="card-playlist-library-contanier__cover__default-wrapper"
+      >
+        <IconDefaultPlaylist class="card-playlist-library-contanier__cover__default-wrapper__img" />
+      </div>
     </router-link>
     <div v-if="!isCollasped" class="card-playlist-library-contanier__info">
       <router-link
@@ -55,6 +62,7 @@ import { mapActions, mapState } from 'pinia'
 import IconPlay from '../Icons/IconPlay.vue'
 import IconPause from '../Icons/IconPause.vue'
 import { usePlayerStore } from '@/stores/player'
+import IconDefaultPlaylist from '../Icons/IconDefaultPlaylist.vue'
 
 export default {
   name: 'CardPlaylistLibrary',
@@ -70,7 +78,8 @@ export default {
   },
   components: {
     IconPause,
-    IconPlay
+    IconPlay,
+    IconDefaultPlaylist
   },
   computed: {
     ...mapState(useLibraryStore, ['isCollasped']),
@@ -184,6 +193,21 @@ export default {
       height: 100%;
       width: 100%;
       object-fit: cover;
+    }
+
+    &__default-wrapper {
+      height: 100%;
+      width: 100%;
+      background-color: $color-bg-3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &__img {
+        width: 50%;
+        height: 50%;
+        fill: $color-font-secondary;
+      }
     }
   }
 

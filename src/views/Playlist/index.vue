@@ -43,10 +43,10 @@
       </div>
       <div class="playlist-container__content">
         <div class="playlist-container__content__btn-group">
-          <div class="playlist-container__content__btn-group__play-wrapper">
+          <div v-if="tracks.length" class="playlist-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="playlist" />
           </div>
-          <div class="playlist-container__content__btn-group__follow-wrapper">
+          <div v-if="!isOwner" class="playlist-container__content__btn-group__follow-wrapper">
             <button
               class="playlist-container__content__btn-group__follow-wrapper__btn"
               @click="handleClickFollowButton"
@@ -56,7 +56,7 @@
           </div>
         </div>
         <div class="playlist-container__content__tracks">
-          <TrackListHeader />
+          <TrackListHeader v-if="tracks.length" />
           <TrackCard
             v-for="(item, index) in tracks"
             :key="item.id"
@@ -107,6 +107,8 @@ import Banner from '@/components/Banner/index.vue'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
 import Message from '@/components/Message'
+import { mapState } from 'pinia'
+import { useUserStore } from '@/stores/user'
 
 export default {
   name: 'Playlist',
@@ -132,6 +134,10 @@ export default {
     }
   },
   computed: {
+    ...mapState(useUserStore, ['uid']),
+    isOwner() {
+      return this.playlist.owner.id === this.uid
+    },
     duration() {
       return timeFormatAlbum(
         this.playlist.tracks.items.reduce((acc, item) => {
