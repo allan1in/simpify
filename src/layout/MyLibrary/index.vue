@@ -12,15 +12,12 @@
           }}</span>
         </div>
         <div v-show="!isCollasped" class="my-library__container__title__right">
-          <button class="my-library__container__title__right__create-playlist">
+          <button class="my-library__container__title__right__create-playlist" @click="openDialog = true">
             <div class="my-library__container__title__right__create-playlist__icon-wrapper">
               <IconPlus />
             </div>
           </button>
-          <button
-            class="my-library__container__title__right__arrow"
-            @click.prevent="isShowMore = !isShowMore"
-          >
+          <button class="my-library__container__title__right__arrow" @click.prevent="isShowMore = !isShowMore">
             <div class="my-library__container__title__right__arrow__wrapper">
               <IconArrowRightLonger v-show="!isShowMore" />
               <IconArrowLeftLonger v-show="isShowMore" />
@@ -31,10 +28,7 @@
       <div v-show="!isCollasped" class="my-library__container__tag-bar">
         <TagBar :tags="tags" :isActive @handle-click-tag="changeTag" />
       </div>
-      <div
-        class="my-library__container__content"
-        :class="{ 'my-library__container__content-collasped': isCollasped }"
-      >
+      <div class="my-library__container__content" :class="{ 'my-library__container__content-collasped': isCollasped }">
         <MyOverlayScrollbars os-element="div" @scroll="updateBottom">
           <div class="my-library__container__content__wrapper">
             <LikedSongs v-if="isActive === 'liked_songs'" />
@@ -46,6 +40,37 @@
       </div>
     </div>
   </ResizeBox>
+  <DialogGlobal v-model="openDialog" class="dialog-global-container">
+    <div class="dialog-global-container__top">
+      <h1 class="dialog-global-container__top__title">{{ $t('dialog_edit_playlist.title') }}</h1>
+      <button class="dialog-global-container__top__close">
+        <div class="dialog-global-container__top__close__wrapper" @click="openDialog = false">
+          <IconClose />
+        </div>
+      </button>
+    </div>
+    <div class="dialog-global-container__form">
+      <div class="dialog-global-container__form__image">
+        <ImageEdit />
+      </div>
+      <div class="dialog-global-container__form__input">
+        <div class="dialog-global-container__form__input__text">
+          <InputText :placeholder="$t('dialog_edit_playlist.text_placeholder')" />
+        </div>
+        <div class="dialog-global-container__form__input__text-area">
+          <InputArea :placeholder="$t('dialog_edit_playlist.textarea_placeholder')" />
+        </div>
+      </div>
+    </div>
+    <div class="dialog-global-container__bottom">
+      <div class="dialog-global-container__bottom__statement">
+        {{ $t('dialog_edit_playlist.statement') }}
+      </div>
+      <button class="dialog-global-container__bottom__save">
+        {{ $t('dialog_edit_playlist.save') }}
+      </button>
+    </div>
+  </DialogGlobal>
 </template>
 
 <script>
@@ -64,6 +89,11 @@ import { computed } from 'vue'
 import Playlists from './Playlists/index.vue'
 import Albums from './Albums/index.vue'
 import Artists from './Artists/index.vue'
+import DialogGlobal from '@/components/DialogGlobal/index.vue'
+import IconClose from '@/components/Icons/IconClose.vue'
+import ImageEdit from '@/components/ImageEdit/index.vue'
+import InputText from '@/components/InputText/index.vue'
+import InputArea from '@/components/InputTextArea/index.vue'
 
 export default {
   name: 'MyLibrary',
@@ -76,7 +106,8 @@ export default {
     return {
       tags: ['liked_songs', 'playlists', 'albums', 'artists'],
       isActive: 'liked_songs',
-      bottom: undefined
+      bottom: undefined,
+      openDialog: false
     }
   },
   computed: {
@@ -94,7 +125,12 @@ export default {
     LikedSongs,
     Playlists,
     Albums,
-    Artists
+    Artists,
+    DialogGlobal,
+    IconClose,
+    ImageEdit,
+    InputArea,
+    InputText
   },
   methods: {
     changeTag(tag) {
@@ -108,6 +144,96 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.dialog-global-container {
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__title {
+      display: block;
+      font-size: $font-size-title-primary;
+      font-weight: 700;
+    }
+
+    &__close {
+      height: 3.2rem;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+
+      @include clickAnimation;
+
+      @include transitionFast;
+
+      &:hover {
+        background-color: $color-bg-6;
+      }
+
+      &__wrapper {
+        height: 50%;
+        aspect-ratio: 1 / 1;
+        fill: $color-font-primary;
+      }
+    }
+  }
+
+  &__form {
+    padding: $gutter-2x 0;
+    display: flex;
+    gap: $gutter-2x;
+
+    &__image {
+      flex: 2;
+    }
+
+    &__input {
+      flex: 3;
+      display: flex;
+      flex-direction: column;
+      gap: $gutter-2x;
+
+      &__text {
+        height: calc($font-size-text-primary * 2.5);
+      }
+
+      &__text-area {
+        flex: 1;
+      }
+    }
+  }
+
+  &__bottom {
+    display: flex;
+    align-items: start;
+    gap: $gutter-2x;
+
+    &__statement {
+      flex: 1;
+      font-size: $font-size-text-secondary;
+      font-weight: 700;
+    }
+
+    &__save {
+      width: max-content;
+      height: 5.6rem;
+      display: flex;
+      align-items: center;
+      padding: 0 $gutter-4x;
+      font-size: $font-size-text-primary;
+      background-color: $color-font-primary;
+      color: $color-bg-1;
+      border: 1px solid $color-bg-1;
+      border-radius: 2.8rem;
+      font-weight: 700;
+
+      @include clickAnimation;
+    }
+  }
+}
+
 .my-library__container {
   overflow: hidden;
   container-type: inline-size;

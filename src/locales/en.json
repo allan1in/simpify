@@ -100,6 +100,14 @@
     "added_to_liked_songs": "Added to Liked Songs.",
     "only_for_premium": "Please Upgrade to a Premium Account to Use This Feature.",
     "loading": "Loading now...",
-    "no_track_playing": "No track is playing."
+    "no_track_playing": "No track is playing.",
+    "something_wrong":"Something went wrong..."
+  },
+  "dialog_edit_playlist":{
+    "title":"Edit Details",
+    "text_placeholder":"Add a name",
+    "textarea_placeholder":"Add an optional description",
+    "statement":"By proceeding, you agree to give Spotify access to the image you choose to upload. Please make sure you have the right to upload the image.",
+    "save":"Save"
   }
 }

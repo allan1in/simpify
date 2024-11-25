@@ -1,6 +1,8 @@
 import axios from 'axios'
 import settings from '@/settings.js'
 import { useUserStore } from '@/stores/user'
+import Message from '@/components/Message'
+import i18n from '@/includes/i18n'
 
 const { baseURL } = settings
 
@@ -22,6 +24,7 @@ service.interceptors.request.use(
   },
   function (error) {
     // Do something with request error
+    Message(`${i18n.global.t('message.something_wrong')}`)
     return Promise.reject(error)
   }
 )
@@ -44,6 +47,7 @@ service.interceptors.response.use(
       return res
     } else {
       console.log(error)
+      Message(`${i18n.global.t('message.something_wrong')}`)
     }
 
     return Promise.reject(error)

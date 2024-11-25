@@ -60,10 +60,12 @@ export const usePlayerStore = defineStore('player', {
 
           this.player.addListener('not_ready', (res) => {
             console.log('Device ID has gone offline', res)
+            Message(`${i18n.global.t('message.something_wrong')}`)
           })
 
           this.player.addListener('autoplay_failed', (res) => {
             console.log('Autoplay is not allowed by the browser autoplay rules', res)
+            Message(`${i18n.global.t('message.something_wrong')}`)
           })
 
           this.player.addListener('player_state_changed', (res) => {
@@ -92,18 +94,22 @@ export const usePlayerStore = defineStore('player', {
 
           this.player.addListener('initialization_error', (message) => {
             console.log(message)
+            Message(`${i18n.global.t('message.something_wrong')}`)
           })
 
           this.player.addListener('authentication_error', (message) => {
             console.log(message)
+            Message(`${i18n.global.t('message.something_wrong')}`)
           })
 
           this.player.addListener('account_error', (message) => {
             console.log(message)
+            Message(`${i18n.global.t('message.something_wrong')}`)
           })
 
           this.player.addListener('playback_error', (message) => {
             console.log(message)
+            Message(`${i18n.global.t('message.something_wrong')}`)
           })
 
           this.player.connect()

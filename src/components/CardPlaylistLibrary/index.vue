@@ -1,56 +1,33 @@
 <template>
-  <div
-    class="card-playlist-library-contanier"
-    :class="{ 'card-playlist-library-contanier-collasped-current': isCurrent }"
-  >
-    <router-link
-      :to="{ name: 'Playlist', params: { playlistId: item.id } }"
-      class="card-playlist-library-contanier__cover"
-    >
+  <div class="card-playlist-library-contanier"
+    :class="{ 'card-playlist-library-contanier-collasped-current': isCurrent }">
+    <router-link :to="{ name: 'Playlist', params: { playlistId: item.id } }"
+      class="card-playlist-library-contanier__cover">
       <div class="card-playlist-library-contanier__cover__icon">
-        <div
-          class="card-playlist-library-contanier__cover__icon__wrapper"
-          @click.prevent="handleClick"
-        >
+        <div class="card-playlist-library-contanier__cover__icon__wrapper" @click.prevent="handleClick">
           <IconPause v-if="isPlaying" />
           <IconPlay v-else />
         </div>
       </div>
       <div v-if="isPlaying" class="card-playlist-library-contanier__cover__playing">
-        <img
-          class="card-playlist-library-contanier__cover__playing__img"
-          loading="lazy"
-          src="/src/assets/images/playing.gif"
-          alt=""
-        />
+        <img class="card-playlist-library-contanier__cover__playing__img" loading="lazy"
+          src="/src/assets/images/playing.gif" alt="" />
       </div>
-      <img
-        v-if="item.images !== null"
-        class="card-playlist-library-contanier__cover__img"
-        :src="item.images[0]?.url"
-        :alt="item.name"
-      />
-      <div
-        v-if="item.images === null"
-        class="card-playlist-library-contanier__cover__default-wrapper"
-      >
+      <img v-if="item.images !== null" class="card-playlist-library-contanier__cover__img" :src="item.images[0]?.url"
+        :alt="item.name" />
+      <div v-if="item.images === null" class="card-playlist-library-contanier__cover__default-wrapper">
         <IconDefaultPlaylist class="card-playlist-library-contanier__cover__default-wrapper__img" />
       </div>
     </router-link>
     <div v-if="!isCollasped" class="card-playlist-library-contanier__info">
-      <router-link
-        :to="{ name: 'Playlist', params: { playlistId: item.id } }"
-        class="card-playlist-library-contanier__info__title"
-        :class="{
+      <router-link :to="{ name: 'Playlist', params: { playlistId: item.id } }"
+        class="card-playlist-library-contanier__info__title" :class="{
           'card-playlist-library-contanier__info__title-playing': isCurrent
-        }"
-      >
+        }">
         {{ item.name }}
       </router-link>
-      <router-link
-        :to="{ name: 'User', params: { userId: item.owner.id } }"
-        class="card-playlist-library-contanier__info__owner"
-      >
+      <router-link :to="{ name: 'User', params: { userId: item.owner.id } }"
+        class="card-playlist-library-contanier__info__owner">
         {{ item.owner.display_name }}
       </router-link>
     </div>
@@ -94,6 +71,9 @@ export default {
   methods: {
     ...mapActions(usePlayerStore, ['togglePlay', 'playNewContext']),
     async handleClick() {
+      if (!this.item.tracks.total) {
+        return
+      }
       if (this.isCurrent) {
         await this.togglePlay()
       } else {
