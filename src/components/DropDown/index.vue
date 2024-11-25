@@ -1,6 +1,6 @@
 <template>
   <div class="drop-down-container">
-    <div @click.prevent="handleClick">
+    <div ref="clickWrapper" @click.prevent="handleClick">
       <slot></slot>
     </div>
 
@@ -19,17 +19,13 @@ export default {
   name: 'DropDown',
   data() {
     return {
-      show: false
-    }
-  },
-  props: {
-    top: {
-      type: String,
-      default: 0
+      show: false,
+      top: undefined
     }
   },
   methods: {
     handleClick(e) {
+      this.top = this.$refs.clickWrapper.offsetHeight + 8 + 'px'
       this.show = !this.show
       // Hide element when click outside of it.
       document.onmouseup = (event) => {

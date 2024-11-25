@@ -57,7 +57,7 @@
       </div>
     </div>
     <div class="nav-bar__right">
-      <DropDown top="5.6rem">
+      <DropDown>
         <div class="nav-bar__right__language">
           <button class="nav-bar__right__language__language-wrapper">
             <IconLanguage />
@@ -69,7 +69,7 @@
           <DropDownItem @click="changeLocale('zh')">简体中文 </DropDownItem>
         </template>
       </DropDown>
-      <DropDown top="5.6rem">
+      <DropDown>
         <button class="nav-bar__right__photo-wrapper">
           <img
             v-if="avatar.length !== 0"
