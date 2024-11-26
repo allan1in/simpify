@@ -3,18 +3,12 @@
     <div class="track-container">
       <div class="track-container__banner">
         <Banner :type="$t('track.type')" :title="track.name" :images="track.album.images">
-          <router-link
-            class="track-container__banner-details__artist"
-            :to="{ name: 'Artist', params: { artistId: artists[0].id } }"
-            >{{ artists[0].name }}</router-link
-          >
+          <router-link class="track-container__banner-details__artist"
+            :to="{ name: 'Artist', params: { artistId: artists[0].id } }">{{ artists[0].name }}</router-link>
           <span class="track-container__banner-details__album-wrapper">
             <span> • </span>
-            <router-link
-              class="track-container__banner-details__album-wrapper__album"
-              :to="{ name: 'Album', params: { albumId: track.album.id } }"
-              >{{ track.album.name }}</router-link
-            >
+            <router-link class="track-container__banner-details__album-wrapper__album"
+              :to="{ name: 'Album', params: { albumId: track.album.id } }">{{ track.album.name }}</router-link>
           </span>
           <span class="track-container__banner-details__release-year">
             {{ ` • ${track.album.release_date.split('-')[0]}` }}
@@ -22,9 +16,9 @@
           <span class="track-container__banner-details__duration">
             {{
               ` •
-            ${duration.hr ? `${duration.hr} ${$t('track.duration.hr')} ` : ''}${
-              duration.min ? `${duration.min} ${$t('track.duration.min')} ` : ''
-            }${duration.sec ? `${duration.sec} ${$t('track.duration.sec')} ` : ''}`
+            ${duration.hr ? `${duration.hr} ${$t('track.duration.hr')} ` : ''}${duration.min ? `${duration.min}
+            ${$t('track.duration.min')} ` : ''
+              }${duration.sec ? `${duration.sec} ${$t('track.duration.sec')} ` : ''}`
             }}
           </span>
         </Banner>
@@ -34,10 +28,7 @@
           <div class="track-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="track" />
           </div>
-          <div
-            class="track-container__content__btn-group__add-wrapper"
-            @click.prevent="handleClickSaveButton"
-          >
+          <div class="track-container__content__btn-group__add-wrapper" @click.prevent="handleClickSaveButton">
             <IconSaved v-show="isSaved" />
             <IconAddTo v-show="!isSaved" />
           </div>
@@ -88,7 +79,7 @@ import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import IconAddTo from '@/components/Icons/IconAddTo.vue'
 import IconSaved from '@/components/Icons/IconSaved.vue'
 import Message from '@/components/Message/index'
-import { mapWritableState } from 'pinia'
+import { mapActions, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 
 export default {
@@ -107,7 +98,6 @@ export default {
       id: this.$route.params.trackId,
       track: {},
       artists: [],
-      isSaved: undefined,
       loading_skeleton: true
     }
   },
@@ -115,12 +105,11 @@ export default {
     duration() {
       return timeFormatAlbum(this.track.duration_ms)
     },
-    ...mapWritableState(usePlayerStore, {
-      isSavedGlobal: 'isSaved',
-      currrent_track: 'current_track'
-    })
+    ...mapWritableState(usePlayerStore, ['isSaved',
+      'current_track'])
   },
   methods: {
+    ...mapActions(usePlayerStore, ['checkUserSavedTrack']),
     reset() {
       this.id = this.$route.params.trackId
       this.track = {}
@@ -131,7 +120,7 @@ export default {
     async getAll() {
       await this.getTrack()
       await this.getArtists()
-      await this.checkUserSavedTrack()
+      await this.checkUserSavedTrack(this.track)
 
       this.loading_skeleton = false
     },
@@ -148,21 +137,16 @@ export default {
       const res = (await getSeveralArtists(params)).artists
       this.artists = res
     },
-    async checkUserSavedTrack() {
-      let params = { ids: this.id }
-      const res = await checkUserSavedTracks(params)
-      this.isSaved = res[0]
-    },
     async handleClickSaveButton() {
       if (this.isSaved) {
         await deleteUserSavedTracks({ ids: this.id })
-        await this.checkUserSavedTrack()
+        await this.checkUserSavedTrack(this.track)
         if (!this.isSaved) {
           Message(`${this.$t('message.removed_from_liked_songs')}`)
         }
       } else {
         await saveTracks({ ids: this.id })
-        await this.checkUserSavedTrack()
+        await this.checkUserSavedTrack(this.track)
         if (this.isSaved) {
           Message(`${this.$t('message.added_to_liked_songs')}`)
         }
@@ -176,18 +160,6 @@ export default {
         await this.getAll()
       },
       immediate: true
-    },
-    isSavedGlobal(newVal, oldVal) {
-      // Update data isSaved in this page
-      if (this.currrent_track?.id === this.track.id) {
-        this.isSaved = newVal
-      }
-    },
-    isSaved(newVal, oldVal) {
-      // Update data isSaved in player store
-      if (this.currrent_track?.id === this.track.id) {
-        this.isSavedGlobal = newVal
-      }
     }
   }
 }

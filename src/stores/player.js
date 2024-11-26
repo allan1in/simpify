@@ -9,6 +9,7 @@ import {
 import { Howl } from 'howler'
 import Message from '@/components/Message/index'
 import i18n from '@/includes/i18n'
+import { checkUserSavedTracks } from '@/api/meta/track'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
@@ -68,7 +69,7 @@ export const usePlayerStore = defineStore('player', {
             Message(`${i18n.global.t('message.something_wrong')}`)
           })
 
-          this.player.addListener('player_state_changed', (res) => {
+          this.player.addListener('player_state_changed', async (res) => {
             if (res === null) {
               return
             } else {
@@ -86,6 +87,9 @@ export const usePlayerStore = defineStore('player', {
 
               this.context = res.context
             }
+
+            await this.checkUserSavedTrack()
+            this.loading = false
           })
 
           this.startListenPos()
@@ -318,6 +322,11 @@ export const usePlayerStore = defineStore('player', {
       } else if (useUserStore().checkProduct('free')) {
         Message(`${i18n.global.t('message.only_for_premium')}`)
       }
+    },
+    async checkUserSavedTrack(track = this.current_track) {
+      let params = { ids: track?.id }
+      const res = await checkUserSavedTracks(params)
+      this.isSaved = res[0]
     }
   }
 })
