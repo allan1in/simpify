@@ -17,7 +17,8 @@ export default {
         shapeClass() {
             return {
                 square: this.shape === 'square',
-                circle: this.shape === 'circle'
+                circle: this.shape === 'circle',
+                round: this.shape === 'round'
             }
         }
     }
@@ -39,6 +40,10 @@ export default {
 
 .circle {
     border-radius: 50%;
+}
+
+.round {
+    border-radius: 999rem;
 }
 
 @keyframes loading {

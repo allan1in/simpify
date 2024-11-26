@@ -51,3 +51,11 @@ export function deleteUserSavedPlaylists(id) {
     }
   })
 }
+
+export function createNewPlaylist(id, params) {
+  return request({
+    url: `/users/${id}/playlists`,
+    method: 'put',
+    params
+  })
+}

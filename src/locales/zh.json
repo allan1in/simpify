@@ -103,11 +103,26 @@
     "no_track_playing": "没有正在播放的歌曲。",
     "something_wrong":"出现了一些问题..."
   },
-  "dialog_edit_playlist":{
+  "dialog_playlist_edit":{
     "title":"编辑详情",
     "text_placeholder":"添加名称",
     "textarea_placeholder":"添加简介",
+    "text_label":"名称",
+    "textarea_label":"简介",
     "statement":"继续下一步，则表示你已同意 Spotify 获取你选择上传的图像。请确保你有上传此图像的权利。",
     "save":"保存"
+  },
+  "dialog_playlist_create":{
+    "title":"创建新的歌单",
+    "text_placeholder":"添加名称",
+    "text_label":"名称",
+    "create":"创建"
+  },
+  "drop_down_image_edit":{
+    "change_picture":"更改图片",
+    "remove_picture":"删除图片"
+  },
+  "drop_down_playlist":{
+    "edit_details":"编辑详情"
   }
 }

@@ -103,11 +103,31 @@
     "no_track_playing": "No track is playing.",
     "something_wrong":"Something went wrong..."
   },
-  "dialog_edit_playlist":{
+  "dialog_playlist_edit":{
     "title":"Edit Details",
     "text_placeholder":"Add a name",
     "textarea_placeholder":"Add an optional description",
+    "text_label":"Name",
+    "textarea_label":"Description",
     "statement":"By proceeding, you agree to give Spotify access to the image you choose to upload. Please make sure you have the right to upload the image.",
-    "save":"Save"
+    "save":"Save",
+    "change_picture":"Change Picture",
+    "remove_picture":"Remove Picture"
+  },
+  "dialog_playlist_create":{
+    "title":"Create New Playlist",
+    "text_placeholder":"Add a name",
+    "text_label":"Name",
+    "create":"Create"
+  },
+  "drop_down_image_edit":{
+    "change_picture":"Change Picture",
+    "remove_picture":"Remove Picture"
+  },
+  "drop_down_playlist":{
+    "edit_details":"Edit Details"
+  },
+  "alert_box":{
+    "require_name":"Playlist name is required."
   }
 }

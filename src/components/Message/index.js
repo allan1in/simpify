@@ -6,7 +6,7 @@ const createInstance = (config = {}) => {
   // The distance between bottom and the first message-box
   const bottom = `calc(${variables.height_player} + ${variables.gutter_4x}`
   // The height of each message-box
-  const height = `calc(2 * ${variables.gutter_4x} + ${variables.font_size_text_primary})`
+  const height = `calc(1.5 * ${variables.gutter_4x} + ${variables.font_size_text_primary})`
 
   // Create a message_box
   const message_box = document.createElement('div')

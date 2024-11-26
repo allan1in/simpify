@@ -1,7 +1,7 @@
 <template>
     <div class="input-text-container">
         <label class="input-text-container__label" for="textarea">{{ label }}</label>
-        <input type="text" class="input-text-container__input" :placeholder="placeholder" />
+        <input v-model="textContent" type="text" class="input-text-container__input" :placeholder="placeholder" />
     </div>
 </template>
 <script>
@@ -14,7 +14,18 @@ export default {
         },
         label: {
             type: String,
-            default: '123'
+            default: ''
+        },
+        modelValue: {}
+    },
+    computed: {
+        textContent: {
+            get() {
+                return this.modelValue
+            },
+            set(newVal) {
+                this.$emit('update:modelValue', newVal)
+            }
         }
     }
 }
@@ -24,6 +35,10 @@ export default {
     width: 100%;
     height: 100%;
     position: relative;
+
+    &:focus-within &__label {
+        opacity: 1;
+    }
 
     &__input {
         width: 100%;
@@ -35,8 +50,6 @@ export default {
         padding: $gutter;
         color: $color-font-primary;
 
-        @include transitionFast;
-
         &:focus-visible,
         &:focus {
             outline: none;
@@ -46,26 +59,32 @@ export default {
             background-color: $color-bg-5;
             outline: 0.1rem solid $color-bg-7;
         }
+
+
+        &:focus+.input-textarea-container__label {
+            opacity: 1;
+        }
     }
 
     &__label {
-        font-size: $font-size-text-secondary;
+        font-size: $font-size-text-tertiary;
         font-weight: 700;
         color: $color-font-secondary;
         position: absolute;
-        top: calc(0px - calc($font-size-text-secondary * 0.5));
+        top: calc(0px - calc($font-size-text-tertiary * 0.5));
         left: 1rem;
         line-height: 1;
+        z-index: 0;
         opacity: 0;
 
         &::before {
             content: '';
             position: absolute;
             top: 50%;
-            left: 0;
+            left: -10%;
             transform: translateY(-50%);
-            height: 1rem;
-            width: 100%;
+            height: 0.1rem;
+            width: 120%;
             background-color: $color-bg-5;
             z-index: -1;
         }

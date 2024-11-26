@@ -1,22 +1,12 @@
 <template>
   <li>
-    <router-link
-      v-if="to !== null"
-      :to="to"
-      class="drop-down-item-container"
-      :class="{ 'top-line': topLine }"
-    >
+    <router-link v-if="to !== null" :to="to" class="drop-down-item-container" :class="{ 'top-line': topLine }">
       <span class="drop-down-item-container__text-wrapper">
         <slot></slot>
       </span>
     </router-link>
-    <a
-      v-else-if="toExternal !== ''"
-      :href="toExternal"
-      target="_blank"
-      class="drop-down-item-container"
-      :class="{ 'top-line': topLine }"
-    >
+    <a v-else-if="toExternal !== ''" :href="toExternal" target="_blank" class="drop-down-item-container"
+      :class="{ 'top-line': topLine }">
       <span class="drop-down-item-container__text-wrapper">
         <slot></slot>
       </span>
@@ -41,17 +31,14 @@ export default {
   props: {
     topLine: {
       type: Boolean,
-      require: false,
       default: false
     },
     toExternal: {
       type: String,
-      require: false,
       default: ''
     },
     to: {
       type: Object,
-      require: false,
       default: null
     }
   },
@@ -74,6 +61,8 @@ export default {
   font-size: $font-size-text-secondary;
   padding: 1.2rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 
   &:hover {
     background-color: $color-bg-6;
@@ -85,8 +74,6 @@ export default {
     height: calc($font-size-text-secondary + 0.2rem);
     width: calc($font-size-text-secondary + 0.2rem);
     fill: $color-font-primary;
-    display: flex;
-    align-items: center;
   }
 }
 </style>

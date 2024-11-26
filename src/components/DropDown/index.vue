@@ -1,12 +1,13 @@
 <template>
   <div class="drop-down-container">
-    <div ref="clickWrapper" @click.prevent="handleClick">
-      <slot></slot>
+    <div ref="clickWrapper" class="drop-down-container__click-wrapper" @click.prevent="handleClick">
+      <slot :open="show"></slot>
     </div>
 
     <Transition name="fade-slide-from-top">
-      <div ref="box" v-show="show" class="drop-down-container__box" :style="{ top: top }">
-        <ul class="drop-down-container__box__items-wrapper">
+      <div ref="box" v-show="show" class="drop-down-container__box" :style="{ top: top }"
+        :class="{ 'drop-down-container__box-right': position === 'right' }">
+        <ul class=" drop-down-container__box__items-wrapper">
           <slot name="dropDownItems"></slot>
         </ul>
       </div>
@@ -17,6 +18,12 @@
 <script>
 export default {
   name: 'DropDown',
+  props: {
+    position: {
+      type: String,
+      default: 'left'
+    }
+  },
   data() {
     return {
       show: false,
@@ -49,6 +56,11 @@ export default {
 .drop-down-container {
   position: relative;
 
+  &__click-wrapper {
+    height: max-content;
+    width: max-content;
+  }
+
   &__box {
     width: max-content;
     position: absolute;
@@ -56,6 +68,12 @@ export default {
     right: 0;
     background-color: $color-bg-4;
     border-radius: $border-radius-small;
+    z-index: 10;
+    box-shadow: 0 0 1.5rem 1rem rgba($color-bg-1, 0.2);
+
+    &-right:nth-child(n) {
+      left: 0
+    }
 
     &__items-wrapper {
       padding: 0.3rem;

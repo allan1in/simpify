@@ -1,7 +1,8 @@
 <template>
     <div class="input-textarea-container">
         <label class="input-textarea-container__label" for="textarea">{{ label }}</label>
-        <textarea name="textarea" class="input-textarea-container__input" :placeholder="placeholder"></textarea>
+        <textarea v-model="textContent" name="textarea" class="input-textarea-container__input"
+            :placeholder="placeholder"></textarea>
     </div>
 </template>
 <script>
@@ -14,7 +15,18 @@ export default {
         },
         label: {
             type: String,
-            default: '123'
+            default: ''
+        },
+        modelValue: {}
+    },
+    computed: {
+        textContent: {
+            get() {
+                return this.modelValue
+            },
+            set(newVal) {
+                this.$emit('update:modelValue', newVal)
+            }
         }
     }
 }
@@ -25,6 +37,10 @@ export default {
     height: 100%;
     position: relative;
 
+    &:focus-within &__label {
+        opacity: 1;
+    }
+
     &__input {
         width: 100%;
         height: 100%;
@@ -34,8 +50,6 @@ export default {
         resize: none;
         padding: $gutter;
         color: $color-font-primary;
-
-        @include transitionFast;
 
         &:focus-visible,
         &:focus {
@@ -49,26 +63,26 @@ export default {
     }
 
     &__label {
-        font-size: $font-size-text-secondary;
+        font-size: $font-size-text-tertiary;
         font-weight: 700;
         color: $color-font-secondary;
         position: absolute;
-        top: calc(0px - calc($font-size-text-secondary * 0.5));
+        top: calc(0px - calc($font-size-text-tertiary * 0.5));
         left: 1rem;
         line-height: 1;
+        z-index: 0;
         opacity: 0;
 
         &::before {
             content: '';
             position: absolute;
             top: 50%;
-            left: 0;
+            left: -10%;
             transform: translateY(-50%);
             height: 1rem;
-            width: 100%;
+            width: 120%;
             background-color: $color-bg-5;
             z-index: -1;
-
         }
     }
 }

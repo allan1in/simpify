@@ -3,15 +3,10 @@
     <div class="playlist-container">
       <div class="playlist-container__banner">
         <Banner :type="$t('playlist.type')" :title="playlist.name" :images="playlist.images">
-          <router-link
-            class="playlist-container__banner-details__owner"
-            :to="{ name: 'User', params: { userId: playlist.owner.id } }"
-            >{{ playlist.owner.display_name }}</router-link
-          >
-          <span
-            v-if="playlist.followers.total !== 0"
-            class="playlist-container__banner-details__followers"
-          >
+          <router-link class="playlist-container__banner-details__owner"
+            :to="{ name: 'User', params: { userId: playlist.owner.id } }">{{ playlist.owner.display_name
+            }}</router-link>
+          <span v-if="playlist.followers.total !== 0" class="playlist-container__banner-details__followers">
             {{
               ` • ${Intl.NumberFormat().format(playlist.followers.total)} ${$t(
                 'playlist.follower',
@@ -19,24 +14,17 @@
               )}`
             }}
           </span>
-          <span
-            v-if="playlist.tracks.total !== 0"
-            class="playlist-container__banner-details__total-tracks"
-          >
+          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__total-tracks">
             {{ ` • ${playlist.tracks.total} ${$t('playlist.song', playlist.tracks.total)}` }}
           </span>
-          <span
-            v-if="playlist.tracks.total !== 0"
-            class="playlist-container__banner-details__duration"
-          >
+          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__duration">
             {{
               ` •
-            ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${
-              duration.min
+            ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${duration.min
                 ? `${duration.min}
             ${$t('playlist.duration.min')} `
                 : ''
-            }${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
+              }${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
             }}
           </span>
         </Banner>
@@ -47,26 +35,43 @@
             <ButtonTogglePlay :item="playlist" />
           </div>
           <div v-if="!isOwner" class="playlist-container__content__btn-group__follow-wrapper">
-            <button
-              class="playlist-container__content__btn-group__follow-wrapper__btn"
-              @click="handleClickFollowButton"
-            >
+            <button class="playlist-container__content__btn-group__follow-wrapper__btn"
+              @click="handleClickFollowButton">
               {{ isFollowed ? $t('playlist.following') : $t('playlist.follow') }}
             </button>
+          </div>
+          <div v-if="isOwner" class="playlist-container__content__btn-group__more">
+            <DropDown position="right">
+              <template #default>
+                <button class="playlist-container__content__btn-group__more__btn">
+                  <div class="playlist-container__content__btn-group__more__btn__icon-wrapper">
+                    <IconMore />
+                  </div>
+                </button>
+              </template>
+              <template #dropDownItems>
+                <DropDownItem @click="openDialog = true">
+                  <template #icon>
+                    <div class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper">
+                      <IconEdit />
+                    </div>
+                  </template>
+                  <template #default>
+                    {{ $t('drop_down_playlist.edit_details') }}
+                  </template>
+                </DropDownItem>
+              </template>
+            </DropDown>
           </div>
         </div>
         <div class="playlist-container__content__tracks">
           <TrackListHeader v-if="tracks.length" />
-          <TrackCard
-            v-for="(item, index) in tracks"
-            :key="item.id"
-            :item="item.track"
-            :index="index"
-            :context_uri="this.playlist.uri"
-          />
+          <TrackCard v-for="(item, index) in tracks" :key="item.id" :item="item.track" :index="index"
+            :context_uri="this.playlist.uri" />
         </div>
       </div>
     </div>
+    <DialogPlaylistEdit v-model="openDialog" :item="playlist" />
   </template>
   <template v-else>
     <div class="playlist-container">
@@ -80,6 +85,9 @@
           </div>
           <div class="playlist-container__content__btn-group__follow-wrapper">
             <Skeleton class="skeleton__button" />
+          </div>
+          <div class="playlist-container__content__btn-group__more">
+            <Skeleton shape="round" />
           </div>
         </div>
         <div class="playlist-container__content__tracks">
@@ -109,6 +117,11 @@ import Skeleton from '@/components/Skeleton/index.vue'
 import Message from '@/components/Message'
 import { mapState } from 'pinia'
 import { useUserStore } from '@/stores/user'
+import DropDown from '@/components/DropDown/index.vue'
+import DropDownItem from '@/components/DropDownItem/index.vue'
+import IconMore from '@/components/Icons/IconMore.vue'
+import IconEdit from '@/components/Icons/IconEdit.vue'
+import DialogPlaylistEdit from '@/components/DialogPlaylistEdit/index.vue'
 
 export default {
   name: 'Playlist',
@@ -118,7 +131,12 @@ export default {
     TrackCard,
     Banner,
     ButtonTogglePlay,
-    Skeleton
+    Skeleton,
+    DropDown,
+    DropDownItem,
+    IconMore,
+    IconEdit,
+    DialogPlaylistEdit
   },
   data() {
     return {
@@ -130,7 +148,8 @@ export default {
       tracks_next: '',
       loading_skeleton: true,
       loading_more: false,
-      isFollowed: null
+      isFollowed: null,
+      openDialog: false
     }
   },
   computed: {
@@ -283,6 +302,34 @@ export default {
             border-color: $color-bg-7;
           }
         }
+      }
+
+      &__more {
+        height: 2.4rem;
+        aspect-ratio: 3 / 2;
+
+        &__btn {
+          height: 2.4rem;
+
+          @include clickAnimation;
+
+          &__icon-wrapper {
+            height: 100%;
+            width: 100%;
+            fill: $color-font-secondary;
+          }
+        }
+
+        &__drop-down-item {
+
+          &__icon-wrapper {
+            margin-right: $gutter-1-5x;
+            height: calc($font-size-text-primary + 0.2rem);
+            aspect-ratio: 1 / 1;
+            fill: $color-font-secondary;
+          }
+        }
+
       }
     }
 

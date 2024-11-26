@@ -41,7 +41,7 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 50%;
+        width: 60rem;
         height: unset;
         margin: 0 auto;
         background-color: $color-bg-4;
