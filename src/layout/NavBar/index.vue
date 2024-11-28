@@ -29,8 +29,6 @@
             class="nav-bar__mid-wrapper__mid__search__input"
             type="text"
             :placeholder="$t('nav_bar.input_message')"
-            @click="toSearchPage"
-            @focus="toSearchPage"
             @input="getSearchResult"
             v-model="inputContent"
           />
@@ -157,15 +155,8 @@ export default {
       await this.$router.push({ name: 'Home' })
       this.inputContent = ''
     },
-    toSearchPage() {
-      if (this.$route.path.split('/')[1] !== 'search') {
-        this.$router.push({ name: 'Search' })
-      }
-    },
     getSearchResult() {
-      if (this.inputContent.length === 0) {
-        this.$router.push({ name: 'Search' })
-      } else {
+      if (this.inputContent.length !== 0) {
         this.$router.push({
           name: 'SearchResult',
           params: { inputContent: this.inputContent }

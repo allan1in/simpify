@@ -6,7 +6,6 @@ import {
   togglePlaybackShuffle,
   transferPlayback
 } from '@/api/meta/player'
-import { Howl } from 'howler'
 import Message from '@/components/Message/index'
 import i18n from '@/includes/i18n'
 import { checkUserSavedTracks } from '@/api/meta/track'
@@ -129,18 +128,14 @@ export const usePlayerStore = defineStore('player', {
           this.percentage = 100 * (res.position / this.duration)
         })
       } else if (useUserStore().checkProduct('free')) {
-        // Start to render progress bar
-        this.player.on('play', () => {
-          requestAnimationFrame(this.progress)
-        })
+        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     stopListenPos() {
       if (useUserStore().checkProduct('premium')) {
         this.player.removeListener('progress')
       } else if (useUserStore().checkProduct('free')) {
-        // Stop to render progress bar
-        this.player.pause()
+        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async togglePlay() {
@@ -157,20 +152,7 @@ export const usePlayerStore = defineStore('player', {
           Message(`${i18n.global.t('message.no_track_playing')}`)
         }
       } else if (useUserStore().checkProduct('free')) {
-        if (this.isReady) {
-          if (!this.player?.playing) {
-            return
-          }
-          if (this.player.playing()) {
-            this.player.pause()
-            this.isPause = true
-          } else {
-            this.player.play()
-            this.isPause = false
-          }
-        } else {
-          Message(`${i18n.global.t('message.no_track_playing')}`)
-        }
+        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async nextTrack() {
@@ -178,11 +160,7 @@ export const usePlayerStore = defineStore('player', {
         this.loading = true
         await this.player.nextTrack()
       } else if (useUserStore().checkProduct('free')) {
-        if (this.isReady) {
-          Message(`${i18n.global.t('message.only_for_premium')}`)
-        } else {
-          Message(`${i18n.global.t('message.only_for_premium')}`)
-        }
+        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async preTrack() {
@@ -220,21 +198,14 @@ export const usePlayerStore = defineStore('player', {
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await this.player.setVolume(0)
       } else if (useUserStore().checkProduct('free')) {
-        if (!this.player?.playing) {
-          return
-        }
-        this.player.mute(true)
+        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async setVolume() {
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await this.player.setVolume(this.volume / 100)
       } else if (useUserStore().checkProduct('free')) {
-        if (!this.player?.playing) {
-          return
-        }
-        this.player.mute(false)
-        this.player.volume(this.volume / 100)
+        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async seekPosition() {
@@ -242,7 +213,7 @@ export const usePlayerStore = defineStore('player', {
         await this.player.seek((this.duration * this.percentage) / 100)
         await this.startListenPos()
       } else if (useUserStore().checkProduct('free')) {
-        this.player.seek((this.percentage * this.duration) / 100 / 1000)
+        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async playNewTrack(data, track) {
@@ -254,61 +225,7 @@ export const usePlayerStore = defineStore('player', {
           Message(`${i18n.global.t('message.loading')}`)
         }
       } else if (useUserStore().checkProduct('free')) {
-        this.loading = true
-        // https://github.com/goldfire/howler.js?tab=readme-ov-file#quick-start
-        // Distroy the player already existed
-        if (this.player instanceof Howl) {
-          this.player.unload()
-          this.isPause = true
-          this.position = 0
-          this.percentage = 0
-        }
-
-        // Initialize player infomation
-        this.current_track = track
-
-        // Some of tracks don't have preview_url
-        if (this.current_track.preview_url === null) {
-          this.isReady = false
-          return
-        }
-
-        this.player = new Howl({
-          src: [this.current_track.preview_url],
-          // Streaming audio (for live audio or large files)
-          html5: true,
-          volume: this.volume / 100
-        })
-
-        this.player.play()
-        // Start to render progress bar
-        this.player.on('play', () => {
-          this.isPause = false
-          requestAnimationFrame(this.progress)
-          this.isReady = true
-          this.loading = false
-        })
-
-        this.player.on('pause', () => {
-          this.isPause = true
-        })
-
-        this.player.on('end', () => {
-          this.isPause = true
-          this.position = 0
-          this.percentage = 0
-        })
-      }
-    },
-    // Refresh progress bar position only in free account mode
-    progress() {
-      if (this.player.playing()) {
-        this.position = this.player.seek() * 1000
-        this.duration = this.player.duration() * 1000
-
-        this.percentage = (this.player.seek() / this.player.duration()) * 100
-
-        requestAnimationFrame(this.progress)
+        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async playNewContext(data) {

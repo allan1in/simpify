@@ -168,7 +168,7 @@ export default {
         offset: 0
       }
       const res = await getUserTopArtists(params)
-      this.artists = res.items
+      this.artists = res.items.filter((item) => item !== null)
       this.artists_total = res.total
     },
     async getUserTopTracks() {
@@ -178,7 +178,7 @@ export default {
         offset: 0
       }
       const res = await getUserTopSongs(params)
-      this.tracks = res.items
+      this.tracks = res.items.filter((item) => item !== null)
       this.tracks_total = res.total
     },
     async getPlaylists() {
@@ -187,7 +187,7 @@ export default {
         offset: this.playlists_offset
       }
       const res = await getUserPlaylists(this.id, params)
-      this.playlists = res.items
+      this.playlists = res.items.filter((item) => item !== null)
       this.playlists_total = res.total
     }
   },

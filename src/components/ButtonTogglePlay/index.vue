@@ -1,9 +1,5 @@
 <template>
-  <button
-    class="button-toggle-play-container"
-    :class="{ available: available }"
-    @click.stop.prevent="handleClick"
-  >
+  <button class="button-toggle-play-container" @click.stop.prevent="handleClick">
     <div class="button-toggle-play-container__icon-wrapper">
       <IconPause v-if="isPlaying" />
       <IconPlay v-else />
@@ -31,9 +27,6 @@ export default {
   },
   computed: {
     ...mapWritableState(usePlayerStore, ['context', 'current_track', 'isPause', 'activeDevice']),
-    available() {
-      return this.item.type === 'track' || this.checkProduct('premium')
-    },
     isPlaying() {
       return !this.isPause && this.isCurrent
     },
@@ -63,12 +56,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.available:nth-child(n) {
-  cursor: pointer;
-
-  @include clickAnimation;
-}
-
 .button-toggle-play-container {
   height: 100%;
   width: 100%;
@@ -80,8 +67,9 @@ export default {
   justify-content: center;
   overflow: hidden;
   position: relative;
+  cursor: pointer;
 
-  cursor: not-allowed;
+  @include clickAnimation;
 
   &:hover ::before {
     content: '';

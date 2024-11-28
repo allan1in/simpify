@@ -130,9 +130,8 @@ export default {
     available() {
       if (this.item?.restrictions) {
         return !this.item?.restrictions
-      } else {
-        return !!this.item?.preview_url
       }
+      return true
     },
     isPlaying() {
       return !this.isPause && this.isCurrent

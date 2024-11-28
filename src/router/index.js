@@ -4,23 +4,20 @@ import NotFound from '@/views/NotFound.vue'
 import Home from '@/views/Home/index.vue'
 import Login from '@/views/Login/index.vue'
 import { useUserStore } from '@/stores/user'
-import Search from '@/views/Search/index.vue'
-import GetAll from '@/views/Search/SearchResult/GetAll/index.vue'
-import GetTracks from '@/views/Search/SearchResult/GetTracks/index.vue'
-import GetAlbums from '@/views/Search/SearchResult/GetAlbums/index.vue'
-import GetArtists from '@/views/Search/SearchResult/GetArtists/index.vue'
+import GetAll from '@/views/Search/GetAll/index.vue'
+import GetTracks from '@/views/Search/GetTracks/index.vue'
+import GetAlbums from '@/views/Search/GetAlbums/index.vue'
+import GetArtists from '@/views/Search/GetArtists/index.vue'
 import ArtistAllAlbums from '@/views/Artist/Albums/index.vue'
 import ArtistAllSingles from '@/views/Artist/Singles/index.vue'
 import ArtistAllAppearsOn from '@/views/Artist/AppearsOn/index.vue'
-import GetPlaylists from '@/views/Search/SearchResult/GetPlaylists/index.vue'
-import SearchResult from '@/views/Search/SearchResult/index.vue'
+import GetPlaylists from '@/views/Search/GetPlaylists/index.vue'
+import SearchResult from '@/views/Search/index.vue'
 import Track from '@/views/Track/index.vue'
 import Album from '@/views/Album/index.vue'
 import Artist from '@/views/Artist/index.vue'
 import Playlist from '@/views/Playlist/index.vue'
 import User from '@/views/User/index.vue'
-import Browse from '@/views/Browse/index.vue'
-import FeaturedPlaylists from '@/views/Home/FeaturedPlaylists/index.vue'
 import GetArtistsForUser from '@/views/User/Top/Artists/index.vue'
 import GetTracksForUser from '@/views/User/Top/Tracks/index.vue'
 import UserPlaylists from '@/views/User/Playlists/index.vue'
@@ -42,11 +39,6 @@ const router = createRouter({
           path: '',
           name: 'Home',
           component: Home
-        },
-        {
-          path: '/featured-playlists',
-          name: 'FeaturedPlaylists',
-          component: FeaturedPlaylists
         }
       ]
     },
@@ -57,7 +49,7 @@ const router = createRouter({
         {
           path: '',
           name: 'Search',
-          component: Search
+          redirect: 'NotFound'
         },
         {
           path: ':inputContent',
@@ -148,17 +140,6 @@ const router = createRouter({
           path: '',
           name: 'Playlist',
           component: Playlist
-        }
-      ]
-    },
-    {
-      path: '/browse/:categoryId',
-      component: Layout,
-      children: [
-        {
-          path: '',
-          name: 'Browse',
-          component: Browse
         }
       ]
     },

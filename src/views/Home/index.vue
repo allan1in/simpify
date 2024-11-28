@@ -1,16 +1,6 @@
 <template>
   <div class="dashboard-container" www90>
     <template v-if="!loading_skeleton">
-      <div class="dashboard-container__featured-playlists" v-if="playlists.length !== 0">
-        <TitleShowAll
-          :router-name="playlists_total > playlists_limit ? 'FeaturedPlaylists' : ''"
-          :title="$t('home.featured_playlists')"
-        />
-        <div class="dashboard-container__featured-playlists__content">
-          <CardHorizontal v-for="item in playlists" :key="item.id" :item="item" />
-        </div>
-      </div>
-
       <div class="dashboard-container__new-releases" v-if="albums.length !== 0">
         <TitleShowAll :title="$t('home.new_releases')" />
         <div class="dashboard-container__new-releases__content">
@@ -19,13 +9,6 @@
       </div>
     </template>
     <template v-else>
-      <div class="dashboard-container__featured-playlists">
-        <TitleShowAll :loading="loading_skeleton" />
-        <div class="dashboard-container__featured-playlists__content">
-          <CardHorizontal v-for="i in playlists_limit" :key="i" :loading="loading_skeleton" />
-        </div>
-      </div>
-
       <div class="dashboard-container__new-releases">
         <TitleShowAll :loading="loading_skeleton" />
         <div class="dashboard-container__new-releases__content">
@@ -41,11 +24,8 @@ import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import PlaylistCard from '@/components/CardPlaylist/index.vue'
 import CardAlbum from '@/components/CardAlbum/index.vue'
 import CardHorizontal from '@/components/CardHorizontal/index.vue'
-import { getFeaturedPlaylists } from '@/api/meta/browse'
 import { getNewReleases, getNextNewReleases } from '@/api/meta/album'
 import Skeleton from '@/components/Skeleton/index.vue'
-import { mapState } from 'pinia'
-import { useAppStore } from '@/stores/app'
 
 export default {
   name: 'Dashboard',
@@ -72,19 +52,9 @@ export default {
   },
   methods: {
     async getAll() {
-      await this.getPlaylists()
       await this.getNewReleases()
 
       this.loading_skeleton = false
-    },
-    async getPlaylists() {
-      const params = {
-        limit: this.playlists_limit,
-        offset: 0
-      }
-      const res = (await getFeaturedPlaylists(params)).playlists
-      this.playlists = res.items
-      this.playlists_total = res.total
     },
     async getNewReleases() {
       if (!this.loading_more && this.albums_next !== null) {

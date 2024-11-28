@@ -42,7 +42,7 @@ export default {
           res = await getNextCurrentUserPlaylists(path.slice(path.indexOf('?') + 1))
         }
 
-        let newVals = res.items
+        let newVals = res.items.filter((item) => item !== null)
         let oldVals = JSON.parse(JSON.stringify(this.playlists))
         this.playlists = [...oldVals, ...newVals]
         this.playlists_next = res.next
