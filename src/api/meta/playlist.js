@@ -59,3 +59,11 @@ export function createNewPlaylist(id, data) {
     data
   })
 }
+
+export function updatePlaylistCover(id, data) {
+  return request({
+    url: `/playlists/${id}/images`,
+    method: 'put',
+    data
+  })
+}

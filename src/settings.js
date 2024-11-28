@@ -20,5 +20,6 @@ export default {
    user-follow-read 
    user-follow-modify
    playlist-modify-public 
-   playlist-modify-private`
+   playlist-modify-private
+   ugc-image-upload`
 }

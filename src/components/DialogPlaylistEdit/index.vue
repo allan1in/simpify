@@ -10,15 +10,17 @@
         </div>
         <div class="dialog-global-container__form">
             <div class="dialog-global-container__form__image">
-                <ImageEdit :images="item.images" />
+                <ImageEdit :images="item.images" @handle-selected-image="selectImage" />
             </div>
             <div class="dialog-global-container__form__input">
                 <div class="dialog-global-container__form__input__text">
-                    <InputText v-model="name" :placeholder="$t('dialog_playlist_edit.text_placeholder')"
+                    <InputText maxlength="100" @validate="validate" v-model="name"
+                        :placeholder="$t('dialog_playlist_edit.text_placeholder')"
                         :label="$t('dialog_playlist_edit.text_label')" />
                 </div>
-                <div class="dialog-global-container__form__input__text-area">
-                    <InputArea v-model="description" :placeholder="$t('dialog_playlist_edit.textarea_placeholder')"
+                <div class="dialog-global-container__form__input__text-area-wrapper">
+                    <InputTextArea maxlength="300" v-model="description"
+                        :placeholder="$t('dialog_playlist_edit.textarea_placeholder')"
                         :label="$t('dialog_playlist_edit.textarea_label')" />
                 </div>
             </div>
@@ -38,7 +40,7 @@ import DialogGlobal from '@/components/DialogGlobal/index.vue'
 import IconClose from '@/components/Icons/IconClose.vue'
 import ImageEdit from '@/components/ImageEdit/index.vue'
 import InputText from '@/components/InputText/index.vue'
-import InputArea from '@/components/InputTextArea/index.vue'
+import InputTextArea from '@/components/InputTextArea/index.vue'
 
 export default {
     name: 'DialogPlaylistEdit',
@@ -52,14 +54,18 @@ export default {
     data() {
         return {
             name: undefined,
-            description: undefined
+            description: undefined,
+            minWidth: 300,
+            minHeight: 300,
+            maxSize: 256,
+            selectedImage: {}
         }
     },
     components: {
         DialogGlobal,
         IconClose,
         ImageEdit,
-        InputArea,
+        InputTextArea,
         InputText
     },
     computed: {
@@ -71,6 +77,19 @@ export default {
             set(value) {
                 this.$emit('update:modelValue', value);
             }
+        }
+    },
+    methods: {
+        validate() {
+            if (!this.name.length) {
+                this.showWarnAlert = true
+            } else {
+                this.showWarnAlert = false
+            }
+            return !!this.name.length
+        },
+        selectImage(image) {
+            this.selectedImage = image
         }
     },
     watch: {
@@ -141,7 +160,7 @@ export default {
                 height: calc($font-size-text-primary * 2.5);
             }
 
-            &__text-area {
+            &__text-area-wrapper {
                 flex: 1;
             }
         }

@@ -65,7 +65,7 @@ export default {
           res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).playlists
         }
 
-        let newVals = res.items
+        let newVals = res.items.filter(item => item !== null)
         let oldVals = JSON.parse(JSON.stringify(this.playlists))
 
         this.playlists = [...oldVals, ...newVals]

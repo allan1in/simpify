@@ -1,6 +1,7 @@
 <template>
     <div class="image-edit-container" @mouseenter="isHover = true" @mouseleave="isHover = false">
-        <img v-if="!!images" class="image-edit-container__img" :src="images[0]?.url" alt="" />
+        <img v-if="!!currentImages || !!selectedImage.file" class="image-edit-container__img"
+            :src="selectedImage.file || currentImages[0]?.url" alt="" />
         <div v-else class="image-edit-container__icon-wrapper">
             <IconDefaultPlaylist class="image-edit-container__icon-wrapper__playlist" />
         </div>
@@ -16,7 +17,7 @@
                     </div>
                 </template>
                 <template #dropDownItems>
-                    <DropDownItem>
+                    <DropDownItem @click="triggerFileSelect">
                         <template #icon>
                             <div class="image-edit-container__more__drop-down-item__icon-wrapper">
                                 <IconPictureEdit />
@@ -26,7 +27,7 @@
                             {{ $t('drop_down_image_edit.change_picture') }}
                         </template>
                     </DropDownItem>
-                    <DropDownItem>
+                    <DropDownItem @click="reset">
                         <template #icon>
                             <div class="image-edit-container__more__drop-down-item__icon-wrapper">
                                 <IconPictureDelete />
@@ -60,7 +61,15 @@ export default {
     },
     data() {
         return {
-            isHover: false
+            isHover: false,
+            selectedImage: {
+                base64: '',
+                file: undefined,
+                height: undefined,
+                width: undefined,
+                size: undefined
+            },
+            currentImages: undefined
         }
     },
     components: {
@@ -71,6 +80,49 @@ export default {
         DropDownItem,
         IconPictureDelete,
         IconPictureEdit
+    },
+    methods: {
+        reset() {
+            this.selectedImage = {
+                base64: '',
+                file: undefined,
+                height: undefined,
+                width: undefined,
+                size: undefined
+            }
+            this.currentImages = undefined
+        },
+        triggerFileSelect() {
+            const input = document.createElement("input")
+            input.type = "file"
+            input.style.display = "none"
+            input.accept = "image/.jpg, image/.jpeg, image/.png"
+
+            input.addEventListener("change", (event) => {
+                const file = event.target.files[0]
+                if (file) {
+                    const reader = new FileReader()
+                    reader.onload = (e) => {
+                        const img = new Image()
+                        img.onload = () => {
+                            this.selectedImage.width = img.width
+                            this.selectedImage.height = img.height
+                        }
+                        img.src = e.target.result
+                        this.selectedImage.file = e.target.result
+                        this.selectedImage.base64 = e.target.result.split(',')[1]
+                    }
+                    reader.readAsDataURL(file)
+                    this.selectedImage.size = Math.ceil(file.size / 1024)
+                }
+                this.$emit('handleSelectedImage', this.selectedImage)
+            });
+
+            input.click()
+        }
+    },
+    created() {
+        this.currentImages = this.images
     }
 }
 </script>
@@ -90,6 +142,7 @@ export default {
         height: 100%;
         width: 100%;
         border-radius: $border-radius-small;
+        object-fit: cover;
     }
 
     &__icon-wrapper {

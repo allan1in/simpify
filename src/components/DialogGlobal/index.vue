@@ -1,12 +1,7 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div
-        ref="dialogContainer"
-        class="dialog-global-container"
-        v-if="modelValue"
-        @click="handleClickContainer"
-      >
+      <div ref="dialogContainer" class="dialog-global-container" v-if="modelValue" @click="handleClickContainer">
         <div class="dialog-global-container__box" v-bind="$attrs">
           <slot></slot>
         </div>
@@ -24,7 +19,7 @@ export default {
   methods: {
     handleClickContainer(event) {
       if (event.target === this.$refs.dialogContainer) {
-        this.$emit('beforeClose')
+        this.$emit('clickOutside')
       }
     }
   }
