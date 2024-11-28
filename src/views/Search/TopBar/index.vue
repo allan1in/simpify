@@ -1,33 +1,18 @@
 <template>
-  <template v-if="!loading_skeleton">
-    <section class="top-bar-container">
+  <section class="top-bar-container">
+    <TagButton @handle-click="getAll" :text="$t('top_bar.all')" :isActive="!isActive" />
+    <template v-for="tag in tags" :key="tag">
       <TagButton
-        v-if="showTags.all"
-        @handle-click="getAll"
-        :text="$t('top_bar.all')"
-        :isActive="!isActive"
+        @handle-click="jumpTo(tag)"
+        :text="$t(`top_bar.${tag}`)"
+        :isActive="isActive === tag"
       />
-      <template v-for="tag in tags" :key="tag">
-        <TagButton
-          v-if="showTags[tag]"
-          @handle-click="jumpTo(tag)"
-          :text="$t(`top_bar.${tag}`)"
-          :isActive="isActive === tag"
-        />
-      </template>
-    </section>
-  </template>
-  <template v-else>
-    <section class="top-bar-container">
-      <Skeleton v-for="i in tags.length + 1" :key="i" class="skeleton" />
-    </section>
-  </template>
+    </template>
+  </section>
 </template>
 
 <script>
-import { search } from '@/api/meta/search'
 import Skeleton from '@/components/Skeleton/index.vue'
-import { debounce } from '@/utils/debounce'
 import TagButton from '@/components/TagButton/index.vue'
 
 export default {
@@ -50,53 +35,17 @@ export default {
     },
     jumpTo(tag) {
       this.$router.push({ name: `Get${tag.charAt(0).toUpperCase()}${tag.slice(1)}` })
-    },
-    debouncedCheck() {},
-    // If there is no data of this type, hide the tag
-    async checkHasResults() {
-      if (this.$route.params.inputContent) {
-        let type = this.tags
-          .map((tag) => {
-            return tag.slice(0, tag.length - 1)
-          })
-          .join(',')
-        const params = {
-          q: this.$route.params.inputContent,
-          type: type,
-          limit: 1,
-          offset: 0
-        }
-        const res = await search(params)
-
-        this.tags.forEach((tag) => {
-          this.showTags[tag] = res[tag]?.total === 0 ? false : true
-        })
-
-        Object.keys(this.showTags).forEach((key) => {
-          if (this.showTags[key]) {
-            this.showTags.all = true
-          }
-        })
-
-        this.loading_skeleton = false
-      }
     }
   },
   watch: {
-    async $route(to, from) {
-      this.loading_skeleton = true
-      await this.debouncedCheck()
-      this.isActive = decodeURIComponent(
-        this.$route.fullPath.split('/')[3] ? this.$route.fullPath.split('/')[3] : ''
-      )
+    $route: {
+      handler(to, from) {
+        this.isActive = decodeURIComponent(
+          this.$route.fullPath.split('/')[3] ? this.$route.fullPath.split('/')[3] : ''
+        )
+      },
+      immediate: true
     }
-  },
-  async created() {
-    this.debouncedCheck = debounce(this.checkHasResults)
-    await this.debouncedCheck()
-    this.isActive = decodeURIComponent(
-      this.$route.fullPath.split('/')[3] ? this.$route.fullPath.split('/')[3] : ''
-    )
   }
 }
 </script>
