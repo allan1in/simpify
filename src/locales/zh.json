@@ -101,7 +101,8 @@
     "only_for_premium": "请升级 Premium 以播放音乐。",
     "loading": "加载中...",
     "no_track_playing": "没有正在播放的歌曲。",
-    "something_wrong": "出现了一些问题..."
+    "something_wrong": "出现了一些问题...",
+    "update_succeeded": "修改成功。"
   },
   "dialog_playlist_edit": {
     "title": "编辑详情",

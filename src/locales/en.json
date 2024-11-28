@@ -101,7 +101,8 @@
     "only_for_premium": "Please Upgrade to Premium to Play Music.",
     "loading": "Loading now...",
     "no_track_playing": "No track is playing.",
-    "something_wrong": "Something went wrong..."
+    "something_wrong": "Something went wrong...",
+    "update_succeeded": "Update Succeeded."
   },
   "dialog_playlist_edit": {
     "title": "Edit Details",

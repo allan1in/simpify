@@ -60,10 +60,21 @@ export function createNewPlaylist(id, data) {
   })
 }
 
+export function changePlaylistDetails(id, data) {
+  return request({
+    url: `/playlists/${id}`,
+    method: 'put',
+    data
+  })
+}
+
 export function updatePlaylistCover(id, data) {
   return request({
     url: `/playlists/${id}/images`,
     method: 'put',
+    headers: {
+      'Content-Type': 'image/jpeg'
+    },
     data
   })
 }
