@@ -111,9 +111,7 @@
     "text_label": "Name",
     "textarea_label": "Description",
     "statement": "By proceeding, you agree to give Spotify access to the image you choose to upload. Please make sure you have the right to upload the image.",
-    "save": "Save",
-    "change_picture": "Change Picture",
-    "remove_picture": "Remove Picture"
+    "save": "Save"
   },
   "dialog_playlist_create": {
     "title": "Create New Playlist",
@@ -126,10 +124,19 @@
     "remove_picture": "Remove Picture"
   },
   "drop_down_playlist": {
-    "edit_details": "Edit Details"
+    "edit_details": "Edit Details",
+    "remove": "Remove"
   },
   "alert_box": {
     "require_name": "Playlist name is required.",
     "click_create": "Press create to create new playlist."
+  },
+  "confirm_box": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "confirm_box_playlist_delete": {
+    "title": "Remove from Your Library?",
+    "message": "This will remove {name} from Your Library."
   }
 }

@@ -14,9 +14,9 @@
         <IconExternalLink />
       </span>
     </a>
-    <button v-else class="drop-down-item-container" :class="{ 'top-line': topLine }">
+    <button v-else class="drop-down-item-button" :class="{ 'top-line': topLine }">
       <slot name="icon"></slot>
-      <span class="drop-down-item-container__text-wrapper">
+      <span class="drop-down-item-button__text-wrapper">
         <slot></slot>
       </span>
     </button>
@@ -74,6 +74,22 @@ export default {
     height: calc($font-size-text-secondary + 0.2rem);
     width: calc($font-size-text-secondary + 0.2rem);
     fill: $color-font-primary;
+  }
+}
+
+.drop-down-item-button {
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  font-size: $font-size-text-secondary;
+  padding: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: $color-bg-6;
+    text-decoration: underline;
   }
 }
 </style>

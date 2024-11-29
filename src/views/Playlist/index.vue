@@ -64,7 +64,7 @@
                 </button>
               </template>
               <template #dropDownItems>
-                <DropDownItem @click="openDialog = true">
+                <DropDownItem @click="openEditDialog = true">
                   <template #icon>
                     <div
                       class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper"
@@ -74,6 +74,18 @@
                   </template>
                   <template #default>
                     {{ $t('drop_down_playlist.edit_details') }}
+                  </template>
+                </DropDownItem>
+                <DropDownItem @click="openRemoveConfirm = true">
+                  <template #icon>
+                    <div
+                      class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper"
+                    >
+                      <IconRemove />
+                    </div>
+                  </template>
+                  <template #default>
+                    {{ $t('drop_down_playlist.remove') }}
                   </template>
                 </DropDownItem>
               </template>
@@ -93,9 +105,15 @@
       </div>
     </div>
     <DialogPlaylistEdit
-      v-model="openDialog"
+      v-model="openEditDialog"
       :item="playlist"
       @update-succeed="handleUpdateSucceed"
+    />
+    <ConfirmBox
+      v-model="openRemoveConfirm"
+      @confirm="handleConfirmed"
+      :title="$t('confirm_box_playlist_delete.title')"
+      :message="$t('confirm_box_playlist_delete.message', { name: playlist.name })"
     />
   </template>
   <template v-else>
@@ -147,6 +165,8 @@ import DropDownItem from '@/components/DropDownItem/index.vue'
 import IconMore from '@/components/Icons/IconMore.vue'
 import IconEdit from '@/components/Icons/IconEdit.vue'
 import DialogPlaylistEdit from '@/components/DialogPlaylistEdit/index.vue'
+import IconRemove from '@/components/Icons/IconRemove.vue'
+import ConfirmBox from '@/components/ConfirmBox/index.vue'
 
 export default {
   name: 'Playlist',
@@ -161,7 +181,9 @@ export default {
     DropDownItem,
     IconMore,
     IconEdit,
-    DialogPlaylistEdit
+    DialogPlaylistEdit,
+    IconRemove,
+    ConfirmBox
   },
   data() {
     return {
@@ -174,7 +196,8 @@ export default {
       loading_skeleton: true,
       loading_more: false,
       isFollowed: null,
-      openDialog: false
+      openEditDialog: false,
+      openRemoveConfirm: false
     }
   },
   computed: {
@@ -191,6 +214,11 @@ export default {
     }
   },
   methods: {
+    async handleConfirmed() {
+      const res = await deleteUserSavedPlaylists(this.playlist.id)
+      this.$router.push({ name: 'Home' })
+      this.openRemoveConfirm = false
+    },
     reset() {
       this.id = this.$route.params.playlistId
       this.playlist = {}

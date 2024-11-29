@@ -124,10 +124,15 @@
     "remove_picture": "删除图片"
   },
   "drop_down_playlist": {
-    "edit_details": "编辑详情"
+    "edit_details": "编辑详情",
+    "remove":"移除"
   },
   "alert_box": {
     "require_name": "歌单名称是必填项。",
     "click_create": "点击“创建”以创建新的歌单。"
+  },
+  "confirm_box":{
+    "cancel":"取消",
+    "confirm":"确认"
   }
 }
