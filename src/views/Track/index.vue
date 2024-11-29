@@ -3,12 +3,18 @@
     <div class="track-container">
       <div class="track-container__banner">
         <Banner :type="$t('track.type')" :title="track.name" :images="track.album.images">
-          <router-link class="track-container__banner-details__artist"
-            :to="{ name: 'Artist', params: { artistId: artists[0].id } }">{{ artists[0].name }}</router-link>
+          <router-link
+            class="track-container__banner-details__artist"
+            :to="{ name: 'Artist', params: { artistId: artists[0].id } }"
+            >{{ artists[0].name }}</router-link
+          >
           <span class="track-container__banner-details__album-wrapper">
             <span> • </span>
-            <router-link class="track-container__banner-details__album-wrapper__album"
-              :to="{ name: 'Album', params: { albumId: track.album.id } }">{{ track.album.name }}</router-link>
+            <router-link
+              class="track-container__banner-details__album-wrapper__album"
+              :to="{ name: 'Album', params: { albumId: track.album.id } }"
+              >{{ track.album.name }}</router-link
+            >
           </span>
           <span class="track-container__banner-details__release-year">
             {{ ` • ${track.album.release_date.split('-')[0]}` }}
@@ -16,9 +22,12 @@
           <span class="track-container__banner-details__duration">
             {{
               ` •
-            ${duration.hr ? `${duration.hr} ${$t('track.duration.hr')} ` : ''}${duration.min ? `${duration.min}
-            ${$t('track.duration.min')} ` : ''
-              }${duration.sec ? `${duration.sec} ${$t('track.duration.sec')} ` : ''}`
+            ${duration.hr ? `${duration.hr} ${$t('track.duration.hr')} ` : ''}${
+              duration.min
+                ? `${duration.min}
+            ${$t('track.duration.min')} `
+                : ''
+            }${duration.sec ? `${duration.sec} ${$t('track.duration.sec')} ` : ''}`
             }}
           </span>
         </Banner>
@@ -28,7 +37,10 @@
           <div class="track-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="track" />
           </div>
-          <div class="track-container__content__btn-group__add-wrapper" @click.prevent="handleClickSaveButton">
+          <div
+            class="track-container__content__btn-group__add-wrapper"
+            @click.prevent="handleClickSaveButton"
+          >
             <IconSaved v-show="isSaved" />
             <IconAddTo v-show="!isSaved" />
           </div>
@@ -97,6 +109,7 @@ export default {
     return {
       id: this.$route.params.trackId,
       track: {},
+      isSaved: undefined,
       artists: [],
       loading_skeleton: true
     }
@@ -105,22 +118,25 @@ export default {
     duration() {
       return timeFormatAlbum(this.track.duration_ms)
     },
-    ...mapWritableState(usePlayerStore, ['isSaved',
-      'current_track'])
+    ...mapWritableState(usePlayerStore, {
+      current_track: 'current_track',
+      isSavedGlobal: 'isSaved'
+    })
   },
   methods: {
-    ...mapActions(usePlayerStore, ['checkUserSavedTrack']),
-    reset() {
+    async reset() {
       this.id = this.$route.params.trackId
       this.track = {}
       this.artists = []
-      this.isSaved = undefined
       this.loading_skeleton = true
+    },
+    async checkUserSavedTrack() {
+      this.isSaved = (await checkUserSavedTracks({ ids: this.id }))?.[0]
     },
     async getAll() {
       await this.getTrack()
       await this.getArtists()
-      await this.checkUserSavedTrack(this.track)
+      await this.checkUserSavedTrack()
 
       this.loading_skeleton = false
     },
@@ -140,13 +156,13 @@ export default {
     async handleClickSaveButton() {
       if (this.isSaved) {
         await deleteUserSavedTracks({ ids: this.id })
-        await this.checkUserSavedTrack(this.track)
+        await this.checkUserSavedTrack()
         if (!this.isSaved) {
           Message(`${this.$t('message.removed_from_liked_songs')}`)
         }
       } else {
         await saveTracks({ ids: this.id })
-        await this.checkUserSavedTrack(this.track)
+        await this.checkUserSavedTrack()
         if (this.isSaved) {
           Message(`${this.$t('message.added_to_liked_songs')}`)
         }
@@ -157,9 +173,24 @@ export default {
     $route: {
       async handler(to, from) {
         this.reset()
+        await this.checkUserSavedTrack()
         await this.getAll()
       },
       immediate: true
+    },
+    isSavedGlobal: {
+      handler(newVal, oldVal) {
+        if (this.current_track?.id === this.id) {
+          this.isSaved = newVal
+        }
+      }
+    },
+    isSaved: {
+      handler(newVal, oldVal) {
+        if (this.current_track?.id === this.id) {
+          this.isSavedGlobal = newVal
+        }
+      }
     }
   }
 }

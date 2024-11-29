@@ -8,7 +8,7 @@ import {
 } from '@/api/meta/player'
 import Message from '@/components/Message/index'
 import i18n from '@/includes/i18n'
-import { checkUserSavedTracks } from '@/api/meta/track'
+import { checkUserSavedTracks, deleteUserSavedTracks, saveTracks } from '@/api/meta/track'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
@@ -87,7 +87,7 @@ export const usePlayerStore = defineStore('player', {
               this.context = res.context
             }
 
-            await this.checkUserSavedTrack()
+            this.isSaved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]
             this.loading = false
           })
 
@@ -240,10 +240,20 @@ export const usePlayerStore = defineStore('player', {
         Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
-    async checkUserSavedTrack(track = this.current_track) {
-      let params = { ids: track?.id }
-      const res = await checkUserSavedTracks(params)
-      this.isSaved = res[0]
+    async toggleTrackSave() {
+      if (this.isSaved) {
+        await deleteUserSavedTracks({ ids: this.current_track?.id })
+        this.isSaved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]
+        if (!this.isSaved) {
+          Message(`${i18n.global.t('message.removed_from_liked_songs')}`)
+        }
+      } else {
+        await saveTracks({ ids: this.current_track?.id })
+        this.isSaved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]
+        if (this.isSaved) {
+          Message(`${i18n.global.t('message.added_to_liked_songs')}`)
+        }
+      }
     }
   }
 })
