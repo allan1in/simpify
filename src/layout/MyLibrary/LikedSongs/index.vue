@@ -1,7 +1,22 @@
 <template>
-  <div class="my-library__container__content__liked-songs">
-    <CardTrackLibrary v-for="(item, index) in tracks" :item="item.track" :index :uris />
-  </div>
+  <template v-if="active">
+    <template v-if="!loading_skeleton">
+      <div class="my-library__container__content__liked-songs">
+        <CardTrackLibrary
+          v-for="(item, index) in tracks"
+          :key="item.id"
+          :item="item.track"
+          :index
+          :uris
+        />
+      </div>
+    </template>
+    <template v-else>
+      <div class="my-library__container__content__liked-songs">
+        <CardTrackLibrary v-for="i in tracks_limit" :key="i" :loading="loading_skeleton" />
+      </div>
+    </template>
+  </template>
 </template>
 
 <script>
@@ -11,12 +26,19 @@ import CardTrackLibrary from '@/components/CardTrackLibrary/index.vue'
 export default {
   name: 'LikedSongs',
   inject: ['bottom'],
+  props: {
+    active: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       tracks: [],
       tracks_limit: 20,
       tracks_offset: 0,
-      tracks_next: ''
+      tracks_next: '',
+      loading_skeleton: true
     }
   },
   components: {
@@ -32,8 +54,17 @@ export default {
     }
   },
   methods: {
+    reset() {
+      this.tracks = []
+      this.tracks_limit = 20
+      this.tracks_offset = 0
+      this.tracks_next = ''
+      this.loading_skeleton = true
+    },
     async getAll() {
       await this.getUserlikedSongs()
+
+      this.loading_skeleton = false
     },
     async getUserlikedSongs() {
       if (!this.loading_more && this.tracks_next !== null) {
@@ -68,10 +99,16 @@ export default {
         }
       },
       immediate: true
+    },
+    active: {
+      handler(newVal, oldVal) {
+        if (newVal) {
+          this.reset()
+          this.getAll()
+        }
+      },
+      immediate: true
     }
-  },
-  created() {
-    this.getAll()
   }
 }
 </script>

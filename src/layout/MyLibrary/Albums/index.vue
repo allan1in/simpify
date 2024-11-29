@@ -1,7 +1,16 @@
 <template>
-  <div class="my-library__container__content__albums">
-    <CardAlbumLibrary v-for="item in albums" :item="item.album" />
-  </div>
+  <template v-if="active">
+    <template v-if="!loading_skeleton">
+      <div class="my-library__container__content__albums">
+        <CardAlbumLibrary v-for="item in albums" :item="item.album" />
+      </div>
+    </template>
+    <template v-else>
+      <div class="my-library__container__content__albums">
+        <CardAlbumLibrary v-for="i in albums_limit" :key="i" :loading="loading_skeleton" />
+      </div>
+    </template>
+  </template>
 </template>
 
 <script>
@@ -16,15 +25,31 @@ export default {
       albums: [],
       albums_limit: 20,
       albums_offset: 0,
-      albums_next: ''
+      albums_next: '',
+      loading_skeleton: true
+    }
+  },
+  props: {
+    active: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
     CardAlbumLibrary
   },
   methods: {
+    reset() {
+      this.albums = []
+      this.albums_limit = 20
+      this.albums_offset = 0
+      this.albums_next = ''
+      this.loading_skeleton = true
+    },
     async getAll() {
       await this.getCurrentUserAlbums()
+
+      this.loading_skeleton = false
     },
     async getCurrentUserAlbums() {
       if (!this.loading_more && this.albums_next !== null) {
@@ -59,10 +84,16 @@ export default {
         }
       },
       immediate: true
+    },
+    active: {
+      handler(newVal, oldVal) {
+        if (newVal) {
+          this.reset()
+          this.getAll()
+        }
+      },
+      immediate: true
     }
-  },
-  created() {
-    this.getAll()
   }
 }
 </script>

@@ -1,61 +1,74 @@
 <template>
-  <div
-    class="card-album-library-contanier"
-    :class="{ 'card-album-library-contanier-collasped-current': isCurrent }"
-  >
-    <router-link
-      :to="{ name: 'Album', params: { albumId: item.id } }"
-      class="card-album-library-contanier__cover"
+  <template v-if="!loading">
+    <div
+      class="card-album-library-contanier"
+      :class="{ 'card-album-library-contanier-collasped-current': isCurrent }"
     >
-      <div class="card-album-library-contanier__cover__icon">
-        <div
-          class="card-album-library-contanier__cover__icon__wrapper"
-          @click.prevent="handleClick"
-        >
-          <IconPause v-if="isPlaying" />
-          <IconPlay v-else />
-        </div>
-      </div>
-      <div v-if="isPlaying" class="card-album-library-contanier__cover__playing">
-        <img
-          class="card-album-library-contanier__cover__playing__img"
-          loading="lazy"
-          src="/src/assets/images/playing.gif"
-          alt=""
-        />
-      </div>
-      <img
-        class="card-album-library-contanier__cover__img"
-        :src="item.images[0]?.url"
-        :alt="item.name"
-      />
-    </router-link>
-    <div v-if="!isCollasped" class="card-album-library-contanier__info">
       <router-link
         :to="{ name: 'Album', params: { albumId: item.id } }"
-        class="card-album-library-contanier__info__title"
-        :class="{
-          'card-album-library-contanier__info__title-playing': isCurrent
-        }"
+        class="card-album-library-contanier__cover"
       >
-        {{ item.name }}
-      </router-link>
-      <div class="card-album-library-contanier__info__artists">
-        <span
-          v-for="(artist, index) in item.artists"
-          class="card-album-library-contanier__info__artists__item"
-        >
-          {{ index === 0 ? '' : ', ' }}
-          <router-link
-            :to="{ name: 'Artist', params: { artistId: artist.id } }"
-            class="card-album-library-contanier__info__artists__item__link"
+        <div class="card-album-library-contanier__cover__icon">
+          <div
+            class="card-album-library-contanier__cover__icon__wrapper"
+            @click.prevent="handleClick"
           >
-            {{ artist.name }}
-          </router-link>
-        </span>
+            <IconPause v-if="isPlaying" />
+            <IconPlay v-else />
+          </div>
+        </div>
+        <div v-if="isPlaying" class="card-album-library-contanier__cover__playing">
+          <img
+            class="card-album-library-contanier__cover__playing__img"
+            loading="lazy"
+            src="/src/assets/images/playing.gif"
+            alt=""
+          />
+        </div>
+        <img
+          class="card-album-library-contanier__cover__img"
+          :src="item.images[0]?.url"
+          :alt="item.name"
+        />
+      </router-link>
+      <div v-if="!isCollasped" class="card-album-library-contanier__info">
+        <router-link
+          :to="{ name: 'Album', params: { albumId: item.id } }"
+          class="card-album-library-contanier__info__title"
+          :class="{
+            'card-album-library-contanier__info__title-playing': isCurrent
+          }"
+        >
+          {{ item.name }}
+        </router-link>
+        <div class="card-album-library-contanier__info__artists">
+          <span
+            v-for="(artist, index) in item.artists"
+            class="card-album-library-contanier__info__artists__item"
+          >
+            {{ index === 0 ? '' : ', ' }}
+            <router-link
+              :to="{ name: 'Artist', params: { artistId: artist.id } }"
+              class="card-album-library-contanier__info__artists__item__link"
+            >
+              {{ artist.name }}
+            </router-link>
+          </span>
+        </div>
       </div>
     </div>
-  </div>
+  </template>
+  <template v-else>
+    <div class="card-album-library-contanier skeleton">
+      <div class="card-album-library-contanier__cover">
+        <Skeleton class="card-album-library-contanier__cover__img" />
+      </div>
+      <div v-if="!isCollasped" class="card-album-library-contanier__info">
+        <Skeleton class="card-album-library-contanier__info__title skeleton__name" />
+        <Skeleton class="card-album-library-contanier__info__artists skeleton__artists" />
+      </div>
+    </div>
+  </template>
 </template>
 <script>
 import { useLibraryStore } from '@/stores/library'
@@ -63,6 +76,7 @@ import { mapActions, mapState } from 'pinia'
 import IconPlay from '../Icons/IconPlay.vue'
 import IconPause from '../Icons/IconPause.vue'
 import { usePlayerStore } from '@/stores/player'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'CardAlbumLibrary',
@@ -78,7 +92,8 @@ export default {
   },
   components: {
     IconPause,
-    IconPlay
+    IconPlay,
+    Skeleton
   },
   computed: {
     ...mapState(useLibraryStore, ['isCollasped']),
@@ -108,6 +123,22 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.skeleton {
+  &:nth-child(n):hover {
+    background-color: unset;
+  }
+
+  &__name {
+    height: $font-size-text-primary;
+    width: 50%;
+  }
+
+  &__artists {
+    height: $font-size-text-secondary;
+    width: 80%;
+  }
+}
+
 .card-album-library-contanier {
   display: flex;
   justify-content: start;
@@ -196,6 +227,8 @@ export default {
   }
 
   &__info {
+    flex: 1;
+    height: 70%;
     display: flex;
     flex-direction: column;
     align-items: start;

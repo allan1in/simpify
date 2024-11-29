@@ -1,7 +1,16 @@
 <template>
-  <div class="my-library__container__content__artists">
-    <CardArtistLibrary v-for="item in artists" :item="item" />
-  </div>
+  <template v-if="active">
+    <template v-if="!loading_skeleton">
+      <div class="my-library__container__content__artists">
+        <CardArtistLibrary v-for="item in artists" :item="item" />
+      </div>
+    </template>
+    <template v-else>
+      <div class="my-library__container__content__artists">
+        <CardArtistLibrary v-for="i in artists_limit" :key="i" :loading="loading_skeleton" />
+      </div>
+    </template>
+  </template>
 </template>
 
 <script>
@@ -15,15 +24,30 @@ export default {
     return {
       artists: [],
       artists_limit: 20,
-      artists_next: ''
+      artists_next: '',
+      loading_skeleton: true
+    }
+  },
+  props: {
+    active: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
     CardArtistLibrary
   },
   methods: {
+    reset() {
+      this.artists = []
+      this.artists_limit = 20
+      this.artists_next = ''
+      this.loading_skeleton = true
+    },
     async getAll() {
       await this.getCurrentUserArtists()
+
+      this.loading_skeleton = false
     },
     async getCurrentUserArtists() {
       if (!this.loading_more && this.artists_next !== null) {
@@ -57,10 +81,16 @@ export default {
         }
       },
       immediate: true
+    },
+    active: {
+      handler(newVal, oldVal) {
+        if (newVal) {
+          this.reset()
+          this.getAll()
+        }
+      },
+      immediate: true
     }
-  },
-  created() {
-    this.getAll()
   }
 }
 </script>

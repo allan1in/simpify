@@ -1,47 +1,60 @@
 <template>
-  <div
-    class="card-artist-library-contanier"
-    :class="{ 'card-artist-library-contanier-collasped-current': isCurrent }"
-  >
-    <router-link
-      :to="{ name: 'Artist', params: { artistId: item.id } }"
-      class="card-artist-library-contanier__cover"
+  <template v-if="!loading">
+    <div
+      class="card-artist-library-contanier"
+      :class="{ 'card-artist-library-contanier-collasped-current': isCurrent }"
     >
-      <div class="card-artist-library-contanier__cover__icon">
-        <div
-          class="card-artist-library-contanier__cover__icon__wrapper"
-          @click.prevent="handleClick"
-        >
-          <IconPause v-if="isPlaying" />
-          <IconPlay v-else />
-        </div>
-      </div>
-      <div v-if="isPlaying" class="card-artist-library-contanier__cover__playing">
-        <img
-          class="card-artist-library-contanier__cover__playing__img"
-          loading="lazy"
-          src="/src/assets/images/playing.gif"
-          alt=""
-        />
-      </div>
-      <img
-        class="card-artist-library-contanier__cover__img"
-        :src="item.images[0]?.url"
-        :alt="item.name"
-      />
-    </router-link>
-    <div v-if="!isCollasped" class="card-artist-library-contanier__info">
       <router-link
         :to="{ name: 'Artist', params: { artistId: item.id } }"
-        class="card-artist-library-contanier__info__title"
-        :class="{
-          'card-artist-library-contanier__info__title-playing': isCurrent
-        }"
+        class="card-artist-library-contanier__cover"
       >
-        {{ item.name }}
+        <div class="card-artist-library-contanier__cover__icon">
+          <div
+            class="card-artist-library-contanier__cover__icon__wrapper"
+            @click.prevent="handleClick"
+          >
+            <IconPause v-if="isPlaying" />
+            <IconPlay v-else />
+          </div>
+        </div>
+        <div v-if="isPlaying" class="card-artist-library-contanier__cover__playing">
+          <img
+            class="card-artist-library-contanier__cover__playing__img"
+            loading="lazy"
+            src="/src/assets/images/playing.gif"
+            alt=""
+          />
+        </div>
+        <img
+          class="card-artist-library-contanier__cover__img"
+          :src="item.images[0]?.url"
+          :alt="item.name"
+        />
       </router-link>
+      <div v-if="!isCollasped" class="card-artist-library-contanier__info">
+        <router-link
+          :to="{ name: 'Artist', params: { artistId: item.id } }"
+          class="card-artist-library-contanier__info__title"
+          :class="{
+            'card-artist-library-contanier__info__title-playing': isCurrent
+          }"
+        >
+          {{ item.name }}
+        </router-link>
+      </div>
     </div>
-  </div>
+  </template>
+  <template v-else>
+    <div class="card-artist-library-contanier skeleton">
+      <div class="card-artist-library-contanier__cover">
+        <Skeleton class="card-artist-library-contanier__cover__img" />
+      </div>
+      <div v-if="!isCollasped" class="card-artist-library-contanier__info">
+        <Skeleton class="card-artist-library-contanier__info__title skeleton__name" />
+        <Skeleton class="card-artist-library-contanier__info__artists skeleton__artists" />
+      </div>
+    </div>
+  </template>
 </template>
 <script>
 import { useLibraryStore } from '@/stores/library'
@@ -49,6 +62,7 @@ import { mapActions, mapState } from 'pinia'
 import IconPlay from '../Icons/IconPlay.vue'
 import IconPause from '../Icons/IconPause.vue'
 import { usePlayerStore } from '@/stores/player'
+import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'CardArtistLibrary',
@@ -64,7 +78,8 @@ export default {
   },
   components: {
     IconPause,
-    IconPlay
+    IconPlay,
+    Skeleton
   },
   computed: {
     ...mapState(useLibraryStore, ['isCollasped']),
@@ -94,6 +109,22 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.skeleton {
+  &:nth-child(n):hover {
+    background-color: unset;
+  }
+
+  &__name {
+    height: $font-size-text-primary;
+    width: 50%;
+  }
+
+  &__artists {
+    height: $font-size-text-secondary;
+    width: 80%;
+  }
+}
+
 .card-artist-library-contanier {
   display: flex;
   justify-content: start;
@@ -182,6 +213,8 @@ export default {
   }
 
   &__info {
+    flex: 1;
+    height: 70%;
     display: flex;
     flex-direction: column;
     align-items: start;

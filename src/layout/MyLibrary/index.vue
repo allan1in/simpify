@@ -38,12 +38,12 @@
         class="my-library__container__content"
         :class="{ 'my-library__container__content-collasped': isCollasped }"
       >
-        <MyOverlayScrollbars os-element="div" @scroll="updateBottom">
+        <MyOverlayScrollbars ref="scrollbar" os-element="div" @scroll="updateBottom">
           <div class="my-library__container__content__wrapper">
-            <LikedSongs v-if="activeTag === 'liked_songs'" />
-            <Playlists v-if="activeTag === 'playlists'" />
-            <Albums v-if="activeTag === 'albums'" />
-            <Artists v-if="activeTag === 'artists'" />
+            <LikedSongs :active="activeTag === 'liked_songs'" />
+            <Playlists :active="activeTag === 'playlists'" />
+            <Albums :active="activeTag === 'albums'" />
+            <Artists :active="activeTag === 'artists'" />
           </div>
         </MyOverlayScrollbars>
       </div>
@@ -106,6 +106,18 @@ export default {
     ...mapActions(useLibraryStore, ['changeActiveTag']),
     updateBottom(bottom) {
       this.bottom = bottom
+    },
+    scrollToTop() {
+      const instance = this.$refs.scrollbar.getOsInstance()
+      if (instance) {
+        // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollTo
+        instance.elements().viewport.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    }
+  },
+  watch: {
+    activeTag(newVal, oldVal) {
+      this.scrollToTop()
     }
   }
 }
