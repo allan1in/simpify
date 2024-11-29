@@ -5,7 +5,7 @@
       <TagButton
         @handle-click="jumpTo(tag)"
         :text="$t(`top_bar.${tag}`)"
-        :isActive="isActive === tag"
+        :activeTag="isActive === tag"
       />
     </template>
   </section>
