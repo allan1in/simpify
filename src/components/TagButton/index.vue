@@ -1,5 +1,5 @@
 <template>
-  <button class="tag-button" :class="{ 'btn-active': isActive }" @click="$emit('handleClick')">
+  <button class="tag-button" :class="{ 'btn-active': activeTag }" @click="$emit('handleClick')">
     {{ text }}
   </button>
 </template>
@@ -9,7 +9,7 @@ export default {
   name: 'TagButton',
   emits: ['handleClick'],
   props: {
-    isActive: {
+    activeTag: {
       type: Boolean,
       default: false
     },

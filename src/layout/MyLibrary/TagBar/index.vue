@@ -35,7 +35,7 @@
           class="top-bar-wrapper__top-bar__btn"
           @handle-click="$emit('handleClickTag', tag)"
           :text="$t(`top_bar.${tag}`)"
-          :isActive="isActive === tag"
+          :activeTag="activeTag === tag"
         />
       </template>
     </div>
@@ -55,7 +55,7 @@ export default {
       type: Array,
       default: []
     },
-    isActive: {
+    activeTag: {
       type: String,
       default: ''
     }

@@ -12,12 +12,18 @@
           }}</span>
         </div>
         <div v-show="!isCollasped" class="my-library__container__title__right">
-          <button class="my-library__container__title__right__create-playlist" @click="openDialog = true">
+          <button
+            class="my-library__container__title__right__create-playlist"
+            @click="openDialog = true"
+          >
             <div class="my-library__container__title__right__create-playlist__icon-wrapper">
               <IconPlus />
             </div>
           </button>
-          <button class="my-library__container__title__right__arrow" @click.prevent="isShowMore = !isShowMore">
+          <button
+            class="my-library__container__title__right__arrow"
+            @click.prevent="isShowMore = !isShowMore"
+          >
             <div class="my-library__container__title__right__arrow__wrapper">
               <IconArrowRightLonger v-show="!isShowMore" />
               <IconArrowLeftLonger v-show="isShowMore" />
@@ -26,15 +32,18 @@
         </div>
       </div>
       <div v-show="!isCollasped" class="my-library__container__tag-bar">
-        <TagBar :tags="tags" :isActive @handle-click-tag="changeTag" />
+        <TagBar :tags="tags" :activeTag @handle-click-tag="changeActiveTag" />
       </div>
-      <div class="my-library__container__content" :class="{ 'my-library__container__content-collasped': isCollasped }">
+      <div
+        class="my-library__container__content"
+        :class="{ 'my-library__container__content-collasped': isCollasped }"
+      >
         <MyOverlayScrollbars os-element="div" @scroll="updateBottom">
           <div class="my-library__container__content__wrapper">
-            <LikedSongs v-if="isActive === 'liked_songs'" />
-            <Playlists v-if="isActive === 'playlists'" />
-            <Albums v-if="isActive === 'albums'" />
-            <Artists v-if="isActive === 'artists'" />
+            <LikedSongs v-if="activeTag === 'liked_songs'" />
+            <Playlists v-if="activeTag === 'playlists'" />
+            <Albums v-if="activeTag === 'albums'" />
+            <Artists v-if="activeTag === 'artists'" />
           </div>
         </MyOverlayScrollbars>
       </div>
@@ -48,7 +57,7 @@ import IconLibrary from '@/components/Icons/IconLibrary.vue'
 import IconPlus from '@/components/Icons/IconPlus.vue'
 import ResizeBox from './ResizeBox/index.vue'
 import TagBar from './TagBar/index.vue'
-import { mapWritableState } from 'pinia'
+import { mapActions, mapWritableState } from 'pinia'
 import IconLibraryCollasped from '@/components/Icons/IconLibraryCollasped.vue'
 import IconArrowLeftLonger from '@/components/Icons/IconArrowLeftLonger.vue'
 import IconArrowRightLonger from '@/components/Icons/IconArrowRightLonger.vue'
@@ -71,13 +80,12 @@ export default {
   data() {
     return {
       tags: ['liked_songs', 'playlists', 'albums', 'artists'],
-      isActive: 'liked_songs',
       bottom: undefined,
       openDialog: false
     }
   },
   computed: {
-    ...mapWritableState(useLibraryStore, ['isCollasped', 'myLibWidth', 'isShowMore'])
+    ...mapWritableState(useLibraryStore, ['isCollasped', 'myLibWidth', 'isShowMore', 'activeTag'])
   },
   components: {
     IconLibrary,
@@ -95,9 +103,7 @@ export default {
     DialogPlaylistCreate
   },
   methods: {
-    changeTag(tag) {
-      this.isActive = tag
-    },
+    ...mapActions(useLibraryStore, ['changeActiveTag']),
     updateBottom(bottom) {
       this.bottom = bottom
     }

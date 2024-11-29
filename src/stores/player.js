@@ -13,10 +13,9 @@ import { checkUserSavedTracks, deleteUserSavedTracks, saveTracks } from '@/api/m
 export const usePlayerStore = defineStore('player', {
   state: () => ({
     player: null,
-    activeDevice: null,
     volume: 50,
     isShuffle: false,
-    isPause: true,
+    isPause: `true`,
     repeatMode: 0,
     isMute: false,
     percentage: 0,
@@ -53,7 +52,6 @@ export const usePlayerStore = defineStore('player', {
 
           this.player.addListener('ready', async (res) => {
             await transferPlayback({ device_ids: [res.device_id] })
-            this.activeDevice = { id: res.device_id }
             this.isReady = true
             this.loading = false
           })
