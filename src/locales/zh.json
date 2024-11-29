@@ -125,14 +125,18 @@
   },
   "drop_down_playlist": {
     "edit_details": "编辑详情",
-    "remove":"移除"
+    "remove": "移除"
   },
   "alert_box": {
     "require_name": "歌单名称是必填项。",
     "click_create": "点击“创建”以创建新的歌单。"
   },
-  "confirm_box":{
-    "cancel":"取消",
-    "confirm":"确认"
+  "confirm_box": {
+    "cancel": "取消",
+    "confirm": "确认"
+  },
+  "confirm_box_playlist_delete": {
+    "title": "确认从音乐库移除？",
+    "message": "此操作会将 {name} 从你的音乐库中移除。"
   }
 }
