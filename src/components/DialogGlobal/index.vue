@@ -1,8 +1,14 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div ref="dialogContainer" class="dialog-global-container" v-if="modelValue" @click="handleClickContainer">
+      <div
+        ref="dialogContainer"
+        class="dialog-global-container"
+        v-if="modelValue"
+        @click="handleClickContainer"
+      >
         <div class="dialog-global-container__box" v-bind="$attrs">
+          <div class="loading-cover" :class="{ 'loading-cover-active': loading }"></div>
           <slot></slot>
         </div>
       </div>
@@ -13,12 +19,16 @@
 export default {
   name: 'DialogGlobal',
   props: {
-    modelValue: {}
+    modelValue: {},
+    loading: {
+      type: Boolean,
+      default: false
+    }
   },
   inheritAttrs: false,
   methods: {
     handleClickContainer(event) {
-      if (event.target === this.$refs.dialogContainer) {
+      if (!this.loading && event.target === this.$refs.dialogContainer) {
         this.$emit('clickOutside')
       }
     }
@@ -26,6 +36,24 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.loading-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba($color-bg-1, 0.5);
+  z-index: -1;
+  opacity: 0;
+
+  @include transition;
+
+  &-active:nth-child(n) {
+    z-index: 1;
+    opacity: 1;
+  }
+}
+
 .dialog-global-container {
   width: 100vw;
   height: 100vh;

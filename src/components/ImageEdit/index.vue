@@ -47,7 +47,15 @@ import IconPictureEdit from '../Icons/IconPictureEdit.vue'
 
 export default {
   name: 'ImageEdit',
-  props: ['modelValue'],
+  props: {
+    modelValue: {},
+    validate: {
+      type: Function,
+      default: () => {
+        return true
+      }
+    }
+  },
   data() {
     return {
       isHover: false
@@ -80,19 +88,25 @@ export default {
       input.accept = 'image/.jpg, image/.jpeg, image/.png'
 
       input.addEventListener('change', (event) => {
+        let newImage = {}
         const file = event.target.files[0]
         if (file) {
-          this.currentImage.size = Math.ceil(file.size / 1024)
+          newImage.size = Math.ceil(file.size / 1024)
           const reader = new FileReader()
           reader.onload = (e) => {
             const img = new Image()
             img.onload = () => {
-              this.currentImage.width = img.width
-              this.currentImage.height = img.height
+              newImage.width = img.width
+              newImage.height = img.height
+              newImage.file = e.target.result
+              newImage.base64 = e.target.result.split(',')[1]
+              if (this.validate(newImage)) {
+                Object.keys(newImage).forEach((key) => {
+                  this.currentImage[key] = newImage[key]
+                })
+              }
             }
             img.src = e.target.result
-            this.currentImage.file = e.target.result
-            this.currentImage.base64 = e.target.result.split(',')[1]
           }
           reader.readAsDataURL(file)
         }

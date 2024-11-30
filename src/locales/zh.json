@@ -129,7 +129,8 @@
   },
   "alert_box": {
     "require_name": "歌单名称是必填项。",
-    "click_create": "点击“创建”以创建新的歌单。"
+    "click_create": "点击“创建”以创建新的歌单。",
+    "click_save": "点击“保存”以保留你的更改。"
   },
   "confirm_box": {
     "cancel": "取消",
