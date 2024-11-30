@@ -2,11 +2,19 @@
   <div class="input-text-container">
     <div class="input-text-container__input-box">
       <label class="input-text-container__input-box__label" for="textarea">{{ label }}</label>
-      <input v-bind="$attrs" v-model="textContent" type="text" class="input-text-container__input-box__input"
-        :placeholder="placeholder" @focus="$emit('validate')" @focusout="$emit('validate')"
-        @input="$emit('validate')" />
+      <input
+        v-bind="$attrs"
+        v-model="textContent"
+        type="text"
+        class="input-text-container__input-box__input"
+        :placeholder="placeholder"
+        @focusout="$emit('validate')"
+        @input="$emit('validate')"
+      />
     </div>
-    <span v-show="showCount" class="input-text-container__count">{{ `${textContent.length} / ${maxLength}` }}</span>
+    <span v-show="showCount" class="input-text-container__count">{{
+      `${textContent.length} / ${maxLength}`
+    }}</span>
   </div>
 </template>
 <script>
@@ -44,7 +52,7 @@ export default {
   },
   watch: {
     'textContent.length'(newVal, oldVal) {
-      if (this.maxLength && (newVal >= Math.floor(this.maxLength * 0.9))) {
+      if (this.maxLength && newVal >= Math.floor(this.maxLength * 0.9)) {
         this.showCount = true
       } else {
         this.showCount = false
@@ -61,7 +69,6 @@ export default {
   align-items: center;
   background-color: $color-bg-6;
   border-radius: $border-radius-small;
-
 
   &:focus-within &__input-box__label {
     opacity: 1;
@@ -97,7 +104,7 @@ export default {
         background-color: $color-bg-5;
       }
 
-      &:focus+.input-textarea-container__label {
+      &:focus + .input-textarea-container__label {
         opacity: 1;
       }
     }

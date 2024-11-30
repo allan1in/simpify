@@ -14,4 +14,11 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.app-container {
+  height: 100vh;
+  width: 100vw;
+  min-height: $min-height-app;
+  min-width: $min-width-app;
+}
+</style>

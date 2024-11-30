@@ -106,16 +106,11 @@ export default {
 
 .banner {
   padding: $gutter-3x;
-  background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
+  background: linear-gradient(to bottom, $color-bg-6, $color-bg-3);
   display: flex;
   align-items: end;
   justify-content: start;
   gap: $gutter-3x;
-
-  @include respond(phone) {
-    flex-direction: column;
-    align-items: center;
-  }
 
   &__img-wrapper {
     flex-shrink: 0;
@@ -131,12 +126,6 @@ export default {
 
     &-round {
       border-radius: 50%;
-    }
-
-    @include respond(phone) {
-      height: unset;
-      width: 60%;
-      aspect-ratio: 1 / 1;
     }
 
     &__img {
@@ -163,12 +152,14 @@ export default {
       font-family: $font-family-title;
       font-size: $font-size-title-large;
       font-weight: 800;
-      line-height: 1.5;
+      margin: $gutter 0;
 
       @include oneLineEllipsis;
 
       @include respond(phone) {
         font-size: 3.2rem;
+
+        @include twoLineEllipsis;
       }
     }
 

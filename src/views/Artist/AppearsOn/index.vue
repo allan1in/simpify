@@ -66,7 +66,7 @@ export default {
           res = await getNextAppearsOn(this.id, path.slice(path.indexOf('?') + 1))
         }
 
-        let newVals = res.items
+        let newVals = res.items.filter((item) => item !== null)
         let oldVals = JSON.parse(JSON.stringify(this.appearsOn))
         this.appearsOn = [...oldVals, ...newVals]
         this.appearsOn_next = res.next

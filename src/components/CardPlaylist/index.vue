@@ -166,11 +166,11 @@ export default {
       width: 25%;
       aspect-ratio: 1 / 1;
       position: absolute;
-      right: 1rem;
-      bottom: 1rem;
+      right: 5%;
+      bottom: 5%;
       z-index: 10;
       opacity: 0;
-      transform: translateY(1rem);
+      transform: translateY(15%);
 
       @include transition;
 

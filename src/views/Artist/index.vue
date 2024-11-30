@@ -1,12 +1,7 @@
 <template>
   <template v-if="!loading_skeleton">
     <div class="artist-container">
-      <div
-        class="artist-container__cover"
-        :style="{
-          'background-image': `url(${artist.images?.length !== 0 ? artist.images[0].url : ''})`
-        }"
-      >
+      <div class="artist-container__cover" :style="coverStyle">
         <h1 class="artist-container__cover__title" :title="artist.name">{{ artist.name }}</h1>
         <div class="artist-container__cover__followers" v-if="artist.followers.total !== 0">
           {{
@@ -197,6 +192,11 @@ export default {
         uris.push(item.uri)
       })
       return uris
+    },
+    coverStyle() {
+      return {
+        'background-image': `url(${this.artist.images?.length !== 0 ? this.artist.images[0].url : 'linear-gradient(to bottom, $color-bg-6, $color-bg-4)'})`
+      }
     }
   },
   methods: {
@@ -301,7 +301,7 @@ export default {
 
 .artist-container {
   &__cover {
-    background: linear-gradient(to bottom, $color-bg-6, $color-bg-5);
+    background: linear-gradient(to bottom, $color-bg-6, $color-bg-6);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 0 50%;
@@ -329,18 +329,17 @@ export default {
       font-weight: 800;
       text-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
       // Prevent shadows from being hidden due to 'overflow:hidden'
-      margin: -2rem;
-      padding: 2rem;
+      margin: calc(0rem - $gutter-2x) calc(0rem - $gutter-3x);
+      padding: $gutter-3x;
       z-index: 10;
-      line-height: 1.4;
+
+      @include oneLineEllipsis;
 
       @include respondContainer(phone) {
         font-size: 4rem;
-        margin: -0.6rem;
-        padding: 0.6rem;
-      }
 
-      @include oneLineEllipsis;
+        @include twoLineEllipsis;
+      }
     }
 
     &__followers {

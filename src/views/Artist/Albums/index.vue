@@ -66,7 +66,7 @@ export default {
           res = await getNextAlbums(this.id, path.slice(path.indexOf('?') + 1))
         }
 
-        let newVals = res.items
+        let newVals = res.items.filter((item) => item !== null)
         let oldVals = JSON.parse(JSON.stringify(this.albums))
         this.albums = [...oldVals, ...newVals]
         this.albums_next = res.next

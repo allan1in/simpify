@@ -13,45 +13,40 @@
         </button>
       </div>
     </div>
-    <div class="nav-bar__mid-wrapper">
-      <div class="nav-bar__mid-wrapper__mid">
-        <button class="nav-bar__mid-wrapper__mid__home-btn" @click="toHome">
-          <span
-            class="nav-bar__mid-wrapper__mid__home-btn__wrapper"
-            :class="{ 'btn-active': isHome }"
-          >
-            <IconHomeActive v-if="isHome" />
-            <IconHome v-else />
-          </span>
-        </button>
-        <div class="nav-bar__mid-wrapper__mid__search">
-          <input
-            class="nav-bar__mid-wrapper__mid__search__input"
-            type="text"
-            :placeholder="$t('nav_bar.input_message')"
-            @input="getSearchResult"
-            v-model="inputContent"
-          />
-          <div class="nav-bar__mid-wrapper__mid__search__icon-wrapper">
-            <IconSearch />
-          </div>
-          <button
-            v-if="inputContent.length === 0"
-            class="nav-bar__mid-wrapper__mid__search__btn-wrapper"
-            :class="{ 'btn-active': isSearch }"
-            @click="toSearchPage"
-          >
-            <IconBrowseActive v-if="isSearch" />
-            <IconBrowse v-else />
-          </button>
-          <button
-            v-else
-            class="nav-bar__mid-wrapper__mid__search__btn-wrapper nav-bar__mid-wrapper__mid__search__btn-wrapper__clear-border"
-            @click="inputContent = ''"
-          >
-            <IconClose />
-          </button>
+    <div class="nav-bar__mid">
+      <button class="nav-bar__mid__home-btn" @click="toHome">
+        <span class="nav-bar__mid__home-btn__wrapper" :class="{ 'btn-active': isHome }">
+          <IconHomeActive v-if="isHome" />
+          <IconHome v-else />
+        </span>
+      </button>
+      <div class="nav-bar__mid__search">
+        <input
+          class="nav-bar__mid__search__input"
+          type="text"
+          :placeholder="$t('nav_bar.input_message')"
+          @input="getSearchResult"
+          v-model="inputContent"
+        />
+        <div class="nav-bar__mid__search__icon-wrapper">
+          <IconSearch />
         </div>
+        <button
+          v-if="inputContent.length === 0"
+          class="nav-bar__mid__search__btn-wrapper"
+          :class="{ 'btn-active': isSearch }"
+          @click="toSearchPage"
+        >
+          <IconBrowseActive v-if="isSearch" />
+          <IconBrowse v-else />
+        </button>
+        <button
+          v-else
+          class="nav-bar__mid__search__btn-wrapper nav-bar__mid__search__btn-wrapper__clear-border"
+          @click="inputContent = ''"
+        >
+          <IconClose />
+        </button>
       </div>
     </div>
     <div class="nav-bar__right">
@@ -216,8 +211,10 @@ export default {
   display: flex;
   justify-content: space-between;
   position: relative;
+  gap: $gutter-2x;
 
   &__left {
+    flex: 1;
     display: flex;
     align-items: center;
     z-index: 1;
@@ -256,140 +253,120 @@ export default {
         @include clickAnimation;
       }
     }
-
-    @include respond(tab-port) {
-      display: none;
-    }
   }
 
-  &__mid-wrapper {
-    position: absolute;
+  &__mid {
+    flex: 5;
+    z-index: 1;
     display: flex;
-    justify-content: center;
-    width: 100%;
+    align-items: center;
+    gap: $gutter;
+    max-width: 53.7rem;
 
-    @include respond(tab-port) {
-      position: relative;
-      justify-content: start;
-      margin-right: $gutter;
+    &__home-btn {
+      width: $height-nav;
+      height: $height-nav;
+      border-radius: 50%;
+      background-color: $color-bg-3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:hover &__wrapper {
+        fill: $color-font-primary;
+      }
+
+      @include clickAnimation;
+
+      &__wrapper {
+        fill: $color-font-secondary;
+        height: calc($height-nav / 2);
+        width: calc($height-nav / 2);
+      }
     }
 
-    &__mid {
-      display: flex;
-      align-items: center;
-      gap: $gutter;
-      width: 53.7rem;
+    &__search {
+      position: relative;
+      cursor: pointer;
+      width: calc(100% - 5.6rem);
 
-      @include respond(tab-port) {
-        width: unset;
-        flex-grow: 1;
-        max-width: 53.7rem;
+      &:hover &__input {
+        background-color: $color-bg-5;
+        box-shadow: inset 0 0 0 1px $color-bg-6;
+
+        @include transition;
       }
 
-      &__home-btn {
-        width: $height-nav;
+      &:hover &__icon-wrapper {
+        fill: $color-font-primary;
+      }
+
+      &__input {
+        width: 100%;
         height: $height-nav;
-        border-radius: 50%;
         background-color: $color-bg-3;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        color: $color-font-primary;
+        padding: 1.2rem 6.4rem 1.2rem 4.8rem;
+        border-radius: calc($height-nav / 2);
+        font-size: 1.6rem;
+        cursor: pointer;
 
-        &:hover &__wrapper {
-          fill: $color-font-primary;
+        @include transition;
+
+        &::placeholder {
+          color: $color-font-secondary;
         }
 
-        @include clickAnimation;
+        &:nth-child(n):focus {
+          background-color: $color-bg-3;
+          box-shadow: inset 0 0 0 2px $color-font-primary;
+          cursor: text;
+        }
 
-        &__wrapper {
-          fill: $color-font-secondary;
-          height: calc($height-nav / 2);
-          width: calc($height-nav / 2);
+        &:focus + div {
+          fill: $color-font-primary;
         }
       }
 
-      &__search {
-        position: relative;
-        cursor: pointer;
-        width: calc(100% - 5.6rem);
+      &__icon-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 1.2rem;
+        transform: translateY(-50%);
+        fill: $color-font-secondary;
+        height: calc($height-nav / 2);
+        width: calc($height-nav / 2);
+      }
 
-        &:hover &__input {
-          background-color: $color-bg-5;
-          box-shadow: inset 0 0 0 1px $color-bg-6;
+      &__btn-wrapper {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 0.6rem;
+        fill: $color-font-secondary;
+        box-sizing: content-box;
+        height: calc($height-nav / 2);
+        width: calc($height-nav / 2);
+        padding: 0 1.2rem;
+        border-left: 1px solid $color-font-secondary;
 
-          @include transition;
-        }
-
-        &:hover &__icon-wrapper {
+        &:hover {
           fill: $color-font-primary;
-        }
 
-        &__input {
-          width: 100%;
-          height: $height-nav;
-          background-color: $color-bg-3;
-          color: $color-font-primary;
-          padding: 1.2rem 6.4rem 1.2rem 4.8rem;
-          border-radius: calc($height-nav / 2);
-          font-size: 1.6rem;
-          cursor: pointer;
-
-          @include transition;
-
-          &::placeholder {
-            color: $color-font-secondary;
-          }
-
-          &:nth-child(n):focus {
-            background-color: $color-bg-3;
-            box-shadow: inset 0 0 0 2px $color-font-primary;
-            cursor: text;
-          }
-
-          &:focus + div {
-            fill: $color-font-primary;
+          & svg {
+            @include clickAnimation;
           }
         }
 
-        &__icon-wrapper {
-          position: absolute;
-          top: 50%;
-          left: 1.2rem;
-          transform: translateY(-50%);
-          fill: $color-font-secondary;
-          height: calc($height-nav / 2);
-          width: calc($height-nav / 2);
-        }
-
-        &__btn-wrapper {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          right: 0.6rem;
-          fill: $color-font-secondary;
-          box-sizing: content-box;
-          height: calc($height-nav / 2);
-          width: calc($height-nav / 2);
-          padding: 0 1.2rem;
-          border-left: 1px solid $color-font-secondary;
-
-          &:hover {
-            fill: $color-font-primary;
-
-            & svg {
-              @include clickAnimation;
-            }
-          }
-
-          &__clear-border {
-            border: none;
-          }
+        &__clear-border {
+          border: none;
         }
       }
     }
   }
 
   &__right {
+    flex: 1;
     z-index: 1;
     display: flex;
     justify-content: end;

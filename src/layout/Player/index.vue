@@ -108,34 +108,7 @@
       <SeekBar class="player-bar__mid__seek-bar" :disabled="notAvaliable" />
     </div>
     <div class="player-bar__right">
-      <!-- <button
-        class="icon-wrapper"
-        :class="{ 'btn-active': isNowPlayingView }"
-        @click="isNowPlayingView = !isNowPlayingView"
-      >
-        <IconNowPlayingView />
-      </button> -->
-      <!-- <button
-        class="icon-wrapper"
-        :class="{ 'btn-active': isLyrics }"
-        @click="isLyrics = !isLyrics"
-      >
-        <IconLyrics />
-      </button> -->
-      <!-- <button class="icon-wrapper" :class="{ 'btn-active': isQueen }" @click="isQueen = !isQueen">
-        <IconQueen />
-      </button>
-      <button
-        class="icon-wrapper"
-        :class="{ 'btn-active': isConnectToDevice }"
-        @click="isConnectToDevice = !isConnectToDevice"
-      >
-        <IconConnectToDevice />
-      </button> -->
       <VolumeBar class="player-bar__right__volume-bar" :disabled="notAvaliable" />
-      <!-- <button class="icon-wrapper" :class="{ 'btn-active': isMiniPlayer }" @click="isMiniPlayer = !isMiniPlayer">
-        <IconMiniPlayer />
-      </button> -->
       <button
         class="icon-wrapper player-bar__right__full-screen"
         @click="openFullScreenPlayer"
@@ -143,14 +116,6 @@
         :disabled="notAvaliable"
       >
         <IconFullScreen />
-      </button>
-      <button
-        class="icon-wrapper player-bar__right__play-phone"
-        @click="togglePlay"
-        :class="{ 'not-allowed': notAvaliable }"
-      >
-        <IconPlay v-if="isPause" />
-        <IconPause v-else />
       </button>
     </div>
   </footer>
@@ -165,10 +130,6 @@ import IconPrevious from '@/components/Icons/IconPrevious.vue'
 import IconRepeat from '@/components/Icons/IconRepeat.vue'
 import IconRepeatSingle from '@/components/Icons/IconRepeatSingle.vue'
 import IconShuffle from '@/components/Icons/IconShuffle.vue'
-import IconNowPlayingView from '@/components/Icons/IconNowPlayingView.vue'
-import IconQueen from '@/components/Icons/IconQueen.vue'
-import IconConnectToDevice from '@/components/Icons/IconConnectToDevice.vue'
-import IconLyrics from '@/components/Icons/IconLyrics.vue'
 import IconMiniPlayer from '@/components/Icons/IconMiniPlayer.vue'
 import IconFullScreen from '@/components/Icons/IconFullScreen.vue'
 import IconSaved from '@/components/Icons/IconSaved.vue'
@@ -181,8 +142,6 @@ import { useUserStore } from '@/stores/user'
 import Skeleton from '@/components/Skeleton/index.vue'
 import IconArrowDown from '@/components/Icons/IconArrowDown.vue'
 import IconArrowUp from '@/components/Icons/IconArrowUp.vue'
-import { checkUserSavedTracks, deleteUserSavedTracks, saveTracks } from '@/api/meta/track'
-import Message from '@/components/Message/index'
 
 export default {
   name: 'Player',
@@ -195,10 +154,6 @@ export default {
     IconRepeat,
     IconRepeatSingle,
     IconAddTo,
-    IconNowPlayingView,
-    IconQueen,
-    IconConnectToDevice,
-    IconLyrics,
     IconMiniPlayer,
     IconFullScreen,
     IconSaved,
@@ -358,17 +313,13 @@ $msg-artist-font-size: 1.2rem;
   height: $height-player;
   display: flex;
   position: relative;
+  gap: $gutter-2x;
 
   &__left {
     flex: 3;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-
-    @include respond(phone) {
-      flex: unset;
-      flex-grow: 1;
-    }
 
     &__msg-wrapper {
       margin: 0 $gutter;
@@ -440,10 +391,6 @@ $msg-artist-font-size: 1.2rem;
     flex-direction: column;
     justify-content: center;
 
-    @include respond(phone) {
-      flex: 10;
-    }
-
     &__btn-group {
       display: flex;
       justify-content: center;
@@ -471,10 +418,6 @@ $msg-artist-font-size: 1.2rem;
         }
       }
     }
-
-    @include respond(phone) {
-      display: none;
-    }
   }
 
   &__right {
@@ -482,30 +425,6 @@ $msg-artist-font-size: 1.2rem;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-
-    @include respond(phone) {
-      flex: unset;
-      flex-shrink: 0;
-    }
-
-    &__volume-bar,
-    &__full-screen {
-      @include respond(phone) {
-        display: none;
-      }
-    }
-
-    &__play-phone {
-      display: none;
-
-      @include respond(phone) {
-        display: block;
-        height: 4.4rem;
-        width: 4.4rem;
-        margin: 0 1.6rem;
-        fill: $color-font-primary;
-      }
-    }
   }
 }
 </style>

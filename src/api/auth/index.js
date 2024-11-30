@@ -21,7 +21,6 @@ export function refreshToken(data) {
     },
     data: {
       grant_type: 'refresh_token',
-      refresh_token: localStorage.getItem('refresh_token'),
       ...data
     }
   })

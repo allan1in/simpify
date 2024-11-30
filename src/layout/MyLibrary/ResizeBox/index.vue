@@ -93,15 +93,6 @@ export default {
     this.$nextTick(() => {
       this.myLibWidth = this.minWidth
       this.$refs.resizeBox.style.width = this.myLibWidth + 'px'
-
-      const resizeObserver = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          if (entry.target.offsetWidth < this.minWidth) {
-            this.isCollasped = true
-          }
-        }
-      })
-      resizeObserver.observe(this.$refs.resizeBox)
     })
   }
 }

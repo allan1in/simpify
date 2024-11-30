@@ -94,21 +94,25 @@ export const usePlayerStore = defineStore('player', {
           // Errors
 
           this.player.addListener('initialization_error', (message) => {
+            console.log('initialization_error')
             console.log(message)
             Message(`${i18n.global.t('message.something_wrong')}`)
           })
 
           this.player.addListener('authentication_error', (message) => {
+            console.log('authentication_error')
             console.log(message)
             Message(`${i18n.global.t('message.something_wrong')}`)
           })
 
           this.player.addListener('account_error', (message) => {
+            console.log('account_error')
             console.log(message)
             Message(`${i18n.global.t('message.something_wrong')}`)
           })
 
           this.player.addListener('playback_error', (message) => {
+            console.log('playback_error')
             console.log(message)
             Message(`${i18n.global.t('message.something_wrong')}`)
           })

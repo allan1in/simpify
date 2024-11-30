@@ -136,6 +136,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: $gutter;
 
     &__left {
       display: flex;
@@ -167,6 +168,8 @@ export default {
         font-weight: 700;
 
         @include transitionFast;
+
+        @include oneLineEllipsis;
       }
     }
 

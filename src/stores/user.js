@@ -34,7 +34,7 @@ export const useUserStore = defineStore('user', {
       localStorage.setItem('refresh_token', refresh_token)
 
       this.access_token = access_token
-      // localStorage.setItem('expires_in', expires_in)
+
       // const now = new Date()
       // const expiry = new Date(now.getTime() + expires_in * 1000)
       // localStorage.setItem('expires', expiry)
@@ -54,7 +54,8 @@ export const useUserStore = defineStore('user', {
     },
     async refreshToken() {
       const response = await refreshToken({
-        client_id: clientId
+        client_id: clientId,
+        refresh_token: localStorage.getItem('refresh_token')
       })
 
       const { access_token, refresh_token, expires_in } = response
@@ -65,7 +66,6 @@ export const useUserStore = defineStore('user', {
 
       this.access_token = access_token
       console.log('Refresh token')
-      // localStorage.setItem('expires_in', expires_in)
       // const now = new Date()
       // const expiry = new Date(now.getTime() + expires_in * 1000)
       // localStorage.setItem('expires', expiry)

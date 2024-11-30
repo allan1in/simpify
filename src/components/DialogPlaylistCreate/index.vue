@@ -15,8 +15,12 @@
     </div>
     <div class="dialog-global-container__form">
       <div class="dialog-global-container__form__input">
-        <AlertBox v-if="showWarnAlert" type="warn" :value="$t('alert_box.require_name')" />
-        <AlertBox v-if="showInfoAlert" :value="$t('alert_box.click_create')" />
+        <AlertBox
+          v-if="alertVariables.showWarnAlert"
+          type="warn"
+          :value="$t('alert_box.require_name')"
+        />
+        <AlertBox v-if="alertVariables.showInfoAlert" :value="$t('alert_box.click_create')" />
         <div class="dialog-global-container__form__input__text">
           <InputText
             v-model="name"
@@ -55,8 +59,10 @@ export default {
   data() {
     return {
       name: '',
-      showWarnAlert: false,
-      showInfoAlert: false,
+      alertVariables: {
+        showWarnAlert: false,
+        showInfoAlert: false
+      },
       loading: false
     }
   },
@@ -81,20 +87,26 @@ export default {
     ...mapState(useUserStore, ['uid'])
   },
   methods: {
+    updateAlertToTrue(key) {
+      Object.keys(this.alertVariables).forEach((key) => {
+        this.alertVariables[key] = false
+      })
+      this.alertVariables[key] = true
+    },
     validate() {
       if (!this.name.length) {
-        this.showWarnAlert = true
+        this.updateAlertToTrue('showWarnAlert')
       } else {
-        this.showWarnAlert = false
+        this.alertVariables.showWarnAlert = false
       }
       return !!this.name.length
     },
     handleBeforeClose() {
       if (this.name !== '') {
-        if (this.showInfoAlert) {
+        if (this.alertVariables.showInfoAlert) {
           this.openDialog = false
         } else {
-          this.showInfoAlert = true
+          this.updateAlertToTrue('showInfoAlert')
         }
       } else {
         this.openDialog = false
@@ -121,20 +133,10 @@ export default {
     modelValue: {
       handler(newVal, oldVal) {
         this.name = ''
-        this.showWarnAlert = false
-        this.showInfoAlert = false
+        this.alertVariables.showWarnAlert = false
+        this.alertVariables.showInfoAlert = false
       },
       immediate: true
-    },
-    showInfoAlert(newVal, oldVal) {
-      if (newVal) {
-        this.showWarnAlert = false
-      }
-    },
-    showWarnAlert(newVal, oldVal) {
-      if (newVal) {
-        this.showInfoAlert = false
-      }
     }
   }
 }

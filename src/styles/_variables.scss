@@ -30,9 +30,10 @@ $gutter-3x: calc(3 * $gutter);
 $gutter-4x: calc(4 * $gutter);
 
 // HEIGHT
+$min-height-app: 600px;
 $height-player: 7.2rem;
 $height-nav: 4.8rem;
-$height-content: calc(100vh - $height-player - $height-nav - 4 * $gutter);
+$height-content: calc(max(100vh, $min-height-app) - $height-player - $height-nav - 4 * $gutter);
 
 // BORDER
 $border-radius-default: 0.8rem;
@@ -40,6 +41,7 @@ $border-radius-small: 0.4rem;
 
 // WIDTH
 $max-width-main-view: 192rem;
+$min-width-app: 800px;
 
 // DURATION
 $duration-default: 0.3s;

@@ -1,11 +1,11 @@
 <template>
   <section class="top-bar-container">
-    <TagButton @handle-click="getAll" :text="$t('top_bar.all')" :isActive="!isActive" />
+    <TagButton @handle-click="getAll" :text="$t('top_bar.all')" :active-tag="!isActive" />
     <template v-for="tag in tags" :key="tag">
       <TagButton
         @handle-click="jumpTo(tag)"
         :text="$t(`top_bar.${tag}`)"
-        :activeTag="isActive === tag"
+        :active-tag="isActive === tag"
       />
     </template>
   </section>

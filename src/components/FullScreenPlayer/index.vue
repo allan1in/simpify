@@ -241,16 +241,13 @@ export default {
   }
 
   @include clickAnimation;
-
-  @include respond(phone) {
-    height: 4rem;
-    width: 4rem;
-  }
 }
 
 .full-screen-container {
-  height: 100vh;
-  width: 100vw;
+  height: inherit;
+  width: inherit;
+  min-height: inherit;
+  min-width: inherit;
   position: absolute;
   top: 0;
   left: 0;
@@ -262,11 +259,6 @@ export default {
   justify-content: space-between;
   gap: 4rem;
   overflow: hidden;
-
-  @include respond(phone) {
-    gap: 1.6rem;
-    padding: 4rem 4rem;
-  }
 
   &__top {
     flex-shrink: 0;
@@ -324,11 +316,6 @@ export default {
         width: 2rem;
         fill: $color-font-primary;
       }
-
-      @include respond(phone) {
-        opacity: 1;
-        transform: translateX(0rem);
-      }
     }
   }
 
@@ -340,20 +327,6 @@ export default {
     justify-content: start;
     align-items: end;
     gap: 3rem;
-
-    @include respond(phone) {
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-    }
-
-    @media (orientation: portrait) {
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-    }
 
     &__cover-wrapper {
       height: 60%;
@@ -372,21 +345,6 @@ export default {
         width: 100%;
         object-fit: cover;
       }
-
-      @media (orientation: portrait) {
-        width: 80%;
-        height: unset;
-
-        &-small {
-          width: 60%;
-          height: unset;
-        }
-      }
-
-      @include respond(phone) {
-        width: 80%;
-        height: unset;
-      }
     }
 
     &__text-wrapper {
@@ -401,10 +359,6 @@ export default {
         font-size: 3.2rem;
 
         @include oneLineEllipsis;
-
-        @include respond(phone) {
-          font-size: 2.4rem;
-        }
       }
 
       &__artist {
@@ -412,10 +366,6 @@ export default {
         color: $color-font-secondary;
 
         @include oneLineEllipsis;
-
-        @include respond(phone) {
-          font-size: $font-size-text-primary;
-        }
       }
     }
   }
@@ -430,10 +380,6 @@ export default {
       opacity: 1;
     }
 
-    @include respond(phone) {
-      opacity: 1;
-    }
-
     &__seek-bar {
       width: 100%;
       margin-bottom: 1.6rem;
@@ -445,10 +391,6 @@ export default {
 
       &__left {
         flex: 3;
-
-        @include respond(phone) {
-          display: none;
-        }
       }
 
       &__mid {
@@ -457,11 +399,6 @@ export default {
         justify-content: center;
         align-items: center;
         gap: 1rem;
-
-        @include respond(phone) {
-          gap: unset;
-          justify-content: space-between;
-        }
 
         &__play {
           height: 5.2rem;
@@ -475,21 +412,11 @@ export default {
 
           @include clickAnimation;
 
-          @include respond(phone) {
-            height: 6rem;
-            width: 6rem;
-          }
-
           &__icon-wrapper-round {
             display: inline-block;
             fill: $color-bg-1;
             height: 1.6rem;
             width: 1.6rem;
-
-            @include respond(phone) {
-              height: 2.6rem;
-              width: 2.6rem;
-            }
           }
         }
       }
@@ -499,10 +426,6 @@ export default {
         display: flex;
         justify-content: end;
         align-items: center;
-
-        @include respond(phone) {
-          display: none;
-        }
       }
     }
   }
