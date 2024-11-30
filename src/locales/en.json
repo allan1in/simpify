@@ -132,7 +132,7 @@
     "click_create": "Press create to create new playlist.",
     "click_save": "Press save to keep changes you've made.",
     "image_dimension_too_small": "Image too small. Images must be at least 300x300.",
-    "image_size_too_large": "Maximum image size is 256 KB"
+    "image_size_too_large": "The maximum image size is 256KB."
   },
   "confirm_box": {
     "cancel": "Cancel",

@@ -147,14 +147,14 @@ export default {
       })
     },
     validateName() {
+      this.resetAlert()
       if (!this.name.length) {
         this.updateAlertToTrue('showNameWarnAlert')
-      } else {
-        this.alertVariables.showNameWarnAlert = false
       }
       return !!this.name.length
     },
     validateImage(selectedImage) {
+      this.resetAlert()
       if (selectedImage.width < this.minWidth || selectedImage.height < this.minHeight) {
         this.updateAlertToTrue('showImageDimensionAlert')
         return false

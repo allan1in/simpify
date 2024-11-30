@@ -130,7 +130,9 @@
   "alert_box": {
     "require_name": "歌单名称是必填项。",
     "click_create": "点击“创建”以创建新的歌单。",
-    "click_save": "点击“保存”以保留你的更改。"
+    "click_save": "点击“保存”以保留你的更改。",
+    "image_dimension_too_small": "图像过小。图像分辨率至少为 300x300。",
+    "image_size_too_large": "图像最大为 256KB。"
   },
   "confirm_box": {
     "cancel": "取消",

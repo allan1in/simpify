@@ -106,7 +106,7 @@ export default {
 
 .banner {
   padding: $gutter-3x;
-  background: linear-gradient(to bottom, $color-bg-6, $color-bg-3);
+  background: linear-gradient(to bottom, $color-bg-6, $color-bg-4);
   display: flex;
   align-items: end;
   justify-content: start;
