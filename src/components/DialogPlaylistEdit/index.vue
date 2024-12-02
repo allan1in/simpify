@@ -212,12 +212,6 @@ export default {
         this.selectedImage = this.item.images ? JSON.parse(JSON.stringify(this.item.images[0])) : {}
         this.resetAlert()
       }
-    },
-    item: {
-      handler(newVal, oldVal) {
-        console.log(newVal)
-      },
-      deep: true
     }
   }
 }

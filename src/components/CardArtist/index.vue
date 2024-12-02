@@ -43,7 +43,6 @@
       </div>
       <div class="artist-card__name-wrapper">
         <Skeleton class="skeleton__name" />
-        <Skeleton class="skeleton__type" />
       </div>
     </div>
   </template>
@@ -93,12 +92,6 @@ export default {
   &__name {
     height: $font-size-text-primary;
     width: 80%;
-  }
-
-  &__type {
-    height: $font-size-text-secondary;
-    width: 40%;
-    margin-top: calc($font-size-text-secondary * 0.5);
   }
 }
 
