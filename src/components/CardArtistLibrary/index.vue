@@ -1,25 +1,44 @@
 <template>
   <template v-if="!loading">
-    <div class="card-artist-library-contanier"
-      :class="{ 'card-artist-library-contanier-collasped-current': isCurrent }">
-      <router-link :to="{ name: 'Artist', params: { artistId: item.id } }" class="card-artist-library-contanier__cover">
+    <div
+      class="card-artist-library-contanier"
+      :class="{ 'card-artist-library-contanier-collasped-current': isCurrent }"
+    >
+      <router-link
+        :to="{ name: 'Artist', params: { artistId: item.id } }"
+        class="card-artist-library-contanier__cover"
+      >
         <div class="card-artist-library-contanier__cover__icon">
-          <div class="card-artist-library-contanier__cover__icon__wrapper" @click.prevent="handleClick">
+          <div
+            class="card-artist-library-contanier__cover__icon__wrapper"
+            @click.prevent="handleClick"
+          >
             <IconPause v-if="isPlaying" />
             <IconPlay v-else />
           </div>
         </div>
         <div v-if="isPlaying" class="card-artist-library-contanier__cover__playing">
-          <img class="card-artist-library-contanier__cover__playing__img" loading="lazy"
-            src="/src/assets/images/playing.gif" alt="" />
+          <img
+            class="card-artist-library-contanier__cover__playing__img"
+            loading="lazy"
+            src="/src/assets/images/playing.gif"
+            alt=""
+          />
         </div>
-        <img class="card-artist-library-contanier__cover__img" :src="item.images[0]?.url" :alt="item.name" />
+        <img
+          class="card-artist-library-contanier__cover__img"
+          :src="item.images[0]?.url"
+          :alt="item.name"
+        />
       </router-link>
       <div v-if="!isCollasped" class="card-artist-library-contanier__info">
-        <router-link :to="{ name: 'Artist', params: { artistId: item.id } }"
-          class="card-artist-library-contanier__info__title" :class="{
+        <router-link
+          :to="{ name: 'Artist', params: { artistId: item.id } }"
+          class="card-artist-library-contanier__info__title"
+          :class="{
             'card-artist-library-contanier__info__title-playing': isCurrent
-          }">
+          }"
+        >
           {{ item.name }}
         </router-link>
       </div>
@@ -32,7 +51,6 @@
       </div>
       <div v-if="!isCollasped" class="card-artist-library-contanier__info">
         <Skeleton class="card-artist-library-contanier__info__title skeleton__name" />
-        <Skeleton class="card-artist-library-contanier__info__artists skeleton__artists" />
       </div>
     </div>
   </template>
@@ -98,11 +116,6 @@ export default {
   &__name {
     height: $font-size-text-primary;
     width: 50%;
-  }
-
-  &__artists {
-    height: $font-size-text-secondary;
-    width: 80%;
   }
 }
 
