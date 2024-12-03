@@ -13,14 +13,6 @@
         </div>
         <div v-show="!isCollasped" class="my-library__container__title__right">
           <button
-            class="my-library__container__title__right__create-playlist"
-            @click="openDialog = true"
-          >
-            <div class="my-library__container__title__right__create-playlist__icon-wrapper">
-              <IconPlus />
-            </div>
-          </button>
-          <button
             class="my-library__container__title__right__arrow"
             @click.prevent="isShowMore = !isShowMore"
           >
@@ -49,7 +41,6 @@
       </div>
     </div>
   </ResizeBox>
-  <DialogPlaylistCreate v-model="openDialog" />
 </template>
 
 <script>
@@ -68,7 +59,6 @@ import { computed } from 'vue'
 import Playlists from './Playlists/index.vue'
 import Albums from './Albums/index.vue'
 import Artists from './Artists/index.vue'
-import DialogPlaylistCreate from '@/components/DialogPlaylistCreate/index.vue'
 
 export default {
   name: 'MyLibrary',
@@ -80,8 +70,7 @@ export default {
   data() {
     return {
       tags: ['liked_songs', 'playlists', 'albums', 'artists'],
-      bottom: undefined,
-      openDialog: false
+      bottom: undefined
     }
   },
   computed: {
@@ -99,8 +88,7 @@ export default {
     LikedSongs,
     Playlists,
     Albums,
-    Artists,
-    DialogPlaylistCreate
+    Artists
   },
   methods: {
     ...mapActions(useLibraryStore, ['changeActiveTag']),
