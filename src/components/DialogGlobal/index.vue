@@ -8,7 +8,9 @@
         @click="handleClickContainer"
       >
         <div class="dialog-global-container__box" v-bind="$attrs">
-          <div class="loading-cover" :class="{ 'loading-cover-active': loading }"></div>
+          <div class="loading-cover" :class="{ 'loading-cover-active': loading }">
+            <IconLoading />
+          </div>
           <slot></slot>
         </div>
       </div>
@@ -16,6 +18,8 @@
   </Teleport>
 </template>
 <script>
+import IconLoading from '../Icons/IconLoading.vue'
+
 export default {
   name: 'DialogGlobal',
   props: {
@@ -24,6 +28,9 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  components: {
+    IconLoading
   },
   inheritAttrs: false,
   methods: {
@@ -45,6 +52,9 @@ export default {
   background-color: rgba($color-bg-1, 0.5);
   z-index: -1;
   opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   @include transition;
 
