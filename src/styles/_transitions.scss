@@ -47,3 +47,20 @@
     opacity: 0;
   }
 }
+
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all $duration-default ease;
+  width: 100%;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: scale(0.1);
+}
+
+.list-leave-active {
+  position: absolute;
+}

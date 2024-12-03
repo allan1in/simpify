@@ -2,7 +2,9 @@
   <template v-if="active">
     <template v-if="!loading_skeleton">
       <div class="my-library__container__content__artists">
-        <CardArtistLibrary v-for="item in artists" :item="item" />
+        <TransitionGroup name="list">
+          <CardArtistLibrary v-for="item in artists" :key="item.id" :item="item" />
+        </TransitionGroup>
       </div>
     </template>
     <template v-else>
@@ -16,13 +18,14 @@
 <script>
 import { getCurrentUserArtists, getNextCurrentUserArtists } from '@/api/meta/user'
 import CardArtistLibrary from '@/components/CardArtistLibrary/index.vue'
+import { useLibraryStore } from '@/stores/library';
+import { mapState } from 'pinia';
 
 export default {
   name: 'Artists',
   inject: ['bottom'],
   data() {
     return {
-      artists: [],
       artists_limit: 20,
       artists_next: '',
       loading_skeleton: true
@@ -37,9 +40,12 @@ export default {
   components: {
     CardArtistLibrary
   },
+  computed: {
+    ...mapState(useLibraryStore, ['artists'])
+  },
   methods: {
     reset() {
-      this.artists = []
+      useLibraryStore().clearList('artists')
       this.artists_limit = 20
       this.artists_next = ''
       this.loading_skeleton = true
@@ -64,9 +70,8 @@ export default {
           res = await getNextCurrentUserArtists(path.slice(path.indexOf('?') + 1))
         }
 
-        let newVals = res.artists.items
-        let oldVals = JSON.parse(JSON.stringify(this.artists))
-        this.artists = [...oldVals, ...newVals]
+        let newVals = res.artists.items.filter(item => item !== null)
+        useLibraryStore().addArtists(newVals)
         this.artists_next = res.artists.next
 
         this.loading_more = false

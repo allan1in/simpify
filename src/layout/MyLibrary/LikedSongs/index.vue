@@ -2,13 +2,9 @@
   <template v-if="active">
     <template v-if="!loading_skeleton">
       <div class="my-library__container__content__liked-songs">
-        <CardTrackLibrary
-          v-for="(item, index) in tracks"
-          :key="item.id"
-          :item="item.track"
-          :index
-          :uris
-        />
+        <TransitionGroup name="list">
+          <CardTrackLibrary v-for="(item, index) in likedSongs" :key="item.track.id" :item="item.track" :index :uris />
+        </TransitionGroup>
       </div>
     </template>
     <template v-else>
@@ -22,6 +18,8 @@
 <script>
 import { getNextUserlikedSongs, getUserlikedSongs } from '@/api/meta/user'
 import CardTrackLibrary from '@/components/CardTrackLibrary/index.vue'
+import { useLibraryStore } from '@/stores/library';
+import { mapActions, mapState } from 'pinia';
 
 export default {
   name: 'LikedSongs',
@@ -34,7 +32,6 @@ export default {
   },
   data() {
     return {
-      tracks: [],
       tracks_limit: 20,
       tracks_offset: 0,
       tracks_next: '',
@@ -47,15 +44,17 @@ export default {
   computed: {
     uris() {
       let uris = []
-      this.tracks.forEach((item) => {
+      this.likedSongs.forEach((item) => {
         uris.push(item.track.uri)
       })
       return uris
-    }
+    },
+    ...mapState(useLibraryStore, ['likedSongs'])
   },
   methods: {
+    ...mapActions(useLibraryStore, ['addLikedSongs']),
     reset() {
-      this.tracks = []
+      useLibraryStore().clearList('likedSongs')
       this.tracks_limit = 20
       this.tracks_offset = 0
       this.tracks_next = ''
@@ -82,9 +81,8 @@ export default {
           res = await getNextUserlikedSongs(path.slice(path.indexOf('?') + 1))
         }
 
-        let newVals = res.items
-        let oldVals = JSON.parse(JSON.stringify(this.tracks))
-        this.tracks = [...oldVals, ...newVals]
+        let newVals = res.items.filter(item => item !== null)
+        this.addLikedSongs(newVals)
         this.tracks_next = res.next
 
         this.loading_more = false

@@ -3,15 +3,10 @@
     <div class="playlist-container">
       <div class="playlist-container__banner">
         <Banner :type="$t('playlist.type')" :title="playlist.name" :images="playlist.images">
-          <router-link
-            class="playlist-container__banner-details__owner"
-            :to="{ name: 'User', params: { userId: playlist.owner.id } }"
-            >{{ playlist.owner.display_name }}</router-link
-          >
-          <span
-            v-if="playlist.followers.total !== 0"
-            class="playlist-container__banner-details__followers"
-          >
+          <router-link class="playlist-container__banner-details__owner"
+            :to="{ name: 'User', params: { userId: playlist.owner.id } }">{{ playlist.owner.display_name
+            }}</router-link>
+          <span v-if="playlist.followers.total !== 0" class="playlist-container__banner-details__followers">
             {{
               ` • ${Intl.NumberFormat().format(playlist.followers.total)} ${$t(
                 'playlist.follower',
@@ -19,24 +14,17 @@
               )}`
             }}
           </span>
-          <span
-            v-if="playlist.tracks.total !== 0"
-            class="playlist-container__banner-details__total-tracks"
-          >
+          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__total-tracks">
             {{ ` • ${playlist.tracks.total} ${$t('playlist.song', playlist.tracks.total)}` }}
           </span>
-          <span
-            v-if="playlist.tracks.total !== 0"
-            class="playlist-container__banner-details__duration"
-          >
+          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__duration">
             {{
               ` •
-            ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${
-              duration.min
+            ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${duration.min
                 ? `${duration.min}
             ${$t('playlist.duration.min')} `
                 : ''
-            }${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
+              }${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
             }}
           </span>
         </Banner>
@@ -47,10 +35,8 @@
             <ButtonTogglePlay :item="playlist" />
           </div>
           <div v-if="!isOwner" class="playlist-container__content__btn-group__follow-wrapper">
-            <button
-              class="playlist-container__content__btn-group__follow-wrapper__btn"
-              @click="handleClickFollowButton"
-            >
+            <button class="playlist-container__content__btn-group__follow-wrapper__btn"
+              @click="handleClickFollowButton">
               {{ isFollowed ? $t('playlist.following') : $t('playlist.follow') }}
             </button>
           </div>
@@ -66,9 +52,7 @@
               <template #dropDownItems>
                 <DropDownItem @click="openEditDialog = true">
                   <template #icon>
-                    <div
-                      class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper"
-                    >
+                    <div class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper">
                       <IconEdit />
                     </div>
                   </template>
@@ -78,9 +62,7 @@
                 </DropDownItem>
                 <DropDownItem @click="openRemoveConfirm = true">
                   <template #icon>
-                    <div
-                      class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper"
-                    >
+                    <div class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper">
                       <IconRemove />
                     </div>
                   </template>
@@ -94,27 +76,14 @@
         </div>
         <div class="playlist-container__content__tracks">
           <TrackListHeader v-if="tracks.length" />
-          <TrackCard
-            v-for="(item, index) in tracks"
-            :key="item.id"
-            :item="item.track"
-            :index="index"
-            :context_uri="this.playlist.uri"
-          />
+          <TrackCard v-for="(item, index) in tracks" :key="item.id" :item="item.track" :index="index"
+            :context_uri="this.playlist.uri" />
         </div>
       </div>
     </div>
-    <DialogPlaylistEdit
-      v-model="openEditDialog"
-      :item="playlist"
-      @update-succeed="handleUpdateSucceed"
-    />
-    <ConfirmBox
-      v-model="openRemoveConfirm"
-      @confirm="handleConfirmed"
-      :title="$t('confirm_box_playlist_delete.title')"
-      :message="$t('confirm_box_playlist_delete.message', { name: playlist.name })"
-    />
+    <DialogPlaylistEdit v-model="openEditDialog" :item="playlist" @update-succeed="handleUpdateSucceed" />
+    <ConfirmBox v-model="openRemoveConfirm" @confirm="handleConfirmed" :title="$t('confirm_box_playlist_delete.title')"
+      :message="$t('confirm_box_playlist_delete.message', { name: playlist.name })" />
   </template>
   <template v-else>
     <div class="playlist-container">
@@ -167,6 +136,7 @@ import IconEdit from '@/components/Icons/IconEdit.vue'
 import DialogPlaylistEdit from '@/components/DialogPlaylistEdit/index.vue'
 import IconRemove from '@/components/Icons/IconRemove.vue'
 import ConfirmBox from '@/components/ConfirmBox/index.vue'
+import { useLibraryStore } from '@/stores/library'
 
 export default {
   name: 'Playlist',
@@ -216,7 +186,10 @@ export default {
   methods: {
     async handleConfirmed() {
       const res = await deleteUserSavedPlaylists(this.playlist.id)
-      this.$router.push({ name: 'Home' })
+      useLibraryStore().removePlaylist(this.playlist.id)
+      if (this.$route.fullPath.split('/').indexOf(this.playlist.id) !== -1) {
+        this.$router.push({ name: 'Home' })
+      }
       this.openRemoveConfirm = false
     },
     reset() {
@@ -273,18 +246,21 @@ export default {
         await deleteUserSavedPlaylists(this.playlist.id)
         await this.checkUserSavedPlaylist()
         if (!this.isFollowed) {
+          useLibraryStore().removePlaylist(this.playlist.id)
           Message(`${this.$t('message.removed_from_lib')}`)
         }
       } else {
         await savePlaylists(this.playlist.id)
         await this.checkUserSavedPlaylist()
         if (this.isFollowed) {
+          useLibraryStore().addPlaylists(this.playlist)
           Message(`${this.$t('message.added_to_lib')}`)
         }
       }
     },
-    handleUpdateSucceed() {
-      this.getPlaylist()
+    async handleUpdateSucceed() {
+      await this.getPlaylist()
+      await useLibraryStore().updatePlaylist(this.playlist)
     }
   },
   watch: {

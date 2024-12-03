@@ -3,18 +3,12 @@
     <div class="track-container">
       <div class="track-container__banner">
         <Banner :type="$t('track.type')" :title="track.name" :images="track.album.images">
-          <router-link
-            class="track-container__banner-details__artist"
-            :to="{ name: 'Artist', params: { artistId: artists[0].id } }"
-            >{{ artists[0].name }}</router-link
-          >
+          <router-link class="track-container__banner-details__artist"
+            :to="{ name: 'Artist', params: { artistId: artists[0].id } }">{{ artists[0].name }}</router-link>
           <span class="track-container__banner-details__album-wrapper">
             <span> • </span>
-            <router-link
-              class="track-container__banner-details__album-wrapper__album"
-              :to="{ name: 'Album', params: { albumId: track.album.id } }"
-              >{{ track.album.name }}</router-link
-            >
+            <router-link class="track-container__banner-details__album-wrapper__album"
+              :to="{ name: 'Album', params: { albumId: track.album.id } }">{{ track.album.name }}</router-link>
           </span>
           <span class="track-container__banner-details__release-year">
             {{ ` • ${track.album.release_date.split('-')[0]}` }}
@@ -22,12 +16,11 @@
           <span class="track-container__banner-details__duration">
             {{
               ` •
-            ${duration.hr ? `${duration.hr} ${$t('track.duration.hr')} ` : ''}${
-              duration.min
+            ${duration.hr ? `${duration.hr} ${$t('track.duration.hr')} ` : ''}${duration.min
                 ? `${duration.min}
             ${$t('track.duration.min')} `
                 : ''
-            }${duration.sec ? `${duration.sec} ${$t('track.duration.sec')} ` : ''}`
+              }${duration.sec ? `${duration.sec} ${$t('track.duration.sec')} ` : ''}`
             }}
           </span>
         </Banner>
@@ -37,10 +30,7 @@
           <div class="track-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="track" />
           </div>
-          <div
-            class="track-container__content__btn-group__add-wrapper"
-            @click.prevent="handleClickSaveButton"
-          >
+          <div class="track-container__content__btn-group__add-wrapper" @click.prevent="handleClickSaveButton">
             <IconSaved v-show="isSaved" />
             <IconAddTo v-show="!isSaved" />
           </div>
@@ -91,8 +81,9 @@ import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import IconAddTo from '@/components/Icons/IconAddTo.vue'
 import IconSaved from '@/components/Icons/IconSaved.vue'
 import Message from '@/components/Message/index'
-import { mapActions, mapWritableState } from 'pinia'
+import { mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
+import { useLibraryStore } from '@/stores/library'
 
 export default {
   name: 'Track',
@@ -158,12 +149,14 @@ export default {
         await deleteUserSavedTracks({ ids: this.id })
         await this.checkUserSavedTrack()
         if (!this.isSaved) {
+          useLibraryStore().removeLikedSong(this.track.id)
           Message(`${this.$t('message.removed_from_liked_songs')}`)
         }
       } else {
         await saveTracks({ ids: this.id })
         await this.checkUserSavedTrack()
         if (this.isSaved) {
+          useLibraryStore().addLikedSongs(this.track)
           Message(`${this.$t('message.added_to_liked_songs')}`)
         }
       }

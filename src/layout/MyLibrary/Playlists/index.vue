@@ -2,7 +2,9 @@
   <template v-if="active">
     <template v-if="!loading_skeleton">
       <div class="my-library__container__content__playlists">
-        <CardPlaylistLibrary v-for="item in playlists" :item />
+        <TransitionGroup name="list">
+          <CardPlaylistLibrary v-for="item in playlists" :key="item.id" :item />
+        </TransitionGroup>
       </div>
     </template>
     <template v-else>
@@ -15,6 +17,8 @@
 <script>
 import { getCurrentUserPlaylists, getNextCurrentUserPlaylists } from '@/api/meta/user'
 import CardPlaylistLibrary from '@/components/CardPlaylistLibrary/index.vue'
+import { useLibraryStore } from '@/stores/library';
+import { mapState } from 'pinia';
 
 export default {
   name: 'Playlists',
@@ -27,7 +31,6 @@ export default {
   },
   data() {
     return {
-      playlists: [],
       playlists_limit: 20,
       playlists_offset: 0,
       playlists_next: '',
@@ -37,9 +40,12 @@ export default {
   components: {
     CardPlaylistLibrary
   },
+  computed: {
+    ...mapState(useLibraryStore, ['playlists'])
+  },
   methods: {
     reset() {
-      this.playlists = []
+      useLibraryStore().clearList('playlists')
       this.playlists_limit = 20
       this.playlists_offset = 0
       this.playlists_next = ''
@@ -67,8 +73,8 @@ export default {
         }
 
         let newVals = res.items.filter((item) => item !== null)
-        let oldVals = JSON.parse(JSON.stringify(this.playlists))
-        this.playlists = [...oldVals, ...newVals]
+
+        useLibraryStore().addPlaylists(newVals)
         this.playlists_next = res.next
 
         this.loading_more = false

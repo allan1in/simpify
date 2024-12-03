@@ -9,6 +9,7 @@ import {
 import Message from '@/components/Message/index'
 import i18n from '@/includes/i18n'
 import { checkUserSavedTracks, deleteUserSavedTracks, saveTracks } from '@/api/meta/track'
+import { useLibraryStore } from './library'
 
 export const usePlayerStore = defineStore('player', {
   state: () => ({
@@ -62,8 +63,8 @@ export const usePlayerStore = defineStore('player', {
           })
 
           this.player.addListener('autoplay_failed', (res) => {
-            console.log('Autoplay is not allowed by the browser autoplay rules', res)
-            Message(`${i18n.global.t('message.something_wrong')}`)
+            console.log(res)
+            Message(`${i18n.global.t('message.autoplay_failed')}`)
           })
 
           this.player.addListener('player_state_changed', async (res) => {
@@ -111,10 +112,12 @@ export const usePlayerStore = defineStore('player', {
             Message(`${i18n.global.t('message.something_wrong')}`)
           })
 
-          this.player.addListener('playback_error', (message) => {
+          this.player.addListener('playback_error', async (message) => {
             console.log('playback_error')
             console.log(message)
             Message(`${i18n.global.t('message.something_wrong')}`)
+            await this.player.disconnect()
+            await this.initPlayer()
           })
 
           this.player.connect()
@@ -247,12 +250,14 @@ export const usePlayerStore = defineStore('player', {
         await deleteUserSavedTracks({ ids: this.current_track?.id })
         this.isSaved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]
         if (!this.isSaved) {
+          useLibraryStore().removeLikedSong(this.current_track.id)
           Message(`${i18n.global.t('message.removed_from_liked_songs')}`)
         }
       } else {
         await saveTracks({ ids: this.current_track?.id })
         this.isSaved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]
         if (this.isSaved) {
+          useLibraryStore().addLikedSongs(this.current_track)
           Message(`${i18n.global.t('message.added_to_liked_songs')}`)
         }
       }
