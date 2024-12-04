@@ -2,16 +2,14 @@
   <template v-if="!loading">
     <div
       class="card-track-library-contanier"
-      :class="{ 'card-track-library-contanier-collasped-current': isCurrent }"
+      :class="{ 'card-track-library-contanier-collasped-current': isCurrentPage }"
+      @click="$router.push({ name: 'Track', params: { trackId: item.id } })"
     >
-      <router-link
-        :to="{ name: 'Track', params: { trackId: item.id } }"
-        class="card-track-library-contanier__cover"
-      >
+      <div class="card-track-library-contanier__cover">
         <div class="card-track-library-contanier__cover__icon">
           <div
             class="card-track-library-contanier__cover__icon__wrapper"
-            @click.prevent="handleClick"
+            @click.prevent.stop="handleClick"
           >
             <IconPause v-if="isPlaying" />
             <IconPlay v-else />
@@ -30,13 +28,13 @@
           :src="item.album.images[0]?.url"
           :alt="item.name"
         />
-      </router-link>
+      </div>
       <div v-if="!isCollasped" class="card-track-library-contanier__info">
         <router-link
           :to="{ name: 'Track', params: { trackId: item.id } }"
           class="card-track-library-contanier__info__title"
           :class="{
-            'card-track-library-contanier__info__title-playing': isCurrent
+            'card-track-library-contanier__info__title-playing': isCurrentItem
           }"
         >
           {{ item.name }}
@@ -107,16 +105,24 @@ export default {
     ...mapState(useLibraryStore, ['isCollasped']),
     ...mapState(usePlayerStore, ['isPause', 'current_track']),
     isPlaying() {
-      return !this.isPause && this.isCurrent
+      return !this.isPause && this.isCurrentItem
     },
-    isCurrent() {
+    isCurrentItem() {
       return this.current_track?.uri === this.item.uri
+    },
+    isCurrentPage() {
+      return (
+        this.$route.fullPath
+          .split('/')
+          .map((item) => this.item.id === item)
+          .indexOf(true) !== -1
+      )
     }
   },
   methods: {
     ...mapActions(usePlayerStore, ['togglePlay', 'playNewTrack']),
     async handleClick() {
-      if (this.isCurrent) {
+      if (this.isCurrentItem) {
         await this.togglePlay()
       } else {
         // New track
@@ -157,11 +163,12 @@ export default {
   height: 5.6rem;
   padding-left: $gutter;
   border-radius: $border-radius-small;
+  cursor: pointer;
 
   @include transition;
 
   &:hover {
-    background-color: $color-bg-3;
+    background-color: $color-bg-4;
   }
 
   &:hover &__cover__icon {
@@ -173,7 +180,7 @@ export default {
   }
 
   &-collasped-current {
-    background-color: $color-bg-5;
+    background-color: $color-bg-6;
   }
 
   &__cover {

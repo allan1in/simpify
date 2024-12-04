@@ -2,16 +2,14 @@
   <template v-if="!loading">
     <div
       class="card-album-library-contanier"
-      :class="{ 'card-album-library-contanier-collasped-current': isCurrent }"
+      :class="{ 'card-album-library-contanier-collasped-current': isCurrentItem }"
+      @click="$router.push({ name: 'Album', params: { albumId: item.id } })"
     >
-      <router-link
-        :to="{ name: 'Album', params: { albumId: item.id } }"
-        class="card-album-library-contanier__cover"
-      >
+      <div class="card-album-library-contanier__cover">
         <div class="card-album-library-contanier__cover__icon">
           <div
             class="card-album-library-contanier__cover__icon__wrapper"
-            @click.prevent="handleClick"
+            @click.prevent.stop="handleClick"
           >
             <IconPause v-if="isPlaying" />
             <IconPlay v-else />
@@ -30,13 +28,13 @@
           :src="item.images[0]?.url"
           :alt="item.name"
         />
-      </router-link>
+      </div>
       <div v-if="!isCollasped" class="card-album-library-contanier__info">
         <router-link
           :to="{ name: 'Album', params: { albumId: item.id } }"
           class="card-album-library-contanier__info__title"
           :class="{
-            'card-album-library-contanier__info__title-playing': isCurrent
+            'card-album-library-contanier__info__title-playing': isCurrentItem
           }"
         >
           {{ item.name }}
@@ -99,16 +97,24 @@ export default {
     ...mapState(useLibraryStore, ['isCollasped']),
     ...mapState(usePlayerStore, ['isPause', 'context']),
     isPlaying() {
-      return !this.isPause && this.isCurrent
+      return !this.isPause && this.isCurrentItem
     },
-    isCurrent() {
+    isCurrentItem() {
       return this.context?.uri === this.item.uri
+    },
+    isCurrentPage() {
+      return (
+        this.$route.fullPath
+          .split('/')
+          .map((item) => this.item.id === item)
+          .indexOf(true) !== -1
+      )
     }
   },
   methods: {
     ...mapActions(usePlayerStore, ['togglePlay', 'playNewContext']),
     async handleClick() {
-      if (this.isCurrent) {
+      if (this.isCurrentItem) {
         await this.togglePlay()
       } else {
         // New context
@@ -146,6 +152,7 @@ export default {
   height: 5.6rem;
   padding-left: $gutter;
   border-radius: $border-radius-small;
+  cursor: pointer;
 
   @include transition;
 
@@ -162,7 +169,11 @@ export default {
   }
 
   &-collasped-current {
-    background-color: $color-bg-5;
+    background-color: $color-bg-4;
+
+    &:hover {
+      background-color: $color-bg-5;
+    }
   }
 
   &__cover {

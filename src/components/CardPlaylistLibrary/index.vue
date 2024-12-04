@@ -1,34 +1,54 @@
 <template>
   <template v-if="!loading">
-    <div class="card-playlist-library-contanier"
-      :class="{ 'card-playlist-library-contanier-collasped-current': isCurrent }">
-      <router-link :to="{ name: 'Playlist', params: { playlistId: item.id } }"
-        class="card-playlist-library-contanier__cover">
+    <div
+      class="card-playlist-library-contanier"
+      :class="{ 'card-playlist-library-contanier-collasped-current': isCurrentPage }"
+      @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })"
+    >
+      <div class="card-playlist-library-contanier__cover">
         <div class="card-playlist-library-contanier__cover__icon">
-          <div class="card-playlist-library-contanier__cover__icon__wrapper" @click.prevent="handleClick">
+          <div
+            class="card-playlist-library-contanier__cover__icon__wrapper"
+            @click.prevent.stop="handleClick"
+          >
             <IconPause v-if="isPlaying" />
             <IconPlay v-else />
           </div>
         </div>
         <div v-if="isPlaying" class="card-playlist-library-contanier__cover__playing">
-          <img class="card-playlist-library-contanier__cover__playing__img" loading="lazy"
-            src="/src/assets/images/playing.gif" alt="" />
+          <img
+            class="card-playlist-library-contanier__cover__playing__img"
+            loading="lazy"
+            src="/src/assets/images/playing.gif"
+            alt=""
+          />
         </div>
-        <img v-if="hasImage" class="card-playlist-library-contanier__cover__img" :src="item.images[0]?.url"
-          :alt="item.name" />
+        <img
+          v-if="hasImage"
+          class="card-playlist-library-contanier__cover__img"
+          :src="item.images[0]?.url"
+          :alt="item.name"
+        />
         <div v-if="!hasImage" class="card-playlist-library-contanier__cover__default-wrapper">
-          <IconDefaultPlaylist class="card-playlist-library-contanier__cover__default-wrapper__img" />
+          <IconDefaultPlaylist
+            class="card-playlist-library-contanier__cover__default-wrapper__img"
+          />
         </div>
-      </router-link>
+      </div>
       <div v-if="!isCollasped" class="card-playlist-library-contanier__info">
-        <router-link :to="{ name: 'Playlist', params: { playlistId: item.id } }"
-          class="card-playlist-library-contanier__info__title" :class="{
-            'card-playlist-library-contanier__info__title-playing': isCurrent
-          }">
+        <router-link
+          :to="{ name: 'Playlist', params: { playlistId: item.id } }"
+          class="card-playlist-library-contanier__info__title"
+          :class="{
+            'card-playlist-library-contanier__info__title-playing': isCurrentItem
+          }"
+        >
           {{ item.name }}
         </router-link>
-        <router-link :to="{ name: 'User', params: { userId: item.owner.id } }"
-          class="card-playlist-library-contanier__info__owner">
+        <router-link
+          :to="{ name: 'User', params: { userId: item.owner.id } }"
+          class="card-playlist-library-contanier__info__owner"
+        >
           {{ item.owner.display_name }}
         </router-link>
       </div>
@@ -77,13 +97,21 @@ export default {
     ...mapState(useLibraryStore, ['isCollasped']),
     ...mapState(usePlayerStore, ['isPause', 'context']),
     isPlaying() {
-      return !this.isPause && this.isCurrent
+      return !this.isPause && this.isCurrentItem
     },
-    isCurrent() {
+    isCurrentItem() {
       return this.context?.uri === this.item.uri
     },
     hasImage() {
       return this.item.images && this.item.images[0]
+    },
+    isCurrentPage() {
+      return (
+        this.$route.fullPath
+          .split('/')
+          .map((item) => this.item.id === item)
+          .indexOf(true) !== -1
+      )
     }
   },
   methods: {
@@ -92,7 +120,7 @@ export default {
       if (!this.item.tracks.total) {
         return
       }
-      if (this.isCurrent) {
+      if (this.isCurrentItem) {
         await this.togglePlay()
       } else {
         // New context
@@ -130,6 +158,7 @@ export default {
   height: 5.6rem;
   padding-left: $gutter;
   border-radius: $border-radius-small;
+  cursor: pointer;
 
   @include transition;
 
@@ -146,7 +175,11 @@ export default {
   }
 
   &-collasped-current {
-    background-color: $color-bg-5;
+    background-color: $color-bg-4;
+
+    &:hover {
+      background-color: $color-bg-5;
+    }
   }
 
   &__cover {
