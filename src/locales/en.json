@@ -136,5 +136,11 @@
   "confirm_box_playlist_delete": {
     "title": "Remove from Your Library?",
     "message": "This will remove {name} from Your Library."
+  },
+  "tooltip":{
+    "collaspe_lib":"Collaspe Your Library",
+    "expand_lib":"Expand Your Library",
+    "show_more":"Show More",
+    "show_less":"Show Less"
   }
 }

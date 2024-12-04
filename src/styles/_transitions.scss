@@ -39,7 +39,7 @@
 .fade {
   &-enter-active,
   &-leave-active {
-    transition: all $duration-default ease;
+    transition: opacity $duration-default ease;
   }
 
   &-enter-from,

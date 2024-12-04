@@ -100,10 +100,13 @@ export const usePlayerStore = defineStore('player', {
             Message(`${i18n.global.t('message.something_wrong')}`)
           })
 
-          this.player.addListener('authentication_error', (message) => {
+          this.player.addListener('authentication_error', async (message) => {
             console.log('authentication_error')
             console.log(message)
             Message(`${i18n.global.t('message.something_wrong')}`)
+            await this.player.disconnect()
+            await useUserStore().refreshToken()
+            await this.initPlayer()
           })
 
           this.player.addListener('account_error', (message) => {
@@ -117,6 +120,7 @@ export const usePlayerStore = defineStore('player', {
             console.log(message)
             Message(`${i18n.global.t('message.something_wrong')}`)
             await this.player.disconnect()
+            await useUserStore().refreshToken()
             await this.initPlayer()
           })
 

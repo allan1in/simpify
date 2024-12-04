@@ -2,34 +2,32 @@
   <ResizeBox>
     <div class="my-library__container">
       <div class="my-library__container__title">
-        <div class="my-library__container__title__left" @click.prevent="isCollasped = !isCollasped">
-          <div class="my-library__container__title__left__icon-wrapper">
-            <IconLibrary v-show="!isCollasped" />
-            <IconLibraryCollasped v-show="isCollasped" />
-          </div>
-          <span v-show="!isCollasped" class="my-library__container__title__left__text">{{
-            $t('my_library.title')
-          }}</span>
-        </div>
-        <div v-show="!isCollasped" class="my-library__container__title__right">
-          <button
-            class="my-library__container__title__right__arrow"
-            @click.prevent="isShowMore = !isShowMore"
-          >
-            <div class="my-library__container__title__right__arrow__wrapper">
-              <IconArrowRightLonger v-show="!isShowMore" />
-              <IconArrowLeftLonger v-show="isShowMore" />
+        <ToolTip :text="toolTipTextTitle" :position="toolTipPositionTitle">
+          <div class="my-library__container__title__left" @click.prevent="isCollasped = !isCollasped">
+            <div class="my-library__container__title__left__icon-wrapper">
+              <IconLibrary v-show="!isCollasped" />
+              <IconLibraryCollasped v-show="isCollasped" />
             </div>
-          </button>
-        </div>
+            <span v-show="!isCollasped" class="my-library__container__title__left__text">{{
+              $t('my_library.title')
+            }}</span>
+          </div>
+        </ToolTip>
+        <ToolTip :text="toolTipTextArrow">
+          <div v-show="!isCollasped" class="my-library__container__title__right">
+            <button class="my-library__container__title__right__arrow" @click.prevent="isShowMore = !isShowMore">
+              <div class="my-library__container__title__right__arrow__wrapper">
+                <IconArrowRightLonger v-show="!isShowMore" />
+                <IconArrowLeftLonger v-show="isShowMore" />
+              </div>
+            </button>
+          </div>
+        </ToolTip>
       </div>
       <div v-show="!isCollasped" class="my-library__container__tag-bar">
         <TagBar :tags="tags" :activeTag @handle-click-tag="changeActiveTag" />
       </div>
-      <div
-        class="my-library__container__content"
-        :class="{ 'my-library__container__content-collasped': isCollasped }"
-      >
+      <div class="my-library__container__content" :class="{ 'my-library__container__content-collasped': isCollasped }">
         <MyOverlayScrollbars ref="scrollbar" os-element="div" @scroll="updateBottom">
           <div class="my-library__container__content__wrapper">
             <LikedSongs :active="activeTag === 'liked_songs'" />
@@ -59,6 +57,7 @@ import { computed } from 'vue'
 import Playlists from './Playlists/index.vue'
 import Albums from './Albums/index.vue'
 import Artists from './Artists/index.vue'
+import ToolTip from '@/components/ToolTip/index.vue'
 
 export default {
   name: 'MyLibrary',
@@ -74,7 +73,25 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useLibraryStore, ['isCollasped', 'myLibWidth', 'isShowMore', 'activeTag'])
+    ...mapWritableState(useLibraryStore, ['isCollasped', 'myLibWidth', 'isShowMore', 'activeTag']),
+    toolTipTextTitle() {
+      if (this.isCollasped) {
+        return this.$t('tooltip.expand_lib')
+      }
+      return this.$t('tooltip.collaspe_lib')
+    },
+    toolTipPositionTitle() {
+      if (this.isCollasped) {
+        return 'right'
+      }
+      return 'top'
+    },
+    toolTipTextArrow() {
+      if (this.isShowMore) {
+        return this.$t('tooltip.show_less')
+      }
+      return this.$t('tooltip.show_more')
+    }
   },
   components: {
     IconLibrary,
@@ -88,7 +105,8 @@ export default {
     LikedSongs,
     Playlists,
     Albums,
-    Artists
+    Artists,
+    ToolTip
   },
   methods: {
     ...mapActions(useLibraryStore, ['changeActiveTag']),

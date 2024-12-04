@@ -136,5 +136,8 @@
   "confirm_box_playlist_delete": {
     "title": "确认从音乐库移除？",
     "message": "此操作会将 {name} 从你的音乐库中移除。"
+  },
+  "tooltip":{
+    "collaspe_lib":"折叠音乐库"
   }
 }
