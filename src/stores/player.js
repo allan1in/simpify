@@ -16,7 +16,7 @@ export const usePlayerStore = defineStore('player', {
     player: null,
     volume: 50,
     isShuffle: false,
-    isPause: `true`,
+    isPause: true,
     repeatMode: 0,
     isMute: false,
     percentage: 0,
@@ -136,18 +136,17 @@ export const usePlayerStore = defineStore('player', {
           this.position = res.position
           this.percentage = 100 * (res.position / this.duration)
         })
-      } else if (useUserStore().checkProduct('free')) {
-        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     stopListenPos() {
       if (useUserStore().checkProduct('premium')) {
         this.player.removeListener('progress')
-      } else if (useUserStore().checkProduct('free')) {
-        Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async togglePlay() {
+      if (this.loading) {
+        return
+      }
       if (useUserStore().checkProduct('premium')) {
         if (this.isReady && !!this.current_track) {
           let state = await this.player.getCurrentState()
@@ -165,6 +164,9 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async nextTrack() {
+      if (this.loading) {
+        return
+      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         this.loading = true
         await this.player.nextTrack()
@@ -173,6 +175,9 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async preTrack() {
+      if (this.loading) {
+        return
+      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         this.loading = true
         await this.player.previousTrack()
@@ -181,6 +186,9 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async setRepeatMode() {
+      if (this.loading) {
+        return
+      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         if (this.repeatMode === 0) {
           await setRepeatMode({ state: 'context' })
@@ -197,6 +205,9 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async toggleShuffle() {
+      if (this.loading) {
+        return
+      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await togglePlaybackShuffle({ state: !this.isShuffle })
       } else if (useUserStore().checkProduct('free')) {
@@ -204,6 +215,9 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async setMute() {
+      if (this.loading) {
+        return
+      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await this.player.setVolume(0)
       } else if (useUserStore().checkProduct('free')) {
@@ -211,6 +225,9 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async setVolume() {
+      if (this.loading) {
+        return
+      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await this.player.setVolume(this.volume / 100)
       } else if (useUserStore().checkProduct('free')) {
@@ -218,6 +235,9 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async seekPosition() {
+      if (this.loading) {
+        return
+      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await this.player.seek((this.duration * this.percentage) / 100)
         await this.startListenPos()
@@ -225,7 +245,10 @@ export const usePlayerStore = defineStore('player', {
         Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
-    async playNewTrack(data, track) {
+    async playNewTrack(data) {
+      if (this.loading) {
+        return
+      }
       if (useUserStore().checkProduct('premium')) {
         this.loading = true
         if (this.isReady) {
@@ -238,6 +261,9 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async playNewContext(data) {
+      if (this.loading) {
+        return
+      }
       if (useUserStore().checkProduct('premium')) {
         this.loading = true
         if (this.isReady) {
@@ -250,6 +276,9 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async toggleTrackSave() {
+      if (this.loading) {
+        return
+      }
       if (this.isSaved) {
         await deleteUserSavedTracks({ ids: this.current_track?.id })
         this.isSaved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]

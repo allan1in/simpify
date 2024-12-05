@@ -2,7 +2,7 @@
   <div
     class="tooltip-container"
     ref="triggerWrapper"
-    @click.prevent="hideImmediate"
+    @click.prevent.stop="hideImmediate"
     @mouseover="handleMouseEnter"
     @mouseout="handleMouseLeave"
   >
