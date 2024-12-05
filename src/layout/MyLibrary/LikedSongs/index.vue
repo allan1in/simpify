@@ -3,7 +3,13 @@
     <template v-if="!loading_skeleton">
       <div class="my-library__container__content__liked-songs">
         <TransitionGroup name="list">
-          <CardTrackLibrary v-for="(item, index) in likedSongs" :key="item.track.id" :item="item.track" :index :uris />
+          <CardTrackLibrary
+            v-for="(item, index) in likedSongs"
+            :key="item.track.id"
+            :item="item.track"
+            :index
+            :uris
+          />
         </TransitionGroup>
       </div>
     </template>
@@ -18,8 +24,8 @@
 <script>
 import { getNextUserlikedSongs, getUserlikedSongs } from '@/api/meta/user'
 import CardTrackLibrary from '@/components/CardTrackLibrary/index.vue'
-import { useLibraryStore } from '@/stores/library';
-import { mapActions, mapState } from 'pinia';
+import { useLibraryStore } from '@/stores/library'
+import { mapActions, mapState } from 'pinia'
 
 export default {
   name: 'LikedSongs',
@@ -81,7 +87,7 @@ export default {
           res = await getNextUserlikedSongs(path.slice(path.indexOf('?') + 1))
         }
 
-        let newVals = res.items.filter(item => item !== null)
+        let newVals = res.items.filter((item) => item !== null)
         this.addLikedSongs(newVals)
         this.tracks_next = res.next
 

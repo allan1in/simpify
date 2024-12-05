@@ -6,15 +6,14 @@
       @click="$router.push({ name: 'Track', params: { trackId: item.id } })"
     >
       <div class="card-track-library-contanier__cover">
-        <div class="card-track-library-contanier__cover__icon">
-          <div
-            class="card-track-library-contanier__cover__icon__wrapper"
-            @click.prevent.stop="handleClick"
-          >
-            <IconPause v-if="isPlaying" />
-            <IconPlay v-else />
+        <ToolTip :text="toolTipText">
+          <div class="card-track-library-contanier__cover__icon" @click.prevent="handleClick">
+            <div class="card-track-library-contanier__cover__icon__wrapper">
+              <IconPause v-if="isPlaying" />
+              <IconPlay v-else />
+            </div>
           </div>
-        </div>
+        </ToolTip>
         <div v-if="isPlaying" class="card-track-library-contanier__cover__playing">
           <img
             class="card-track-library-contanier__cover__playing__img"
@@ -75,6 +74,7 @@ import IconPlay from '../Icons/IconPlay.vue'
 import IconPause from '../Icons/IconPause.vue'
 import { usePlayerStore } from '@/stores/player'
 import Skeleton from '@/components/Skeleton/index.vue'
+import ToolTip from '@/components/ToolTip/index.vue'
 
 export default {
   name: 'CardTrackLibrary',
@@ -99,7 +99,8 @@ export default {
   components: {
     IconPause,
     IconPlay,
-    Skeleton
+    Skeleton,
+    ToolTip
   },
   computed: {
     ...mapState(useLibraryStore, ['isCollasped']),
@@ -117,6 +118,12 @@ export default {
           .map((item) => this.item.id === item)
           .indexOf(true) !== -1
       )
+    },
+    toolTipText() {
+      if (this.isPlaying) {
+        return this.$t('tooltip.pause', { item: this.item.name })
+      }
+      return this.$t('tooltip.play', { item: this.item.name })
     }
   },
   methods: {

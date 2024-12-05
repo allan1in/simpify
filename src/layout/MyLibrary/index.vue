@@ -3,7 +3,10 @@
     <div class="my-library__container">
       <div class="my-library__container__title">
         <ToolTip :text="toolTipTextTitle" :position="toolTipPositionTitle">
-          <div class="my-library__container__title__left" @click.prevent="isCollasped = !isCollasped">
+          <div
+            class="my-library__container__title__left"
+            @click.prevent="isCollasped = !isCollasped"
+          >
             <div class="my-library__container__title__left__icon-wrapper">
               <IconLibrary v-show="!isCollasped" />
               <IconLibraryCollasped v-show="isCollasped" />
@@ -15,7 +18,10 @@
         </ToolTip>
         <ToolTip :text="toolTipTextArrow">
           <div v-show="!isCollasped" class="my-library__container__title__right">
-            <button class="my-library__container__title__right__arrow" @click.prevent="isShowMore = !isShowMore">
+            <button
+              class="my-library__container__title__right__arrow"
+              @click.prevent="isShowMore = !isShowMore"
+            >
               <div class="my-library__container__title__right__arrow__wrapper">
                 <IconArrowRightLonger v-show="!isShowMore" />
                 <IconArrowLeftLonger v-show="isShowMore" />
@@ -27,7 +33,10 @@
       <div v-show="!isCollasped" class="my-library__container__tag-bar">
         <TagBar :tags="tags" :activeTag @handle-click-tag="changeActiveTag" />
       </div>
-      <div class="my-library__container__content" :class="{ 'my-library__container__content-collasped': isCollasped }">
+      <div
+        class="my-library__container__content"
+        :class="{ 'my-library__container__content-collasped': isCollasped }"
+      >
         <MyOverlayScrollbars ref="scrollbar" os-element="div" @scroll="updateBottom">
           <div class="my-library__container__content__wrapper">
             <LikedSongs :active="activeTag === 'liked_songs'" />
@@ -184,41 +193,18 @@ export default {
       align-items: center;
       gap: 0.8rem;
 
-      &__create-playlist {
-        border-radius: 50%;
-        padding: 0.5rem;
-
-        @include clickAnimation;
-
-        @include transitionFast;
-
-        &:hover {
-          background-color: $color-bg-3;
-        }
-
-        &:hover &__icon-wrapper {
-          fill: $color-font-primary;
-        }
-
-        &__icon-wrapper {
-          height: 1.4rem;
-          aspect-ratio: 1 / 1;
-          fill: $color-font-secondary;
-
-          @include transitionFast;
-        }
-      }
-
       &__arrow {
         border-radius: 50%;
         padding: 0.5rem;
 
-        @include clickAnimation;
-
         @include transitionFast;
 
         &:hover {
           background-color: $color-bg-3;
+        }
+
+        &:active {
+          opacity: 0.8;
         }
 
         &:hover &__icon-wrapper {
@@ -249,6 +235,7 @@ export default {
 
     &__wrapper {
       padding: 0 $gutter $gutter $gutter;
+      width: 100%;
     }
   }
 }

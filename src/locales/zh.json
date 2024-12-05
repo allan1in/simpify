@@ -137,7 +137,12 @@
     "title": "确认从音乐库移除？",
     "message": "此操作会将 {name} 从你的音乐库中移除。"
   },
-  "tooltip":{
-    "collaspe_lib":"折叠音乐库"
+  "tooltip": {
+    "collaspe_lib": "折叠音乐库",
+    "expand_lib": "展开音乐库",
+    "show_more": "展示更多",
+    "show_less": "展示更少",
+    "play": "播放 {item}",
+    "pause": "暂停 {item}"
   }
 }
