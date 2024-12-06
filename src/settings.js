@@ -1,5 +1,5 @@
 export default {
-  clientId: 'd1a9c27292924038baac7e70a0ea094e', // App clientId
+  clientId: '7a4eb047468d473c9d2c54e8dc04ecdc', // App clientId
   redirectUrl: 'http://localhost:5173/login', // App redirect URL - must be localhost URL and/or HTTPS
 
   baseURL: 'https://api.spotify.com/v1',

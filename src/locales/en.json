@@ -143,6 +143,12 @@
     "show_more": "Show More",
     "show_less": "Show Less",
     "play": "Play {item}",
-    "pause": "Pause {item}"
+    "pause": "Pause {item}",
+    "go_back": "Go Back",
+    "go_forward": "Go Forward",
+    "home": "Home",
+    "browse": "Browse",
+    "clear_search": "Clear Search Field",
+    "language": "Language"
   }
 }

@@ -6,14 +6,17 @@
       @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })"
     >
       <div class="card-playlist-library-contanier__cover">
-        <ToolTip :text="toolTipText">
-          <div class="card-playlist-library-contanier__cover__icon" @click.prevent="handleClick">
-            <div class="card-playlist-library-contanier__cover__icon__wrapper">
+        <div class="card-playlist-library-contanier__cover__icon">
+          <ToolTip :text="toolTipText" stop-propagation>
+            <button
+              class="card-playlist-library-contanier__cover__icon__wrapper"
+              @click.prevent="handleClick"
+            >
               <IconPause v-if="isPlaying" />
               <IconPlay v-else />
-            </div>
-          </div>
-        </ToolTip>
+            </button>
+          </ToolTip>
+        </div>
         <div v-if="isPlaying" class="card-playlist-library-contanier__cover__playing">
           <img
             class="card-playlist-library-contanier__cover__playing__img"
@@ -215,7 +218,8 @@ export default {
       @include transition;
 
       &__wrapper {
-        height: 40%;
+        display: block;
+        height: 1.8rem;
         aspect-ratio: 1 / 1;
         fill: $color-font-primary;
 

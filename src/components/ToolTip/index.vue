@@ -2,9 +2,9 @@
   <div
     class="tooltip-container"
     ref="triggerWrapper"
-    @click.prevent.stop="hideImmediate"
-    @mouseover="handleMouseEnter"
-    @mouseout="handleMouseLeave"
+    @click="hideImmediate"
+    @mouseover="handleMouseOver"
+    @mouseout="handleMouseOut"
   >
     <slot></slot>
 
@@ -47,24 +47,25 @@ export default {
     disable: {
       type: Boolean,
       default: false
+    },
+    stopPropagation: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
-    handleMouseEnter() {
-      if (!this.visible) {
-        this.timer = setTimeout(() => {
-          this.showTooltip()
-        }, this.delay)
-      }
-    },
-    handleMouseLeave() {
+    handleMouseOver() {
       clearTimeout(this.timer)
-      if (this.visible) {
-        this.visible = false
-      }
+      this.timer = setTimeout(() => {
+        this.showTooltip()
+      }, this.delay)
+    },
+    handleMouseOut() {
+      clearTimeout(this.timer)
+      this.visible = false
     },
     showTooltip() {
-      if (this.disable || this.visible) {
+      if (this.disable) {
         return
       }
 
@@ -104,7 +105,7 @@ export default {
           case 'bottom': {
             top = rect.bottom + gutter
             if (top > clientHeight) {
-              top = clientHeight - gutter
+              top = clientHeight - toolTipHeight - gutter
             }
 
             left = rect.left + rect.width / 2
@@ -160,11 +161,12 @@ export default {
         }
       })
     },
-    hideImmediate() {
-      if (this.visible) {
-        this.transitionName = ''
-        this.visible = false
+    hideImmediate(e) {
+      if (this.stopPropagation) {
+        e.stopPropagation()
       }
+      this.transitionName = ''
+      this.visible = false
     },
     handleAfterLeave() {
       this.transitionName = 'fade'

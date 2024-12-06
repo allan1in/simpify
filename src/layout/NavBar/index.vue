@@ -5,21 +5,27 @@
         <IconPrimaryLogo />
       </router-link>
       <div class="nav-bar__left__arrow">
-        <button class="nav-bar__left__arrow__left" @click="$router.go(-1)">
-          <IconArrowLeft />
-        </button>
-        <button class="nav-bar__left__arrow__right" @click="$router.go(1)">
-          <IconArrowRight />
-        </button>
+        <ToolTip :text="$t('tooltip.go_back')">
+          <button class="nav-bar__left__arrow__left" @click="$router.go(-1)">
+            <IconArrowLeft />
+          </button>
+        </ToolTip>
+        <ToolTip :text="$t('tooltip.go_forward')">
+          <button class="nav-bar__left__arrow__right" @click="$router.go(1)">
+            <IconArrowRight />
+          </button>
+        </ToolTip>
       </div>
     </div>
     <div class="nav-bar__mid">
-      <button class="nav-bar__mid__home-btn" @click="toHome">
-        <span class="nav-bar__mid__home-btn__wrapper" :class="{ 'btn-active': isHome }">
-          <IconHomeActive v-if="isHome" />
-          <IconHome v-else />
-        </span>
-      </button>
+      <ToolTip :text="$t('tooltip.home')">
+        <button class="nav-bar__mid__home-btn" @click="toHome">
+          <span class="nav-bar__mid__home-btn__wrapper" :class="{ 'btn-active': isHome }">
+            <IconHomeActive v-if="isHome" />
+            <IconHome v-else />
+          </span>
+        </button>
+      </ToolTip>
       <div class="nav-bar__mid__search">
         <input
           class="nav-bar__mid__search__input"
@@ -31,31 +37,44 @@
         <div class="nav-bar__mid__search__icon-wrapper">
           <IconSearch />
         </div>
-        <button
-          v-if="inputContent.length === 0"
-          class="nav-bar__mid__search__btn-wrapper"
-          :class="{ 'btn-active': isSearch }"
-          @click="toSearchPage"
-        >
-          <IconBrowseActive v-if="isSearch" />
-          <IconBrowse v-else />
-        </button>
-        <button
-          v-else
-          class="nav-bar__mid__search__btn-wrapper nav-bar__mid__search__btn-wrapper__clear-border"
-          @click="inputContent = ''"
-        >
-          <IconClose />
-        </button>
+        <div v-if="inputContent.length === 0" class="nav-bar__mid__search__line"></div>
+        <template v-if="inputContent.length === 0">
+          <div class="nav-bar__mid__search__btn">
+            <ToolTip :text="$t('tooltip.browse')">
+              <button
+                class="nav-bar__mid__search__btn__btn-wrapper"
+                :class="{ 'btn-active': isSearch }"
+                @click="toSearchPage"
+              >
+                <IconBrowseActive v-if="isSearch" />
+                <IconBrowse v-else />
+              </button>
+            </ToolTip>
+          </div>
+        </template>
+        <template v-else>
+          <div class="nav-bar__mid__search__btn">
+            <ToolTip :text="$t('tooltip.clear_search')">
+              <button
+                class="nav-bar__mid__search__btn__btn-wrapper nav-bar__mid__search__btn__btn-wrapper__clear-border"
+                @click="inputContent = ''"
+              >
+                <IconClose />
+              </button>
+            </ToolTip>
+          </div>
+        </template>
       </div>
     </div>
     <div class="nav-bar__right">
       <DropDown>
-        <div class="nav-bar__right__language">
-          <button class="nav-bar__right__language__language-wrapper">
-            <IconLanguage />
-          </button>
-        </div>
+        <ToolTip :text="$t('tooltip.language')">
+          <div class="nav-bar__right__language">
+            <button class="nav-bar__right__language__language-wrapper">
+              <IconLanguage />
+            </button>
+          </div>
+        </ToolTip>
 
         <template #dropDownItems>
           <DropDownItem @click="changeLocale('en')">English</DropDownItem>
@@ -63,20 +82,22 @@
         </template>
       </DropDown>
       <DropDown>
-        <button class="nav-bar__right__photo-wrapper">
-          <img
-            v-if="avatar.length !== 0"
-            class="nav-bar__right__photo-wrapper__photo"
-            :src="avatar"
-            :alt="display_name"
-            :title="display_name"
-          />
-          <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
-            <span class="nav-bar__right__photo-wrapper__photo-default-wrapper__default">{{
-              display_name.charAt(0).toLocaleUpperCase()
-            }}</span>
-          </div>
-        </button>
+        <ToolTip :text="display_name">
+          <button class="nav-bar__right__photo-wrapper">
+            <img
+              v-if="avatar.length !== 0"
+              class="nav-bar__right__photo-wrapper__photo"
+              :src="avatar"
+              :alt="display_name"
+              :title="display_name"
+            />
+            <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
+              <span class="nav-bar__right__photo-wrapper__photo-default-wrapper__default">{{
+                display_name.charAt(0).toLocaleUpperCase()
+              }}</span>
+            </div>
+          </button>
+        </ToolTip>
         <template #dropDownItems>
           <DropDownItem
             toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account"
@@ -116,6 +137,7 @@ import IconArrowLeft from '@/components/Icons/IconArrowLeft.vue'
 import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
 import IconLanguage from '@/components/Icons/IconLanguage.vue'
 import { useAppStore } from '@/stores/app'
+import ToolTip from '@/components/ToolTip/index.vue'
 
 export default {
   name: 'NavBar',
@@ -132,7 +154,8 @@ export default {
     IconArrowLeft,
     IconArrowRight,
     IconDefaultUser,
-    IconLanguage
+    IconLanguage,
+    ToolTip
   },
   computed: {
     ...mapState(useUserStore, ['avatar', 'display_name', 'uid'])
@@ -338,28 +361,40 @@ export default {
         width: calc($height-nav / 2);
       }
 
-      &__btn-wrapper {
+      &__line {
+        height: 60%;
+        width: 0;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        right: 0.6rem;
-        fill: $color-font-secondary;
-        box-sizing: content-box;
-        height: calc($height-nav / 2);
-        width: calc($height-nav / 2);
-        padding: 0 1.2rem;
+        right: 5.4rem;
         border-left: 1px solid $color-font-secondary;
+      }
 
-        &:hover {
-          fill: $color-font-primary;
+      &__btn {
+        position: absolute;
+        top: 0;
+        right: 0.6rem;
 
-          & svg {
-            @include clickAnimation;
+        &__btn-wrapper {
+          display: block;
+          fill: $color-font-secondary;
+          box-sizing: content-box;
+          height: calc($height-nav / 2);
+          width: calc($height-nav / 2);
+          padding: 1.2rem;
+
+          &:hover {
+            fill: $color-font-primary;
+
+            & svg {
+              @include clickAnimation;
+            }
           }
-        }
 
-        &__clear-border {
-          border: none;
+          &__clear-border {
+            border: none;
+          }
         }
       }
     }

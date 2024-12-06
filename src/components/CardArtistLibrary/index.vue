@@ -6,14 +6,18 @@
       @click="$router.push({ name: 'Artist', params: { artistId: item.id } })"
     >
       <div class="card-artist-library-contanier__cover">
-        <ToolTip :text="toolTipText">
-          <div class="card-artist-library-contanier__cover__icon" @click.prevent="handleClick">
-            <div class="card-artist-library-contanier__cover__icon__wrapper">
+        <div class="card-artist-library-contanier__cover__icon">
+          <ToolTip :text="toolTipText" stop-propagation>
+            <button
+              @click.prevent="handleClick"
+              class="card-artist-library-contanier__cover__icon__wrapper"
+            >
               <IconPause v-if="isPlaying" />
               <IconPlay v-else />
-            </div>
-          </div>
-        </ToolTip>
+            </button>
+          </ToolTip>
+        </div>
+
         <div v-if="isPlaying" class="card-artist-library-contanier__cover__playing">
           <img
             class="card-artist-library-contanier__cover__playing__img"
@@ -189,7 +193,8 @@ export default {
       @include transition;
 
       &__wrapper {
-        height: 40%;
+        display: block;
+        height: 1.8rem;
         aspect-ratio: 1 / 1;
         fill: $color-font-primary;
 

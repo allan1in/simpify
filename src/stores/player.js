@@ -145,6 +145,7 @@ export const usePlayerStore = defineStore('player', {
     },
     async togglePlay() {
       if (this.loading) {
+        Message(`${i18n.global.t('message.loading')}`)
         return
       }
       if (useUserStore().checkProduct('premium')) {
@@ -165,6 +166,7 @@ export const usePlayerStore = defineStore('player', {
     },
     async nextTrack() {
       if (this.loading) {
+        Message(`${i18n.global.t('message.loading')}`)
         return
       }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
@@ -176,6 +178,7 @@ export const usePlayerStore = defineStore('player', {
     },
     async preTrack() {
       if (this.loading) {
+        Message(`${i18n.global.t('message.loading')}`)
         return
       }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
@@ -187,6 +190,7 @@ export const usePlayerStore = defineStore('player', {
     },
     async setRepeatMode() {
       if (this.loading) {
+        Message(`${i18n.global.t('message.loading')}`)
         return
       }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
@@ -206,6 +210,7 @@ export const usePlayerStore = defineStore('player', {
     },
     async toggleShuffle() {
       if (this.loading) {
+        Message(`${i18n.global.t('message.loading')}`)
         return
       }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
@@ -216,6 +221,7 @@ export const usePlayerStore = defineStore('player', {
     },
     async setMute() {
       if (this.loading) {
+        Message(`${i18n.global.t('message.loading')}`)
         return
       }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
@@ -226,6 +232,7 @@ export const usePlayerStore = defineStore('player', {
     },
     async setVolume() {
       if (this.loading) {
+        Message(`${i18n.global.t('message.loading')}`)
         return
       }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
@@ -236,6 +243,7 @@ export const usePlayerStore = defineStore('player', {
     },
     async seekPosition() {
       if (this.loading) {
+        Message(`${i18n.global.t('message.loading')}`)
         return
       }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
@@ -246,22 +254,20 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async playNewTrack(data) {
-      if (this.loading) {
+      if (this.loading || !this.isReady) {
+        Message(`${i18n.global.t('message.loading')}`)
         return
       }
       if (useUserStore().checkProduct('premium')) {
         this.loading = true
-        if (this.isReady) {
-          await startPlayback(data)
-        } else {
-          Message(`${i18n.global.t('message.loading')}`)
-        }
+        await startPlayback(data)
       } else if (useUserStore().checkProduct('free')) {
         Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async playNewContext(data) {
       if (this.loading) {
+        Message(`${i18n.global.t('message.loading')}`)
         return
       }
       if (useUserStore().checkProduct('premium')) {
@@ -277,6 +283,7 @@ export const usePlayerStore = defineStore('player', {
     },
     async toggleTrackSave() {
       if (this.loading) {
+        Message(`${i18n.global.t('message.loading')}`)
         return
       }
       if (this.isSaved) {
