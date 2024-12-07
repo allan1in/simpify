@@ -48,20 +48,22 @@
   }
 }
 
-.list-move,
-.list-enter-active,
-.list-leave-active {
-  transition: all $duration-default ease;
-  // Fill collapse due to position: absolute
-  width: calc(100% - 2 * $gutter);
-}
+.list {
+  &-move,
+  &-enter-active,
+  &-leave-active {
+    transition: all $duration-default ease;
+    // Fill collapse due to position: absolute
+    width: calc(100% - 2 * $gutter);
+  }
 
-.list-leave-active {
-  position: absolute;
-}
+  &-leave-active {
+    position: absolute;
+  }
 
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: scale(0.1);
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
+    transform: scale(0.1);
+  }
 }

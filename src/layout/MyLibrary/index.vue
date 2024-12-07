@@ -11,23 +11,27 @@
               <IconLibrary v-show="!isCollasped" />
               <IconLibraryCollasped v-show="isCollasped" />
             </div>
-            <span v-show="!isCollasped" class="my-library__container__title__left__text">{{
-              $t('my_library.title')
-            }}</span>
+            <Transition name="fade">
+              <span v-show="!isCollasped" class="my-library__container__title__left__text">{{
+                $t('my_library.title')
+              }}</span>
+            </Transition>
           </div>
         </ToolTip>
         <ToolTip :text="toolTipTextArrow">
-          <div v-show="!isCollasped" class="my-library__container__title__right">
-            <button
-              class="my-library__container__title__right__arrow"
-              @click.prevent="isShowMore = !isShowMore"
-            >
-              <div class="my-library__container__title__right__arrow__wrapper">
-                <IconArrowRightLonger v-show="!isShowMore" />
-                <IconArrowLeftLonger v-show="isShowMore" />
-              </div>
-            </button>
-          </div>
+          <Transition name="fade">
+            <div v-show="!isCollasped" class="my-library__container__title__right">
+              <button
+                class="my-library__container__title__right__arrow"
+                @click.prevent="isShowMore = !isShowMore"
+              >
+                <div class="my-library__container__title__right__arrow__wrapper">
+                  <IconArrowRightLonger v-show="!isShowMore" />
+                  <IconArrowLeftLonger v-show="isShowMore" />
+                </div>
+              </button>
+            </div>
+          </Transition>
         </ToolTip>
       </div>
       <div v-show="!isCollasped" class="my-library__container__tag-bar">

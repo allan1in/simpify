@@ -3,7 +3,11 @@
     <template v-if="!loading">
       <div class="player-bar__left">
         <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
-          <img class="player-bar__left__cover-wrapper__cover" :src="current_track.album.images[0].url" alt="track" />
+          <img
+            class="player-bar__left__cover-wrapper__cover"
+            :src="current_track.album.images[0].url"
+            alt="track"
+          />
         </div>
         <div class="player-bar__left__msg-wrapper">
           <div class="player-bar__left__msg-wrapper__title" v-if="current_track?.id">
@@ -12,10 +16,14 @@
             }}</router-link>
           </div>
           <div class="player-bar__left__msg-wrapper__artist" v-if="current_track?.artists?.length">
-            <router-link v-for="(artist, index) in current_track.artists" :key="artist.uri" :to="{
-              name: 'Artist',
-              params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
-            }">
+            <router-link
+              v-for="(artist, index) in current_track.artists"
+              :key="artist.uri"
+              :to="{
+                name: 'Artist',
+                params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
+              }"
+            >
               {{ (index === 0 ? '' : ', ') + artist.name }}
             </router-link>
           </div>
@@ -51,18 +59,29 @@
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
         <ToolTip :text="toolTipShuffle" :disable="notAvaliable">
-          <button class="icon-wrapper"
-            :class="{ 'btn-active': isShuffle, 'not-allowed': notAvaliable || isFreeAccount }" @click="toggleShuffle">
+          <button
+            class="icon-wrapper"
+            :class="{ 'btn-active': isShuffle, 'not-allowed': notAvaliable || isFreeAccount }"
+            @click="toggleShuffle"
+          >
             <IconShuffle />
           </button>
         </ToolTip>
         <ToolTip :text="$t('tooltip.previous')" :disable="notAvaliable">
-          <button class="icon-wrapper" @click="preTrack" :class="{ 'not-allowed': notAvaliable || isFreeAccount }">
+          <button
+            class="icon-wrapper"
+            @click="preTrack"
+            :class="{ 'not-allowed': notAvaliable || isFreeAccount }"
+          >
             <IconPrevious />
           </button>
         </ToolTip>
         <ToolTip :text="toolTipPlay" :disable="notAvaliable">
-          <button class="player-bar__mid__btn-group__play" @click="togglePlay" :class="{ 'not-allowed': notAvaliable }">
+          <button
+            class="player-bar__mid__btn-group__play"
+            @click="togglePlay"
+            :class="{ 'not-allowed': notAvaliable }"
+          >
             <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
               <IconPlay v-if="isPause" />
               <IconPause v-else />
@@ -70,14 +89,23 @@
           </button>
         </ToolTip>
         <ToolTip :text="$t('tooltip.next')" :disable="notAvaliable">
-          <button class="icon-wrapper" @click="nextTrack" :class="{ 'not-allowed': notAvaliable || isFreeAccount }">
+          <button
+            class="icon-wrapper"
+            @click="nextTrack"
+            :class="{ 'not-allowed': notAvaliable || isFreeAccount }"
+          >
             <IconNext />
           </button>
         </ToolTip>
         <ToolTip :text="toolTipRepeat" :disable="notAvaliable">
-          <button class="icon-wrapper"
-            :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': notAvaliable || isFreeAccount }"
-            @click="setRepeatMode">
+          <button
+            class="icon-wrapper"
+            :class="{
+              'btn-active': repeatMode !== 0,
+              'not-allowed': notAvaliable || isFreeAccount
+            }"
+            @click="setRepeatMode"
+          >
             <IconRepeatSingle v-if="repeatMode === 2" />
             <IconRepeat v-else />
           </button>
@@ -88,8 +116,12 @@
     <div class="player-bar__right">
       <VolumeBar class="player-bar__right__volume-bar" :disabled="notAvaliable" />
       <ToolTip :text="$t('tooltip.fullscreen')" :disable="notAvaliable">
-        <button class="icon-wrapper player-bar__right__full-screen" @click="openFullScreenPlayer"
-          :class="{ 'not-allowed': notAvaliable }" :disabled="notAvaliable">
+        <button
+          class="icon-wrapper player-bar__right__full-screen"
+          @click="openFullScreenPlayer"
+          :class="{ 'not-allowed': notAvaliable }"
+          :disabled="notAvaliable"
+        >
           <IconFullScreen />
         </button>
       </ToolTip>
@@ -154,7 +186,6 @@ export default {
       'isPause',
       'isShuffle',
       'repeatMode',
-      'isMute',
       'volume',
       'isReady',
       'loading',

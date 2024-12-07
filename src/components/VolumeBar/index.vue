@@ -1,7 +1,12 @@
 <template>
   <div class="volume-container">
     <ToolTip :text="toolTipMute" :disable="disabled">
-      <button class="icon-wrapper" @click="handleMuteClick" :class="{ 'not-allowed': disabled }" :disabled="disabled">
+      <button
+        class="icon-wrapper"
+        @click="handleMuteClick"
+        :class="{ 'not-allowed': disabled }"
+        :disabled="disabled"
+      >
         <IconVolumeMuted v-if="isMute || volume == 0" />
         <IconVolumeQuiet v-else-if="volume <= 33" />
         <IconVolumeNormal v-else-if="volume <= 66" />
@@ -9,8 +14,12 @@
       </button>
     </ToolTip>
     <div class="volume-container__progress-wrapper">
-      <ProcessBar :percentage="isMute ? 0 : volume" @update-percentage="updateVolume" @mouse-down="handleMouseDown"
-        :disabled="disabled" />
+      <ProcessBar
+        :percentage="isMute ? 0 : volume"
+        @update-percentage="updateVolume"
+        @mouse-down="handleMouseDown"
+        :disabled="disabled"
+      />
     </div>
   </div>
 </template>
@@ -83,6 +92,13 @@ export default {
         this.isMute = true
       } else {
         this.isMute = false
+      }
+    },
+    isMute(newVal) {
+      if (newVal) {
+        this.setMute()
+      } else {
+        this.setVolume()
       }
     }
   }

@@ -1,12 +1,17 @@
 <template>
   <template v-if="!loading">
-    <div class="card-artist-library-contanier"
+    <div
+      class="card-artist-library-contanier"
       :class="{ 'card-artist-library-contanier-collasped-current': isCurrentPage }"
-      @click="$router.push({ name: 'Artist', params: { artistId: item.id } })">
+      @click="$router.push({ name: 'Artist', params: { artistId: item.id } })"
+    >
       <div class="card-artist-library-contanier__cover">
         <div class="card-artist-library-contanier__cover__icon">
           <ToolTip :text="toolTipText" stop-propagation>
-            <button @click.prevent="handleClick" class="card-artist-library-contanier__cover__icon__wrapper">
+            <button
+              @click.prevent="handleClick"
+              class="card-artist-library-contanier__cover__icon__wrapper"
+            >
               <IconPause v-if="isPlaying" />
               <IconPlay v-else />
             </button>
@@ -14,19 +19,32 @@
         </div>
 
         <div v-if="isPlaying" class="card-artist-library-contanier__cover__playing">
-          <img class="card-artist-library-contanier__cover__playing__img" loading="lazy"
-            src="/src/assets/images/playing.gif" alt="" />
+          <img
+            class="card-artist-library-contanier__cover__playing__img"
+            loading="lazy"
+            src="/src/assets/images/playing.gif"
+            alt=""
+          />
         </div>
-        <img class="card-artist-library-contanier__cover__img" :src="item.images[0]?.url" :alt="item.name" />
+        <img
+          class="card-artist-library-contanier__cover__img"
+          :src="item.images[0]?.url"
+          :alt="item.name"
+        />
       </div>
-      <div v-if="!isCollasped" class="card-artist-library-contanier__info">
-        <router-link :to="{ name: 'Artist', params: { artistId: item.id } }"
-          class="card-artist-library-contanier__info__title" :class="{
-            'card-artist-library-contanier__info__title-playing': isCurrentItem
-          }">
-          {{ item.name }}
-        </router-link>
-      </div>
+      <Transition name="fade">
+        <div v-if="!isCollasped" class="card-artist-library-contanier__info">
+          <router-link
+            :to="{ name: 'Artist', params: { artistId: item.id } }"
+            class="card-artist-library-contanier__info__title"
+            :class="{
+              'card-artist-library-contanier__info__title-playing': isCurrentItem
+            }"
+          >
+            {{ item.name }}
+          </router-link>
+        </div>
+      </Transition>
     </div>
   </template>
   <template v-else>

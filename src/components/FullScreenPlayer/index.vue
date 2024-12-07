@@ -22,19 +22,21 @@
             </h2>
           </div>
         </div>
-        <button
-          :class="{
-            'full-screen-container__top__close-wrapper-show': isCursorMove || isCursorOverClose
-          }"
-          class="full-screen-container__top__close-wrapper"
-          @click="closeFullScreenPlayer"
-          @mouseover="isCursorOverClose = true"
-          @mouseout="isCursorOverClose = false"
-        >
-          <div class="full-screen-container__top__close-wrapper__close">
-            <IconClose />
-          </div>
-        </button>
+        <ToolTip :text="$t('tooltip.exit_fullscreen')">
+          <button
+            :class="{
+              'full-screen-container__top__close-wrapper-show': isCursorMove || isCursorOverClose
+            }"
+            class="full-screen-container__top__close-wrapper"
+            @click="closeFullScreenPlayer"
+            @mouseover="isCursorOverClose = true"
+            @mouseout="isCursorOverClose = false"
+          >
+            <div class="full-screen-container__top__close-wrapper__close">
+              <IconClose />
+            </div>
+          </button>
+        </ToolTip>
       </div>
       <div class="full-screen-container__content">
         <div
@@ -75,41 +77,53 @@
         <div class="full-screen-container__player__btns">
           <div class="full-screen-container__player__btns__left"></div>
           <div class="full-screen-container__player__btns__mid">
-            <button
-              class="icon-wrapper"
-              :class="{ 'btn-active': isShuffle }"
-              @click="toggleShuffle"
-            >
-              <IconShuffle />
-            </button>
-            <button class="icon-wrapper" @click="preTrack">
-              <IconPrevious />
-            </button>
-            <button class="full-screen-container__player__btns__mid__play" @click="togglePlay">
-              <span class="full-screen-container__player__btns__mid__play__icon-wrapper-round">
-                <IconPlay v-if="isPause" />
-                <IconPause v-else />
-              </span>
-            </button>
-            <button class="icon-wrapper" @click="nextTrack">
-              <IconNext />
-            </button>
-            <button
-              class="icon-wrapper"
-              :class="{ 'btn-active': repeatMode !== 0 }"
-              @click="setRepeatMode"
-            >
-              <IconRepeatSingle v-if="repeatMode === 2" />
-              <IconRepeat v-else />
-            </button>
+            <ToolTip :text="toolTipShuffle">
+              <button
+                class="icon-wrapper"
+                :class="{ 'btn-active': isShuffle }"
+                @click="toggleShuffle"
+              >
+                <IconShuffle />
+              </button>
+            </ToolTip>
+            <ToolTip :text="$t('tooltip.previous')">
+              <button class="icon-wrapper" @click="preTrack">
+                <IconPrevious />
+              </button>
+            </ToolTip>
+            <ToolTip :text="toolTipPlay">
+              <button class="full-screen-container__player__btns__mid__play" @click="togglePlay">
+                <span class="full-screen-container__player__btns__mid__play__icon-wrapper-round">
+                  <IconPlay v-if="isPause" />
+                  <IconPause v-else />
+                </span>
+              </button>
+            </ToolTip>
+            <ToolTip :text="$t('tooltip.next')">
+              <button class="icon-wrapper" @click="nextTrack">
+                <IconNext />
+              </button>
+            </ToolTip>
+            <ToolTip :text="toolTipRepeat">
+              <button
+                class="icon-wrapper"
+                :class="{ 'btn-active': repeatMode !== 0 }"
+                @click="setRepeatMode"
+              >
+                <IconRepeatSingle v-if="repeatMode === 2" />
+                <IconRepeat v-else />
+              </button>
+            </ToolTip>
           </div>
           <div class="full-screen-container__player__btns__right">
             <div class="full-screen-container__player__btns__right__volume">
               <VolumeBar />
             </div>
-            <button class="icon-wrapper" @click="closeFullScreenPlayer">
-              <IconFullScreenClose />
-            </button>
+            <ToolTip :text="$t('tooltip.exit_fullscreen')">
+              <button class="icon-wrapper" @click="closeFullScreenPlayer">
+                <IconFullScreenClose />
+              </button>
+            </ToolTip>
           </div>
         </div>
       </div>
@@ -133,6 +147,7 @@ import IconFullScreenClose from '../Icons/IconFullScreenClose.vue'
 import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
 import { useAppStore } from '@/stores/app'
+import ToolTip from '@/components/ToolTip/index.vue'
 
 export default {
   name: 'FullScreenPlayer',
@@ -152,7 +167,30 @@ export default {
       'isMute',
       'volume'
     ]),
-    ...mapWritableState(useAppStore, ['showFullScreenPlayer'])
+    ...mapWritableState(useAppStore, ['showFullScreenPlayer']),
+    toolTipShuffle() {
+      if (this.isShuffle) {
+        return this.$t('tooltip.disable_shuffle')
+      }
+      return this.$t('tooltip.enable_shuffle')
+    },
+    toolTipPlay() {
+      if (this.isPause) {
+        return this.$t('tooltip.play')
+      }
+      return this.$t('tooltip.pause')
+    },
+    toolTipRepeat() {
+      if (this.repeatMode === 0) {
+        return this.$t('tooltip.repeat_enable')
+      } else if (this.repeatMode === 1) {
+        return this.$t('tooltip.repeat_one')
+      } else if (this.repeatMode === 2) {
+        return this.$t('tooltip.repeat_disable')
+      } else {
+        throw Error('Invalid value of repeatMode! Only accept values 0, 1 or 2.')
+      }
+    }
   },
   components: {
     IconPrimaryLogo,
@@ -166,7 +204,8 @@ export default {
     IconRepeatSingle,
     IconFullScreenClose,
     VolumeBar,
-    SeekBar
+    SeekBar,
+    ToolTip
   },
   methods: {
     async closeFullScreenPlayer() {
@@ -303,8 +342,13 @@ export default {
       justify-content: center;
       transform: translateX(10rem);
       opacity: 0;
+      transition-property: transform, opacity;
+      transition-duration: $duration-slow;
+      transition-timing-function: ease;
 
-      @include transitionSlow;
+      &:hover {
+        opacity: 0.8;
+      }
 
       &-show {
         opacity: 1;
@@ -398,7 +442,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 1rem;
+        gap: $gutter-1-5x;
 
         &__play {
           height: 5.2rem;

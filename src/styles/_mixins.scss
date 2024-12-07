@@ -27,19 +27,19 @@
 
 @mixin transition {
   & {
-    transition: all $duration-default ease-in;
+    transition: all $duration-default ease;
   }
 }
 
 @mixin transitionSlow {
   & {
-    transition: all $duration-slow ease-in;
+    transition: all $duration-slow ease;
   }
 }
 
 @mixin transitionFast {
   & {
-    transition: all $duration-fast ease-in;
+    transition: all $duration-fast ease;
   }
 }
 

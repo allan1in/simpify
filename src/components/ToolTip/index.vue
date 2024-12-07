@@ -191,7 +191,7 @@ export default {
     font-size: $font-size-text-secondary;
     padding: 0.4rem 1rem;
     z-index: 99999;
-    box-shadow: 0 0 1rem 0.5rem rgba($color-bg-1, 0.6);
+    box-shadow: 0 0 1rem 0.5rem rgba($color-bg-1, 0.4);
   }
 }
 </style>

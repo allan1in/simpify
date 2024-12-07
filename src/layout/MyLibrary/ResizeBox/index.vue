@@ -9,12 +9,14 @@
 <script>
 import { useLibraryStore } from '@/stores/library'
 import { mapWritableState } from 'pinia'
+import variables from '@/styles/export/variables.module.scss'
 
 export default {
   name: 'ResizeBox',
   data() {
     return {
       minWidth: 280,
+      maxWidth: undefined,
       collapsedWidth: 72
     }
   },
@@ -24,7 +26,7 @@ export default {
   methods: {
     handleMouseDown(event) {
       event.preventDefault()
-
+      this.$refs.resizeBox.style.transition = 'none'
       let boxLeft = this.$refs.resizeBox.getBoundingClientRect().left
       let newWidth
 
@@ -60,6 +62,7 @@ export default {
       document.onmouseup = () => {
         document.onmousemove = null
         document.onmouseup = null
+        this.$refs.resizeBox.style.transition = `width ${variables.duration_slow} ease`
       }
     }
   },
@@ -79,7 +82,6 @@ export default {
       if (newVal) {
         this.$nextTick(() => {
           this.$refs.resizeBox.style.width = '100%'
-          this.myLibWidth = this.$refs.resizeBox.offsetWidth
         })
       } else {
         this.$nextTick(() => {
@@ -87,12 +89,23 @@ export default {
           this.myLibWidth = this.minWidth
         })
       }
+    },
+    maxWidth(newVal) {
+      if (this.isShowMore && !this.isCollasped) {
+        this.myLibWidth = newVal
+      }
     }
   },
   created() {
     this.$nextTick(() => {
       this.myLibWidth = this.minWidth
       this.$refs.resizeBox.style.width = this.myLibWidth + 'px'
+      // Get maxWidth when transition end
+      this.$refs.resizeBox.addEventListener('transitionend', (event) => {
+        if (event.propertyName === 'width') {
+          this.maxWidth = this.$refs.resizeBox.offsetWidth
+        }
+      })
     })
   }
 }
@@ -102,6 +115,8 @@ export default {
   background-color: $color-bg-2;
   position: relative;
   border-radius: $border-radius-default;
+
+  transition: width $duration-slow ease;
 
   &__resize-handle {
     width: $gutter;
