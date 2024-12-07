@@ -231,10 +231,6 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async setVolume() {
-      if (this.loading) {
-        Message(`${i18n.global.t('message.loading')}`)
-        return
-      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await this.player.setVolume(this.volume / 100)
       } else if (useUserStore().checkProduct('free')) {

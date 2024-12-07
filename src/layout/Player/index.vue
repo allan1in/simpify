@@ -3,13 +3,6 @@
     <template v-if="!loading">
       <div class="player-bar__left">
         <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
-          <div class="player-bar__left__cover-wrapper__arrow">
-            <div class="player-bar__left__cover-wrapper__arrow__wrapper"
-              @click="showFullScreenPlayer = !showFullScreenPlayer">
-              <IconArrowUp v-show="!showFullScreenPlayer" />
-              <IconArrowDown v-show="showFullScreenPlayer" />
-            </div>
-          </div>
           <img class="player-bar__left__cover-wrapper__cover" :src="current_track.album.images[0].url" alt="track" />
         </div>
         <div class="player-bar__left__msg-wrapper">
@@ -28,10 +21,12 @@
           </div>
         </div>
         <div class="player-bar__left__save-btn">
-          <button class="icon-wrapper" v-if="current_track" @click="toggleTrackSave">
-            <IconSaved v-if="isSaved" />
-            <IconAddTo v-else />
-          </button>
+          <ToolTip :text="toolTipLike" :disable="notAvaliable">
+            <button class="icon-wrapper" v-if="current_track" @click="toggleTrackSave">
+              <IconSaved v-if="isSaved" />
+              <IconAddTo v-else />
+            </button>
+          </ToolTip>
         </div>
       </div>
     </template>
@@ -55,37 +50,49 @@
     </template>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
-        <button class="icon-wrapper" :class="{ 'btn-active': isShuffle, 'not-allowed': notAvaliable || isFreeAccount }"
-          @click="toggleShuffle">
-          <IconShuffle />
-        </button>
-        <button class="icon-wrapper" @click="preTrack" :class="{ 'not-allowed': notAvaliable || isFreeAccount }">
-          <IconPrevious />
-        </button>
-        <button class="player-bar__mid__btn-group__play" @click="togglePlay" :class="{ 'not-allowed': notAvaliable }">
-          <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
-            <IconPlay v-if="isPause" />
-            <IconPause v-else />
-          </span>
-        </button>
-        <button class="icon-wrapper" @click="nextTrack" :class="{ 'not-allowed': notAvaliable || isFreeAccount }">
-          <IconNext />
-        </button>
-        <button class="icon-wrapper"
-          :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': notAvaliable || isFreeAccount }"
-          @click="setRepeatMode">
-          <IconRepeatSingle v-if="repeatMode === 2" />
-          <IconRepeat v-else />
-        </button>
+        <ToolTip :text="toolTipShuffle" :disable="notAvaliable">
+          <button class="icon-wrapper"
+            :class="{ 'btn-active': isShuffle, 'not-allowed': notAvaliable || isFreeAccount }" @click="toggleShuffle">
+            <IconShuffle />
+          </button>
+        </ToolTip>
+        <ToolTip :text="$t('tooltip.previous')" :disable="notAvaliable">
+          <button class="icon-wrapper" @click="preTrack" :class="{ 'not-allowed': notAvaliable || isFreeAccount }">
+            <IconPrevious />
+          </button>
+        </ToolTip>
+        <ToolTip :text="toolTipPlay" :disable="notAvaliable">
+          <button class="player-bar__mid__btn-group__play" @click="togglePlay" :class="{ 'not-allowed': notAvaliable }">
+            <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
+              <IconPlay v-if="isPause" />
+              <IconPause v-else />
+            </span>
+          </button>
+        </ToolTip>
+        <ToolTip :text="$t('tooltip.next')" :disable="notAvaliable">
+          <button class="icon-wrapper" @click="nextTrack" :class="{ 'not-allowed': notAvaliable || isFreeAccount }">
+            <IconNext />
+          </button>
+        </ToolTip>
+        <ToolTip :text="toolTipRepeat" :disable="notAvaliable">
+          <button class="icon-wrapper"
+            :class="{ 'btn-active': repeatMode !== 0, 'not-allowed': notAvaliable || isFreeAccount }"
+            @click="setRepeatMode">
+            <IconRepeatSingle v-if="repeatMode === 2" />
+            <IconRepeat v-else />
+          </button>
+        </ToolTip>
       </div>
       <SeekBar class="player-bar__mid__seek-bar" :disabled="notAvaliable" />
     </div>
     <div class="player-bar__right">
       <VolumeBar class="player-bar__right__volume-bar" :disabled="notAvaliable" />
-      <button class="icon-wrapper player-bar__right__full-screen" @click="openFullScreenPlayer"
-        :class="{ 'not-allowed': notAvaliable }" :disabled="notAvaliable">
-        <IconFullScreen />
-      </button>
+      <ToolTip :text="$t('tooltip.fullscreen')" :disable="notAvaliable">
+        <button class="icon-wrapper player-bar__right__full-screen" @click="openFullScreenPlayer"
+          :class="{ 'not-allowed': notAvaliable }" :disabled="notAvaliable">
+          <IconFullScreen />
+        </button>
+      </ToolTip>
     </div>
   </footer>
 </template>
@@ -109,8 +116,7 @@ import SeekBar from '@/components/SeekBar/index.vue'
 import { useAppStore } from '@/stores/app'
 import { useUserStore } from '@/stores/user'
 import Skeleton from '@/components/Skeleton/index.vue'
-import IconArrowDown from '@/components/Icons/IconArrowDown.vue'
-import IconArrowUp from '@/components/Icons/IconArrowUp.vue'
+import ToolTip from '@/components/ToolTip/index.vue'
 
 export default {
   name: 'Player',
@@ -129,8 +135,7 @@ export default {
     VolumeBar,
     SeekBar,
     Skeleton,
-    IconArrowDown,
-    IconArrowUp
+    ToolTip
   },
   data() {
     return {
@@ -161,6 +166,35 @@ export default {
     },
     notAvaliable() {
       return !this.isReady || !this.current_track
+    },
+    toolTipShuffle() {
+      if (this.isShuffle) {
+        return this.$t('tooltip.disable_shuffle')
+      }
+      return this.$t('tooltip.enable_shuffle')
+    },
+    toolTipPlay() {
+      if (this.isPause) {
+        return this.$t('tooltip.play')
+      }
+      return this.$t('tooltip.pause')
+    },
+    toolTipRepeat() {
+      if (this.repeatMode === 0) {
+        return this.$t('tooltip.repeat_enable')
+      } else if (this.repeatMode === 1) {
+        return this.$t('tooltip.repeat_one')
+      } else if (this.repeatMode === 2) {
+        return this.$t('tooltip.repeat_disable')
+      } else {
+        throw Error('Invalid value of repeatMode! Only accept values 0, 1 or 2.')
+      }
+    },
+    toolTipLike() {
+      if (this.isSaved) {
+        return this.$t('tooltip.remove_from_liked_songs')
+      }
+      return this.$t('tooltip.add_to_liked_songs')
     }
   },
   methods: {
@@ -320,32 +354,9 @@ $msg-artist-font-size: 1.2rem;
         display: block;
       }
 
-      &__arrow {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        padding: 0.6rem;
-        cursor: pointer;
-        border-radius: 50%;
-        background-color: $color-bg-3;
-        opacity: 0.8;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        display: none;
-
-        &__wrapper {
-          height: 1.2rem;
-          width: 1.2rem;
-          fill: $color-font-secondary;
-        }
-      }
-
       &__cover {
         width: 100%;
         object-fit: cover;
-        cursor: pointer;
       }
     }
 

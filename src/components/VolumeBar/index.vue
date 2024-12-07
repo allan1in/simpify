@@ -1,11 +1,13 @@
 <template>
   <div class="volume-container">
-    <button class="icon-wrapper" @click="handleMuteClick" :class="{ 'not-allowed': disabled }" :disabled="disabled">
-      <IconVolumeMuted v-if="isMute || volume == 0" />
-      <IconVolumeQuiet v-else-if="volume <= 33" />
-      <IconVolumeNormal v-else-if="volume <= 66" />
-      <IconVolumeLoud v-else />
-    </button>
+    <ToolTip :text="toolTipMute" :disable="disabled">
+      <button class="icon-wrapper" @click="handleMuteClick" :class="{ 'not-allowed': disabled }" :disabled="disabled">
+        <IconVolumeMuted v-if="isMute || volume == 0" />
+        <IconVolumeQuiet v-else-if="volume <= 33" />
+        <IconVolumeNormal v-else-if="volume <= 66" />
+        <IconVolumeLoud v-else />
+      </button>
+    </ToolTip>
     <div class="volume-container__progress-wrapper">
       <ProcessBar :percentage="isMute ? 0 : volume" @update-percentage="updateVolume" @mouse-down="handleMouseDown"
         :disabled="disabled" />
@@ -20,6 +22,7 @@ import IconVolumeQuiet from '../Icons/IconVolumeQuiet.vue'
 import IconVolumeMuted from '../Icons/IconVolumeMuted.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
+import ToolTip from '@/components/ToolTip/index.vue'
 
 export default {
   name: 'VolumeBar',
@@ -28,16 +31,32 @@ export default {
     IconVolumeLoud,
     IconVolumeNormal,
     IconVolumeQuiet,
-    IconVolumeMuted
+    IconVolumeMuted,
+    ToolTip
   },
   computed: {
-    ...mapWritableState(usePlayerStore, ['isMute', 'volume'])
+    ...mapWritableState(usePlayerStore, ['isMute', 'volume']),
+    toolTipMute() {
+      if (this.isMute) {
+        return this.$t('tooltip.unmute')
+      }
+      return this.$t('tooltip.mute')
+    }
   },
   props: {
     disabled: {
       type: Boolean,
       require: false,
       default: false
+    }
+  },
+  data() {
+    return {
+      tooltip: {
+        mute: {
+          text: undefined
+        }
+      }
     }
   },
   methods: {
@@ -64,13 +83,6 @@ export default {
         this.isMute = true
       } else {
         this.isMute = false
-      }
-    },
-    isMute(newVal, oldVal) {
-      if (newVal) {
-        this.setMute()
-      } else {
-        this.setVolume()
       }
     }
   }

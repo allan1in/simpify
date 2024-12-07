@@ -55,11 +55,3 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
-
-## TODO
-
-1. add title attribute
-2. white screen first load
-3. user dont have premirem
-4. theme
-5. i18n
