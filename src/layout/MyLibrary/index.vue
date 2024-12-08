@@ -34,22 +34,25 @@
           </Transition>
         </ToolTip>
       </div>
-      <div v-show="!isCollasped" class="my-library__container__tag-bar">
-        <TagBar :tags="tags" :activeTag @handle-click-tag="changeActiveTag" />
-      </div>
-      <div
-        class="my-library__container__content"
-        :class="{ 'my-library__container__content-collasped': isCollasped }"
-      >
-        <MyOverlayScrollbars ref="scrollbar" os-element="div" @scroll="updateBottom">
-          <div class="my-library__container__content__wrapper">
-            <LikedSongs :active="activeTag === 'liked_songs'" />
-            <Playlists :active="activeTag === 'playlists'" />
-            <Albums :active="activeTag === 'albums'" />
-            <Artists :active="activeTag === 'artists'" />
-          </div>
-        </MyOverlayScrollbars>
-      </div>
+      <TransitionGroup name="list-fade">
+        <div v-if="!isCollasped" class="my-library__container__tag-bar" :key="'tagbar'">
+          <TagBar :tags="tags" :activeTag @handle-click-tag="changeActiveTag" />
+        </div>
+        <div
+          class="my-library__container__content"
+          :class="{ 'my-library__container__content-collasped': isCollasped }"
+          :key="'content'"
+        >
+          <MyOverlayScrollbars ref="scrollbar" os-element="div" @scroll="updateBottom">
+            <div class="my-library__container__content__wrapper">
+              <LikedSongs :active="activeTag === 'liked_songs'" />
+              <Playlists :active="activeTag === 'playlists'" />
+              <Albums :active="activeTag === 'albums'" />
+              <Artists :active="activeTag === 'artists'" />
+            </div>
+          </MyOverlayScrollbars>
+        </div>
+      </TransitionGroup>
     </div>
   </ResizeBox>
 </template>

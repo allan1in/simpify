@@ -67,3 +67,21 @@
     transform: scale(0.1);
   }
 }
+
+.list-fade {
+  &-move,
+  &-enter-active,
+  &-leave-active {
+    transition: all $duration-default ease;
+    width: 100%;
+  }
+
+  &-leave-active {
+    position: absolute;
+  }
+
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
+  }
+}

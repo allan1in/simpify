@@ -3,13 +3,7 @@
     ref="osInstance"
     @os-scroll="onScroll"
     :element="osElement"
-    :options="{
-      scrollbars: {
-        theme: 'os-theme-custom',
-        autoHide: 'leave',
-        clickScroll: true
-      }
-    }"
+    :options="options"
     defer
     class="my-overlay-scroll-bar"
   >
@@ -35,6 +29,17 @@ export default {
     osElement: {
       type: String,
       required: true
+    }
+  },
+  data() {
+    return {
+      options: {
+        scrollbars: {
+          theme: 'os-theme-custom',
+          autoHide: 'leave',
+          clickScroll: true
+        }
+      }
     }
   },
   methods: {
