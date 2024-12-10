@@ -3,10 +3,7 @@
     <div class="my-library__container">
       <div class="my-library__container__title">
         <ToolTip :text="toolTipTextTitle" :position="toolTipPositionTitle">
-          <div
-            class="my-library__container__title__left"
-            @click.prevent="isCollasped = !isCollasped"
-          >
+          <div class="my-library__container__title__left" @click.prevent="isCollasped = !isCollasped">
             <div class="my-library__container__title__left__icon-wrapper">
               <IconLibrary v-show="!isCollasped" />
               <IconLibraryCollasped v-show="isCollasped" />
@@ -21,10 +18,7 @@
         <ToolTip :text="toolTipTextArrow">
           <Transition name="fade">
             <div v-show="!isCollasped" class="my-library__container__title__right">
-              <button
-                class="my-library__container__title__right__arrow"
-                @click.prevent="isShowMore = !isShowMore"
-              >
+              <button class="my-library__container__title__right__arrow" @click.prevent="isShowMore = !isShowMore">
                 <div class="my-library__container__title__right__arrow__wrapper">
                   <IconArrowRightLonger v-show="!isShowMore" />
                   <IconArrowLeftLonger v-show="isShowMore" />
@@ -38,11 +32,8 @@
         <div v-if="!isCollasped" class="my-library__container__tag-bar" :key="'tagbar'">
           <TagBar :tags="tags" :activeTag @handle-click-tag="changeActiveTag" />
         </div>
-        <div
-          class="my-library__container__content"
-          :class="{ 'my-library__container__content-collasped': isCollasped }"
-          :key="'content'"
-        >
+        <div class="my-library__container__content" :class="{ 'my-library__container__content-collasped': isCollasped }"
+          :key="'content'">
           <MyOverlayScrollbars ref="scrollbar" os-element="div" @scroll="updateBottom">
             <div class="my-library__container__content__wrapper">
               <LikedSongs :active="activeTag === 'liked_songs'" />
@@ -243,6 +234,7 @@ export default {
     &__wrapper {
       padding: 0 $gutter $gutter $gutter;
       width: 100%;
+      overflow: hidden;
     }
   }
 }

@@ -1,29 +1,18 @@
 <template>
-  <div
-    ref="wrapper"
-    class="top-bar-wrapper"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
-  >
-    <i v-show="showShadow && !reachedLeft" class="top-bar-wrapper__shadow-left"></i>
-    <i v-show="showShadow && !reachedRight" class="top-bar-wrapper__shadow-right"></i>
+  <div ref="wrapper" class="top-bar-wrapper" @mouseenter="mouseOver = true" @mouseleave="mouseOver = false">
+    <i v-show="isOverflow && !reachedLeft" class="top-bar-wrapper__shadow-left"></i>
+    <i v-show="isOverflow && !reachedRight" class="top-bar-wrapper__shadow-right"></i>
     <Transition name="fade">
-      <button
-        v-show="showArrow && !reachedLeft"
-        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-left"
-        @click.prevent="scrollX('pre')"
-      >
+      <button v-show="mouseOver && isOverflow && !reachedLeft"
+        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-left" @click.prevent="scrollX('pre')">
         <div class="top-bar-wrapper__arrow__icon-wrapper">
           <IconArrowLeft />
         </div>
       </button>
     </Transition>
     <Transition name="fade">
-      <button
-        v-show="showArrow && !reachedRight"
-        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-right"
-        @click.prevent="scrollX('next')"
-      >
+      <button v-show="mouseOver && isOverflow && !reachedRight"
+        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-right" @click.prevent="scrollX('next')">
         <div class="top-bar-wrapper__arrow__icon-wrapper">
           <IconArrowRight />
         </div>
@@ -31,12 +20,8 @@
     </Transition>
     <div ref="topBar" class="top-bar-wrapper__top-bar">
       <template v-for="tag in tags" :key="tag">
-        <TagButton
-          class="top-bar-wrapper__top-bar__btn"
-          @handle-click="$emit('handleClickTag', tag)"
-          :text="$t(`top_bar.${tag}`)"
-          :activeTag="activeTag === tag"
-        />
+        <TagButton class="top-bar-wrapper__top-bar__btn" @handle-click="$emit('handleClickTag', tag)"
+          :text="$t(`top_bar.${tag}`)" :activeTag="activeTag === tag" />
       </template>
     </div>
   </div>
@@ -67,28 +52,19 @@ export default {
   },
   data() {
     return {
-      showArrow: false,
-      showShadow: false,
+      overflow: undefined,
       reachedLeft: true,
-      reachedRight: false
+      reachedRight: false,
+      mouseOver: false
     }
   },
   computed: {
-    ...mapWritableState(useLibraryStore, ['myLibWidth'])
+    ...mapWritableState(useLibraryStore, ['myLibWidth']),
+    isOverflow() {
+      return this.overflow > 0
+    }
   },
   methods: {
-    handleMouseEnter() {
-      if (this.$refs.wrapper.offsetWidth < this.$refs.topBar.offsetWidth) {
-        this.showArrow = true
-        this.showShadow = true
-      }
-    },
-    handleMouseLeave() {
-      if (this.$refs.wrapper.offsetWidth < this.$refs.topBar.offsetWidth) {
-        this.showArrow = false
-        this.showShadow = true
-      }
-    },
     scrollX(direction, distance) {
       // Set default distance
       if (direction == 'pre') {
@@ -121,18 +97,17 @@ export default {
   watch: {
     // Update the left(position-left) value of the top bar when the width value of resize box changed
     myLibWidth(newVal, oldVal) {
+      this.overflow = this.$refs.topBar.offsetWidth - this.$refs.wrapper.offsetWidth
       // Show both of arrows
       this.reachedLeft = false
       this.reachedRight = false
 
-      // Get current left value
+      // Get the offset of the topbar
       let left = this.$refs.topBar.style.left?.split('px')[0] || 0
-      // Get the minimum left value
-      const minLeft = this.$refs.wrapper.offsetWidth - this.$refs.topBar.offsetWidth
+      const minLeft = 0 - this.overflow
 
       if (this.$refs.wrapper.offsetWidth >= this.$refs.topBar.offsetWidth) {
         this.$refs.topBar.style.left = 0
-        this.showShadow = false
       } else {
         if (left <= minLeft) {
           // Already reached the far right
@@ -144,7 +119,6 @@ export default {
           this.reachedLeft = true
           this.$refs.topBar.style.left = 0 + 'px'
         }
-        this.showShadow = true
       }
     }
   }
@@ -159,7 +133,7 @@ export default {
     display: block;
     height: 100%;
     width: 1rem;
-    box-shadow: 0.5rem 0 1.6rem 0 $color-bg-1;
+    box-shadow: 0.5rem 0 1.6rem 0.6rem $color-bg-2;
     position: absolute;
     left: -1rem;
     top: 0;
@@ -170,7 +144,7 @@ export default {
     display: block;
     height: 100%;
     width: 1rem;
-    box-shadow: -0.5rem 0 1.6rem 0 $color-bg-1;
+    box-shadow: -0.5rem 0 1.6rem 0.6rem $color-bg-2;
     position: absolute;
     right: -1rem;
     top: 0;

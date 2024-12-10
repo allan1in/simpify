@@ -17,7 +17,8 @@ export default {
     return {
       minWidth: 280,
       maxWidth: undefined,
-      collapsedWidth: 72
+      collapsedWidth: 72,
+      observer: undefined
     }
   },
   computed: {
@@ -50,7 +51,6 @@ export default {
 
         // Update new Width
         this.$refs.resizeBox.style.width = newWidth + 'px'
-        this.myLibWidth = newWidth
 
         // Has reached the maximum width
         if (this.$refs.resizeBox.offsetWidth !== newWidth) {
@@ -64,6 +64,29 @@ export default {
         document.onmouseup = null
         this.$refs.resizeBox.style.transition = `width ${variables.duration_slow} ease`
       }
+    },
+    startObserve() {
+      const box = this.$refs.resizeBox;
+      this.observer = new ResizeObserver((entries) => {
+        if (!this.isCollasped) {
+          for (let entry of entries) {
+            this.myLibWidth = entry.contentRect.width
+          }
+        }
+
+      });
+      this.observer.observe(box);
+    },
+    stopObserve() {
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+    },
+    init() {
+      this.$nextTick(() => {
+        this.myLibWidth = this.minWidth
+        this.$refs.resizeBox.style.width = this.myLibWidth + 'px'
+      })
     }
   },
   watch: {
@@ -86,27 +109,18 @@ export default {
       } else {
         this.$nextTick(() => {
           this.$refs.resizeBox.style.width = this.minWidth + 'px'
-          this.myLibWidth = this.minWidth
         })
-      }
-    },
-    maxWidth(newVal) {
-      if (this.isShowMore && !this.isCollasped) {
-        this.myLibWidth = newVal
       }
     }
   },
   created() {
-    this.$nextTick(() => {
-      this.myLibWidth = this.minWidth
-      this.$refs.resizeBox.style.width = this.myLibWidth + 'px'
-      // Get maxWidth when transition end
-      this.$refs.resizeBox.addEventListener('transitionend', (event) => {
-        if (event.propertyName === 'width') {
-          this.maxWidth = this.$refs.resizeBox.offsetWidth
-        }
-      })
-    })
+    this.init()
+  },
+  mounted() {
+    this.startObserve()
+  },
+  beforeDestroy() {
+    this.stopObserve()
   }
 }
 </script>
