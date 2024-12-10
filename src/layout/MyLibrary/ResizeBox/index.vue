@@ -66,20 +66,19 @@ export default {
       }
     },
     startObserve() {
-      const box = this.$refs.resizeBox;
+      const box = this.$refs.resizeBox
       this.observer = new ResizeObserver((entries) => {
         if (!this.isCollasped) {
           for (let entry of entries) {
             this.myLibWidth = entry.contentRect.width
           }
         }
-
-      });
-      this.observer.observe(box);
+      })
+      this.observer.observe(box)
     },
     stopObserve() {
       if (this.observer) {
-        this.observer.disconnect();
+        this.observer.disconnect()
       }
     },
     init() {
@@ -97,7 +96,7 @@ export default {
         })
       } else {
         this.$nextTick(() => {
-          this.$refs.resizeBox.style.width = this.myLibWidth + 'px'
+          this.$refs.resizeBox.style.width = Math.max(this.minWidth, this.myLibWidth) + 'px'
         })
       }
     },
