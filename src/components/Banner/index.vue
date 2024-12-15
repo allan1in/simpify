@@ -2,7 +2,7 @@
   <template v-if="!loading">
     <div class="banner">
       <div class="banner__img-wrapper" :class="{ 'banner__img-wrapper-round': classImgRound }">
-        <img v-if="showImg" class="banner__img-wrapper__img" :src="images[0].url" :alt="title" />
+        <Image v-if="showImg" class="banner__img-wrapper__img" :src="images[0].url" :alt="title" />
         <div v-else class="banner__img-wrapper__icon">
           <IconDefaultUser v-if="showTypeUser" />
           <IconDefaultPlaylist v-else />
@@ -37,13 +37,15 @@
 import IconDefaultPlaylist from '../Icons/IconDefaultPlaylist.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
 import IconDefaultUser from '../Icons/IconDefaultUser.vue'
+import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'Banner',
   components: {
     IconDefaultPlaylist,
     Skeleton,
-    IconDefaultUser
+    IconDefaultUser,
+    Image
   },
   computed: {
     classImgRound() {

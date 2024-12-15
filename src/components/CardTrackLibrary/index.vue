@@ -18,14 +18,9 @@
         </div>
 
         <div v-if="isPlaying" class="card-track-library-contanier__cover__playing">
-          <img
-            class="card-track-library-contanier__cover__playing__img"
-            loading="lazy"
-            src="/src/assets/images/playing.gif"
-            alt=""
-          />
+          <i class="card-track-library-contanier__cover__playing__icon"></i>
         </div>
-        <img
+        <Image
           class="card-track-library-contanier__cover__img"
           :src="item.album.images[0]?.url"
           :alt="item.name"
@@ -79,6 +74,7 @@ import IconPlay from '../Icons/IconPlay.vue'
 import IconPause from '../Icons/IconPause.vue'
 import { usePlayerStore } from '@/stores/player'
 import Skeleton from '@/components/Skeleton/index.vue'
+import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'CardTrackLibrary',
@@ -103,7 +99,8 @@ export default {
   components: {
     IconPause,
     IconPlay,
-    Skeleton
+    Skeleton,
+    Image
   },
   computed: {
     ...mapState(useLibraryStore, ['isCollasped']),
@@ -241,10 +238,12 @@ export default {
 
       @include transition;
 
-      &__img {
+      &__icon {
+        display: block;
+        background: url(/src/assets/images/playing.gif);
+        background-size: cover;
         height: 30%;
         aspect-ratio: 1 / 1;
-        object-fit: cover;
       }
     }
 

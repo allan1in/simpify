@@ -17,14 +17,9 @@
           </button>
         </div>
         <div v-if="isPlaying" class="card-playlist-library-contanier__cover__playing">
-          <img
-            class="card-playlist-library-contanier__cover__playing__img"
-            loading="lazy"
-            src="/src/assets/images/playing.gif"
-            alt=""
-          />
+          <i class="card-playlist-library-contanier__cover__playing__icon"></i>
         </div>
-        <img
+        <Image
           v-if="hasImage"
           class="card-playlist-library-contanier__cover__img"
           :src="item.images[0]?.url"
@@ -77,6 +72,7 @@ import IconPause from '../Icons/IconPause.vue'
 import { usePlayerStore } from '@/stores/player'
 import IconDefaultPlaylist from '../Icons/IconDefaultPlaylist.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
+import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'CardPlaylistLibrary',
@@ -94,7 +90,8 @@ export default {
     IconPause,
     IconPlay,
     IconDefaultPlaylist,
-    Skeleton
+    Skeleton,
+    Image
   },
   computed: {
     ...mapState(useLibraryStore, ['isCollasped']),
@@ -239,10 +236,12 @@ export default {
 
       @include transition;
 
-      &__img {
+      &__icon {
+        display: block;
+        background: url(/src/assets/images/playing.gif);
+        background-size: cover;
         height: 30%;
         aspect-ratio: 1 / 1;
-        object-fit: cover;
       }
     }
 

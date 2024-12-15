@@ -11,12 +11,7 @@
           </div>
           <div class="track-card__left__num-wrapper">
             <div class="track-card__left__num-wrapper__playing" v-if="isPlaying">
-              <img
-                loading="lazy"
-                class="track-card__left__num-wrapper__playing__img"
-                src="/src/assets/images/playing.gif"
-                alt=""
-              />
+              <i class="track-card__left__num-wrapper__playing__icon"></i>
             </div>
             <span v-else>{{ index + 1 }}</span>
           </div>
@@ -34,8 +29,7 @@
           :to="{ name: 'Track', params: { trackId: item.id } }"
           class="track-card__title__cover-wrapper"
         >
-          <img
-            loading="lazy"
+          <Image
             class="track-card__title__cover-wrapper__cover"
             :src="item.album.images[2].url"
             alt="Album Cover"
@@ -116,13 +110,15 @@ import { mapActions, mapState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import Skeleton from '@/components/Skeleton/index.vue'
 import { useLibraryStore } from '@/stores/library'
+import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'CardTrack',
   components: {
     IconPlay,
     IconPause,
-    Skeleton
+    Skeleton,
+    Image
   },
   computed: {
     ...mapState(usePlayerStore, ['current_track', 'isPause']),
@@ -310,11 +306,12 @@ export default {
         height: 1.4rem;
         aspect-ratio: 1 / 1;
 
-        &__img {
+        &__icon {
           display: block;
+          background: url(/src/assets/images/playing.gif);
+          background-size: cover;
           height: 100%;
-          width: 100%;
-          object-fit: cover;
+          aspect-ratio: 1 / 1;
         }
       }
     }

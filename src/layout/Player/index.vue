@@ -3,7 +3,7 @@
     <template v-if="!loading">
       <div class="player-bar__left">
         <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
-          <img
+          <Image
             class="player-bar__left__cover-wrapper__cover"
             :src="current_track.album.images[0].url"
             alt="track"
@@ -145,6 +145,7 @@ import SeekBar from '@/components/SeekBar/index.vue'
 import { useAppStore } from '@/stores/app'
 import { useUserStore } from '@/stores/user'
 import Skeleton from '@/components/Skeleton/index.vue'
+import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'Player',
@@ -162,7 +163,8 @@ export default {
     IconSaved,
     VolumeBar,
     SeekBar,
-    Skeleton
+    Skeleton,
+    Image
   },
   data() {
     return {

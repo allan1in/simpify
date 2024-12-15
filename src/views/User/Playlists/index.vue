@@ -17,8 +17,6 @@
   </template>
 </template>
 <script>
-import { useAppStore } from '@/stores/app'
-import { mapWritableState } from 'pinia'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import CardPlaylist from '@/components/CardPlaylist/index.vue'
 import { getNextUserPlaylists, getUserPlaylists } from '@/api/meta/user'

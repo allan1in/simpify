@@ -43,8 +43,7 @@
           :class="{ 'full-screen-container__content__cover-wrapper-small': !isCursorMove }"
           v-if="current_track?.album?.images"
         >
-          <img
-            loading="lazy"
+          <Image
             class="full-screen-container__content__cover-wrapper__cover"
             :src="current_track.album.images[0].url"
             :alt="current_track.name"
@@ -144,6 +143,7 @@ import IconFullScreenClose from '../Icons/IconFullScreenClose.vue'
 import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
 import { useAppStore } from '@/stores/app'
+import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'FullScreenPlayer',
@@ -200,7 +200,8 @@ export default {
     IconRepeatSingle,
     IconFullScreenClose,
     VolumeBar,
-    SeekBar
+    SeekBar,
+    Image
   },
   methods: {
     async closeFullScreenPlayer() {
@@ -368,6 +369,7 @@ export default {
     gap: 3rem;
 
     &__cover-wrapper {
+      flex-shrink: 0;
       height: 60%;
       aspect-ratio: 1 / 1;
       border-radius: $border-radius-default;

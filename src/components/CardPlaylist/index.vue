@@ -6,8 +6,7 @@
     >
       <div class="playlist-card__img-box">
         <div class="playlist-card__img-box__img-wrapper">
-          <img
-            loading="lazy"
+          <Image
             v-if="item.images?.length"
             :src="item.images[0].url"
             alt="Playlist Cover"
@@ -66,6 +65,7 @@ import { usePlayerStore } from '@/stores/player'
 import { mapState } from 'pinia'
 import IconDefaultPlaylist from '../Icons/IconDefaultPlaylist.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
+import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'CardPlaylist',
@@ -84,7 +84,8 @@ export default {
   components: {
     ButtonTogglePlay,
     IconDefaultPlaylist,
-    Skeleton
+    Skeleton,
+    Image
   },
   computed: {
     ...mapState(usePlayerStore, ['isPause', 'context'])

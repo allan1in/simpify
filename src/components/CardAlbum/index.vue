@@ -3,8 +3,7 @@
     <div class="album-card" @click="$router.push({ name: 'Album', params: { albumId: item.id } })">
       <div class="album-card__img-box">
         <div class="album-card__img-box__img-wrapper">
-          <img
-            loading="lazy"
+          <Image
             :src="item.images[0].url"
             alt="Album Cover"
             class="album-card__img-box__img-wrapper__img"
@@ -64,6 +63,7 @@ import { usePlayerStore } from '@/stores/player'
 import { mapState } from 'pinia'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
+import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'CardAlbum',
@@ -82,7 +82,8 @@ export default {
   },
   components: {
     ButtonTogglePlay,
-    Skeleton
+    Skeleton,
+    Image
   },
   computed: {
     ...mapState(usePlayerStore, ['isPause', 'context'])

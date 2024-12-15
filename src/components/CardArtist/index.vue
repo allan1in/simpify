@@ -6,8 +6,7 @@
     >
       <div class="artist-card__img-box">
         <div class="artist-card__img-box__img-wrapper">
-          <img
-            loading="lazy"
+          <Image
             v-if="item.images[1]?.url"
             :src="item.images[1].url"
             alt="Artist Cover"
@@ -28,9 +27,6 @@
           class="artist-card__name-wrapper__name"
           >{{ item.name }}</router-link
         >
-        <!-- <div class="artist-card__name-wrapper__type">
-          {{ `${item.type.charAt(0).toUpperCase()}${item.type.slice(1)}` }}
-        </div> -->
       </div>
     </div>
   </template>
@@ -54,13 +50,15 @@ import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import { mapState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import Skeleton from '@/components/Skeleton/index.vue'
+import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'CardArtist',
   components: {
     IconDefaultArtist,
     ButtonTogglePlay,
-    Skeleton
+    Skeleton,
+    Image
   },
   props: {
     item: {
