@@ -1,31 +1,40 @@
 <template>
   <nav class="nav-bar">
     <div class="nav-bar__left">
-      <router-link to="/" class="nav-bar__left__logo">
-        <IconPrimaryLogo />
-      </router-link>
+      <div class="nav-bar__left__logo">
+        <a
+          v-tooltip="$t('tooltip.go_to_spotify')"
+          href="https://open.spotify.com/"
+          target="_blank"
+          class="nav-bar__left__logo__icon"
+        >
+          <IconPrimaryLogo />
+        </a>
+      </div>
       <div class="nav-bar__left__arrow">
-        <ToolTip :text="$t('tooltip.go_back')">
-          <button class="nav-bar__left__arrow__left" @click="$router.go(-1)">
-            <IconArrowLeft />
-          </button>
-        </ToolTip>
-        <ToolTip :text="$t('tooltip.go_forward')">
-          <button class="nav-bar__left__arrow__right" @click="$router.go(1)">
-            <IconArrowRight />
-          </button>
-        </ToolTip>
+        <button
+          v-tooltip="$t('tooltip.go_back')"
+          class="nav-bar__left__arrow__left"
+          @click="$router.go(-1)"
+        >
+          <IconArrowLeft />
+        </button>
+        <button
+          v-tooltip="$t('tooltip.go_forward')"
+          class="nav-bar__left__arrow__right"
+          @click="$router.go(1)"
+        >
+          <IconArrowRight />
+        </button>
       </div>
     </div>
     <div class="nav-bar__mid">
-      <ToolTip :text="$t('tooltip.home')">
-        <button class="nav-bar__mid__home-btn" @click="toHome">
-          <span class="nav-bar__mid__home-btn__wrapper" :class="{ 'btn-active': isHome }">
-            <IconHomeActive v-if="isHome" />
-            <IconHome v-else />
-          </span>
-        </button>
-      </ToolTip>
+      <button v-tooltip="$t('tooltip.home')" class="nav-bar__mid__home-btn" @click="toHome">
+        <span class="nav-bar__mid__home-btn__wrapper" :class="{ 'btn-active': isHome }">
+          <IconHomeActive v-if="isHome" />
+          <IconHome v-else />
+        </span>
+      </button>
       <div class="nav-bar__mid__search">
         <input
           class="nav-bar__mid__search__input"
@@ -37,44 +46,24 @@
         <div class="nav-bar__mid__search__icon-wrapper">
           <IconSearch />
         </div>
-        <div v-if="inputContent.length === 0" class="nav-bar__mid__search__line"></div>
-        <template v-if="inputContent.length === 0">
-          <div class="nav-bar__mid__search__btn">
-            <ToolTip :text="$t('tooltip.browse')">
-              <button
-                class="nav-bar__mid__search__btn__btn-wrapper"
-                :class="{ 'btn-active': isSearch }"
-                @click="toSearchPage"
-              >
-                <IconBrowseActive v-if="isSearch" />
-                <IconBrowse v-else />
-              </button>
-            </ToolTip>
-          </div>
-        </template>
-        <template v-else>
-          <div class="nav-bar__mid__search__btn">
-            <ToolTip :text="$t('tooltip.clear_search')">
-              <button
-                class="nav-bar__mid__search__btn__btn-wrapper nav-bar__mid__search__btn__btn-wrapper__clear-border"
-                @click="inputContent = ''"
-              >
-                <IconClose />
-              </button>
-            </ToolTip>
-          </div>
-        </template>
+        <div class="nav-bar__mid__search__btn" v-if="inputContent.length !== 0">
+          <button
+            v-tooltip="$t('tooltip.clear_search')"
+            class="nav-bar__mid__search__btn__btn-wrapper nav-bar__mid__search__btn__btn-wrapper__clear-border"
+            @click="inputContent = ''"
+          >
+            <IconClose />
+          </button>
+        </div>
       </div>
     </div>
     <div class="nav-bar__right">
       <DropDown>
-        <ToolTip :text="$t('tooltip.language')">
-          <div class="nav-bar__right__language">
-            <button class="nav-bar__right__language__language-wrapper">
-              <IconLanguage />
-            </button>
-          </div>
-        </ToolTip>
+        <div v-tooltip="$t('tooltip.language')" class="nav-bar__right__language">
+          <button class="nav-bar__right__language__language-wrapper">
+            <IconLanguage />
+          </button>
+        </div>
 
         <template #dropDownItems>
           <DropDownItem @click="changeLocale('en')">English</DropDownItem>
@@ -82,22 +71,20 @@
         </template>
       </DropDown>
       <DropDown>
-        <ToolTip :text="display_name">
-          <button class="nav-bar__right__photo-wrapper">
-            <img
-              v-if="avatar.length !== 0"
-              class="nav-bar__right__photo-wrapper__photo"
-              :src="avatar"
-              :alt="display_name"
-              :title="display_name"
-            />
-            <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
-              <span class="nav-bar__right__photo-wrapper__photo-default-wrapper__default">{{
-                display_name.charAt(0).toLocaleUpperCase()
-              }}</span>
-            </div>
-          </button>
-        </ToolTip>
+        <button v-tooltip="display_name" class="nav-bar__right__photo-wrapper">
+          <img
+            v-if="avatar.length !== 0"
+            class="nav-bar__right__photo-wrapper__photo"
+            :src="avatar"
+            :alt="display_name"
+            :title="display_name"
+          />
+          <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
+            <span class="nav-bar__right__photo-wrapper__photo-default-wrapper__default">{{
+              display_name.charAt(0).toLocaleUpperCase()
+            }}</span>
+          </div>
+        </button>
         <template #dropDownItems>
           <DropDownItem
             toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account"
@@ -121,8 +108,6 @@
 </template>
 
 <script>
-import IconBrowse from '@/components/Icons/IconBrowse.vue'
-import IconBrowseActive from '@/components/Icons/IconBrowseActive.vue'
 import IconClose from '@/components/Icons/IconClose.vue'
 import IconHome from '@/components/Icons/IconHome.vue'
 import IconHomeActive from '@/components/Icons/IconHomeActive.vue'
@@ -146,8 +131,6 @@ export default {
     IconHome,
     IconHomeActive,
     IconSearch,
-    IconBrowse,
-    IconBrowseActive,
     IconClose,
     DropDown,
     DropDownItem,
@@ -245,11 +228,17 @@ export default {
     gap: $gutter;
 
     &__logo {
-      display: block;
-      height: calc($height-nav * 2 / 3);
-      width: calc($height-nav * 2 / 3);
-      fill: $color-font-primary;
-      margin: 0 2rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+
+      &__icon {
+        display: block;
+        height: $height-nav;
+        width: calc($height-nav * 2 / 3);
+        fill: $color-font-primary;
+        margin: 0 2rem;
+      }
     }
 
     &__arrow {
@@ -257,10 +246,13 @@ export default {
       align-items: center;
       justify-content: start;
       gap: $gutter;
+      height: 100%;
 
       &__left,
       &__right {
-        height: calc($height-nav / 3);
+        height: 100%;
+        padding: calc($height-nav / 3) 0;
+        width: calc($height-nav / 3);
         aspect-ratio: 1 / 1;
         fill: $color-font-secondary;
         display: flex;
@@ -357,18 +349,9 @@ export default {
         left: 1.2rem;
         transform: translateY(-50%);
         fill: $color-font-secondary;
-        height: calc($height-nav / 2);
+        height: 100%;
         width: calc($height-nav / 2);
-      }
-
-      &__line {
-        height: 60%;
-        width: 0;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        right: 5.4rem;
-        border-left: 1px solid $color-font-secondary;
+        aspect-ratio: 1 / 1;
       }
 
       &__btn {

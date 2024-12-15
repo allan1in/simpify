@@ -5,12 +5,11 @@
       @click="$router.push({ name: 'Track', params: { trackId: item.id } })">
       <div class="card-track-library-contanier__cover">
         <div class="card-track-library-contanier__cover__icon">
-          <ToolTip :text="toolTipText" stop-propagation>
-            <button class="card-track-library-contanier__cover__icon__wrapper" @click.prevent="handleClick">
-              <IconPause v-if="isPlaying" />
-              <IconPlay v-else />
-            </button>
-          </ToolTip>
+          <button v-tooltip="toolTipPlay" class="card-track-library-contanier__cover__icon__wrapper"
+            @click.prevent.stop="handleClick">
+            <IconPause v-if="isPlaying" />
+            <IconPlay v-else />
+          </button>
         </div>
 
         <div v-if="isPlaying" class="card-track-library-contanier__cover__playing">
@@ -104,7 +103,7 @@ export default {
           .indexOf(true) !== -1
       )
     },
-    toolTipText() {
+    toolTipPlay() {
       if (this.isPlaying) {
         return this.$t('tooltip.pause_item', { item: this.item.name })
       }

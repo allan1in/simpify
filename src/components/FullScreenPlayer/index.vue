@@ -22,21 +22,20 @@
             </h2>
           </div>
         </div>
-        <ToolTip :text="$t('tooltip.exit_fullscreen')">
-          <button
-            :class="{
-              'full-screen-container__top__close-wrapper-show': isCursorMove || isCursorOverClose
-            }"
-            class="full-screen-container__top__close-wrapper"
-            @click="closeFullScreenPlayer"
-            @mouseover="isCursorOverClose = true"
-            @mouseout="isCursorOverClose = false"
-          >
-            <div class="full-screen-container__top__close-wrapper__close">
-              <IconClose />
-            </div>
-          </button>
-        </ToolTip>
+        <button
+          v-tooltip="$t('tooltip.exit_fullscreen')"
+          :class="{
+            'full-screen-container__top__close-wrapper-show': isCursorMove || isCursorOverClose
+          }"
+          class="full-screen-container__top__close-wrapper"
+          @click="closeFullScreenPlayer"
+          @mouseover="isCursorOverClose = true"
+          @mouseout="isCursorOverClose = false"
+        >
+          <div class="full-screen-container__top__close-wrapper__close">
+            <IconClose />
+          </div>
+        </button>
       </div>
       <div class="full-screen-container__content">
         <div
@@ -77,53 +76,51 @@
         <div class="full-screen-container__player__btns">
           <div class="full-screen-container__player__btns__left"></div>
           <div class="full-screen-container__player__btns__mid">
-            <ToolTip :text="toolTipShuffle">
-              <button
-                class="icon-wrapper"
-                :class="{ 'btn-active': isShuffle }"
-                @click="toggleShuffle"
-              >
-                <IconShuffle />
-              </button>
-            </ToolTip>
-            <ToolTip :text="$t('tooltip.previous')">
-              <button class="icon-wrapper" @click="preTrack">
-                <IconPrevious />
-              </button>
-            </ToolTip>
-            <ToolTip :text="toolTipPlay">
-              <button class="full-screen-container__player__btns__mid__play" @click="togglePlay">
-                <span class="full-screen-container__player__btns__mid__play__icon-wrapper-round">
-                  <IconPlay v-if="isPause" />
-                  <IconPause v-else />
-                </span>
-              </button>
-            </ToolTip>
-            <ToolTip :text="$t('tooltip.next')">
-              <button class="icon-wrapper" @click="nextTrack">
-                <IconNext />
-              </button>
-            </ToolTip>
-            <ToolTip :text="toolTipRepeat">
-              <button
-                class="icon-wrapper"
-                :class="{ 'btn-active': repeatMode !== 0 }"
-                @click="setRepeatMode"
-              >
-                <IconRepeatSingle v-if="repeatMode === 2" />
-                <IconRepeat v-else />
-              </button>
-            </ToolTip>
+            <button
+              v-tooltip="toolTipShuffle"
+              class="icon-wrapper"
+              :class="{ 'btn-active': isShuffle }"
+              @click="toggleShuffle"
+            >
+              <IconShuffle />
+            </button>
+            <button v-tooltip="$t('tooltip.previous')" class="icon-wrapper" @click="preTrack">
+              <IconPrevious />
+            </button>
+            <button
+              v-tooltip="toolTipPlay"
+              class="full-screen-container__player__btns__mid__play"
+              @click="togglePlay"
+            >
+              <span class="full-screen-container__player__btns__mid__play__icon-wrapper-round">
+                <IconPlay v-if="isPause" />
+                <IconPause v-else />
+              </span>
+            </button>
+            <button v-tooltip="$t('tooltip.next')" class="icon-wrapper" @click="nextTrack">
+              <IconNext />
+            </button>
+            <button
+              v-tooltip="toolTipRepeat"
+              class="icon-wrapper"
+              :class="{ 'btn-active': repeatMode !== 0 }"
+              @click="setRepeatMode"
+            >
+              <IconRepeatSingle v-if="repeatMode === 2" />
+              <IconRepeat v-else />
+            </button>
           </div>
           <div class="full-screen-container__player__btns__right">
             <div class="full-screen-container__player__btns__right__volume">
               <VolumeBar />
             </div>
-            <ToolTip :text="$t('tooltip.exit_fullscreen')">
-              <button class="icon-wrapper" @click="closeFullScreenPlayer">
-                <IconFullScreenClose />
-              </button>
-            </ToolTip>
+            <button
+              v-tooltip="$t('tooltip.exit_fullscreen')"
+              class="icon-wrapper"
+              @click="closeFullScreenPlayer"
+            >
+              <IconFullScreenClose />
+            </button>
           </div>
         </div>
       </div>

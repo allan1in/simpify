@@ -1,5 +1,9 @@
 <template>
-  <button class="button-toggle-play-container" @click.stop.prevent="handleClick">
+  <button
+    v-tooltip="toolTipState"
+    class="button-toggle-play-container"
+    @click.prevent.stop="handleClick"
+  >
     <div class="button-toggle-play-container__icon-wrapper">
       <IconPause v-if="isPlaying" />
       <IconPlay v-else />
@@ -35,6 +39,12 @@ export default {
         return this.item?.uri === this.current_track?.uri
       }
       return this.item?.uri === this.context?.uri
+    },
+    toolTipState() {
+      return {
+        content: this.isPlaying ? this.$t('tooltip.pause') : this.$t('tooltip.play'),
+        placement: 'bottom'
+      }
     }
   },
   methods: {

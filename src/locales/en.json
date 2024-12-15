@@ -147,7 +147,6 @@
     "go_back": "Go Back",
     "go_forward": "Go Forward",
     "home": "Home",
-    "browse": "Browse",
     "clear_search": "Clear Search Field",
     "language": "Language",
     "enable_shuffle": "Enable Shuffle",
@@ -157,13 +156,14 @@
     "pause": "Pause",
     "next": "Next",
     "repeat_enable": "Enable Repeat",
-    "repeat_one" : "Enable Repeat One",
-    "repeat_disable":"Disable Repeat",
+    "repeat_one": "Enable Repeat One",
+    "repeat_disable": "Disable Repeat",
     "mute": "Mute",
     "unmute": "Unmute",
     "fullscreen": "Fullscreen",
     "exit_fullscreen": "Exit Fullscreen",
     "add_to_liked_songs": "Add to Liked Songs",
-    "remove_from_liked_songs": "Remove from Liked Songs"
+    "remove_from_liked_songs": "Remove from Liked Songs",
+    "go_to_spotify": "Go to Spotify"
   }
 }

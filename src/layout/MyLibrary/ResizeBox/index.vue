@@ -22,7 +22,12 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useLibraryStore, ['myLibWidth', 'isCollasped', 'isShowMore'])
+    ...mapWritableState(useLibraryStore, [
+      'duringTransitionWidth',
+      'myLibWidth',
+      'isCollasped',
+      'isShowMore'
+    ])
   },
   methods: {
     handleMouseDown(event) {
@@ -65,8 +70,17 @@ export default {
         this.$refs.resizeBox.style.transition = `width ${variables.duration_slow} ease`
       }
     },
+    onTransitionEnd(event) {
+      if (event.propertyName === 'width') {
+        this.duringTransitionWidth = false
+      }
+    },
+    onTransitionStart(event) {
+      if (event.propertyName === 'width') {
+        this.duringTransitionWidth = true
+      }
+    },
     startObserve() {
-      const box = this.$refs.resizeBox
       this.observer = new ResizeObserver((entries) => {
         if (!this.isCollasped) {
           for (let entry of entries) {
@@ -74,12 +88,18 @@ export default {
           }
         }
       })
-      this.observer.observe(box)
+      this.observer.observe(this.$refs.resizeBox)
+
+      this.$refs.resizeBox.addEventListener('transitionend', this.onTransitionEnd)
+      this.$refs.resizeBox.addEventListener('transitionstart', this.onTransitionStart)
     },
     stopObserve() {
       if (this.observer) {
         this.observer.disconnect()
       }
+
+      this.$refs.resizeBox.removeEventListener('transitionend', this.onTransitionEnd)
+      this.$refs.resizeBox.removeEventListener('transitionstart', this.onTransitionStart)
     },
     init() {
       this.$nextTick(() => {

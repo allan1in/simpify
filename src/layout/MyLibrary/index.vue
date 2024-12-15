@@ -2,38 +2,47 @@
   <ResizeBox>
     <div class="my-library__container">
       <div class="my-library__container__title">
-        <ToolTip :text="toolTipTextTitle" :position="toolTipPositionTitle">
-          <div class="my-library__container__title__left" @click.prevent="isCollasped = !isCollasped">
-            <div class="my-library__container__title__left__icon-wrapper">
-              <IconLibrary v-show="!isCollasped" />
-              <IconLibraryCollasped v-show="isCollasped" />
-            </div>
-            <Transition name="fade">
-              <span v-show="!isCollasped" class="my-library__container__title__left__text">{{
-                $t('my_library.title')
-              }}</span>
-            </Transition>
+        <div
+          v-tooltip="toolTipTitle"
+          class="my-library__container__title__left"
+          @click.prevent="isCollasped = !isCollasped"
+        >
+          <div class="my-library__container__title__left__icon-wrapper">
+            <IconLibrary v-if="!isCollasped" />
+            <IconLibraryCollasped v-else />
           </div>
-        </ToolTip>
-        <ToolTip :text="toolTipTextArrow">
-          <Transition name="fade">
-            <div v-show="!isCollasped" class="my-library__container__title__right">
-              <button class="my-library__container__title__right__arrow" @click.prevent="isShowMore = !isShowMore">
-                <div class="my-library__container__title__right__arrow__wrapper">
-                  <IconArrowRightLonger v-show="!isShowMore" />
-                  <IconArrowLeftLonger v-show="isShowMore" />
-                </div>
-              </button>
-            </div>
-          </Transition>
-        </ToolTip>
+
+          <span v-if="!isCollasped" class="my-library__container__title__left__text">{{
+            $t('my_library.title')
+          }}</span>
+        </div>
+        <Transition name="fade">
+          <div
+            v-tooltip="toolTipArrow"
+            v-if="!isCollasped"
+            class="my-library__container__title__right"
+          >
+            <button
+              class="my-library__container__title__right__arrow"
+              @click.prevent="isShowMore = !isShowMore"
+            >
+              <div class="my-library__container__title__right__arrow__wrapper">
+                <IconArrowRightLonger v-if="!isShowMore" />
+                <IconArrowLeftLonger v-else />
+              </div>
+            </button>
+          </div>
+        </Transition>
       </div>
       <TransitionGroup name="list-fade">
         <div v-if="!isCollasped" class="my-library__container__tag-bar" :key="'tagbar'">
           <TagBar :tags="tags" :activeTag @handle-click-tag="changeActiveTag" />
         </div>
-        <div class="my-library__container__content" :class="{ 'my-library__container__content-collasped': isCollasped }"
-          :key="'content'">
+        <div
+          class="my-library__container__content"
+          :class="{ 'my-library__container__content-collasped': isCollasped }"
+          :key="'content'"
+        >
           <MyOverlayScrollbars ref="scrollbar" os-element="div" @scroll="updateBottom">
             <div class="my-library__container__content__wrapper">
               <LikedSongs :active="activeTag === 'liked_songs'" />
@@ -80,20 +89,20 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useLibraryStore, ['isCollasped', 'myLibWidth', 'isShowMore', 'activeTag']),
-    toolTipTextTitle() {
+    ...mapWritableState(useLibraryStore, [
+      'duringTransitionWidth',
+      'isCollasped',
+      'myLibWidth',
+      'isShowMore',
+      'activeTag'
+    ]),
+    toolTipTitle() {
       if (this.isCollasped) {
-        return this.$t('tooltip.expand_lib')
+        return { content: this.$t('tooltip.expand_lib'), placement: 'right' }
       }
-      return this.$t('tooltip.collaspe_lib')
+      return { content: this.$t('tooltip.collaspe_lib'), placement: 'top' }
     },
-    toolTipPositionTitle() {
-      if (this.isCollasped) {
-        return 'right'
-      }
-      return 'top'
-    },
-    toolTipTextArrow() {
+    toolTipArrow() {
       if (this.isShowMore) {
         return this.$t('tooltip.show_less')
       }
