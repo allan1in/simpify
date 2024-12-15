@@ -103,7 +103,8 @@
     "no_track_playing": "No track is playing.",
     "something_wrong": "Something went wrong...",
     "update_succeeded": "Update Succeeded (May be a delay of about a minute).",
-    "autoplay_failed": "Autoplay is not allowed by the browser autoplay rules. Please play manually."
+    "autoplay_failed": "Autoplay is not allowed by the browser autoplay rules. Please play manually.",
+    "check_network": "Please check your network."
   },
   "dialog_playlist_edit": {
     "title": "Edit Details",

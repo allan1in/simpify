@@ -103,7 +103,8 @@
     "no_track_playing": "没有正在播放的歌曲。",
     "something_wrong": "出现了一些问题...",
     "update_succeeded": "修改成功（可能有一分钟左右的延迟）。",
-    "autoplay_failed": "浏览器自动播放规则不允许自动播放。请手动播放。"
+    "autoplay_failed": "浏览器自动播放规则不允许自动播放。请手动播放。",
+    "check_network": "请检查你的网络。"
   },
   "dialog_playlist_edit": {
     "title": "编辑详情",

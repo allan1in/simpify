@@ -39,14 +39,17 @@ service.interceptors.response.use(
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
 
-    // Bad or expired token
     if (error.status === 401) {
+      // Bad or expired token
       await useUserStore().refreshToken()
       error.config.headers.Authorization = `Bearer ${localStorage.getItem('access_token')}`
       const res = await service.request(error.config)
       return res
+    } else if (error.message === 'Network Error') {
+      // Network error
+      Message(`${i18n.global.t('message.check_network')}`)
     } else {
-      console.log(error)
+      console.log(error.message)
       Message(`${i18n.global.t('message.something_wrong')}`)
     }
 

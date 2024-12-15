@@ -1,6 +1,8 @@
 import axios from 'axios'
 import settings from '@/settings.js'
 import router from '@/router'
+import Message from '@/components/Message'
+import i18n from '@/includes/i18n'
 
 const { tokenEndpoint } = settings
 
@@ -23,6 +25,12 @@ service.interceptors.response.use(
     if (error.status === 400) {
       localStorage.clear()
       router.push({ name: 'Login' })
+    } else if (error.message === 'ERR_NETWORK') {
+      // Network error
+      Message(`${i18n.global.t('message.check_network')}`)
+    } else {
+      console.log(error)
+      Message(`${i18n.global.t('message.something_wrong')}`)
     }
     return Promise.reject(error)
   }
