@@ -109,40 +109,45 @@ export default {
 
       this.$refs.topBar.style.left = newLeft + 'px'
     },
+    updateState() {
+      // Update the left(position-left) value of the top bar when the width value of wrapper changed
+      this.overflow = this.$refs.topBar.offsetWidth - this.$refs.wrapper.offsetWidth
+
+      // Show both of arrows
+      this.reachedLeft = false
+      this.reachedRight = false
+
+      // Get the offset of the topbar
+      let left = this.$refs.topBar.style.left?.split('px')[0] || 0
+      const minLeft = 0 - this.overflow
+
+      if (this.$refs.wrapper.offsetWidth >= this.$refs.topBar.offsetWidth) {
+        this.$refs.topBar.style.left = 0
+      } else {
+        if (left <= minLeft) {
+          // Already reached the far right
+          // The left value is smaller, the top bar inside is closer to right
+          this.reachedRight = true
+          this.$refs.topBar.style.left = minLeft + 'px'
+        } else if (left >= 0) {
+          // Already reached the far left
+          this.reachedLeft = true
+          this.$refs.topBar.style.left = 0 + 'px'
+        }
+      }
+    },
     startObserver() {
       this.resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           if (!this.$refs.topBar) {
             return
           }
-          // Update the left(position-left) value of the top bar when the width value of resize box changed
-          this.overflow = this.$refs.topBar.offsetWidth - this.$refs.wrapper.offsetWidth
-          // Show both of arrows
-          this.reachedLeft = false
-          this.reachedRight = false
-
-          // Get the offset of the topbar
-          let left = this.$refs.topBar.style.left?.split('px')[0] || 0
-          const minLeft = 0 - this.overflow
-
-          if (this.$refs.wrapper.offsetWidth >= this.$refs.topBar.offsetWidth) {
-            this.$refs.topBar.style.left = 0
-          } else {
-            if (left <= minLeft) {
-              // Already reached the far right
-              // The left value is smaller, the top bar inside is closer to right
-              this.reachedRight = true
-              this.$refs.topBar.style.left = minLeft + 'px'
-            } else if (left >= 0) {
-              // Already reached the far left
-              this.reachedLeft = true
-              this.$refs.topBar.style.left = 0 + 'px'
-            }
-          }
+          this.updateState()
         }
       })
 
       this.resizeObserver.observe(this.$refs.wrapper)
+      this.resizeObserver.observe(this.$refs.topBar)
     },
     stopObserver() {
       if (this.resizeObserver) {
