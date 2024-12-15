@@ -10,7 +10,7 @@
       </div>
       <div class="banner__info">
         <span class="banner__info__type">{{ type }}</span>
-        <h1 class="banner__info__title" :title>
+        <h1 v-tooltip="title" class="banner__info__title">
           {{ title }}
         </h1>
         <div class="banner__info__details">
@@ -144,8 +144,6 @@ export default {
   }
 
   &__info {
-    width: 100%;
-
     &__type {
       font-size: $font-size-text-secondary;
     }
@@ -158,8 +156,8 @@ export default {
 
       @include oneLineEllipsis;
 
-      @include respond(phone) {
-        font-size: 3.2rem;
+      @include respondContainer(phone) {
+        font-size: calc($font-size-title-large / 2);
 
         @include twoLineEllipsis;
       }

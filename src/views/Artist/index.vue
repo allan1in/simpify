@@ -2,8 +2,16 @@
   <template v-if="!loading_skeleton">
     <div class="artist-container">
       <div class="artist-container__cover">
-        <Image :src="this.artist.images[0].url" class="artist-container__cover__bg" />
-        <h1 class="artist-container__cover__title" :title="artist.name">{{ artist.name }}</h1>
+        <Image
+          v-if="artist.images?.[0]?.url"
+          :src="artist.images[0].url"
+          class="artist-container__cover__bg"
+        />
+        <div class="artist-container__cover__title">
+          <h1 class="artist-container__cover__title__text" v-tooltip="artist.name">
+            {{ artist.name }}
+          </h1>
+        </div>
         <div class="artist-container__cover__followers" v-if="artist.followers.total !== 0">
           {{
             `${Intl.NumberFormat().format(artist.followers.total)} ${$t('artist.follower', artist.followers.total)}`
@@ -336,21 +344,25 @@ export default {
     }
 
     &__title {
-      font-size: $font-size-title-large;
-      font-family: $font-family-title;
-      font-weight: 800;
-      text-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
       // Prevent shadows from being hidden due to 'overflow:hidden'
       margin: calc(0rem - $gutter-2x) calc(0rem - $gutter-3x);
       padding: $gutter-3x;
       z-index: 10;
 
-      @include oneLineEllipsis;
+      &__text {
+        font-size: $font-size-title-large;
+        font-family: $font-family-title;
+        font-weight: 800;
+        text-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+        z-index: 10;
 
-      @include respondContainer(phone) {
-        font-size: 4rem;
+        @include oneLineEllipsis;
 
-        @include twoLineEllipsis;
+        @include respondContainer(phone) {
+          font-size: 4rem;
+
+          @include twoLineEllipsis;
+        }
       }
     }
 
