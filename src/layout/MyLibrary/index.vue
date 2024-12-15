@@ -27,8 +27,10 @@
               @click.prevent="isShowMore = !isShowMore"
             >
               <div class="my-library__container__title__right__arrow__wrapper">
-                <IconArrowRightLonger v-if="!isShowMore" />
-                <IconArrowLeftLonger v-else />
+                <Transition name="fade" mode="out-in">
+                  <IconArrowRightLonger v-if="!isShowMore" />
+                  <IconArrowLeftLonger v-else />
+                </Transition>
               </div>
             </button>
           </div>

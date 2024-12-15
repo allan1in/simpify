@@ -41,10 +41,7 @@ export default {
       return this.item?.uri === this.context?.uri
     },
     toolTipState() {
-      return {
-        content: this.isPlaying ? this.$t('tooltip.pause') : this.$t('tooltip.play'),
-        placement: 'bottom'
-      }
+      return this.isPlaying ? this.$t('tooltip.pause') : this.$t('tooltip.play')
     }
   },
   methods: {

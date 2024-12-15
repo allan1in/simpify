@@ -45,6 +45,7 @@ export default {
 
           if (newWidth > this.minWidth / 2) {
             // Open resizable box
+            this.myLibWidth = this.minWidth
             this.isCollasped = false
             return
           } else {
@@ -68,6 +69,7 @@ export default {
         document.onmousemove = null
         document.onmouseup = null
         this.$refs.resizeBox.style.transition = `width ${variables.duration_slow} ease`
+        this.myLibWidth = newWidth
       }
     },
     onTransitionEnd(event) {
@@ -81,23 +83,10 @@ export default {
       }
     },
     startObserve() {
-      this.observer = new ResizeObserver((entries) => {
-        if (!this.isCollasped) {
-          for (let entry of entries) {
-            this.myLibWidth = entry.contentRect.width
-          }
-        }
-      })
-      this.observer.observe(this.$refs.resizeBox)
-
       this.$refs.resizeBox.addEventListener('transitionend', this.onTransitionEnd)
       this.$refs.resizeBox.addEventListener('transitionstart', this.onTransitionStart)
     },
     stopObserve() {
-      if (this.observer) {
-        this.observer.disconnect()
-      }
-
       this.$refs.resizeBox.removeEventListener('transitionend', this.onTransitionEnd)
       this.$refs.resizeBox.removeEventListener('transitionstart', this.onTransitionStart)
     },
@@ -121,6 +110,10 @@ export default {
       }
     },
     isShowMore(newVal, oldVal) {
+      // Only update box width when value of isCollasped is false
+      if (this.isCollasped) {
+        return
+      }
       if (newVal) {
         this.$nextTick(() => {
           this.$refs.resizeBox.style.width = '100%'
@@ -129,6 +122,13 @@ export default {
         this.$nextTick(() => {
           this.$refs.resizeBox.style.width = this.minWidth + 'px'
         })
+      }
+    },
+    duringTransitionWidth(newVal) {
+      if (!newVal) {
+        if (!this.isCollasped) {
+          this.myLibWidth = this.$refs.resizeBox.offsetWidth
+        }
       }
     }
   },

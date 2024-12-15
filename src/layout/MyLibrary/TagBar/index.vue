@@ -1,18 +1,29 @@
 <template>
-  <div ref="wrapper" class="top-bar-wrapper" @mouseenter="mouseOver = true" @mouseleave="mouseOver = false">
+  <div
+    ref="wrapper"
+    class="top-bar-wrapper"
+    @mouseenter="mouseOver = true"
+    @mouseleave="mouseOver = false"
+  >
     <i v-show="isOverflow && !reachedLeft" class="top-bar-wrapper__shadow-left"></i>
     <i v-show="isOverflow && !reachedRight" class="top-bar-wrapper__shadow-right"></i>
     <Transition name="fade">
-      <button v-show="mouseOver && isOverflow && !reachedLeft"
-        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-left" @click.prevent="scrollX('pre')">
+      <button
+        v-show="mouseOver && isOverflow && !reachedLeft"
+        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-left"
+        @click.prevent="scrollX('pre')"
+      >
         <div class="top-bar-wrapper__arrow__icon-wrapper">
           <IconArrowLeft />
         </div>
       </button>
     </Transition>
     <Transition name="fade">
-      <button v-show="mouseOver && isOverflow && !reachedRight"
-        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-right" @click.prevent="scrollX('next')">
+      <button
+        v-show="mouseOver && isOverflow && !reachedRight"
+        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-right"
+        @click.prevent="scrollX('next')"
+      >
         <div class="top-bar-wrapper__arrow__icon-wrapper">
           <IconArrowRight />
         </div>
@@ -20,8 +31,12 @@
     </Transition>
     <div ref="topBar" class="top-bar-wrapper__top-bar">
       <template v-for="tag in tags" :key="tag">
-        <TagButton class="top-bar-wrapper__top-bar__btn" @handle-click="$emit('handleClickTag', tag)"
-          :text="$t(`top_bar.${tag}`)" :activeTag="activeTag === tag" />
+        <TagButton
+          class="top-bar-wrapper__top-bar__btn"
+          @handle-click="$emit('handleClickTag', tag)"
+          :text="$t(`top_bar.${tag}`)"
+          :activeTag="activeTag === tag"
+        />
       </template>
     </div>
   </div>
@@ -55,11 +70,12 @@ export default {
       overflow: undefined,
       reachedLeft: true,
       reachedRight: false,
-      mouseOver: false
+      mouseOver: false,
+      resizeObserver: undefined
     }
   },
   computed: {
-    ...mapWritableState(useLibraryStore, ['myLibWidth']),
+    ...mapWritableState(useLibraryStore, ['myLibWidth', 'isCollasped']),
     isOverflow() {
       return this.overflow > 0
     }
@@ -92,35 +108,53 @@ export default {
       }
 
       this.$refs.topBar.style.left = newLeft + 'px'
-    }
-  },
-  watch: {
-    // Update the left(position-left) value of the top bar when the width value of resize box changed
-    myLibWidth(newVal, oldVal) {
-      this.overflow = this.$refs.topBar.offsetWidth - this.$refs.wrapper.offsetWidth
-      // Show both of arrows
-      this.reachedLeft = false
-      this.reachedRight = false
+    },
+    startObserver() {
+      this.resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          if (!this.$refs.topBar) {
+            return
+          }
+          // Update the left(position-left) value of the top bar when the width value of resize box changed
+          this.overflow = this.$refs.topBar.offsetWidth - this.$refs.wrapper.offsetWidth
+          // Show both of arrows
+          this.reachedLeft = false
+          this.reachedRight = false
 
-      // Get the offset of the topbar
-      let left = this.$refs.topBar.style.left?.split('px')[0] || 0
-      const minLeft = 0 - this.overflow
+          // Get the offset of the topbar
+          let left = this.$refs.topBar.style.left?.split('px')[0] || 0
+          const minLeft = 0 - this.overflow
 
-      if (this.$refs.wrapper.offsetWidth >= this.$refs.topBar.offsetWidth) {
-        this.$refs.topBar.style.left = 0
-      } else {
-        if (left <= minLeft) {
-          // Already reached the far right
-          // The left value is smaller, the top bar inside is closer to right
-          this.reachedRight = true
-          this.$refs.topBar.style.left = minLeft + 'px'
-        } else if (left >= 0) {
-          // Already reached the far left
-          this.reachedLeft = true
-          this.$refs.topBar.style.left = 0 + 'px'
+          if (this.$refs.wrapper.offsetWidth >= this.$refs.topBar.offsetWidth) {
+            this.$refs.topBar.style.left = 0
+          } else {
+            if (left <= minLeft) {
+              // Already reached the far right
+              // The left value is smaller, the top bar inside is closer to right
+              this.reachedRight = true
+              this.$refs.topBar.style.left = minLeft + 'px'
+            } else if (left >= 0) {
+              // Already reached the far left
+              this.reachedLeft = true
+              this.$refs.topBar.style.left = 0 + 'px'
+            }
+          }
         }
+      })
+
+      this.resizeObserver.observe(this.$refs.wrapper)
+    },
+    stopObserver() {
+      if (this.resizeObserver) {
+        this.resizeObserver.disconnect()
       }
     }
+  },
+  mounted() {
+    this.startObserver()
+  },
+  beforeDestroy() {
+    this.stopObserver()
   }
 }
 </script>
