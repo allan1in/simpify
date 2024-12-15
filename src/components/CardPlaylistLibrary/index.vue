@@ -33,21 +33,23 @@
       </div>
       <Transition name="fade">
         <div v-if="!isCollasped" class="card-playlist-library-contanier__info">
-          <router-link
-            :to="{ name: 'Playlist', params: { playlistId: item.id } }"
+          <a
+            @click.prevent.stop="
+              $router.push({ name: 'Playlist', params: { playlistId: item.id } })
+            "
             class="card-playlist-library-contanier__info__title"
             :class="{
               'card-playlist-library-contanier__info__title-playing': isCurrentItem
             }"
           >
             {{ item.name }}
-          </router-link>
-          <router-link
-            :to="{ name: 'User', params: { userId: item.owner.id } }"
+          </a>
+          <a
+            @click.prevent.stop="$router.push({ name: 'User', params: { userId: item.owner.id } })"
             class="card-playlist-library-contanier__info__owner"
           >
             {{ item.owner.display_name }}
-          </router-link>
+          </a>
         </div>
       </Transition>
     </div>

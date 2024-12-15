@@ -28,27 +28,29 @@
       </div>
       <Transition name="fade">
         <div v-if="!isCollasped" class="card-album-library-contanier__info">
-          <router-link
-            :to="{ name: 'Album', params: { albumId: item.id } }"
+          <a
+            @click.prevent.stop="$router.push({ name: 'Album', params: { albumId: item.id } })"
             class="card-album-library-contanier__info__title"
             :class="{
               'card-album-library-contanier__info__title-playing': isCurrentItem
             }"
           >
             {{ item.name }}
-          </router-link>
+          </a>
           <div class="card-album-library-contanier__info__artists">
             <span
               v-for="(artist, index) in item.artists"
               class="card-album-library-contanier__info__artists__item"
             >
               {{ index === 0 ? '' : ', ' }}
-              <router-link
-                :to="{ name: 'Artist', params: { artistId: artist.id } }"
+              <a
+                @click.stop.prevent="
+                  $router.push({ name: 'Artist', params: { artistId: artist.id } })
+                "
                 class="card-album-library-contanier__info__artists__item__link"
               >
                 {{ artist.name }}
-              </router-link>
+              </a>
             </span>
           </div>
         </div>

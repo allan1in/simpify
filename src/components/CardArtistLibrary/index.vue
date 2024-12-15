@@ -28,15 +28,15 @@
       </div>
       <Transition name="fade">
         <div v-if="!isCollasped" class="card-artist-library-contanier__info">
-          <router-link
-            :to="{ name: 'Artist', params: { artistId: item.id } }"
+          <a
+            @click.prevent.stop="$router.push({ name: 'Artist', params: { artistId: item.id } })"
             class="card-artist-library-contanier__info__title"
             :class="{
               'card-artist-library-contanier__info__title-playing': isCurrentItem
             }"
           >
             {{ item.name }}
-          </router-link>
+          </a>
         </div>
       </Transition>
     </div>
