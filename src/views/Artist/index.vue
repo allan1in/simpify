@@ -1,7 +1,8 @@
 <template>
   <template v-if="!loading_skeleton">
     <div class="artist-container">
-      <div class="artist-container__cover" :style="coverStyle">
+      <div class="artist-container__cover">
+        <Image :src="this.artist.images[0].url" class="artist-container__cover__bg" />
         <h1 class="artist-container__cover__title" :title="artist.name">{{ artist.name }}</h1>
         <div class="artist-container__cover__followers" v-if="artist.followers.total !== 0">
           {{
@@ -15,7 +16,10 @@
             <ButtonTogglePlay :item="artist" />
           </div>
           <div class="artist-container__content__btn-group__follow-wrapper">
-            <button class="artist-container__content__btn-group__follow-wrapper__btn" @click="handleClickFollowButton">
+            <button
+              class="artist-container__content__btn-group__follow-wrapper__btn"
+              @click="handleClickFollowButton"
+            >
               {{ isFollowed ? $t('artist.following') : $t('artist.follow') }}
             </button>
           </div>
@@ -24,32 +28,59 @@
           <TitleShowAll :title="$t('artist.popular')" />
           <div class="artist-container__content__popular__content">
             <TrackListHeader />
-            <TrackCard v-for="(track, index) in tracks" :key="track.id" :index="index" :showArtists="false"
-              :item="track" :uris="uris" />
+            <TrackCard
+              v-for="(track, index) in tracks"
+              :key="track.id"
+              :index="index"
+              :showArtists="false"
+              :item="track"
+              :uris="uris"
+            />
           </div>
         </div>
         <div class="artist-container__content__albums" v-if="albums.length !== 0">
-          <TitleShowAll :router-name="albums_total > albums_limit ? 'ArtistAllAlbums' : ''"
-            :title="$t('artist.albums')" />
+          <TitleShowAll
+            :router-name="albums_total > albums_limit ? 'ArtistAllAlbums' : ''"
+            :title="$t('artist.albums')"
+          />
           <div class="artist-container__content__albums__content">
-            <AlbumCard v-for="(item, index) in albums" :key="item.id" :item="item" :index="index"
-              :show-artists="false" />
+            <AlbumCard
+              v-for="(item, index) in albums"
+              :key="item.id"
+              :item="item"
+              :index="index"
+              :show-artists="false"
+            />
           </div>
         </div>
         <div class="artist-container__content__singles" v-if="singles.length !== 0">
-          <TitleShowAll :router-name="singles_total > singles_limit ? 'ArtistAllSingles' : ''"
-            :title="$t('artist.singles')" />
+          <TitleShowAll
+            :router-name="singles_total > singles_limit ? 'ArtistAllSingles' : ''"
+            :title="$t('artist.singles')"
+          />
           <div class="artist-container__content__singles__content">
-            <AlbumCard v-for="(item, index) in singles" :key="item.id" :item="item" :index="index"
-              :show-artists="false" />
+            <AlbumCard
+              v-for="(item, index) in singles"
+              :key="item.id"
+              :item="item"
+              :index="index"
+              :show-artists="false"
+            />
           </div>
         </div>
         <div class="artist-container__content__appears-on" v-if="appearsOn.length !== 0">
-          <TitleShowAll :router-name="appearsOn_total > appearsOn_limit ? 'ArtistAllAppearsOn' : ''"
-            :title="$t('artist.appears_on')" />
+          <TitleShowAll
+            :router-name="appearsOn_total > appearsOn_limit ? 'ArtistAllAppearsOn' : ''"
+            :title="$t('artist.appears_on')"
+          />
           <div class="artist-container__content__appears-on__content">
-            <AlbumCard v-for="(item, index) in appearsOn" :key="item.id" :item="item" :index="index"
-              :show-artists="false" />
+            <AlbumCard
+              v-for="(item, index) in appearsOn"
+              :key="item.id"
+              :item="item"
+              :index="index"
+              :show-artists="false"
+            />
           </div>
         </div>
       </div>
@@ -122,6 +153,7 @@ import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
 import Message from '@/components/Message'
 import { useLibraryStore } from '@/stores/library'
+import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'Artist',
@@ -132,7 +164,8 @@ export default {
     ArtistCard,
     TitleShowAll,
     ButtonTogglePlay,
-    Skeleton
+    Skeleton,
+    Image
   },
   data() {
     return {
@@ -163,11 +196,6 @@ export default {
         uris.push(item.uri)
       })
       return uris
-    },
-    coverStyle() {
-      return {
-        'background-image': `url(${this.artist.images?.length !== 0 ? this.artist.images[0].url : 'linear-gradient(to bottom, $color-bg-6, $color-bg-4)'})`
-      }
     }
   },
   methods: {
@@ -285,6 +313,16 @@ export default {
     justify-content: center;
     position: relative;
 
+    &__bg {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
     &::before {
       content: ' ';
       display: block;
@@ -294,6 +332,7 @@ export default {
       width: 100%;
       height: 100%;
       background: linear-gradient(to bottom, rgba($color-bg-2, 0.2), rgba($color-bg-2, 0.8));
+      z-index: 10;
     }
 
     &__title {
