@@ -122,7 +122,6 @@ import IconArrowLeft from '@/components/Icons/IconArrowLeft.vue'
 import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
 import IconLanguage from '@/components/Icons/IconLanguage.vue'
 import { useAppStore } from '@/stores/app'
-import ToolTip from '@/components/ToolTip/index.vue'
 
 export default {
   name: 'NavBar',
@@ -137,8 +136,7 @@ export default {
     IconArrowLeft,
     IconArrowRight,
     IconDefaultUser,
-    IconLanguage,
-    ToolTip
+    IconLanguage
   },
   computed: {
     ...mapState(useUserStore, ['avatar', 'display_name', 'uid'])

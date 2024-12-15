@@ -30,7 +30,6 @@ import IconVolumeQuiet from '../Icons/IconVolumeQuiet.vue'
 import IconVolumeMuted from '../Icons/IconVolumeMuted.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
-import ToolTip from '@/components/ToolTip/index.vue'
 
 export default {
   name: 'VolumeBar',
@@ -39,8 +38,7 @@ export default {
     IconVolumeLoud,
     IconVolumeNormal,
     IconVolumeQuiet,
-    IconVolumeMuted,
-    ToolTip
+    IconVolumeMuted
   },
   computed: {
     ...mapWritableState(usePlayerStore, ['isMute', 'volume']),

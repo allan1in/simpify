@@ -144,7 +144,6 @@ import IconFullScreenClose from '../Icons/IconFullScreenClose.vue'
 import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
 import { useAppStore } from '@/stores/app'
-import ToolTip from '@/components/ToolTip/index.vue'
 
 export default {
   name: 'FullScreenPlayer',
@@ -201,8 +200,7 @@ export default {
     IconRepeatSingle,
     IconFullScreenClose,
     VolumeBar,
-    SeekBar,
-    ToolTip
+    SeekBar
   },
   methods: {
     async closeFullScreenPlayer() {

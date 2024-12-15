@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import Tooltip from '@/components/ToolTipNew/index.vue'
+import Tooltip from '@/components/ToolTip/index.vue'
 
 export default {
   mounted(el, binding) {

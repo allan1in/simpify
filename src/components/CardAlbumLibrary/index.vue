@@ -1,36 +1,57 @@
 <template>
   <template v-if="!loading">
-    <div class="card-album-library-contanier"
+    <div
+      class="card-album-library-contanier"
       :class="{ 'card-album-library-contanier-collasped-current': isCurrentPage }"
-      @click="$router.push({ name: 'Album', params: { albumId: item.id } })">
+      @click="$router.push({ name: 'Album', params: { albumId: item.id } })"
+    >
       <div class="card-album-library-contanier__cover">
         <div class="card-album-library-contanier__cover__icon">
-          <button v-tooltip="toolTipPlay" class="card-album-library-contanier__cover__icon__wrapper"
-            @click.prevent.stop="handleClick">
+          <button
+            v-tooltip="toolTipPlay"
+            class="card-album-library-contanier__cover__icon__wrapper"
+            @click.prevent.stop="handleClick"
+          >
             <IconPause v-if="isPlaying" />
             <IconPlay v-else />
           </button>
         </div>
 
         <div v-if="isPlaying" class="card-album-library-contanier__cover__playing">
-          <img class="card-album-library-contanier__cover__playing__img" loading="lazy"
-            src="/src/assets/images/playing.gif" alt="" />
+          <img
+            class="card-album-library-contanier__cover__playing__img"
+            loading="lazy"
+            src="/src/assets/images/playing.gif"
+            alt=""
+          />
         </div>
-        <img class="card-album-library-contanier__cover__img" :src="item.images[0]?.url" :alt="item.name" />
+        <img
+          class="card-album-library-contanier__cover__img"
+          :src="item.images[0]?.url"
+          :alt="item.name"
+        />
       </div>
       <Transition name="fade">
         <div v-if="!isCollasped" class="card-album-library-contanier__info">
-          <router-link :to="{ name: 'Album', params: { albumId: item.id } }"
-            class="card-album-library-contanier__info__title" :class="{
+          <router-link
+            :to="{ name: 'Album', params: { albumId: item.id } }"
+            class="card-album-library-contanier__info__title"
+            :class="{
               'card-album-library-contanier__info__title-playing': isCurrentItem
-            }">
+            }"
+          >
             {{ item.name }}
           </router-link>
           <div class="card-album-library-contanier__info__artists">
-            <span v-for="(artist, index) in item.artists" class="card-album-library-contanier__info__artists__item">
+            <span
+              v-for="(artist, index) in item.artists"
+              class="card-album-library-contanier__info__artists__item"
+            >
               {{ index === 0 ? '' : ', ' }}
-              <router-link :to="{ name: 'Artist', params: { artistId: artist.id } }"
-                class="card-album-library-contanier__info__artists__item__link">
+              <router-link
+                :to="{ name: 'Artist', params: { artistId: artist.id } }"
+                class="card-album-library-contanier__info__artists__item__link"
+              >
                 {{ artist.name }}
               </router-link>
             </span>
@@ -58,7 +79,6 @@ import IconPlay from '../Icons/IconPlay.vue'
 import IconPause from '../Icons/IconPause.vue'
 import { usePlayerStore } from '@/stores/player'
 import Skeleton from '@/components/Skeleton/index.vue'
-import ToolTip from '@/components/ToolTip/index.vue'
 
 export default {
   name: 'CardAlbumLibrary',
@@ -80,8 +100,7 @@ export default {
   components: {
     IconPause,
     IconPlay,
-    Skeleton,
-    ToolTip
+    Skeleton
   },
   computed: {
     ...mapState(useLibraryStore, ['isCollasped']),

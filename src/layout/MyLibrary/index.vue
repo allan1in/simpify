@@ -75,7 +75,6 @@ import { computed } from 'vue'
 import Playlists from './Playlists/index.vue'
 import Albums from './Albums/index.vue'
 import Artists from './Artists/index.vue'
-import ToolTip from '@/components/ToolTip/index.vue'
 
 export default {
   name: 'MyLibrary',
@@ -123,8 +122,7 @@ export default {
     LikedSongs,
     Playlists,
     Albums,
-    Artists,
-    ToolTip
+    Artists
   },
   methods: {
     ...mapActions(useLibraryStore, ['changeActiveTag']),

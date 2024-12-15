@@ -145,7 +145,6 @@ import SeekBar from '@/components/SeekBar/index.vue'
 import { useAppStore } from '@/stores/app'
 import { useUserStore } from '@/stores/user'
 import Skeleton from '@/components/Skeleton/index.vue'
-import ToolTip from '@/components/ToolTip/index.vue'
 
 export default {
   name: 'Player',
@@ -163,8 +162,7 @@ export default {
     IconSaved,
     VolumeBar,
     SeekBar,
-    Skeleton,
-    ToolTip
+    Skeleton
   },
   data() {
     return {

@@ -1,26 +1,9 @@
 <template>
-  <div
-    class="tooltip-container"
-    ref="triggerWrapper"
-    @click="hideImmediate"
-    @mouseover="handleMouseOver"
-    @mouseout="handleMouseOut"
-  >
-    <slot></slot>
-
-    <Teleport to="body">
-      <Transition :name="transitionName" @after-leave="handleAfterLeave">
-        <div
-          v-if="!disable && visible"
-          ref="toolTip"
-          class="tooltip-container__tooltip"
-          :style="tooltipStyle"
-        >
-          {{ content }}
-        </div>
-      </Transition>
-    </Teleport>
-  </div>
+  <Transition name="fade">
+    <div v-if="visible" ref="tooltip" class="tooltip-container" :style="positionStyle">
+      {{ content }}
+    </div>
+  </Transition>
 </template>
 <script>
 export default {
@@ -28,170 +11,123 @@ export default {
   data() {
     return {
       visible: false,
-      tooltipStyle: {},
+      content: '',
+      rect: undefined,
+      placement: '',
       timer: undefined,
-      transitionName: 'fade',
-      content: undefined,
-      delay: 600
+      gutter: 8,
+      tooltipSize: {
+        height: 0,
+        width: 0
+      }
     }
   },
-  props: {
-    text: {
-      type: String,
-      default: ''
-    },
-    position: {
-      type: String,
-      default: 'top'
-    },
-    disable: {
-      type: Boolean,
-      default: false
-    },
-    stopPropagation: {
-      type: Boolean,
-      default: false
+  computed: {
+    positionStyle() {
+      let top = 0
+      let left = 0
+      let transform = 'none'
+      const maxWidth = window.innerWidth
+      const maxHeight = window.innerHeight
+
+      switch (this.placement) {
+        case 'top': {
+          top = this.rect.top - this.gutter - this.tooltipSize.height
+          left = this.rect.left + this.rect.width / 2 - this.tooltipSize.width / 2
+
+          if (left < 0) {
+            left = this.gutter
+          } else if (left + this.tooltipSize.width + this.gutter > maxWidth) {
+            left = maxWidth - this.gutter - this.tooltipSize.width
+          }
+          if (top < 0) {
+            this.placement = 'bottom'
+          }
+
+          break
+        }
+        case 'bottom': {
+          top = this.rect.bottom + this.gutter
+          left = this.rect.left + this.rect.width / 2 - this.tooltipSize.width / 2
+
+          if (left < 0) {
+            left = this.gutter
+          } else if (left + this.tooltipSize.width + this.gutter > maxWidth) {
+            left = maxWidth - this.gutter - this.tooltipSize.width
+          }
+          if (top - this.gutter - this.tooltipSize.height > maxHeight) {
+            top = this.rect.top - this.gutter - this.tooltipSize.height
+          }
+
+          break
+        }
+        case 'left': {
+          top = this.rect.top + this.rect.height / 2 - this.tooltipSize.height / 2
+          left = this.rect.left - this.gutter - this.tooltipSize.width
+
+          if (top - this.gutter - this.tooltipSize.height < 0) {
+            top = maxHeight - gutter - this.tooltipSize.height
+          } else if (top > maxHeight) {
+            top = this.gutter
+          }
+          if (left < 0) {
+            left = this.rect.right + this.gutter
+          }
+
+          break
+        }
+        case 'right': {
+          top = this.rect.top + this.rect.height / 2 - this.tooltipSize.height / 2
+          left = this.rect.right + this.gutter
+
+          if (top - this.gutter - this.tooltipSize.height < 0) {
+            top = maxHeight - gutter - this.tooltipSize.height
+          } else if (top > maxHeight) {
+            top = this.gutter
+          }
+          if (left + this.tooltipSize.width + this.gutter > maxWidth) {
+            left = this.rect.left - this.gutter - this.tooltipSize.width
+          }
+
+          break
+        }
+      }
+
+      return {
+        left: `${left}px`,
+        top: `${top}px`,
+        transform
+      }
     }
   },
   methods: {
-    handleMouseOver() {
-      clearTimeout(this.timer)
+    show() {
       this.timer = setTimeout(() => {
-        this.showTooltip()
-      }, this.delay)
+        this.visible = true
+        this.$nextTick(() => {
+          this.tooltipSize = {
+            width: this.$refs.tooltip.offsetWidth,
+            height: this.$refs.tooltip.offsetHeight
+          }
+        })
+      }, 600)
     },
-    handleMouseOut() {
+    hide() {
       clearTimeout(this.timer)
       this.visible = false
-    },
-    showTooltip() {
-      if (this.disable) {
-        return
-      }
-
-      this.visible = true
-
-      const rect = this.$refs.triggerWrapper.getBoundingClientRect()
-      const clientWidth = document.documentElement.offsetWidth
-      const clientHeight = document.documentElement.offsetHeight
-      let top,
-        left = 'auto'
-      let translate = 'unset'
-      const gutter = 8
-
-      // Make sure to get the offsetHeight after DOM rendering is complete
-      this.$nextTick(() => {
-        const toolTipWidth = this.$refs.toolTip.offsetWidth
-        const toolTipHeight = this.$refs.toolTip.offsetHeight
-
-        switch (this.position) {
-          case 'top': {
-            top = rect.top - toolTipHeight - gutter
-            if (top < 0) {
-              top = rect.bottom + gutter
-            }
-
-            left = rect.left + rect.width / 2
-            if (left - toolTipWidth / 2 < 0) {
-              left = gutter
-            } else if (left + toolTipWidth / 2 > clientWidth) {
-              left = clientWidth - toolTipWidth - gutter
-            } else {
-              translate = 'translateX(-50%)'
-            }
-
-            break
-          }
-          case 'bottom': {
-            top = rect.bottom + gutter
-            if (top > clientHeight) {
-              top = clientHeight - toolTipHeight - gutter
-            }
-
-            left = rect.left + rect.width / 2
-            if (left - toolTipWidth / 2 < 0) {
-              left = gutter
-            } else if (left + toolTipWidth / 2 > clientWidth) {
-              left = clientWidth - toolTipWidth - gutter
-            } else {
-              translate = 'translateX(-50%)'
-            }
-            break
-          }
-          case 'right': {
-            top = rect.top + rect.height / 2
-            if (top < 0) {
-              top = gutter
-            } else if (top > clientHeight) {
-              top = clientHeight - toolTipHeight - gutter
-            }
-
-            left = rect.right + gutter
-            if (left + toolTipWidth / 2 > clientWidth) {
-              left = rect.left - toolTipWidth - gutter
-            } else {
-              translate = 'translateY(-50%)'
-            }
-
-            break
-          }
-          case 'left': {
-            top = rect.top + rect.height / 2
-            if (top < 0) {
-              top = gutter
-            } else if (top > clientHeight) {
-              top = clientHeight - toolTipHeight - gutter
-            }
-
-            left = rect.left - toolTipWidth - gutter
-            if (left - toolTipWidth / 2 < 0) {
-              left = rect.right + gutter
-            } else {
-              translate = 'translateY(-50%)'
-            }
-
-            break
-          }
-        }
-        this.tooltipStyle = {
-          position: 'absolute',
-          top: top + 'px',
-          left: left + 'px',
-          transform: translate
-        }
-      })
-    },
-    hideImmediate(e) {
-      if (this.stopPropagation) {
-        e.stopPropagation()
-      }
-      this.transitionName = ''
-      this.visible = false
-    },
-    handleAfterLeave() {
-      this.transitionName = 'fade'
-    }
-  },
-  watch: {
-    visible: {
-      handler(newVal) {
-        this.content = this.text
-      },
-      immediate: true
     }
   }
 }
 </script>
 <style lang="scss" scoped>
 .tooltip-container {
-  &__tooltip {
-    background-color: $color-bg-4;
-    border-radius: $border-radius-small;
-    width: max-content;
-    font-size: $font-size-text-secondary;
-    padding: 0.4rem 1rem;
-    z-index: 99999;
-    box-shadow: 0 0 1rem 0.5rem rgba($color-bg-1, 0.4);
-  }
+  position: absolute;
+  background-color: $color-bg-4;
+  border-radius: $border-radius-small;
+  width: max-content;
+  font-size: $font-size-text-secondary;
+  padding: 0.4rem 1rem;
+  z-index: 99999;
+  box-shadow: 0 0 1rem 0.5rem rgba($color-bg-1, 0.4);
 }
 </style>
