@@ -1,7 +1,7 @@
 <template>
   <template v-if="!loading_skeleton">
     <main class="artists-container">
-      <TitleShowAll :title="$t('profile_artists')" />
+      <TitleShowAll :title="$t('profile.top_artists')" />
       <div class="artists-container__content">
         <CardArtist v-for="item in artists" :key="item.id" :item />
       </div>

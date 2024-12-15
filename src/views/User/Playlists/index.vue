@@ -1,7 +1,7 @@
 <template>
   <template v-if="!loading_skeleton">
     <main class="playlists-container">
-      <TitleShowAll title="Public Playlists" />
+      <TitleShowAll :title="$t('profile.public_playlists')" />
       <div class="playlists-container__content">
         <CardPlaylist v-for="item in playlists" :key="item.id" :item />
       </div>
