@@ -1,7 +1,14 @@
 <template>
-  <div class="img-container" :style="colorStyle">
-    <img loading="lazy" :src :alt @load="handleLoad" @error="handleError" class="img-container__img"
-      :class="imgClass" />
+  <div class="img-container" :class="imgLoadingClass" :style="colorStyle">
+    <img
+      loading="lazy"
+      :src
+      :alt
+      @load="handleLoad"
+      @error="handleError"
+      class="img-container__img"
+      :class="imgClass"
+    />
   </div>
 </template>
 
@@ -21,6 +28,9 @@ export default {
     },
     colorStyle() {
       return `background: ${this.getRandomHSL()}`
+    },
+    imgLoadingClass() {
+      return { 'img-loading': !this.loadFinish }
     }
   },
   props: {
@@ -46,7 +56,7 @@ export default {
     }
   },
   watch: {
-    src(newVal) {
+    src() {
       this.loadFinish = false
     }
   }
@@ -63,6 +73,10 @@ export default {
     height: 100%;
 
     @include transition;
+
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 }
 
@@ -72,6 +86,22 @@ export default {
   }
 
   &-show {
+    opacity: 1;
+  }
+
+  &-loading {
+    animation: pulse 1.6s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
     opacity: 1;
   }
 }
