@@ -102,6 +102,9 @@ export default {
   },
   methods: {
     show() {
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
       this.timer = setTimeout(() => {
         this.visible = true
         this.$nextTick(() => {
