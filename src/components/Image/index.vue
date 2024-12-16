@@ -1,14 +1,7 @@
 <template>
   <div class="img-container" :style="colorStyle">
-    <img
-      loading="lazy"
-      :src
-      :alt
-      @load="handleLoad"
-      @error="handleError"
-      class="img-container__img"
-      :class="imgClass"
-    />
+    <img loading="lazy" :src :alt @load="handleLoad" @error="handleError" class="img-container__img"
+      :class="imgClass" />
   </div>
 </template>
 
@@ -50,6 +43,11 @@ export default {
     getRandomHSL() {
       const h = Math.floor(Math.random() * 360)
       return `hsl(${h}, 40%, 50%)`
+    }
+  },
+  watch: {
+    src(newVal) {
+      this.loadFinish = false
     }
   }
 }

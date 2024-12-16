@@ -1,5 +1,6 @@
 <template>
-  <div ref="process" class="process" :class="{ 'disabled__process': disabled }" @mousedown="handleMouseDown">
+  <div ref="process" class="process" :class="{ 'disabled__process': disabled, 'no-hover-dot': !draggable }"
+    @mousedown="handleMouseDown">
     <div class="process__line" :class="{ 'disabled__process__line': disabled }">
       <div ref="position" class="process__line__position" :style="{ left: `calc(${percentage}% - 100%)` }"
         :class="{ 'disabled__process__line__position': disabled }"></div>
@@ -20,11 +21,15 @@ export default {
       type: Boolean,
       require: false,
       default: false
+    },
+    draggable: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
     handleMouseDown(event) {
-      if (this.disabled) {
+      if (this.disabled || !this.draggable) {
         return
       }
       // Prevent default drag events
@@ -75,6 +80,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 $progress-line-color: #4d4d4d;
+
+.no-hover-dot:nth-child(n) {
+  &:hover .process__dot {
+    display: none;
+  }
+
+  &:active .process__dot {
+    display: none;
+  }
+}
 
 .disabled__process {
   opacity: 0.3;

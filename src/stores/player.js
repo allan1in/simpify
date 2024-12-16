@@ -71,7 +71,12 @@ export const usePlayerStore = defineStore('player', {
             if (res === null) {
               return
             } else {
-              this.isPause = res.paused
+              if (!res.paused && res.position > 0) {
+                this.isPause = false
+                this.loading = false
+              } else {
+                this.isPause = true
+              }
               this.duration = res.duration
               this.position = res.position
               this.percentage = 100 * (res.position / res.duration)
@@ -87,7 +92,6 @@ export const usePlayerStore = defineStore('player', {
             }
 
             this.isSaved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]
-            this.loading = false
           })
 
           this.startListenPos()
@@ -133,6 +137,10 @@ export const usePlayerStore = defineStore('player', {
     startListenPos() {
       if (useUserStore().checkProduct('premium')) {
         this.player.addListener('progress', async (res) => {
+          if (res.position > 0) {
+            this.isPause = false
+            this.loading = false
+          }
           this.position = res.position
           this.percentage = 100 * (res.position / this.duration)
         })
@@ -224,14 +232,14 @@ export const usePlayerStore = defineStore('player', {
         Message(`${i18n.global.t('message.loading')}`)
         return
       }
-      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
+      if (useUserStore().checkProduct('premium') && this.isReady) {
         await this.player.setVolume(0)
       } else if (useUserStore().checkProduct('free')) {
         Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async setVolume() {
-      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
+      if (useUserStore().checkProduct('premium') && this.isReady) {
         await this.player.setVolume(this.volume / 100)
       } else if (useUserStore().checkProduct('free')) {
         Message(`${i18n.global.t('message.only_for_premium')}`)
