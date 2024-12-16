@@ -45,11 +45,14 @@ service.interceptors.response.use(
       error.config.headers.Authorization = `Bearer ${localStorage.getItem('access_token')}`
       const res = await service.request(error.config)
       return res
-    } else if (error.message === 'Network Error') {
+    } else if (error.code === 'ERR_NETWORK') {
       // Network error
       Message(`${i18n.global.t('message.check_network')}`)
+    } else if (error.status === 429) {
+      // Too many requests
+      Message(`${i18n.global.t('message.too_many_requests')}`)
     } else {
-      console.log(error.message)
+      console.log(error)
       Message(`${i18n.global.t('message.something_wrong')}`)
     }
 

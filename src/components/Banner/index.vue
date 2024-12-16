@@ -24,7 +24,7 @@
       <div class="banner__img-wrapper" :class="{ 'banner__img-wrapper-round': classImgRound }">
         <Skeleton />
       </div>
-      <div class="banner__info">
+      <div class="banner__info skeleton__banner__info">
         <Skeleton class="skeleton__type" />
         <Skeleton class="skeleton__title" />
         <Skeleton class="skeleton__info" />
@@ -89,6 +89,10 @@ export default {
 
 <style lang="scss" scoped>
 .skeleton {
+  &__banner__info {
+    width: 100%;
+  }
+
   &__type {
     height: $font-size-text-primary;
     width: 30%;
