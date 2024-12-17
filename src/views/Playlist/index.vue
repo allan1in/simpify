@@ -204,15 +204,18 @@ export default {
       this.loading_more = false
     },
     async getAll() {
-      await this.getPlaylist()
-      await this.getPlaylistTracks()
-      await this.checkUserSavedPlaylist()
+      await Promise.all([
+        this.getPlaylist(),
+        this.getPlaylistTracks()
+      ])
 
       this.loading_skeleton = false
     },
     async getPlaylist() {
       let res = await getPlaylist(this.id)
       this.playlist = res
+
+      await this.checkUserSavedPlaylist()
     },
     async getPlaylistTracks() {
       if (!this.loading_more && this.tracks_next !== null) {

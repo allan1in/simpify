@@ -1,7 +1,7 @@
 <template>
   <template v-if="!loading">
     <div class="banner">
-      <div class="banner__img-wrapper" :class="{ 'banner__img-wrapper-round': classImgRound }">
+      <div v-if="images" class="banner__img-wrapper" :class="{ 'banner__img-wrapper-round': classImgRound }">
         <Image v-if="showImg" class="banner__img-wrapper__img" :src="images[0].url" :alt="title" />
         <div v-else class="banner__img-wrapper__icon">
           <IconDefaultUser v-if="showTypeUser" />

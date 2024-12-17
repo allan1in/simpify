@@ -126,8 +126,10 @@ export default {
     },
     async getAll() {
       await this.getTrack()
-      await this.getArtists()
-      await this.checkUserSavedTrack()
+      await Promise.all([
+        this.getArtists(),
+        this.checkUserSavedTrack()
+      ])
 
       this.loading_skeleton = false
     },
@@ -166,7 +168,6 @@ export default {
     $route: {
       async handler(to, from) {
         this.reset()
-        await this.checkUserSavedTrack()
         await this.getAll()
       },
       immediate: true

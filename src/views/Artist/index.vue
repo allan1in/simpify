@@ -2,11 +2,7 @@
   <template v-if="!loading_skeleton">
     <div class="artist-container">
       <div class="artist-container__cover">
-        <Image
-          v-if="artist.images?.[0]?.url"
-          :src="artist.images[0].url"
-          class="artist-container__cover__bg"
-        />
+        <Image v-if="artist.images?.[0]?.url" :src="artist.images[0].url" class="artist-container__cover__bg" />
         <div class="artist-container__cover__title">
           <h1 class="artist-container__cover__title__text" v-tooltip="artist.name">
             {{ artist.name }}
@@ -24,10 +20,7 @@
             <ButtonTogglePlay :item="artist" />
           </div>
           <div class="artist-container__content__btn-group__follow-wrapper">
-            <button
-              class="artist-container__content__btn-group__follow-wrapper__btn"
-              @click="handleClickFollowButton"
-            >
+            <button class="artist-container__content__btn-group__follow-wrapper__btn" @click="handleClickFollowButton">
               {{ isFollowed ? $t('artist.following') : $t('artist.follow') }}
             </button>
           </div>
@@ -36,59 +29,32 @@
           <TitleShowAll :title="$t('artist.popular')" />
           <div class="artist-container__content__popular__content">
             <TrackListHeader />
-            <TrackCard
-              v-for="(track, index) in tracks"
-              :key="track.id"
-              :index="index"
-              :showArtists="false"
-              :item="track"
-              :uris="uris"
-            />
+            <TrackCard v-for="(track, index) in tracks" :key="track.id" :index="index" :showArtists="false"
+              :item="track" :uris="uris" />
           </div>
         </div>
         <div class="artist-container__content__albums" v-if="albums.length !== 0">
-          <TitleShowAll
-            :router-name="albums_total > albums_limit ? 'ArtistAllAlbums' : ''"
-            :title="$t('artist.albums')"
-          />
+          <TitleShowAll :router-name="albums_total > albums_limit ? 'ArtistAllAlbums' : ''"
+            :title="$t('artist.albums')" />
           <div class="artist-container__content__albums__content">
-            <AlbumCard
-              v-for="(item, index) in albums"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :show-artists="false"
-            />
+            <AlbumCard v-for="(item, index) in albums" :key="item.id" :item="item" :index="index"
+              :show-artists="false" />
           </div>
         </div>
         <div class="artist-container__content__singles" v-if="singles.length !== 0">
-          <TitleShowAll
-            :router-name="singles_total > singles_limit ? 'ArtistAllSingles' : ''"
-            :title="$t('artist.singles')"
-          />
+          <TitleShowAll :router-name="singles_total > singles_limit ? 'ArtistAllSingles' : ''"
+            :title="$t('artist.singles')" />
           <div class="artist-container__content__singles__content">
-            <AlbumCard
-              v-for="(item, index) in singles"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :show-artists="false"
-            />
+            <AlbumCard v-for="(item, index) in singles" :key="item.id" :item="item" :index="index"
+              :show-artists="false" />
           </div>
         </div>
         <div class="artist-container__content__appears-on" v-if="appearsOn.length !== 0">
-          <TitleShowAll
-            :router-name="appearsOn_total > appearsOn_limit ? 'ArtistAllAppearsOn' : ''"
-            :title="$t('artist.appears_on')"
-          />
+          <TitleShowAll :router-name="appearsOn_total > appearsOn_limit ? 'ArtistAllAppearsOn' : ''"
+            :title="$t('artist.appears_on')" />
           <div class="artist-container__content__appears-on__content">
-            <AlbumCard
-              v-for="(item, index) in appearsOn"
-              :key="item.id"
-              :item="item"
-              :index="index"
-              :show-artists="false"
-            />
+            <AlbumCard v-for="(item, index) in appearsOn" :key="item.id" :item="item" :index="index"
+              :show-artists="false" />
           </div>
         </div>
       </div>
@@ -208,12 +174,13 @@ export default {
   },
   methods: {
     async getAll() {
-      await this.getArtist()
-      await this.getTopTracks()
-      await this.getAlbums()
-      await this.getSingles()
-      await this.getAppearsOn()
-      await this.checkUserSavedArtist()
+      await Promise.all([
+        this.getArtist(),
+        this.getTopTracks(),
+        this.getAlbums(),
+        this.getSingles(),
+        this.getAppearsOn()
+      ])
 
       this.loading_skeleton = false
     },
@@ -233,6 +200,8 @@ export default {
       const res = await getAlbums(this.id, params)
       this.albums = res.items
       this.albums_total = res.total
+
+      await this.checkUserSavedArtist()
     },
     async getSingles() {
       const params = {

@@ -3,7 +3,8 @@
     <div class="player-bar__left">
       <template v-if="current_track && !loading">
         <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
-          <Image class="player-bar__left__cover-wrapper__cover" :src="current_track.album.images[0].url" alt="track" />
+          <Image no-scale class="player-bar__left__cover-wrapper__cover" :src="current_track.album.images[0].url"
+            alt="track" />
         </div>
         <div class="player-bar__left__msg-wrapper">
           <div class="player-bar__left__msg-wrapper__title" v-if="current_track?.id">

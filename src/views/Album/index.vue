@@ -136,9 +136,11 @@ export default {
       this.loading_skeleton = true
     },
     async getAll() {
-      await this.getAlbum()
-      await this.getTracks()
-      await this.checkUserSavedAlbum()
+      await Promise.all([
+        this.getAlbum(),
+        this.getTracks(),
+        this.checkUserSavedAlbum()
+      ])
 
       this.loading_skeleton = false
     },
