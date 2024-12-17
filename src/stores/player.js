@@ -155,6 +155,9 @@ export const usePlayerStore = defineStore('player', {
       if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
         return
+      } else if (!this.isReady) {
+        Message(`${i18n.global.t('message.unready')}`)
+        return
       }
       if (useUserStore().checkProduct('premium')) {
         if (this.isReady && !!this.current_track) {
@@ -176,6 +179,9 @@ export const usePlayerStore = defineStore('player', {
       if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
         return
+      } else if (!this.isReady) {
+        Message(`${i18n.global.t('message.unready')}`)
+        return
       }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         this.loading = true
@@ -188,6 +194,9 @@ export const usePlayerStore = defineStore('player', {
       if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
         return
+      } else if (!this.isReady) {
+        Message(`${i18n.global.t('message.unready')}`)
+        return
       }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         this.loading = true
@@ -199,6 +208,9 @@ export const usePlayerStore = defineStore('player', {
     async setRepeatMode() {
       if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
+        return
+      } else if (!this.isReady) {
+        Message(`${i18n.global.t('message.unready')}`)
         return
       }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
@@ -220,6 +232,9 @@ export const usePlayerStore = defineStore('player', {
       if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
         return
+      } else if (!this.isReady) {
+        Message(`${i18n.global.t('message.unready')}`)
+        return
       }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await togglePlaybackShuffle({ state: !this.isShuffle })
@@ -231,6 +246,9 @@ export const usePlayerStore = defineStore('player', {
       if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
         return
+      } else if (!this.isReady) {
+        Message(`${i18n.global.t('message.unready')}`)
+        return
       }
       if (useUserStore().checkProduct('premium') && this.isReady) {
         await this.player.setVolume(0)
@@ -239,6 +257,10 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async setVolume() {
+      if (!this.isReady) {
+        Message(`${i18n.global.t('message.unready')}`)
+        return
+      }
       if (useUserStore().checkProduct('premium') && this.isReady) {
         await this.player.setVolume(this.volume / 100)
       } else if (useUserStore().checkProduct('free')) {
@@ -248,6 +270,9 @@ export const usePlayerStore = defineStore('player', {
     async seekPosition() {
       if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
+        return
+      } else if (!this.isReady) {
+        Message(`${i18n.global.t('message.unready')}`)
         return
       }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
@@ -261,6 +286,9 @@ export const usePlayerStore = defineStore('player', {
       if (this.loading || !this.isReady) {
         Message(`${i18n.global.t('message.loading')}`)
         return
+      } else if (!this.isReady) {
+        Message(`${i18n.global.t('message.unready')}`)
+        return
       }
       if (useUserStore().checkProduct('premium')) {
         this.loading = true
@@ -272,6 +300,9 @@ export const usePlayerStore = defineStore('player', {
     async playNewContext(data) {
       if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
+        return
+      } else if (!this.isReady) {
+        Message(`${i18n.global.t('message.unready')}`)
         return
       }
       if (useUserStore().checkProduct('premium')) {
@@ -286,10 +317,6 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async toggleTrackSave() {
-      if (this.loading) {
-        Message(`${i18n.global.t('message.loading')}`)
-        return
-      }
       if (this.isSaved) {
         await deleteUserSavedTracks({ ids: this.current_track?.id })
         this.isSaved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]

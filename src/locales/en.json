@@ -105,7 +105,8 @@
     "update_succeeded": "Update Succeeded (May be a delay of about a minute).",
     "autoplay_failed": "Autoplay is not allowed by the browser autoplay rules. Please play manually.",
     "check_network": "Please check your network.",
-    "too_many_requests": "The request is too frequent, please try again later."
+    "too_many_requests": "The request is too frequent, please try again later.",
+    "unready": "Initializing..."
   },
   "dialog_playlist_edit": {
     "title": "Edit Details",

@@ -105,7 +105,8 @@
     "update_succeeded": "修改成功（可能有一分钟左右的延迟）。",
     "autoplay_failed": "浏览器自动播放规则不允许自动播放。请手动播放。",
     "check_network": "请检查你的网络。",
-    "too_many_requests": "请求过于频繁，请稍后再试。"
+    "too_many_requests": "请求过于频繁，请稍后再试。",
+    "unready": "初始化中..."
   },
   "dialog_playlist_edit": {
     "title": "编辑详情",
