@@ -1,7 +1,7 @@
 <template>
     <div class="image-edit-container" @mouseenter="isHover = true" @mouseleave="isHover = false">
-        <img v-if="!!currentImage?.file || !!currentImage?.url" class="image-edit-container__img"
-            :src="currentImage.file ? currentImage.file : currentImage.url" alt="" />
+        <Image no-scale v-if="!!currentImage?.file || !!currentImage?.url" class="image-edit-container__img"
+            :src="currentImage.file ? currentImage.file : currentImage.url" alt="cover" />
         <div v-else class="image-edit-container__icon-wrapper">
             <IconDefaultPlaylist class="image-edit-container__icon-wrapper__playlist" />
         </div>
@@ -40,6 +40,7 @@ import DropDown from '@/components/DropDown/index.vue'
 import DropDownItem from '@/components/DropDownItem/index.vue'
 import IconPictureDelete from '../Icons/IconPictureDelete.vue'
 import IconPictureEdit from '../Icons/IconPictureEdit.vue'
+import Image from '@/components/Image/index.vue'
 
 export default {
     name: 'ImageEdit',
@@ -64,7 +65,8 @@ export default {
         DropDown,
         DropDownItem,
         IconPictureDelete,
-        IconPictureEdit
+        IconPictureEdit,
+        Image
     },
     computed: {
         currentImage: {

@@ -43,7 +43,8 @@
           <div v-if="isOwner" class="playlist-container__content__btn-group__more">
             <DropDown position="right">
               <template #default>
-                <button class="playlist-container__content__btn-group__more__btn">
+                <button v-tooltip="$t('tooltip.more_options', { 'item': playlist.name })"
+                  class="playlist-container__content__btn-group__more__btn">
                   <div class="playlist-container__content__btn-group__more__btn__icon-wrapper">
                     <IconMore />
                   </div>

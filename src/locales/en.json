@@ -166,6 +166,7 @@
     "exit_fullscreen": "Exit Fullscreen",
     "add_to_liked_songs": "Add to Liked Songs",
     "remove_from_liked_songs": "Remove from Liked Songs",
-    "go_to_spotify": "Go to Spotify"
+    "go_to_spotify": "Go to Spotify",
+    "more_options": "More options for {item}"
   }
 }

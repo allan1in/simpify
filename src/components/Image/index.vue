@@ -1,20 +1,11 @@
 <template>
   <div class="img-container" :class="imgLoadingClass" :style="colorStyle">
-    <img
-      loading="lazy"
-      :src
-      :alt
-      @load="handleLoad"
-      @error="handleError"
-      class="img-container__img"
-      :class="imgClass"
-    />
+    <img loading="lazy" :src :alt @load="handleLoad" @error="handleError" class="img-container__img"
+      :class="imgClass" />
   </div>
 </template>
 
 <script>
-import { handleError } from 'vue'
-
 export default {
   name: 'Image',
   data() {
@@ -24,7 +15,7 @@ export default {
   },
   computed: {
     imgClass() {
-      return { 'img-hidden': !this.loadFinish, 'img-show': this.loadFinish }
+      return { 'img-hidden': !this.loadFinish, 'img-show': this.loadFinish, 'img-scale': !this.noScale }
     },
     colorStyle() {
       return `background: ${this.getRandomHSL()}`
@@ -41,6 +32,10 @@ export default {
     alt: {
       type: String,
       default: ''
+    },
+    noScale: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -73,10 +68,6 @@ export default {
     height: 100%;
 
     @include transition;
-
-    &:hover {
-      transform: scale(1.1);
-    }
   }
 }
 
@@ -92,15 +83,23 @@ export default {
   &-loading {
     animation: pulse 1.6s infinite;
   }
+
+  &-scale {
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
 }
 
 @keyframes pulse {
   0% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.6;
   }
+
   100% {
     opacity: 1;
   }

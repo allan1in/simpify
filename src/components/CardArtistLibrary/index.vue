@@ -1,17 +1,12 @@
 <template>
   <template v-if="!loading">
-    <div
-      class="card-artist-library-contanier"
+    <div class="card-artist-library-contanier"
       :class="{ 'card-artist-library-contanier-collasped-current': isCurrentPage }"
-      @click="$router.push({ name: 'Artist', params: { artistId: item.id } })"
-    >
+      @click="$router.push({ name: 'Artist', params: { artistId: item.id } })">
       <div class="card-artist-library-contanier__cover">
         <div class="card-artist-library-contanier__cover__icon">
-          <button
-            v-tooltip="toolTipPlay"
-            @click.prevent.stop="handleClick"
-            class="card-artist-library-contanier__cover__icon__wrapper"
-          >
+          <button v-tooltip="toolTipPlay" @click.prevent.stop="handleClick"
+            class="card-artist-library-contanier__cover__icon__wrapper">
             <IconPause v-if="isPlaying" />
             <IconPlay v-else />
           </button>
@@ -20,21 +15,14 @@
         <div v-if="isPlaying" class="card-artist-library-contanier__cover__playing">
           <i class="card-artist-library-contanier__cover__playing__icon"></i>
         </div>
-        <Image
-          class="card-artist-library-contanier__cover__img"
-          :src="item.images[0]?.url"
-          :alt="item.name"
-        />
+        <Image class="card-artist-library-contanier__cover__img" :src="item.images[0]?.url" :alt="item.name" no-scale />
       </div>
       <Transition name="fade">
         <div v-if="!isCollasped" class="card-artist-library-contanier__info">
-          <a
-            @click.prevent.stop="$router.push({ name: 'Artist', params: { artistId: item.id } })"
-            class="card-artist-library-contanier__info__title"
-            :class="{
+          <a @click.prevent.stop="$router.push({ name: 'Artist', params: { artistId: item.id } })"
+            class="card-artist-library-contanier__info__title" :class="{
               'card-artist-library-contanier__info__title-playing': isCurrentItem
-            }"
-          >
+            }">
             {{ item.name }}
           </a>
         </div>
