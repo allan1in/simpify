@@ -105,7 +105,8 @@ export default {
       track: {},
       isSaved: undefined,
       artists: [],
-      loading_skeleton: true
+      loading_skeleton: true,
+      loading_toggle_save: false,
     }
   },
   computed: {
@@ -150,21 +151,23 @@ export default {
       this.artists = res
     },
     async handleClickSaveButton() {
+      if (this.loading_toggle_save) {
+        return
+      }
+      this.loading_toggle_save = true
       if (this.isSaved) {
         await deleteUserSavedTracks({ ids: this.id })
-        await this.checkUserSavedTrack()
-        if (!this.isSaved) {
-          useLibraryStore().removeLikedSong(this.track.id)
-          Message(`${this.$t('message.removed_from_liked_songs')}`)
-        }
+        this.isSaved = false
+        useLibraryStore().removeLikedSong(this.track.id)
+        Message(`${this.$t('message.removed_from_liked_songs')}`)
+
       } else {
         await saveTracks({ ids: this.id })
-        await this.checkUserSavedTrack()
-        if (this.isSaved) {
-          useLibraryStore().addLikedSongs(this.track)
-          Message(`${this.$t('message.added_to_liked_songs')}`)
-        }
+        this.isSaved = true
+        useLibraryStore().addLikedSongs(this.track)
+        Message(`${this.$t('message.added_to_liked_songs')}`)
       }
+      this.loading_toggle_save = false
     }
   },
   watch: {

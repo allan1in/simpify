@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="player-bar__left__save-btn">
-          <ButtonSave :isSaved class="icon-wrapper" @button-click="toggleTrackSave" />
+          <ButtonSave :isSaved class="icon-wrapper" @button-click="handleToggleTrackSave" />
         </div>
       </template>
     </div>
@@ -107,11 +107,7 @@ export default {
   },
   data() {
     return {
-      isMiniPlayer: false,
-      isConnectToDevice: false,
-      isQueen: false,
-      isLyrics: false,
-      isNowPlayingView: false
+      loading_toggle_save: false
     }
   },
   computed: {
@@ -187,7 +183,15 @@ export default {
       'setRepeatMode',
       'toggleShuffle',
       'toggleTrackSave'
-    ])
+    ]),
+    async handleToggleTrackSave() {
+      if (this.loading_toggle_save) {
+        return
+      }
+      this.loading_toggle_save = true
+      await this.toggleTrackSave()
+      this.loading_toggle_save = false
+    }
   },
   created() {
     this.initPlayer()

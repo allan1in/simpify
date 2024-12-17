@@ -114,6 +114,7 @@ export default {
       tracks_next: '',
       loading_skeleton: true,
       loading_more: false,
+      loading_toggle_save: false,
       isSaved: null
     }
   },
@@ -135,7 +136,8 @@ export default {
       this.tracks_offset = 0
       this.tracks_next = ''
       this.loading_more = false
-      this.loading_skeleton = true
+      this.loading_skeleton = true,
+        this.loading_toggle_save = false
     },
     async getAll() {
       await Promise.all([
@@ -186,21 +188,22 @@ export default {
       this.isSaved = res[0]
     },
     async handleClickSaveButton() {
+      if (this.loading_toggle_save) {
+        return
+      }
+      this.loading_toggle_save = true
       if (this.isSaved) {
         await deleteUserSavedAlbums({ ids: this.id })
-        await this.checkUserSavedAlbum()
-        if (!this.isSaved) {
-          useLibraryStore().removeAlbum(this.id)
-          Message(`${this.$t('message.removed_from_lib')}`)
-        }
+        this.isSaved = false
+        useLibraryStore().removeAlbum(this.id)
+        Message(`${this.$t('message.removed_from_lib')}`)
       } else {
         await saveAlbums({ ids: this.id })
-        await this.checkUserSavedAlbum()
-        if (this.isSaved) {
-          useLibraryStore().addAlbums(this.album)
-          Message(`${this.$t('message.added_to_lib')}`)
-        }
+        this.isSaved = true
+        useLibraryStore().addAlbums(this.album)
+        Message(`${this.$t('message.added_to_lib')}`)
       }
+      this.loading_toggle_save = false
     }
   },
   watch: {

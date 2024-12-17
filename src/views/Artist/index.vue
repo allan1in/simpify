@@ -159,6 +159,7 @@ export default {
       appearsOn_offset: 0,
       appearsOn_total: 0,
       loading_skeleton: true,
+      loading_toggle_follow: false,
       isFollowed: null
     }
   },
@@ -187,6 +188,8 @@ export default {
     async getArtist() {
       const res = await getArtist(this.id)
       this.artist = res
+
+      await this.checkUserSavedArtist()
     },
     async getTopTracks() {
       const res = (await getTopTracks(this.id)).tracks
@@ -201,7 +204,6 @@ export default {
       this.albums = res.items
       this.albums_total = res.total
 
-      await this.checkUserSavedArtist()
     },
     async getSingles() {
       const params = {
@@ -227,21 +229,22 @@ export default {
       this.isFollowed = res[0]
     },
     async handleClickFollowButton() {
+      if (this.loading_toggle_follow) {
+        return
+      }
+      this.loading_toggle_follow = true
       if (this.isFollowed) {
         await deleteUserSavedArtists({ ids: this.artist.id })
-        await this.checkUserSavedArtist()
-        if (!this.isFollowed) {
-          useLibraryStore().removeArtist(this.artist.id)
-          Message(`${this.$t('message.removed_from_lib')}`)
-        }
+        this.isFollowed = false
+        useLibraryStore().removeArtist(this.artist.id)
+        Message(`${this.$t('message.removed_from_lib')}`)
       } else {
         await saveArtists({ ids: this.artist.id })
-        await this.checkUserSavedArtist()
-        if (this.isFollowed) {
-          useLibraryStore().addArtists(this.artist)
-          Message(`${this.$t('message.added_to_lib')}`)
-        }
+        this.isFollowed = true
+        useLibraryStore().addArtists(this.artist)
+        Message(`${this.$t('message.added_to_lib')}`)
       }
+      this.loading_toggle_follow = false
     }
   },
   watch: {

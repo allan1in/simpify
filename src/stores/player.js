@@ -152,13 +152,6 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async togglePlay() {
-      if (this.loading) {
-        Message(`${i18n.global.t('message.loading')}`)
-        return
-      } else if (!this.isReady) {
-        Message(`${i18n.global.t('message.unready')}`)
-        return
-      }
       if (useUserStore().checkProduct('premium')) {
         if (this.isReady && !!this.current_track) {
           let state = await this.player.getCurrentState()
@@ -176,13 +169,6 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async nextTrack() {
-      if (this.loading) {
-        Message(`${i18n.global.t('message.loading')}`)
-        return
-      } else if (!this.isReady) {
-        Message(`${i18n.global.t('message.unready')}`)
-        return
-      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         this.loading = true
         await this.player.nextTrack()
@@ -191,13 +177,6 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async preTrack() {
-      if (this.loading) {
-        Message(`${i18n.global.t('message.loading')}`)
-        return
-      } else if (!this.isReady) {
-        Message(`${i18n.global.t('message.unready')}`)
-        return
-      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         this.loading = true
         await this.player.previousTrack()
@@ -206,13 +185,6 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async setRepeatMode() {
-      if (this.loading) {
-        Message(`${i18n.global.t('message.loading')}`)
-        return
-      } else if (!this.isReady) {
-        Message(`${i18n.global.t('message.unready')}`)
-        return
-      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         if (this.repeatMode === 0) {
           await setRepeatMode({ state: 'context' })
@@ -229,13 +201,6 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async toggleShuffle() {
-      if (this.loading) {
-        Message(`${i18n.global.t('message.loading')}`)
-        return
-      } else if (!this.isReady) {
-        Message(`${i18n.global.t('message.unready')}`)
-        return
-      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await togglePlaybackShuffle({ state: !this.isShuffle })
       } else if (useUserStore().checkProduct('free')) {
@@ -243,13 +208,6 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async setMute() {
-      if (this.loading) {
-        Message(`${i18n.global.t('message.loading')}`)
-        return
-      } else if (!this.isReady) {
-        Message(`${i18n.global.t('message.unready')}`)
-        return
-      }
       if (useUserStore().checkProduct('premium') && this.isReady) {
         await this.player.setVolume(0)
       } else if (useUserStore().checkProduct('free')) {
@@ -257,10 +215,6 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async setVolume() {
-      if (!this.isReady) {
-        Message(`${i18n.global.t('message.unready')}`)
-        return
-      }
       if (useUserStore().checkProduct('premium') && this.isReady) {
         await this.player.setVolume(this.volume / 100)
       } else if (useUserStore().checkProduct('free')) {
@@ -268,13 +222,6 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async seekPosition() {
-      if (this.loading) {
-        Message(`${i18n.global.t('message.loading')}`)
-        return
-      } else if (!this.isReady) {
-        Message(`${i18n.global.t('message.unready')}`)
-        return
-      }
       if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
         await this.player.seek((this.duration * this.percentage) / 100)
         await this.startListenPos()
@@ -283,7 +230,7 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async playNewTrack(data) {
-      if (this.loading || !this.isReady) {
+      if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
         return
       } else if (!this.isReady) {
@@ -319,18 +266,14 @@ export const usePlayerStore = defineStore('player', {
     async toggleTrackSave() {
       if (this.isSaved) {
         await deleteUserSavedTracks({ ids: this.current_track?.id })
-        this.isSaved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]
-        if (!this.isSaved) {
-          useLibraryStore().removeLikedSong(this.current_track.id)
-          Message(`${i18n.global.t('message.removed_from_liked_songs')}`)
-        }
+        this.isSaved = false
+        useLibraryStore().removeLikedSong(this.current_track.id)
+        Message(`${i18n.global.t('message.removed_from_liked_songs')}`)
       } else {
         await saveTracks({ ids: this.current_track?.id })
-        this.isSaved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]
-        if (this.isSaved) {
-          useLibraryStore().addLikedSongs(this.current_track)
-          Message(`${i18n.global.t('message.added_to_liked_songs')}`)
-        }
+        this.isSaved = true
+        useLibraryStore().addLikedSongs(this.current_track)
+        Message(`${i18n.global.t('message.added_to_liked_songs')}`)
       }
     }
   }

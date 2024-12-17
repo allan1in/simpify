@@ -173,7 +173,8 @@ export default {
       loading_more: false,
       isFollowed: null,
       openEditDialog: false,
-      openRemoveConfirm: false
+      openRemoveConfirm: false,
+      loading_toggle_follow: false,
     }
   },
   computed: {
@@ -206,7 +207,8 @@ export default {
       this.tracks_offset = 0
       this.tracks_next = ''
       this.loading_skeleton = true
-      this.loading_more = false
+      this.loading_more = false,
+        this.loading_toggle_follow = false
     },
     async getAll() {
       await Promise.all([
@@ -251,21 +253,22 @@ export default {
       this.isFollowed = res[0]
     },
     async handleClickFollowButton() {
+      if (this.loading_toggle_follow) {
+        return
+      }
+      this.loading_toggle_follow = true
       if (this.isFollowed) {
         await deleteUserSavedPlaylists(this.playlist.id)
-        await this.checkUserSavedPlaylist()
-        if (!this.isFollowed) {
-          useLibraryStore().removePlaylist(this.playlist.id)
-          Message(`${this.$t('message.removed_from_lib')}`)
-        }
+        this.isFollowed = false
+        useLibraryStore().removePlaylist(this.playlist.id)
+        Message(`${this.$t('message.removed_from_lib')}`)
       } else {
         await savePlaylists(this.playlist.id)
-        await this.checkUserSavedPlaylist()
-        if (this.isFollowed) {
-          useLibraryStore().addPlaylists(this.playlist)
-          Message(`${this.$t('message.added_to_lib')}`)
-        }
+        this.isFollowed = true
+        useLibraryStore().addPlaylists(this.playlist)
+        Message(`${this.$t('message.added_to_lib')}`)
       }
+      this.loading_toggle_follow = false
     },
     async handleUpdateSucceed() {
       await this.getPlaylist()

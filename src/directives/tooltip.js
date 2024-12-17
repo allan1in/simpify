@@ -56,7 +56,6 @@ export default {
     el._instance = instance
   },
   unmounted(el) {
-    el._instance.hide()
     el.removeEventListener('mouseenter', el._showTooltip)
     el.removeEventListener('mouseleave', el._hideTooltip)
     el.removeEventListener('click', el._hideTooltip)
