@@ -170,8 +170,6 @@ export default {
     &__details {
       font-size: $font-size-text-secondary;
       color: $color-font-secondary;
-
-      @include twoLineEllipsis;
     }
   }
 }

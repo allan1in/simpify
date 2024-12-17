@@ -2,28 +2,16 @@
   <nav class="nav-bar">
     <div class="nav-bar__left">
       <div class="nav-bar__left__logo">
-        <a
-          v-tooltip="$t('tooltip.go_to_spotify')"
-          href="https://open.spotify.com/"
-          target="_blank"
-          class="nav-bar__left__logo__icon"
-        >
+        <a v-tooltip="$t('tooltip.go_to_spotify')" href="https://open.spotify.com/" target="_blank"
+          class="nav-bar__left__logo__icon">
           <IconPrimaryLogo />
         </a>
       </div>
       <div class="nav-bar__left__arrow">
-        <button
-          v-tooltip="$t('tooltip.go_back')"
-          class="nav-bar__left__arrow__left"
-          @click="$router.go(-1)"
-        >
+        <button v-tooltip="$t('tooltip.go_back')" class="nav-bar__left__arrow__left" @click="$router.go(-1)">
           <IconArrowLeft />
         </button>
-        <button
-          v-tooltip="$t('tooltip.go_forward')"
-          class="nav-bar__left__arrow__right"
-          @click="$router.go(1)"
-        >
+        <button v-tooltip="$t('tooltip.go_forward')" class="nav-bar__left__arrow__right" @click="$router.go(1)">
           <IconArrowRight />
         </button>
       </div>
@@ -36,22 +24,15 @@
         </span>
       </button>
       <div class="nav-bar__mid__search">
-        <input
-          class="nav-bar__mid__search__input"
-          type="text"
-          :placeholder="$t('nav_bar.input_message')"
-          @input="getSearchResult"
-          v-model="inputContent"
-        />
+        <input class="nav-bar__mid__search__input" type="text" :placeholder="$t('nav_bar.input_message')"
+          @input="getSearchResult" v-model="inputContent" />
         <div class="nav-bar__mid__search__icon-wrapper">
           <IconSearch />
         </div>
         <div class="nav-bar__mid__search__btn" v-if="inputContent.length !== 0">
-          <button
-            v-tooltip="$t('tooltip.clear_search')"
+          <button v-tooltip="$t('tooltip.clear_search')"
             class="nav-bar__mid__search__btn__btn-wrapper nav-bar__mid__search__btn__btn-wrapper__clear-border"
-            @click="inputContent = ''"
-          >
+            @click="inputContent = ''">
             <IconClose />
           </button>
         </div>
@@ -72,13 +53,8 @@
       </DropDown>
       <DropDown>
         <button v-tooltip="display_name" class="nav-bar__right__photo-wrapper">
-          <img
-            v-if="avatar.length !== 0"
-            class="nav-bar__right__photo-wrapper__photo"
-            :src="avatar"
-            :alt="display_name"
-            :title="display_name"
-          />
+          <img v-if="avatar.length !== 0" class="nav-bar__right__photo-wrapper__photo" :src="avatar" :alt="display_name"
+            :title="display_name" />
           <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
             <span class="nav-bar__right__photo-wrapper__photo-default-wrapper__default">{{
               display_name.charAt(0).toLocaleUpperCase()
@@ -87,16 +63,13 @@
         </button>
         <template #dropDownItems>
           <DropDownItem
-            toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account"
-          >
-            {{ $t('user.account') }}</DropDownItem
-          >
+            toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account">
+            {{ $t('user.account') }}</DropDownItem>
           <DropDownItem :to="{ name: 'User', params: { userId: uid } }">{{
             $t('user.profile')
           }}</DropDownItem>
-          <DropDownItem
-            toExternal="https://www.spotify.com/us/premium/?ref=web_loggedin_upgrade_menu"
-            >{{ $t('user.upgrade') }}
+          <DropDownItem toExternal="https://www.spotify.com/us/premium/?ref=web_loggedin_upgrade_menu">{{
+            $t('user.upgrade') }}
           </DropDownItem>
           <DropDownItem :topLine="true" @click.prevent="logout">{{
             $t('user.log_out')
@@ -336,7 +309,7 @@ export default {
           cursor: text;
         }
 
-        &:focus + div {
+        &:focus+div {
           fill: $color-font-primary;
         }
       }

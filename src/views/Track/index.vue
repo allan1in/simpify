@@ -3,26 +3,29 @@
     <div class="track-container">
       <div class="track-container__banner">
         <Banner :type="$t('track.type')" :title="track.name" :images="track.album.images">
-          <router-link class="track-container__banner-details__artist"
-            :to="{ name: 'Artist', params: { artistId: artists[0].id } }">{{ artists[0].name }}</router-link>
-          <span class="track-container__banner-details__album-wrapper">
-            <span> • </span>
-            <router-link class="track-container__banner-details__album-wrapper__album"
-              :to="{ name: 'Album', params: { albumId: track.album.id } }">{{ track.album.name }}</router-link>
-          </span>
-          <span class="track-container__banner-details__release-year">
-            {{ ` • ${track.album.release_date.split('-')[0]}` }}
-          </span>
-          <span class="track-container__banner-details__duration">
-            {{
-              ` •
-            ${duration.hr ? `${duration.hr} ${$t('track.duration.hr')} ` : ''}${duration.min
-                ? `${duration.min}
-            ${$t('track.duration.min')} `
-                : ''
-              }${duration.sec ? `${duration.sec} ${$t('track.duration.sec')} ` : ''}`
-            }}
-          </span>
+          <div class="track-container__banner-details">
+            <router-link class="track-container__banner-details__artist"
+              :to="{ name: 'Artist', params: { artistId: artists[0].id } }">{{ artists[0].name }}</router-link>
+            <span class="track-container__banner-details__album-wrapper">
+              <span> • </span>
+              <router-link class="track-container__banner-details__album-wrapper__album"
+                :to="{ name: 'Album', params: { albumId: track.album.id } }">{{ track.album.name }}</router-link>
+            </span>
+            <span class="track-container__banner-details__release-year">
+              {{ ` • ${track.album.release_date.split('-')[0]}` }}
+            </span>
+            <span class="track-container__banner-details__duration">
+              {{
+                ` •
+              ${duration.hr ? `${duration.hr} ${$t('track.duration.hr')} ` : ''}${duration.min
+                  ? `${duration.min}
+              ${$t('track.duration.min')} `
+                  : ''
+                }${duration.sec ? `${duration.sec} ${$t('track.duration.sec')} ` : ''}`
+              }}
+            </span>
+          </div>
+
         </Banner>
       </div>
       <div class="track-container__content">
@@ -193,6 +196,9 @@ export default {
 <style lang="scss" scoped>
 .track-container {
   &__banner-details {
+
+    @include twoLineEllipsis;
+
     &__artist {
       font-weight: 700;
       color: $color-font-primary;

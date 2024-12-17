@@ -4,19 +4,21 @@
       <div class="user-container__banner">
         <Banner :type="$t('profile.type')" :title="profile.display_name" :images="profile.images" imgShape="circle"
           default-icon="user">
-          <span class="user-container__banner__details__playlists" v-if="playlists_total">
-            {{
-              `${Intl.NumberFormat().format(playlists_total)} ${$t('profile.playlist', playlists_total)}
-            `
-            }}
-          </span>
-          <span class="user-container__banner__details__followers" v-if="profile.followers.total">
-            {{
-              ` • ${Intl.NumberFormat().format(
-                profile.followers.total
-              )} ${$t('profile.follower', profile.followers.total)}`
-            }}
-          </span>
+          <div class="user-container__banner-details">
+            <span class="user-container__banner-details__playlists" v-if="playlists_total">
+              {{
+                `${Intl.NumberFormat().format(playlists_total)} ${$t('profile.playlist', playlists_total)}
+              `
+              }}
+            </span>
+            <span class="user-container__banner-details__followers" v-if="profile.followers.total">
+              {{
+                ` • ${Intl.NumberFormat().format(
+                  profile.followers.total
+                )} ${$t('profile.follower', profile.followers.total)}`
+              }}
+            </span>
+          </div>
         </Banner>
       </div>
       <div class="user-container__content">
@@ -185,6 +187,11 @@ export default {
 
 <style lang="scss" scoped>
 .user-container {
+
+  &__banner-details {
+    @include twoLineEllipsis;
+  }
+
   &__content {
     padding: $gutter-1-5x;
 

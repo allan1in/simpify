@@ -55,3 +55,9 @@ npm run test:e2e
 ```sh
 npm run lint
 ```
+
+# TODOS
+
+1. problem url: /search/%
+2. problem description: ———————— \* 300
+3. tooltip overflow

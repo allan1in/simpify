@@ -3,30 +3,35 @@
     <div class="playlist-container">
       <div class="playlist-container__banner">
         <Banner :type="$t('playlist.type')" :title="playlist.name" :images="playlist.images">
-          <router-link class="playlist-container__banner-details__owner"
-            :to="{ name: 'User', params: { userId: playlist.owner.id } }">{{ playlist.owner.display_name
-            }}</router-link>
-          <span v-if="playlist.followers.total !== 0" class="playlist-container__banner-details__followers">
-            {{
-              ` • ${Intl.NumberFormat().format(playlist.followers.total)} ${$t(
-                'playlist.follower',
-                playlist.followers.total
-              )}`
-            }}
-          </span>
-          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__total-tracks">
-            {{ ` • ${playlist.tracks.total} ${$t('playlist.song', playlist.tracks.total)}` }}
-          </span>
-          <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__duration">
-            {{
-              ` •
-            ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${duration.min
-                ? `${duration.min}
-            ${$t('playlist.duration.min')} `
-                : ''
-              }${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
-            }}
-          </span>
+          <div class="playlist-container__banner-description">
+            <span v-tooltip="playlist.description">{{ playlist.description }}</span>
+          </div>
+          <div class="playlist-container__banner-details">
+            <router-link class="playlist-container__banner-details__owner"
+              :to="{ name: 'User', params: { userId: playlist.owner.id } }">{{ playlist.owner.display_name
+              }}</router-link>
+            <span v-if="playlist.followers.total !== 0" class="playlist-container__banner-details__followers">
+              {{
+                ` • ${Intl.NumberFormat().format(playlist.followers.total)} ${$t(
+                  'playlist.follower',
+                  playlist.followers.total
+                )}`
+              }}
+            </span>
+            <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__total-tracks">
+              {{ ` • ${playlist.tracks.total} ${$t('playlist.song', playlist.tracks.total)}` }}
+            </span>
+            <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__duration">
+              {{
+                ` •
+              ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${duration.min
+                  ? `${duration.min}
+              ${$t('playlist.duration.min')} `
+                  : ''
+                }${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
+              }}
+            </span>
+          </div>
         </Banner>
       </div>
       <div class="playlist-container__content">
@@ -294,7 +299,16 @@ export default {
 }
 
 .playlist-container {
+  &__banner-description {
+    margin-bottom: $gutter;
+
+    @include twoLineEllipsis;
+  }
+
   &__banner-details {
+
+    @include twoLineEllipsis;
+
     &__owner {
       font-weight: 700;
       color: $color-font-primary;

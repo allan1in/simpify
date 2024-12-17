@@ -3,29 +3,31 @@
     <div class="album-container">
       <div class="album-container__cover">
         <Banner :type="$t('album.type')" :title="album.name" :images="album.images">
-          <span v-for="(artist, index) in album.artists" :key="artist.id"
-            class="album-container__banner-details__artist">
-            {{ index === 0 ? '' : ' • ' }}
-            <router-link class="album-container__banner-details__artist__link"
-              :to="{ name: 'Artist', params: { artistId: artist.id } }">{{ artist.name }}</router-link>
-          </span>
+          <div class="album-container__banner-details">
+            <span v-for="(artist, index) in album.artists" :key="artist.id"
+              class="album-container__banner-details__artist">
+              {{ index === 0 ? '' : ' • ' }}
+              <router-link class="album-container__banner-details__artist__link"
+                :to="{ name: 'Artist', params: { artistId: artist.id } }">{{ artist.name }}</router-link>
+            </span>
 
-          <span class="album-container__banner-details__release-year">
-            {{ ` • ${album.release_date.split('-')[0]}` }}
-          </span>
-          <span v-if="album.total_tracks !== 0" class="album-container__banner-details__total-tracks">
-            {{ ` • ${album.total_tracks} ${$t('album.song', album.total_tracks)}` }}
-          </span>
-          <span class="album-container__banner-details__duration">
-            {{
-              ` •
-            ${duration.hr ? `${duration.hr} ${$t('album.duration.hr')} ` : ''}${duration.min
-                ? `${duration.min}
-            ${$t('album.duration.min')} `
-                : ''
-              }${duration.sec ? `${duration.sec} ${$t('album.duration.sec')} ` : ''}`
-            }}
-          </span>
+            <span class="album-container__banner-details__release-year">
+              {{ ` • ${album.release_date.split('-')[0]}` }}
+            </span>
+            <span v-if="album.total_tracks !== 0" class="album-container__banner-details__total-tracks">
+              {{ ` • ${album.total_tracks} ${$t('album.song', album.total_tracks)}` }}
+            </span>
+            <span class="album-container__banner-details__duration">
+              {{
+                ` •
+              ${duration.hr ? `${duration.hr} ${$t('album.duration.hr')} ` : ''}${duration.min
+                  ? `${duration.min}
+              ${$t('album.duration.min')} `
+                  : ''
+                }${duration.sec ? `${duration.sec} ${$t('album.duration.sec')} ` : ''}`
+              }}
+            </span>
+          </div>
         </Banner>
       </div>
       <div class="album-container__content">
@@ -222,6 +224,9 @@ export default {
 <style lang="scss" scoped>
 .album-container {
   &__banner-details {
+
+    @include twoLineEllipsis;
+
     &__artist__link {
       font-weight: 700;
       color: $color-font-primary;
