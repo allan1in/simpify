@@ -30,10 +30,8 @@
           <div class="track-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="track" />
           </div>
-          <div class="track-container__content__btn-group__add-wrapper" @click.prevent="handleClickSaveButton">
-            <IconSaved v-show="isSaved" />
-            <IconAddTo v-show="!isSaved" />
-          </div>
+          <ButtonSave :isSaved class="track-container__content__btn-group__add-wrapper"
+            @button-click="handleClickSaveButton" />
         </div>
         <div class="track-container__content__artists">
           <TitleShowAll :title="$t('track.all_artists')" />
@@ -84,6 +82,7 @@ import Message from '@/components/Message/index'
 import { mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import { useLibraryStore } from '@/stores/library'
+import ButtonSave from '@/components/ButtonSave/index.vue'
 
 export default {
   name: 'Track',
@@ -94,7 +93,8 @@ export default {
     Skeleton,
     ButtonTogglePlay,
     IconAddTo,
-    IconSaved
+    IconSaved,
+    ButtonSave
   },
   data() {
     return {

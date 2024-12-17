@@ -26,12 +26,15 @@ export const usePlayerStore = defineStore('player', {
     context: null,
     index: 0,
     isReady: false,
-    loading: true,
+    loading: false,
     isSaved: null
   }),
   actions: {
     initPlayer() {
       if (useUserStore().checkProduct('premium')) {
+        console.log('start init player')
+        this.isReady = false
+        this.loading = false
         // Import SDK
         // https://developer.spotify.com/documentation/web-playback-sdk
         const script = document.createElement('script')
@@ -52,9 +55,9 @@ export const usePlayerStore = defineStore('player', {
           // Events
 
           this.player.addListener('ready', async (res) => {
+            console.log('ready')
             await transferPlayback({ device_ids: [res.device_id] })
             this.isReady = true
-            this.loading = false
           })
 
           this.player.addListener('not_ready', (res) => {
@@ -73,7 +76,6 @@ export const usePlayerStore = defineStore('player', {
             } else {
               if (!res.paused && res.position > 0) {
                 this.isPause = false
-                this.loading = false
               } else {
                 this.isPause = true
               }
@@ -92,6 +94,7 @@ export const usePlayerStore = defineStore('player', {
             }
 
             this.isSaved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]
+            this.loading = false
           })
 
           this.startListenPos()
@@ -130,8 +133,6 @@ export const usePlayerStore = defineStore('player', {
 
           this.player.connect()
         }
-      } else if (useUserStore().checkProduct('free')) {
-        this.loading = false
       }
     },
     startListenPos() {
@@ -139,7 +140,6 @@ export const usePlayerStore = defineStore('player', {
         this.player.addListener('progress', async (res) => {
           if (res.position > 0) {
             this.isPause = false
-            this.loading = false
           }
           this.position = res.position
           this.percentage = 100 * (res.position / this.duration)

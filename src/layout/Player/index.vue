@@ -1,30 +1,29 @@
 <template>
   <footer class="player-bar">
     <div class="player-bar__left">
-      <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
-        <Image class="player-bar__left__cover-wrapper__cover" :src="current_track.album.images[0].url" alt="track" />
-      </div>
-      <div class="player-bar__left__msg-wrapper">
-        <div class="player-bar__left__msg-wrapper__title" v-if="current_track?.id">
-          <router-link :to="{ name: 'Track', params: { trackId: current_track.id } }">{{
-            current_track.name
-          }}</router-link>
+      <template v-if="current_track && !loading">
+        <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
+          <Image class="player-bar__left__cover-wrapper__cover" :src="current_track.album.images[0].url" alt="track" />
         </div>
-        <div class="player-bar__left__msg-wrapper__artist" v-if="current_track?.artists?.length">
-          <router-link v-for="(artist, index) in current_track.artists" :key="artist.uri" :to="{
-            name: 'Artist',
-            params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
-          }">
-            {{ (index === 0 ? '' : ', ') + artist.name }}
-          </router-link>
+        <div class="player-bar__left__msg-wrapper">
+          <div class="player-bar__left__msg-wrapper__title" v-if="current_track?.id">
+            <router-link :to="{ name: 'Track', params: { trackId: current_track.id } }">{{
+              current_track.name
+            }}</router-link>
+          </div>
+          <div class="player-bar__left__msg-wrapper__artist" v-if="current_track?.artists?.length">
+            <router-link v-for="(artist, index) in current_track.artists" :key="artist.uri" :to="{
+              name: 'Artist',
+              params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
+            }">
+              {{ (index === 0 ? '' : ', ') + artist.name }}
+            </router-link>
+          </div>
         </div>
-      </div>
-      <div class="player-bar__left__save-btn">
-        <button v-tooltip="toolTipLike" class="icon-wrapper" v-if="current_track" @click="toggleTrackSave">
-          <IconSaved v-if="isSaved" />
-          <IconAddTo v-else />
-        </button>
-      </div>
+        <div class="player-bar__left__save-btn">
+          <ButtonSave :isSaved class="icon-wrapper" @button-click="toggleTrackSave" />
+        </div>
+      </template>
     </div>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
@@ -68,7 +67,6 @@
 </template>
 
 <script>
-import IconAddTo from '@/components/Icons/IconAddTo.vue'
 import IconNext from '@/components/Icons/IconNext.vue'
 import IconPause from '@/components/Icons/IconPause.vue'
 import IconPlay from '@/components/Icons/IconPlay.vue'
@@ -78,7 +76,6 @@ import IconRepeatSingle from '@/components/Icons/IconRepeatSingle.vue'
 import IconShuffle from '@/components/Icons/IconShuffle.vue'
 import IconMiniPlayer from '@/components/Icons/IconMiniPlayer.vue'
 import IconFullScreen from '@/components/Icons/IconFullScreen.vue'
-import IconSaved from '@/components/Icons/IconSaved.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import VolumeBar from '@/components/VolumeBar/index.vue'
@@ -87,6 +84,7 @@ import { useAppStore } from '@/stores/app'
 import { useUserStore } from '@/stores/user'
 import Skeleton from '@/components/Skeleton/index.vue'
 import Image from '@/components/Image/index.vue'
+import ButtonSave from '@/components/ButtonSave/index.vue'
 
 export default {
   name: 'Player',
@@ -98,14 +96,13 @@ export default {
     IconShuffle,
     IconRepeat,
     IconRepeatSingle,
-    IconAddTo,
     IconMiniPlayer,
     IconFullScreen,
-    IconSaved,
     VolumeBar,
     SeekBar,
     Skeleton,
-    Image
+    Image,
+    ButtonSave
   },
   data() {
     return {
@@ -126,7 +123,8 @@ export default {
       'repeatMode',
       'volume',
       'isReady',
-      'isSaved'
+      'isSaved',
+      'loading'
     ]),
     ...mapWritableState(useAppStore, ['showFullScreenPlayer']),
     isFreeAccount() {
@@ -160,12 +158,6 @@ export default {
       } else {
         throw Error('Invalid value of repeatMode! Only accept values 0, 1 or 2.')
       }
-    },
-    toolTipLike() {
-      if (this.isSaved) {
-        return this.$t('tooltip.remove_from_liked_songs')
-      }
-      return this.$t('tooltip.add_to_liked_songs')
     }
   },
   methods: {

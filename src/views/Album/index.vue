@@ -33,10 +33,8 @@
           <div class="album-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="album" />
           </div>
-          <div class="album-container__content__btn-group__add-wrapper" @click.prevent="handleClickSaveButton">
-            <IconSaved v-show="isSaved" />
-            <IconAddTo v-show="!isSaved" />
-          </div>
+          <ButtonSave :isSaved class="album-container__content__btn-group__add-wrapper"
+            @button-click="handleClickSaveButton" />
         </div>
         <div class="album-container__content__tracks">
           <TrackListHeader :showAlbum="false" />
@@ -89,6 +87,7 @@ import IconSaved from '@/components/Icons/IconSaved.vue'
 import IconAddTo from '@/components/Icons/IconAddTo.vue'
 import Message from '@/components/Message/index'
 import { useLibraryStore } from '@/stores/library'
+import ButtonSave from '@/components/ButtonSave/index.vue'
 
 export default {
   name: 'Album',
@@ -100,7 +99,8 @@ export default {
     ButtonTogglePlay,
     Skeleton,
     IconAddTo,
-    IconSaved
+    IconSaved,
+    ButtonSave
   },
   data() {
     return {
