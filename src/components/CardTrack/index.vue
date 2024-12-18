@@ -121,7 +121,7 @@ export default {
   props: {
     item: {
       type: Object,
-      default: {}
+      default: () => { return {} }
     },
     index: {
       type: Number,

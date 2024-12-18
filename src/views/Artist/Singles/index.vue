@@ -27,8 +27,7 @@ export default {
   inject: ['bottom'],
   components: {
     AlbumCard,
-    TitleShowAll,
-    AlbumCard
+    TitleShowAll
   },
   data() {
     return {
@@ -76,7 +75,7 @@ export default {
     }
   },
   watch: {
-    bottom(newVal, oldVal) {
+    bottom(newVal) {
       if (newVal <= 0) {
         this.getSingles()
       }

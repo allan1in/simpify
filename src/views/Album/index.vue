@@ -85,8 +85,6 @@ import { timeFormatAlbum } from '@/utils/time_format'
 import Banner from '@/components/Banner/index.vue'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
-import IconSaved from '@/components/Icons/IconSaved.vue'
-import IconAddTo from '@/components/Icons/IconAddTo.vue'
 import Message from '@/components/Message/index'
 import { useLibraryStore } from '@/stores/library'
 import ButtonSave from '@/components/ButtonSave/index.vue'
@@ -100,8 +98,6 @@ export default {
     Banner,
     ButtonTogglePlay,
     Skeleton,
-    IconAddTo,
-    IconSaved,
     ButtonSave
   },
   data() {
@@ -205,14 +201,14 @@ export default {
   },
   watch: {
     $route: {
-      async handler(to, from) {
+      async handler() {
         this.reset()
         this.loading_skeleton = true
         await this.getAll()
       },
       immediate: true
     },
-    bottom(newVal, oldVal) {
+    bottom(newVal) {
       if (newVal <= 0) {
         this.getTracks()
       }

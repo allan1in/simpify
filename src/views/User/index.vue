@@ -83,7 +83,6 @@ import {
   getUserTopSongs
 } from '@/api/meta/user'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
-import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
 import { mapState } from 'pinia'
 import { useUserStore } from '@/stores/user'
 import CardArtist from '@/components/CardArtist/index.vue'
@@ -95,7 +94,6 @@ export default {
   name: 'User',
   components: {
     TitleShowAll,
-    IconDefaultUser,
     CardArtist,
     CardTrack,
     CardPlaylist,
@@ -174,7 +172,7 @@ export default {
   },
   watch: {
     $route: {
-      async handler(to, from) {
+      async handler() {
         this.id = this.$route.params.userId
         this.loading_skeleton = true
         await this.getAll()

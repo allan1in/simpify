@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import IconPrimaryLogo from '@/components/Icons/IconPrimaryLogo.vue'
 import { getCodeChanllenge } from '@/utils/code_challenge_base64'
 import { getCodeVerifier } from '@/utils/code_verifier'
 import settings from '@/settings'
@@ -16,7 +15,6 @@ import Loading from '@/components/Loading/index.vue'
 export default {
   name: 'Login',
   components: {
-    IconPrimaryLogo,
     Loading
   },
   data() {

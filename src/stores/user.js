@@ -27,17 +27,13 @@ export const useUserStore = defineStore('user', {
         code_verifier: code_verifier
       })
 
-      const { access_token, refresh_token, expires_in } = response
+      const { access_token, refresh_token } = response
 
       // Save to localStorage
       localStorage.setItem('access_token', access_token)
       localStorage.setItem('refresh_token', refresh_token)
 
       this.access_token = access_token
-
-      // const now = new Date()
-      // const expiry = new Date(now.getTime() + expires_in * 1000)
-      // localStorage.setItem('expires', expiry)
     },
     async getUserData() {
       const res = await getCurrentUserProfile()
@@ -58,7 +54,7 @@ export const useUserStore = defineStore('user', {
         refresh_token: localStorage.getItem('refresh_token')
       })
 
-      const { access_token, refresh_token, expires_in } = response
+      const { access_token, refresh_token } = response
 
       // Save to localStorage
       localStorage.setItem('access_token', access_token)
@@ -66,9 +62,6 @@ export const useUserStore = defineStore('user', {
 
       this.access_token = access_token
       console.log('Refresh token')
-      // const now = new Date()
-      // const expiry = new Date(now.getTime() + expires_in * 1000)
-      // localStorage.setItem('expires', expiry)
     },
     checkProduct(p) {
       return this.product === p

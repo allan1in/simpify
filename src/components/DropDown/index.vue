@@ -43,7 +43,7 @@ export default {
     }
   },
   watch: {
-    show(newVal, oldVal) {
+    show(newVal) {
       if (!newVal) {
         document.onmouseup = null
       }

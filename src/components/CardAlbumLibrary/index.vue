@@ -26,7 +26,8 @@
             {{ item.name }}
           </a>
           <div class="card-album-library-contanier__info__artists">
-            <span v-for="(artist, index) in item.artists" class="card-album-library-contanier__info__artists__item">
+            <span v-for="(artist, index) in item.artists" :key="artist.id"
+              class="card-album-library-contanier__info__artists__item">
               {{ index === 0 ? '' : ', ' }}
               <a @click.stop.prevent="
                 $router.push({ name: 'Artist', params: { artistId: artist.id } })
@@ -69,7 +70,7 @@ export default {
     },
     item: {
       type: Object,
-      default: {}
+      default: () => { return {} }
     }
   },
   data() {

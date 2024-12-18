@@ -1,29 +1,18 @@
 <template>
-  <div
-    ref="wrapper"
-    class="top-bar-wrapper"
-    @mouseenter="mouseOver = true"
-    @mouseleave="mouseOver = false"
-  >
+  <div ref="wrapper" class="top-bar-wrapper" @mouseenter="mouseOver = true" @mouseleave="mouseOver = false">
     <i v-show="isOverflow && !reachedLeft" class="top-bar-wrapper__shadow-left"></i>
     <i v-show="isOverflow && !reachedRight" class="top-bar-wrapper__shadow-right"></i>
     <Transition name="fade">
-      <button
-        v-show="mouseOver && isOverflow && !reachedLeft"
-        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-left"
-        @click.prevent="scrollX('pre')"
-      >
+      <button v-show="mouseOver && isOverflow && !reachedLeft"
+        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-left" @click.prevent="scrollX('pre')">
         <div class="top-bar-wrapper__arrow__icon-wrapper">
           <IconArrowLeft />
         </div>
       </button>
     </Transition>
     <Transition name="fade">
-      <button
-        v-show="mouseOver && isOverflow && !reachedRight"
-        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-right"
-        @click.prevent="scrollX('next')"
-      >
+      <button v-show="mouseOver && isOverflow && !reachedRight"
+        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-right" @click.prevent="scrollX('next')">
         <div class="top-bar-wrapper__arrow__icon-wrapper">
           <IconArrowRight />
         </div>
@@ -31,12 +20,8 @@
     </Transition>
     <div ref="topBar" class="top-bar-wrapper__top-bar">
       <template v-for="tag in tags" :key="tag">
-        <TagButton
-          class="top-bar-wrapper__top-bar__btn"
-          @handle-click="$emit('handleClickTag', tag)"
-          :text="$t(`top_bar.${tag}`)"
-          :activeTag="activeTag === tag"
-        />
+        <TagButton class="top-bar-wrapper__top-bar__btn" @handle-click="$emit('handleClickTag', tag)"
+          :text="$t(`top_bar.${tag}`)" :activeTag="activeTag === tag" />
       </template>
     </div>
   </div>
@@ -53,7 +38,7 @@ export default {
   props: {
     tags: {
       type: Array,
-      default: []
+      default: () => { return [] }
     },
     activeTag: {
       type: String,
@@ -138,12 +123,12 @@ export default {
     },
     startObserver() {
       this.resizeObserver = new ResizeObserver((entries) => {
-        for (let entry of entries) {
+        entries.forEach(() => {
           if (!this.$refs.topBar) {
             return
           }
           this.updateState()
-        }
+        })
       })
 
       this.resizeObserver.observe(this.$refs.wrapper)
@@ -158,7 +143,7 @@ export default {
   mounted() {
     this.startObserver()
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.stopObserver()
   }
 }

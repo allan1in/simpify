@@ -117,7 +117,6 @@ import {
   saveArtists
 } from '@/api/meta/artist'
 import AlbumCard from '@/components/CardAlbum/index.vue'
-import ArtistCard from '@/components/CardArtist/index.vue'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import { mapWritableState } from 'pinia'
 import { useAppStore } from '@/stores/app'
@@ -134,7 +133,6 @@ export default {
     TrackListHeader,
     TrackCard,
     AlbumCard,
-    ArtistCard,
     TitleShowAll,
     ButtonTogglePlay,
     Skeleton,
@@ -246,7 +244,7 @@ export default {
   },
   watch: {
     $route: {
-      async handler(to, from) {
+      async handler(to) {
         this.id = to.params.artistId
         this.loading_skeleton = true
         await this.getAll()

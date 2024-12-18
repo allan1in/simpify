@@ -2,11 +2,8 @@
   <ResizeBox>
     <div class="my-library__container">
       <div class="my-library__container__title">
-        <div
-          v-tooltip="toolTipTitle"
-          class="my-library__container__title__left"
-          @click.prevent="isCollasped = !isCollasped"
-        >
+        <div v-tooltip="toolTipTitle" class="my-library__container__title__left"
+          @click.prevent="isCollasped = !isCollasped">
           <div class="my-library__container__title__left__icon-wrapper">
             <IconLibrary v-if="!isCollasped" />
             <IconLibraryCollasped v-else />
@@ -17,15 +14,8 @@
           }}</span>
         </div>
         <Transition name="fade">
-          <div
-            v-tooltip="toolTipArrow"
-            v-if="!isCollasped"
-            class="my-library__container__title__right"
-          >
-            <button
-              class="my-library__container__title__right__arrow"
-              @click.prevent="isShowMore = !isShowMore"
-            >
+          <div v-tooltip="toolTipArrow" v-if="!isCollasped" class="my-library__container__title__right">
+            <button class="my-library__container__title__right__arrow" @click.prevent="isShowMore = !isShowMore">
               <div class="my-library__container__title__right__arrow__wrapper">
                 <Transition name="fade" mode="out-in">
                   <IconArrowRightLonger v-if="!isShowMore" />
@@ -40,11 +30,8 @@
         <div v-if="!isCollasped" class="my-library__container__tag-bar" :key="'tagbar'">
           <TagBar :tags="tags" :activeTag @handle-click-tag="changeActiveTag" />
         </div>
-        <div
-          class="my-library__container__content"
-          :class="{ 'my-library__container__content-collasped': isCollasped }"
-          :key="'content'"
-        >
+        <div class="my-library__container__content" :class="{ 'my-library__container__content-collasped': isCollasped }"
+          :key="'content'">
           <MyOverlayScrollbars ref="scrollbar" os-element="div" @scroll="updateBottom">
             <div class="my-library__container__content__wrapper">
               <LikedSongs :active="activeTag === 'liked_songs'" />
@@ -61,7 +48,6 @@
 
 <script>
 import IconLibrary from '@/components/Icons/IconLibrary.vue'
-import IconPlus from '@/components/Icons/IconPlus.vue'
 import ResizeBox from './ResizeBox/index.vue'
 import TagBar from './TagBar/index.vue'
 import { mapActions, mapWritableState } from 'pinia'
@@ -112,7 +98,6 @@ export default {
   },
   components: {
     IconLibrary,
-    IconPlus,
     ResizeBox,
     TagBar,
     IconLibraryCollasped,
@@ -138,7 +123,7 @@ export default {
     }
   },
   watch: {
-    activeTag(newVal, oldVal) {
+    activeTag() {
       this.scrollToTop()
     }
   }

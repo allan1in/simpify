@@ -80,7 +80,7 @@ export default {
   },
   watch: {
     bottom: {
-      handler(newVal, oldVal) {
+      handler(newVal) {
         if (newVal <= 0) {
           this.getCurrentUserArtists()
         }
@@ -88,7 +88,7 @@ export default {
       immediate: true
     },
     active: {
-      handler(newVal, oldVal) {
+      handler(newVal) {
         if (newVal) {
           this.reset()
           this.getAll()

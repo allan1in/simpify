@@ -62,7 +62,7 @@ export default {
     ...mapActions(usePlayerStore, ['startListenPos', 'stopListenPos', 'seekPosition'])
   },
   watch: {
-    percentage(newVal, oldVal) {
+    percentage() {
       this.position = (this.duration * this.percentage) / 100
     }
   }

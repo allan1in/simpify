@@ -1,24 +1,15 @@
 <template>
   <div class="volume-container">
-    <button
-      v-tooltip="toolTipMute"
-      class="icon-wrapper"
-      @click="handleMuteClick"
-      :class="{ 'not-allowed': disabled }"
-      :disabled="disabled"
-    >
+    <button v-tooltip="toolTipMute" class="icon-wrapper" @click="handleMuteClick" :class="{ 'not-allowed': disabled }"
+      :disabled="disabled">
       <IconVolumeMuted v-if="isMute || volume == 0" />
       <IconVolumeQuiet v-else-if="volume <= 33" />
       <IconVolumeNormal v-else-if="volume <= 66" />
       <IconVolumeLoud v-else />
     </button>
     <div class="volume-container__progress-wrapper">
-      <ProcessBar
-        :percentage="isMute ? 0 : volume"
-        @update-percentage="updateVolume"
-        @mouse-down="handleMouseDown"
-        :disabled="disabled"
-      />
+      <ProcessBar :percentage="isMute ? 0 : volume" @update-percentage="updateVolume" @mouse-down="handleMouseDown"
+        :disabled="disabled" />
     </div>
   </div>
 </template>
@@ -84,7 +75,7 @@ export default {
     ...mapActions(usePlayerStore, ['setVolume', 'setMute'])
   },
   watch: {
-    volume(newVal, oldVal) {
+    volume(newVal) {
       if (newVal === 0) {
         this.isMute = true
       } else {

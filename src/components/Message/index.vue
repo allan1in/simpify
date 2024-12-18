@@ -17,7 +17,7 @@ export default {
   props: {
     config: {
       type: Object,
-      default: {}
+      default: () => { return {} }
     },
     remove: {
       type: Function,

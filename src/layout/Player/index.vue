@@ -76,7 +76,6 @@ import IconPrevious from '@/components/Icons/IconPrevious.vue'
 import IconRepeat from '@/components/Icons/IconRepeat.vue'
 import IconRepeatSingle from '@/components/Icons/IconRepeatSingle.vue'
 import IconShuffle from '@/components/Icons/IconShuffle.vue'
-import IconMiniPlayer from '@/components/Icons/IconMiniPlayer.vue'
 import IconFullScreen from '@/components/Icons/IconFullScreen.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
@@ -84,7 +83,6 @@ import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
 import { useAppStore } from '@/stores/app'
 import { useUserStore } from '@/stores/user'
-import Skeleton from '@/components/Skeleton/index.vue'
 import Image from '@/components/Image/index.vue'
 import ButtonSave from '@/components/ButtonSave/index.vue'
 
@@ -98,11 +96,9 @@ export default {
     IconShuffle,
     IconRepeat,
     IconRepeatSingle,
-    IconMiniPlayer,
     IconFullScreen,
     VolumeBar,
     SeekBar,
-    Skeleton,
     Image,
     ButtonSave
   },

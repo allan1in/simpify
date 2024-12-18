@@ -43,7 +43,7 @@ export default {
     }
   },
   watch: {
-    'textContent.length'(newVal, oldVal) {
+    'textContent.length'(newVal) {
       if (this.maxLength && (newVal >= Math.floor(this.maxLength * 0.9))) {
         this.showCount = true
       } else {

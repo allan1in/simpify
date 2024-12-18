@@ -69,7 +69,7 @@ export default {
     },
     images: {
       type: Object,
-      default: {}
+      default: () => { return {} }
     },
     imgShape: {
       type: String,

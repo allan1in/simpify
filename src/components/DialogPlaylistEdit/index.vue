@@ -10,21 +10,11 @@
         </button>
       </div>
       <div v-if="anyAlertTrue" class="dialog-container__alert">
-        <AlertBox
-          v-if="alertVariables.showNameWarnAlert"
-          type="warn"
-          :value="$t('alert_box.require_name')"
-        />
-        <AlertBox
-          v-else-if="alertVariables.showImageDimensionAlert"
-          type="warn"
-          :value="$t('alert_box.image_dimension_too_small')"
-        />
-        <AlertBox
-          v-else-if="alertVariables.showImageSizeAlert"
-          type="warn"
-          :value="$t('alert_box.image_size_too_large')"
-        />
+        <AlertBox v-if="alertVariables.showNameWarnAlert" type="warn" :value="$t('alert_box.require_name')" />
+        <AlertBox v-else-if="alertVariables.showImageDimensionAlert" type="warn"
+          :value="$t('alert_box.image_dimension_too_small')" />
+        <AlertBox v-else-if="alertVariables.showImageSizeAlert" type="warn"
+          :value="$t('alert_box.image_size_too_large')" />
         <AlertBox v-else-if="alertVariables.showInfoAlert" :value="$t('alert_box.click_save')" />
       </div>
       <div class="dialog-container__form">
@@ -33,21 +23,14 @@
         </div>
         <div class="dialog-container__form__input">
           <div class="dialog-container__form__input__text">
-            <InputText
-              maxlength="100"
-              @validate="validateName"
-              v-model="name"
+            <InputText maxlength="100" @validate="validateName" v-model="name"
               :placeholder="$t('dialog_playlist_edit.text_placeholder')"
-              :label="$t('dialog_playlist_edit.text_label')"
-            />
+              :label="$t('dialog_playlist_edit.text_label')" />
           </div>
           <div class="dialog-container__form__input__text-area-wrapper">
-            <InputTextArea
-              maxlength="300"
-              v-model="description"
+            <InputTextArea maxlength="300" v-model="description"
               :placeholder="$t('dialog_playlist_edit.textarea_placeholder')"
-              :label="$t('dialog_playlist_edit.textarea_label')"
-            />
+              :label="$t('dialog_playlist_edit.textarea_label')" />
           </div>
         </div>
       </div>
@@ -75,10 +58,10 @@ import AlertBox from '@/components/AlertBox/index.vue'
 export default {
   name: 'DialogPlaylistEdit',
   props: {
-    modelValue: 'modelValue',
+    modelValue: {},
     item: {
       type: Object,
-      default: {}
+      default: () => { return {} }
     }
   },
   data() {
@@ -205,7 +188,7 @@ export default {
   },
   watch: {
     modelValue: {
-      handler(newVal, oldVal) {
+      handler() {
         this.name = this.item.name
         this.description = this.item.description
         // Deep clone, otherwise the changes in ImageEdit component will influent this.item

@@ -1,32 +1,19 @@
 <template>
   <template v-if="!loading">
-    <div
-      class="card-library-container"
-      @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })"
-    >
+    <div class="card-library-container" @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })">
       <div class="card-library-container__cover-wrapper">
-        <img
-          loading="lazy"
-          class="card-library-container__cover-wrapper__cover"
-          :src="item.images[0].url"
-          :alt="item.name"
-        />
+        <img loading="lazy" class="card-library-container__cover-wrapper__cover" :src="item.images[0].url"
+          :alt="item.name" />
       </div>
       <div class="card-library-container__info-wrapper">
-        <router-link
-          :to="{ name: 'Playlist', params: { playlistId: item.id } }"
-          class="card-library-container__info-wrapper__info"
-          >{{ item.name }}</router-link
-        >
+        <router-link :to="{ name: 'Playlist', params: { playlistId: item.id } }"
+          class="card-library-container__info-wrapper__info">{{ item.name }}</router-link>
       </div>
       <div class="card-library-container__right-wrapper">
-        <div
-          class="card-library-container__right-wrapper__btn-wrapper"
-          :class="{
-            'card-library-container__right-wrapper__btn-wrapper-playing':
-              !isPause && item.uri === context.uri
-          }"
-        >
+        <div class="card-library-container__right-wrapper__btn-wrapper" :class="{
+          'card-library-container__right-wrapper__btn-wrapper-playing':
+            !isPause && item.uri === context.uri
+        }">
           <ButtonTogglePlay :item="item" />
         </div>
       </div>
@@ -49,7 +36,7 @@ export default {
     item: {
       type: Object,
       require: false,
-      default: {}
+      default: () => { return {} }
     },
     loading: {
       type: Boolean,

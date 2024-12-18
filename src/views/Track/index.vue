@@ -79,8 +79,6 @@ import ArtistCard from '@/components/CardArtist/index.vue'
 import Banner from '@/components/Banner/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
-import IconAddTo from '@/components/Icons/IconAddTo.vue'
-import IconSaved from '@/components/Icons/IconSaved.vue'
 import Message from '@/components/Message/index'
 import { mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
@@ -95,8 +93,6 @@ export default {
     Banner,
     Skeleton,
     ButtonTogglePlay,
-    IconAddTo,
-    IconSaved,
     ButtonSave
   },
   data() {
@@ -169,21 +165,21 @@ export default {
   },
   watch: {
     $route: {
-      async handler(to, from) {
+      async handler() {
         this.reset()
         await this.getAll()
       },
       immediate: true
     },
     isSavedGlobal: {
-      handler(newVal, oldVal) {
+      handler(newVal) {
         if (this.current_track?.id === this.id) {
           this.isSaved = newVal
         }
       }
     },
     isSaved: {
-      handler(newVal, oldVal) {
+      handler(newVal) {
         if (this.current_track?.id === this.id) {
           this.isSavedGlobal = newVal
         }

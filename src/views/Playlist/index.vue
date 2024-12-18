@@ -191,7 +191,6 @@ export default {
   },
   methods: {
     async handleConfirmed() {
-      const res = await deleteUserSavedPlaylists(this.playlist.id)
       useLibraryStore().removePlaylist(this.playlist.id)
       if (this.$route.fullPath.split('/').indexOf(this.playlist.id) !== -1) {
         this.$router.push({ name: 'Home' })
@@ -273,13 +272,13 @@ export default {
   },
   watch: {
     $route: {
-      async handler(to, from) {
+      async handler() {
         this.reset()
         await this.getAll()
       },
       immediate: true
     },
-    bottom(newVal, oldVal) {
+    bottom(newVal) {
       if (newVal <= 0) {
         this.getPlaylistTracks()
       }

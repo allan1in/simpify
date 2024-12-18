@@ -68,7 +68,7 @@ export default {
     },
     item: {
       type: Object,
-      default: {}
+      default: () => { return {} }
     }
   },
   components: {

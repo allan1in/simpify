@@ -44,7 +44,7 @@ export const usePlayerStore = defineStore('player', {
 
         window.onSpotifyWebPlaybackSDKReady = () => {
           const token = useUserStore().access_token
-          this.player = new Spotify.Player({
+          this.player = new window.Spotify.Player({
             name: 'Web Player (Vue)',
             getOAuthToken: (cb) => {
               cb(token)

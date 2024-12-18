@@ -41,7 +41,7 @@ export default {
             left = maxWidth - this.gutter - this.tooltipSize.width
           }
           if (top < 0) {
-            this.placement = 'bottom'
+            top = this.rect.bottom + this.gutter
           }
 
           break
@@ -66,7 +66,7 @@ export default {
           left = this.rect.left - this.gutter - this.tooltipSize.width
 
           if (top - this.gutter - this.tooltipSize.height < 0) {
-            top = maxHeight - gutter - this.tooltipSize.height
+            top = maxHeight - this.gutter - this.tooltipSize.height
           } else if (top > maxHeight) {
             top = this.gutter
           }
@@ -81,7 +81,7 @@ export default {
           left = this.rect.right + this.gutter
 
           if (top - this.gutter - this.tooltipSize.height < 0) {
-            top = maxHeight - gutter - this.tooltipSize.height
+            top = maxHeight - this.gutter - this.tooltipSize.height
           } else if (top > maxHeight) {
             top = this.gutter
           }

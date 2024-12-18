@@ -76,7 +76,7 @@ export default {
     }
   },
   watch: {
-    bottom(newVal, oldVal) {
+    bottom(newVal) {
       if (newVal <= 0) {
         this.getArtists()
       }

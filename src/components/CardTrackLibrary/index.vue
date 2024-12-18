@@ -27,7 +27,8 @@
             {{ item.name }}
           </a>
           <div class="card-track-library-contanier__info__artists">
-            <span v-for="(artist, index) in item.artists" class="card-track-library-contanier__info__artists__item">
+            <span v-for="(artist, index) in item.artists" :key="artist.id"
+              class="card-track-library-contanier__info__artists__item">
               {{ index === 0 ? '' : ', ' }}
               <a @click.prevent.stop="
                 $router.push({ name: 'Artist', params: { artistId: artist.id } })
@@ -70,7 +71,7 @@ export default {
     },
     item: {
       type: Object,
-      default: {}
+      default: () => { return {} }
     },
     index: {
       type: Number,
@@ -78,7 +79,7 @@ export default {
     },
     uris: {
       type: Array,
-      default: []
+      default: () => { return [] }
     }
   },
   components: {

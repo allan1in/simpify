@@ -5,6 +5,10 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  test: {
+    // Don't need to import functions from vitest in test files (**.spec.js)
+    globals: true
+  },
   plugins: [vue()],
   resolve: {
     alias: {

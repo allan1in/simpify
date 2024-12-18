@@ -34,11 +34,9 @@
 </template>
 <script>
 import IconDefaultPlaylist from '../Icons/IconDefaultPlaylist.vue'
-import IconEdit from '../Icons/IconEdit.vue'
 import IconMore from '../Icons/IconMore.vue'
 import DropDown from '@/components/DropDown/index.vue'
 import DropDownItem from '@/components/DropDownItem/index.vue'
-import IconPictureDelete from '../Icons/IconPictureDelete.vue'
 import IconPictureEdit from '../Icons/IconPictureEdit.vue'
 import Image from '@/components/Image/index.vue'
 
@@ -59,12 +57,10 @@ export default {
         }
     },
     components: {
-        IconEdit,
         IconDefaultPlaylist,
         IconMore,
         DropDown,
         DropDownItem,
-        IconPictureDelete,
         IconPictureEdit,
         Image
     },

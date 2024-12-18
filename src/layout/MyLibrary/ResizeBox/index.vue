@@ -98,7 +98,7 @@ export default {
     }
   },
   watch: {
-    isCollasped(newVal, oldVal) {
+    isCollasped(newVal) {
       if (newVal) {
         this.$nextTick(() => {
           this.$refs.resizeBox.style.width = this.collapsedWidth + 'px'
@@ -109,7 +109,7 @@ export default {
         })
       }
     },
-    isShowMore(newVal, oldVal) {
+    isShowMore(newVal) {
       // Only update box width when value of isCollasped is false
       if (this.isCollasped) {
         return
@@ -138,7 +138,7 @@ export default {
   mounted() {
     this.startObserve()
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.stopObserve()
   }
 }

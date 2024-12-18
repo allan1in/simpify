@@ -92,7 +92,6 @@ import DropDown from '@/components/DropDown/index.vue'
 import DropDownItem from '@/components/DropDownItem/index.vue'
 import IconArrowRight from '@/components/Icons/IconArrowRight.vue'
 import IconArrowLeft from '@/components/Icons/IconArrowLeft.vue'
-import IconDefaultUser from '@/components/Icons/IconDefaultUser.vue'
 import IconLanguage from '@/components/Icons/IconLanguage.vue'
 import { useAppStore } from '@/stores/app'
 
@@ -108,7 +107,6 @@ export default {
     DropDownItem,
     IconArrowLeft,
     IconArrowRight,
-    IconDefaultUser,
     IconLanguage
   },
   computed: {
@@ -137,7 +135,7 @@ export default {
     },
     ...mapActions(useUserStore, ['logout']),
     ...mapActions(useAppStore, ['setLanguage']),
-    changeLocale(language, country) {
+    changeLocale(language) {
       // https://vue-i18n.intlify.dev/guide/essentials/scope.html#locale-changing
       this.$i18n.locale = language
       this.setLanguage(language)
@@ -146,7 +144,7 @@ export default {
   watch: {
     // Set data values by route
     $route: {
-      handler(to, from) {
+      handler(to) {
         let path = to.path.split('/')
 
         if (to.name === 'Home') {

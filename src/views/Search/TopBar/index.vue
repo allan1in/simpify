@@ -2,17 +2,12 @@
   <section class="top-bar-container">
     <TagButton @handle-click="getAll" :text="$t('top_bar.all')" :active-tag="!isActive" />
     <template v-for="tag in tags" :key="tag">
-      <TagButton
-        @handle-click="jumpTo(tag)"
-        :text="$t(`top_bar.${tag}`)"
-        :active-tag="isActive === tag"
-      />
+      <TagButton @handle-click="jumpTo(tag)" :text="$t(`top_bar.${tag}`)" :active-tag="isActive === tag" />
     </template>
   </section>
 </template>
 
 <script>
-import Skeleton from '@/components/Skeleton/index.vue'
 import TagButton from '@/components/TagButton/index.vue'
 
 export default {
@@ -26,7 +21,6 @@ export default {
     }
   },
   components: {
-    Skeleton,
     TagButton
   },
   methods: {
@@ -39,7 +33,7 @@ export default {
   },
   watch: {
     $route: {
-      handler(to, from) {
+      handler() {
         this.isActive = decodeURIComponent(
           this.$route.fullPath.split('/')[3] ? this.$route.fullPath.split('/')[3] : ''
         )

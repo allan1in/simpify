@@ -21,21 +21,15 @@
 
 <script>
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
-import PlaylistCard from '@/components/CardPlaylist/index.vue'
 import CardAlbum from '@/components/CardAlbum/index.vue'
-import CardHorizontal from '@/components/CardHorizontal/index.vue'
 import { getNewReleases, getNextNewReleases } from '@/api/meta/album'
-import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'Dashboard',
   inject: ['bottom'],
   components: {
-    PlaylistCard,
     TitleShowAll,
-    CardAlbum,
-    CardHorizontal,
-    Skeleton
+    CardAlbum
   },
   data() {
     return {
@@ -87,7 +81,7 @@ export default {
     }
   },
   watch: {
-    bottom(newVal, oldVal) {
+    bottom(newVal) {
       if (newVal <= 0) {
         this.getNewReleases()
       }

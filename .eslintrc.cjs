@@ -17,12 +17,13 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest'
   },
-  // check Node synax
   env: {
+    browser: true,
+    es2021: true,
     node: true
   },
-  // customize rules
-  rule: {
-    'multi-word-component-names': 'off'
+  rules: {
+    'vue/multi-word-component-names': 'off',
+    'vue/no-reserved-component-names': 'off'
   }
 }

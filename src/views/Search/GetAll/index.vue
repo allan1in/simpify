@@ -76,7 +76,6 @@ import { searchArtists } from '@/api/meta/search'
 import { searchTracks } from '@/api/meta/search'
 import { debounce } from '@/utils/debounce'
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
-import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'GetAll',
@@ -86,8 +85,7 @@ export default {
     CardAlbum,
     CardPlaylist,
     TrackListHeader,
-    TitleShowAll,
-    Skeleton
+    TitleShowAll
   },
   data() {
     return {
@@ -179,7 +177,7 @@ export default {
     await this.debouncedGetAll()
   },
   watch: {
-    $route(to, from) {
+    $route() {
       this.loading_skeleton = true
       this.debouncedGetAll()
     }
