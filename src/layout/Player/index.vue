@@ -22,7 +22,8 @@
           </div>
         </div>
         <div class="player-bar__left__save-btn">
-          <ButtonSave :isSaved class="icon-wrapper" @button-click="handleToggleTrackSave" />
+          <ButtonSave :isSaved class="icon-wrapper" @button-click="handleToggleTrackSave"
+            :loading="loading_toggle_save" />
         </div>
       </template>
     </div>
@@ -185,9 +186,6 @@ export default {
       'toggleTrackSave'
     ]),
     async handleToggleTrackSave() {
-      if (this.loading_toggle_save) {
-        return
-      }
       this.loading_toggle_save = true
       await this.toggleTrackSave()
       this.loading_toggle_save = false

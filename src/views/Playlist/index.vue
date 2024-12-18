@@ -40,10 +40,7 @@
             <ButtonTogglePlay :item="playlist" />
           </div>
           <div v-if="!isOwner" class="playlist-container__content__btn-group__follow-wrapper">
-            <button class="playlist-container__content__btn-group__follow-wrapper__btn"
-              @click="handleClickFollowButton">
-              {{ isFollowed ? $t('playlist.following') : $t('playlist.follow') }}
-            </button>
+            <ButtonFollow :loading="loading_toggle_follow" :isFollowed @button-click="handleClickFollowButton" />
           </div>
           <div v-if="isOwner" class="playlist-container__content__btn-group__more">
             <DropDown position="right">
@@ -143,6 +140,7 @@ import DialogPlaylistEdit from '@/components/DialogPlaylistEdit/index.vue'
 import IconRemove from '@/components/Icons/IconRemove.vue'
 import ConfirmBox from '@/components/ConfirmBox/index.vue'
 import { useLibraryStore } from '@/stores/library'
+import ButtonFollow from '@/components/ButtonFollow/index.vue'
 
 export default {
   name: 'Playlist',
@@ -159,7 +157,8 @@ export default {
     IconEdit,
     DialogPlaylistEdit,
     IconRemove,
-    ConfirmBox
+    ConfirmBox,
+    ButtonFollow
   },
   data() {
     return {
@@ -253,9 +252,6 @@ export default {
       this.isFollowed = res[0]
     },
     async handleClickFollowButton() {
-      if (this.loading_toggle_follow) {
-        return
-      }
       this.loading_toggle_follow = true
       if (this.isFollowed) {
         await deleteUserSavedPlaylists(this.playlist.id)
@@ -331,30 +327,6 @@ export default {
       &__play-wrapper {
         height: 5.4rem;
         aspect-ratio: 1 / 1;
-      }
-
-      &__follow-wrapper {
-        &__btn {
-          border: 1px solid $color-bg-7;
-          padding: 0 $gutter-2x;
-          height: 3.2rem;
-          font-size: $font-size-text-secondary;
-          font-weight: 700;
-          border-radius: 1.6rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          @include clickAnimation;
-
-          &:hover {
-            border-color: $color-font-primary;
-          }
-
-          &:active {
-            border-color: $color-bg-7;
-          }
-        }
       }
 
       &__more {

@@ -1,5 +1,5 @@
 <template>
-    <button v-tooltip="toolTipLike" @click.prevent="$emit('buttonClick')">
+    <button v-tooltip="toolTipLike" @click.prevent="handleClick">
         <IconSaved v-if="isSaved" />
         <IconAddTo v-else />
     </button>
@@ -13,6 +13,10 @@ export default {
         isSaved: {
             type: Boolean,
             required: true
+        },
+        loading: {
+            type: Boolean,
+            default: false
         }
     },
     components: {
@@ -25,6 +29,14 @@ export default {
                 return this.$t('tooltip.remove_from_liked_songs')
             }
             return this.$t('tooltip.add_to_liked_songs')
+        }
+    },
+    methods: {
+        handleClick() {
+            if (this.loading) {
+                return
+            }
+            this.$emit('buttonClick')
         }
     }
 }

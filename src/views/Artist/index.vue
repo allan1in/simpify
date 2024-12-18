@@ -20,9 +20,7 @@
             <ButtonTogglePlay :item="artist" />
           </div>
           <div class="artist-container__content__btn-group__follow-wrapper">
-            <button class="artist-container__content__btn-group__follow-wrapper__btn" @click="handleClickFollowButton">
-              {{ isFollowed ? $t('artist.following') : $t('artist.follow') }}
-            </button>
+            <ButtonFollow @button-click="handleClickFollowButton" :loading="loading_toggle_follow" :isFollowed />
           </div>
         </div>
         <div v-if="tracks.length !== 0" class="artist-container__content__popular">
@@ -128,6 +126,7 @@ import Skeleton from '@/components/Skeleton/index.vue'
 import Message from '@/components/Message'
 import { useLibraryStore } from '@/stores/library'
 import Image from '@/components/Image/index.vue'
+import ButtonFollow from '@/components/ButtonFollow/index.vue'
 
 export default {
   name: 'Artist',
@@ -139,7 +138,8 @@ export default {
     TitleShowAll,
     ButtonTogglePlay,
     Skeleton,
-    Image
+    Image,
+    ButtonFollow
   },
   data() {
     return {
@@ -229,9 +229,6 @@ export default {
       this.isFollowed = res[0]
     },
     async handleClickFollowButton() {
-      if (this.loading_toggle_follow) {
-        return
-      }
       this.loading_toggle_follow = true
       if (this.isFollowed) {
         await deleteUserSavedArtists({ ids: this.artist.id })
@@ -358,30 +355,6 @@ export default {
       &__play-wrapper {
         height: 5.6rem;
         width: 5.6rem;
-      }
-
-      &__follow-wrapper {
-        &__btn {
-          border: 1px solid $color-bg-7;
-          padding: 0 $gutter-2x;
-          height: 3.2rem;
-          font-size: $font-size-text-secondary;
-          font-weight: 700;
-          border-radius: 1.6rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          @include clickAnimation;
-
-          &:hover {
-            border-color: $color-font-primary;
-          }
-
-          &:active {
-            border-color: $color-bg-7;
-          }
-        }
       }
     }
 

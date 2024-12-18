@@ -36,7 +36,7 @@
             <ButtonTogglePlay :item="album" />
           </div>
           <ButtonSave :isSaved class="album-container__content__btn-group__add-wrapper"
-            @button-click="handleClickSaveButton" />
+            @button-click="handleClickSaveButton" :loading="loading_toggle_save" />
         </div>
         <div class="album-container__content__tracks">
           <TrackListHeader :showAlbum="false" />
@@ -188,9 +188,6 @@ export default {
       this.isSaved = res[0]
     },
     async handleClickSaveButton() {
-      if (this.loading_toggle_save) {
-        return
-      }
       this.loading_toggle_save = true
       if (this.isSaved) {
         await deleteUserSavedAlbums({ ids: this.id })

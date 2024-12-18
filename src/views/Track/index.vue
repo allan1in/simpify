@@ -34,7 +34,7 @@
             <ButtonTogglePlay :item="track" />
           </div>
           <ButtonSave :isSaved class="track-container__content__btn-group__add-wrapper"
-            @button-click="handleClickSaveButton" />
+            @button-click="handleClickSaveButton" :loading="loading_toggle_save" />
         </div>
         <div class="track-container__content__artists">
           <TitleShowAll :title="$t('track.all_artists')" />
@@ -151,9 +151,6 @@ export default {
       this.artists = res
     },
     async handleClickSaveButton() {
-      if (this.loading_toggle_save) {
-        return
-      }
       this.loading_toggle_save = true
       if (this.isSaved) {
         await deleteUserSavedTracks({ ids: this.id })
