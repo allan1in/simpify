@@ -1,6 +1,12 @@
 <template>
   <div class="dashboard-container" www90>
     <template v-if="!loading_skeleton">
+      <div class="dashboard-container__recent-play" v-if="tracks.length !== 0">
+        <TitleShowAll :title="$t('home.recent-play')" />
+        <div class="dashboard-container__recent-play__content">
+          <CardTrackHorizontal v-for="item in tracks" :key="item.id" :item="item" />
+        </div>
+      </div>
       <div class="dashboard-container__new-releases" v-if="albums.length !== 0">
         <TitleShowAll :title="$t('home.new_releases')" />
         <div class="dashboard-container__new-releases__content">
@@ -9,6 +15,12 @@
       </div>
     </template>
     <template v-else>
+      <div class="dashboard-container__recent-play">
+        <TitleShowAll :loading="loading_skeleton" />
+        <div class="dashboard-container__recent-play__content">
+          <CardTrackHorizontal v-for="i in tracks_limit" :key="i" :loading="loading_skeleton" />
+        </div>
+      </div>
       <div class="dashboard-container__new-releases">
         <TitleShowAll :loading="loading_skeleton" />
         <div class="dashboard-container__new-releases__content">
@@ -23,13 +35,16 @@
 import TitleShowAll from '@/components/TitleShowAll/index.vue'
 import CardAlbum from '@/components/CardAlbum/index.vue'
 import { getNewReleases, getNextNewReleases } from '@/api/meta/album'
+import CardTrackHorizontal from '@/components/CardTrackHorizontal/index.vue'
+import { getRecentlyPlayedTracks } from '@/api/meta/track'
 
 export default {
   name: 'Dashboard',
   inject: ['bottom'],
   components: {
     TitleShowAll,
-    CardAlbum
+    CardAlbum,
+    CardTrackHorizontal
   },
   data() {
     return {
@@ -41,12 +56,15 @@ export default {
       albums_offset: 0,
       albums_next: '',
       loading_skeleton: true,
-      loading_more: false
+      loading_more: false,
+      tracks: [],
+      days: 7,
+      tracks_limit: 8
     }
   },
   methods: {
     async getAll() {
-      await this.getNewReleases()
+      await Promise.all([this.getNewReleases(), this.getRecentlyPlayedTracks()])
 
       this.loading_skeleton = false
     },
@@ -78,6 +96,14 @@ export default {
 
         this.loading_more = false
       }
+    },
+    async getRecentlyPlayedTracks() {
+      const params = {
+        limit: this.tracks_limit,
+        before: Date.now()
+      }
+      const res = await getRecentlyPlayedTracks(params)
+      this.tracks = res.items
     }
   },
   watch: {
@@ -97,7 +123,7 @@ export default {
 .dashboard-container {
   padding: $gutter-1-5x;
 
-  &__featured-playlists {
+  &__recent-play {
     &__content {
       padding: $gutter-1-5x;
       gap: $gutter-1-5x;

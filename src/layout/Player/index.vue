@@ -163,7 +163,7 @@ export default {
       return useUserStore().checkProduct('free')
     },
     notAvaliable() {
-      return !this.isReady
+      return !this.isReady || this.isFreeAccount
     },
     draggable() {
       return !!this.current_track

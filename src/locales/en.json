@@ -1,7 +1,8 @@
 {
   "home": {
     "featured_playlists": "Featured Playlists",
-    "new_releases": "New Releases"
+    "new_releases": "New Releases",
+    "recent-play": "Recently Played"
   },
   "title_show_all": {
     "show_all": "show all"

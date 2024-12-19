@@ -1,7 +1,8 @@
 {
   "home": {
     "featured_playlists": "精选列表",
-    "new_releases": "最新发布"
+    "new_releases": "最新发布",
+    "recent-play": "最近播放"
   },
   "title_show_all": {
     "show_all": "显示全部"

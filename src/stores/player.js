@@ -133,6 +133,8 @@ export const usePlayerStore = defineStore('player', {
 
           this.player.connect()
         }
+      } else if (useUserStore().checkProduct('free')) {
+        this.isReady = true
       }
     },
     startListenPos() {

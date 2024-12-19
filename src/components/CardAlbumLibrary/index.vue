@@ -165,10 +165,11 @@ export default {
 
 .card-album-library-contanier {
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
+  gap: $gutter;
   height: 5.6rem;
-  padding-left: $gutter;
+  padding: 0 $gutter;
   border-radius: $border-radius-small;
   cursor: pointer;
 
@@ -199,7 +200,6 @@ export default {
     display: block;
     height: 70%;
     aspect-ratio: 1 / 1;
-    margin-right: $gutter;
     position: relative;
     overflow: hidden;
     border-radius: $border-radius-small;

@@ -2,21 +2,21 @@
   <template v-if="!loading">
     <div
       class="card-library-container"
-      @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })"
+      @click="$router.push({ name: 'Track', params: { trackId: item.track.id } })"
     >
       <div class="card-library-container__cover-wrapper">
         <img
           loading="lazy"
           class="card-library-container__cover-wrapper__cover"
-          :src="item.images[0].url"
-          :alt="item.name"
+          :src="item.track.album.images[0].url"
+          :alt="item.track.name"
         />
       </div>
       <div class="card-library-container__info-wrapper">
         <router-link
-          :to="{ name: 'Playlist', params: { playlistId: item.id } }"
+          :to="{ name: 'Track', params: { trackId: item.track.id } }"
           class="card-library-container__info-wrapper__info"
-          >{{ item.name }}</router-link
+          >{{ item.track.name }}</router-link
         >
       </div>
       <div class="card-library-container__right-wrapper">
@@ -24,10 +24,10 @@
           class="card-library-container__right-wrapper__btn-wrapper"
           :class="{
             'card-library-container__right-wrapper__btn-wrapper-playing':
-              !isPause && item.uri === context.uri
+              !isPause && item.track.uri === current_track.uri
           }"
         >
-          <ButtonTogglePlay :item="item" />
+          <ButtonTogglePlay :item="item.track" />
         </div>
       </div>
     </div>
@@ -44,7 +44,7 @@ import { mapState } from 'pinia'
 import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
-  name: 'CardLibrary',
+  name: 'CardTrackLibrary',
   props: {
     item: {
       type: Object,
@@ -64,7 +64,7 @@ export default {
     Skeleton
   },
   computed: {
-    ...mapState(usePlayerStore, ['isPause', 'context'])
+    ...mapState(usePlayerStore, ['isPause', 'current_track'])
   }
 }
 </script>
@@ -78,6 +78,7 @@ export default {
 .card-library-container {
   display: flex;
   justify-content: start;
+  gap: $gutter-1-5x;
   width: 100%;
   height: 5.6rem;
   border-radius: $border-radius-small;
@@ -104,11 +105,12 @@ export default {
   }
 
   &:hover &__right-wrapper__btn-wrapper {
-    transform: translateX(-1.6rem);
+    transform: translateX(0);
     opacity: 1;
   }
 
   &__cover-wrapper {
+    flex-shrink: 0;
     height: 100%;
     aspect-ratio: 1 / 1;
     position: relative;
@@ -125,7 +127,6 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
-    padding: 0 2rem;
     font-size: $font-size-text-secondary;
     font-weight: 700;
 
@@ -135,6 +136,8 @@ export default {
   }
 
   &__right-wrapper {
+    flex-basis: 5.6rem;
+    flex-shrink: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -149,7 +152,7 @@ export default {
       @include transition;
 
       &-playing {
-        transform: translateX(-1.6rem);
+        transform: translateX(0);
         opacity: 1;
       }
     }

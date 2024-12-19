@@ -21,5 +21,6 @@ export default {
    user-follow-modify
    playlist-modify-public 
    playlist-modify-private
-   ugc-image-upload`
+   ugc-image-upload
+   user-read-recently-played`
 }

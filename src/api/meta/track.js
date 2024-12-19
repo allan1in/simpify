@@ -30,3 +30,11 @@ export function deleteUserSavedTracks(params) {
     params
   })
 }
+
+export function getRecentlyPlayedTracks(params) {
+  return request({
+    url: `/me/player/recently-played`,
+    method: 'get',
+    params
+  })
+}
