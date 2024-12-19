@@ -18,8 +18,8 @@
 <script>
 import { getCurrentUserAlbums, getNextCurrentUserAlbums } from '@/api/meta/user'
 import CardAlbumLibrary from '@/components/CardAlbumLibrary/index.vue'
-import { useLibraryStore } from '@/stores/library';
-import { mapState } from 'pinia';
+import { useLibraryStore } from '@/stores/library'
+import { mapState } from 'pinia'
 
 export default {
   name: 'Albums',
@@ -73,7 +73,7 @@ export default {
           res = await getNextCurrentUserAlbums(path.slice(path.indexOf('?') + 1))
         }
 
-        let newVals = res.items.filter(item => item !== null)
+        let newVals = res.items.filter((item) => item !== null)
         useLibraryStore().addAlbums(newVals)
         this.albums_next = res.next
 

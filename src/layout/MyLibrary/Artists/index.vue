@@ -18,8 +18,8 @@
 <script>
 import { getCurrentUserArtists, getNextCurrentUserArtists } from '@/api/meta/user'
 import CardArtistLibrary from '@/components/CardArtistLibrary/index.vue'
-import { useLibraryStore } from '@/stores/library';
-import { mapState } from 'pinia';
+import { useLibraryStore } from '@/stores/library'
+import { mapState } from 'pinia'
 
 export default {
   name: 'Artists',
@@ -70,7 +70,7 @@ export default {
           res = await getNextCurrentUserArtists(path.slice(path.indexOf('?') + 1))
         }
 
-        let newVals = res.artists.items.filter(item => item !== null)
+        let newVals = res.artists.items.filter((item) => item !== null)
         useLibraryStore().addArtists(newVals)
         this.artists_next = res.artists.next
 

@@ -4,8 +4,9 @@
       <router-link class="title-show-all__title" :to="{ name: routerName }">{{
         title
       }}</router-link>
-      <router-link class="title-show-all__show-all" :to="{ name: routerName }">{{ $t('title_show_all.show_all')
-        }}</router-link>
+      <router-link class="title-show-all__show-all" :to="{ name: routerName }">{{
+        $t('title_show_all.show_all')
+      }}</router-link>
     </div>
     <h1 v-else class="title-simple">
       {{ title }}

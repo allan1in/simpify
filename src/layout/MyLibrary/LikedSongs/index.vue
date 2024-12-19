@@ -3,7 +3,13 @@
     <template v-if="!loading_skeleton">
       <div class="my-library__container__content__liked-songs">
         <TransitionGroup name="list">
-          <CardTrackLibrary v-for="(item, index) in likedSongs" :key="item.track.id" :item="item.track" :index :uris />
+          <CardTrackLibrary
+            v-for="(item, index) in likedSongs"
+            :key="item.track.id"
+            :item="item.track"
+            :index
+            :uris
+          />
         </TransitionGroup>
       </div>
     </template>

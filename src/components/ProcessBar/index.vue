@@ -1,12 +1,24 @@
 <template>
-  <div ref="process" class="process" :class="{ 'disabled__process': disabled, 'no-hover-dot': !draggable }"
-    @mousedown="handleMouseDown">
-    <div class="process__line" :class="{ 'disabled__process__line': disabled }">
-      <div ref="position" class="process__line__position" :style="{ left: `calc(${percentage}% - 100%)` }"
-        :class="{ 'disabled__process__line__position': disabled }"></div>
+  <div
+    ref="process"
+    class="process"
+    :class="{ disabled__process: disabled, 'no-hover-dot': !draggable }"
+    @mousedown="handleMouseDown"
+  >
+    <div class="process__line" :class="{ disabled__process__line: disabled }">
+      <div
+        ref="position"
+        class="process__line__position"
+        :style="{ left: `calc(${percentage}% - 100%)` }"
+        :class="{ disabled__process__line__position: disabled }"
+      ></div>
     </div>
-    <div ref="dot" class="process__dot" :class="{ 'disabled__process__dot': disabled }"
-      :style="{ left: `${percentage}%` }"></div>
+    <div
+      ref="dot"
+      class="process__dot"
+      :class="{ disabled__process__dot: disabled }"
+      :style="{ left: `${percentage}%` }"
+    ></div>
   </div>
 </template>
 <script>

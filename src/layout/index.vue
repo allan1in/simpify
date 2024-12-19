@@ -6,7 +6,10 @@
       <div class="app-container__mid-wrapper__main-view">
         <MyOverlayScrollbars os-element="main" @scroll="updateBottom">
           <div class="app-container__mid-wrapper__main-view__container">
-            <div class="app-container__mid-wrapper__main-view__container__content" v-show="!loading">
+            <div
+              class="app-container__mid-wrapper__main-view__container__content"
+              v-show="!loading"
+            >
               <RouterView />
             </div>
             <Loading :loading="loading" />

@@ -4,27 +4,37 @@
       <div class="album-container__cover">
         <Banner :type="$t('album.type')" :title="album.name" :images="album.images">
           <div class="album-container__banner-details">
-            <span v-for="(artist, index) in album.artists" :key="artist.id"
-              class="album-container__banner-details__artist">
+            <span
+              v-for="(artist, index) in album.artists"
+              :key="artist.id"
+              class="album-container__banner-details__artist"
+            >
               {{ index === 0 ? '' : ' • ' }}
-              <router-link class="album-container__banner-details__artist__link"
-                :to="{ name: 'Artist', params: { artistId: artist.id } }">{{ artist.name }}</router-link>
+              <router-link
+                class="album-container__banner-details__artist__link"
+                :to="{ name: 'Artist', params: { artistId: artist.id } }"
+                >{{ artist.name }}</router-link
+              >
             </span>
 
             <span class="album-container__banner-details__release-year">
               {{ ` • ${album.release_date.split('-')[0]}` }}
             </span>
-            <span v-if="album.total_tracks !== 0" class="album-container__banner-details__total-tracks">
+            <span
+              v-if="album.total_tracks !== 0"
+              class="album-container__banner-details__total-tracks"
+            >
               {{ ` • ${album.total_tracks} ${$t('album.song', album.total_tracks)}` }}
             </span>
             <span class="album-container__banner-details__duration">
               {{
                 ` •
-              ${duration.hr ? `${duration.hr} ${$t('album.duration.hr')} ` : ''}${duration.min
+              ${duration.hr ? `${duration.hr} ${$t('album.duration.hr')} ` : ''}${
+                duration.min
                   ? `${duration.min}
               ${$t('album.duration.min')} `
                   : ''
-                }${duration.sec ? `${duration.sec} ${$t('album.duration.sec')} ` : ''}`
+              }${duration.sec ? `${duration.sec} ${$t('album.duration.sec')} ` : ''}`
               }}
             </span>
           </div>
@@ -35,13 +45,24 @@
           <div class="album-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="album" />
           </div>
-          <ButtonSave :isSaved class="album-container__content__btn-group__add-wrapper"
-            @button-click="handleClickSaveButton" :loading="loading_toggle_save" />
+          <ButtonSave
+            :isSaved
+            class="album-container__content__btn-group__add-wrapper"
+            @button-click="handleClickSaveButton"
+            :loading="loading_toggle_save"
+          />
         </div>
         <div class="album-container__content__tracks">
           <TrackListHeader :showAlbum="false" />
-          <TrackCard v-for="(item, index) in tracks" :key="item.id" :item="item" :index="index" :show-album="false"
-            :show-image="false" :context_uri="this.album.uri" />
+          <TrackCard
+            v-for="(item, index) in tracks"
+            :key="item.id"
+            :item="item"
+            :index="index"
+            :show-album="false"
+            :show-image="false"
+            :context_uri="this.album.uri"
+          />
         </div>
       </div>
     </div>
@@ -62,8 +83,13 @@
         </div>
         <div class="album-container__content__tracks">
           <TrackListHeader :showAlbum="false" :loading="loading_skeleton" />
-          <TrackCard v-for="i in tracks_limit" :key="i" :show-album="false" :show-image="false"
-            :loading="loading_skeleton" />
+          <TrackCard
+            v-for="i in tracks_limit"
+            :key="i"
+            :show-album="false"
+            :show-image="false"
+            :loading="loading_skeleton"
+          />
         </div>
       </div>
     </div>
@@ -132,15 +158,10 @@ export default {
       this.tracks_offset = 0
       this.tracks_next = ''
       this.loading_more = false
-      this.loading_skeleton = true,
-        this.loading_toggle_save = false
+      ;(this.loading_skeleton = true), (this.loading_toggle_save = false)
     },
     async getAll() {
-      await Promise.all([
-        this.getAlbum(),
-        this.getTracks(),
-        this.checkUserSavedAlbum()
-      ])
+      await Promise.all([this.getAlbum(), this.getTracks(), this.checkUserSavedAlbum()])
 
       this.loading_skeleton = false
     },
@@ -220,7 +241,6 @@ export default {
 <style lang="scss" scoped>
 .album-container {
   &__banner-details {
-
     @include twoLineEllipsis;
 
     &__artist__link {

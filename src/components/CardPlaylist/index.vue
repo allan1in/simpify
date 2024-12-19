@@ -1,24 +1,37 @@
 <template>
   <template v-if="!loading">
-    <div class="playlist-card" @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })">
+    <div
+      class="playlist-card"
+      @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })"
+    >
       <div class="playlist-card__img-box">
         <div class="playlist-card__img-box__img-wrapper">
-          <Image v-if="item.images?.length" :src="item.images[0].url" alt="Playlist Cover"
-            class="playlist-card__img-box__img-wrapper__img" />
+          <Image
+            v-if="item.images?.length"
+            :src="item.images[0].url"
+            alt="Playlist Cover"
+            class="playlist-card__img-box__img-wrapper__img"
+          />
           <div v-else class="playlist-card__img-box__img-wrapper__icon">
             <IconDefaultPlaylist />
           </div>
         </div>
-        <div class="playlist-card__img-box__toggle-play" :class="{
-          'playlist-card__img-box__toggle-play-playing': !isPause && item.uri === context?.uri
-        }">
+        <div
+          class="playlist-card__img-box__toggle-play"
+          :class="{
+            'playlist-card__img-box__toggle-play-playing': !isPause && item.uri === context?.uri
+          }"
+        >
           <ButtonTogglePlay :item />
         </div>
       </div>
 
       <div class="playlist-card__name-wrapper">
-        <router-link :to="{ name: 'Playlist', params: { playlistId: item.id } }"
-          class="playlist-card__name-wrapper__name">{{ item.name }}</router-link>
+        <router-link
+          :to="{ name: 'Playlist', params: { playlistId: item.id } }"
+          class="playlist-card__name-wrapper__name"
+          >{{ item.name }}</router-link
+        >
       </div>
       <div class="playlist-card__info-wrapper">
         <div class="playlist-card__info-wrapper__info">
@@ -60,7 +73,9 @@ export default {
     item: {
       type: Object,
       require: false,
-      default: () => { return {} }
+      default: () => {
+        return {}
+      }
     },
     loading: {
       type: Boolean,

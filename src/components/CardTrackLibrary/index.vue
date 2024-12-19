@@ -1,12 +1,17 @@
 <template>
   <template v-if="!loading">
-    <div class="card-track-library-contanier"
+    <div
+      class="card-track-library-contanier"
       :class="{ 'card-track-library-contanier-collasped-current': isCurrentPage }"
-      @click="$router.push({ name: 'Track', params: { trackId: item.id } })">
+      @click="$router.push({ name: 'Track', params: { trackId: item.id } })"
+    >
       <div class="card-track-library-contanier__cover">
         <div class="card-track-library-contanier__cover__icon">
-          <button v-tooltip="toolTipPlay" class="card-track-library-contanier__cover__icon__wrapper"
-            @click.prevent.stop="handleClick">
+          <button
+            v-tooltip="toolTipPlay"
+            class="card-track-library-contanier__cover__icon__wrapper"
+            @click.prevent.stop="handleClick"
+          >
             <IconPause v-if="isPlaying" />
             <IconPlay v-else />
           </button>
@@ -15,24 +20,37 @@
         <div v-if="isPlaying" class="card-track-library-contanier__cover__playing">
           <i class="card-track-library-contanier__cover__playing__icon"></i>
         </div>
-        <Image class="card-track-library-contanier__cover__img" :src="item.album.images[0]?.url" :alt="item.name"
-          no-scale />
+        <Image
+          class="card-track-library-contanier__cover__img"
+          :src="item.album.images[0]?.url"
+          :alt="item.name"
+          no-scale
+        />
       </div>
       <Transition name="fade">
         <div v-if="!isCollasped" class="card-track-library-contanier__info">
-          <a @click.prevent.stop="$router.push({ name: 'Track', params: { trackId: item.id } })"
-            class="card-track-library-contanier__info__title" :class="{
+          <a
+            @click.prevent.stop="$router.push({ name: 'Track', params: { trackId: item.id } })"
+            class="card-track-library-contanier__info__title"
+            :class="{
               'card-track-library-contanier__info__title-playing': isCurrentItem
-            }">
+            }"
+          >
             {{ item.name }}
           </a>
           <div class="card-track-library-contanier__info__artists">
-            <span v-for="(artist, index) in item.artists" :key="artist.id"
-              class="card-track-library-contanier__info__artists__item">
+            <span
+              v-for="(artist, index) in item.artists"
+              :key="artist.id"
+              class="card-track-library-contanier__info__artists__item"
+            >
               {{ index === 0 ? '' : ', ' }}
-              <a @click.prevent.stop="
-                $router.push({ name: 'Artist', params: { artistId: artist.id } })
-                " class="card-track-library-contanier__info__artists__item__link">
+              <a
+                @click.prevent.stop="
+                  $router.push({ name: 'Artist', params: { artistId: artist.id } })
+                "
+                class="card-track-library-contanier__info__artists__item__link"
+              >
                 {{ artist.name }}
               </a>
             </span>
@@ -71,7 +89,9 @@ export default {
     },
     item: {
       type: Object,
-      default: () => { return {} }
+      default: () => {
+        return {}
+      }
     },
     index: {
       type: Number,
@@ -79,7 +99,9 @@ export default {
     },
     uris: {
       type: Array,
-      default: () => { return [] }
+      default: () => {
+        return []
+      }
     }
   },
   components: {

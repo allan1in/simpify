@@ -1,5 +1,11 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" display="block" height="1.2rem" width="5.6rem" viewBox="0 0 1 100">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    display="block"
+    height="1.2rem"
+    width="5.6rem"
+    viewBox="0 0 1 100"
+  >
     <circle class="dot dot1" cx="-140" cy="50" r="32"></circle>
     <circle class="dot dot2" cx="0" cy="50" r="32"></circle>
     <circle class="dot dot3" cx="140" cy="50" r="32"></circle>

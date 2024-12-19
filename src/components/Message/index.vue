@@ -17,11 +17,13 @@ export default {
   props: {
     config: {
       type: Object,
-      default: () => { return {} }
+      default: () => {
+        return {}
+      }
     },
     remove: {
       type: Function,
-      default: () => { }
+      default: () => {}
     }
   },
   methods: {

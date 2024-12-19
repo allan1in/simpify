@@ -1,12 +1,17 @@
 <template>
   <template v-if="!loading">
-    <div class="card-playlist-library-contanier"
+    <div
+      class="card-playlist-library-contanier"
       :class="{ 'card-playlist-library-contanier-collasped-current': isCurrentPage }"
-      @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })">
+      @click="$router.push({ name: 'Playlist', params: { playlistId: item.id } })"
+    >
       <div class="card-playlist-library-contanier__cover">
         <div class="card-playlist-library-contanier__cover__icon">
-          <button v-tooltip="toolTipPlay" class="card-playlist-library-contanier__cover__icon__wrapper"
-            @click.prevent.stop="handleClick">
+          <button
+            v-tooltip="toolTipPlay"
+            class="card-playlist-library-contanier__cover__icon__wrapper"
+            @click.prevent.stop="handleClick"
+          >
             <IconPause v-if="isPlaying" />
             <IconPlay v-else />
           </button>
@@ -14,23 +19,36 @@
         <div v-if="isPlaying" class="card-playlist-library-contanier__cover__playing">
           <i class="card-playlist-library-contanier__cover__playing__icon"></i>
         </div>
-        <Image v-if="hasImage" class="card-playlist-library-contanier__cover__img" :src="item.images[0]?.url"
-          :alt="item.name" no-scale />
+        <Image
+          v-if="hasImage"
+          class="card-playlist-library-contanier__cover__img"
+          :src="item.images[0]?.url"
+          :alt="item.name"
+          no-scale
+        />
         <div v-if="!hasImage" class="card-playlist-library-contanier__cover__default-wrapper">
-          <IconDefaultPlaylist class="card-playlist-library-contanier__cover__default-wrapper__img" />
+          <IconDefaultPlaylist
+            class="card-playlist-library-contanier__cover__default-wrapper__img"
+          />
         </div>
       </div>
       <Transition name="fade">
         <div v-if="!isCollasped" class="card-playlist-library-contanier__info">
-          <a @click.prevent.stop="
-            $router.push({ name: 'Playlist', params: { playlistId: item.id } })
-            " class="card-playlist-library-contanier__info__title" :class="{
+          <a
+            @click.prevent.stop="
+              $router.push({ name: 'Playlist', params: { playlistId: item.id } })
+            "
+            class="card-playlist-library-contanier__info__title"
+            :class="{
               'card-playlist-library-contanier__info__title-playing': isCurrentItem
-            }">
+            }"
+          >
             {{ item.name }}
           </a>
-          <a @click.prevent.stop="$router.push({ name: 'User', params: { userId: item.owner.id } })"
-            class="card-playlist-library-contanier__info__owner">
+          <a
+            @click.prevent.stop="$router.push({ name: 'User', params: { userId: item.owner.id } })"
+            class="card-playlist-library-contanier__info__owner"
+          >
             {{ item.owner.display_name }}
           </a>
         </div>
@@ -68,7 +86,9 @@ export default {
     },
     item: {
       type: Object,
-      default: () => { return {} }
+      default: () => {
+        return {}
+      }
     }
   },
   components: {

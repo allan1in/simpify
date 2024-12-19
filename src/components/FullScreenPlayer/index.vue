@@ -1,15 +1,24 @@
 <template>
   <Transition name="slide-from-bottom">
-    <main v-show="showFullScreenPlayer" @mousemove="isCursorMove = true" class="full-screen-container">
-      <div class="full-screen-container__background" :class="{ 'full-screen-container__background-pause': isPause }">
-      </div>
+    <main
+      v-show="showFullScreenPlayer"
+      @mousemove="isCursorMove = true"
+      class="full-screen-container"
+    >
+      <div
+        class="full-screen-container__background"
+        :class="{ 'full-screen-container__background-pause': isPause }"
+      ></div>
       <div class="full-screen-container__wrapper">
         <div class="full-screen-container__wrapper__top">
           <div class="full-screen-container__wrapper__top__title">
             <div class="full-screen-container__wrapper__top__title__icon-wrapper">
               <IconPrimaryLogo />
             </div>
-            <div class="full-screen-container__wrapper__top__title__text-wrapper" v-if="current_track?.album?.name">
+            <div
+              class="full-screen-container__wrapper__top__title__text-wrapper"
+              v-if="current_track?.album?.name"
+            >
               <h1 class="full-screen-container__wrapper__top__title__text-wrapper__from">
                 {{ $t('fullscreen_player.title') }}
               </h1>
@@ -18,52 +27,83 @@
               </h2>
             </div>
           </div>
-          <button v-tooltip="$t('tooltip.exit_fullscreen')" :class="{
-            'full-screen-container__wrapper__top__close-wrapper-show':
-              isCursorMove || isCursorOverClose
-          }" class="full-screen-container__wrapper__top__close-wrapper" @click="closeFullScreenPlayer"
-            @mouseover="isCursorOverClose = true" @mouseout="isCursorOverClose = false">
+          <button
+            v-tooltip="$t('tooltip.exit_fullscreen')"
+            :class="{
+              'full-screen-container__wrapper__top__close-wrapper-show':
+                isCursorMove || isCursorOverClose
+            }"
+            class="full-screen-container__wrapper__top__close-wrapper"
+            @click="closeFullScreenPlayer"
+            @mouseover="isCursorOverClose = true"
+            @mouseout="isCursorOverClose = false"
+          >
             <div class="full-screen-container__wrapper__top__close-wrapper__close">
               <IconClose />
             </div>
           </button>
         </div>
         <div class="full-screen-container__wrapper__content">
-          <div class="full-screen-container__wrapper__content__cover-wrapper" :class="{
-            'full-screen-container__wrapper__content__cover-wrapper-small': !isCursorMove
-          }" v-if="current_track?.album?.images">
-            <Image class="full-screen-container__wrapper__content__cover-wrapper__cover"
-              :src="current_track.album.images[0].url" :alt="current_track.name" />
+          <div
+            class="full-screen-container__wrapper__content__cover-wrapper"
+            :class="{
+              'full-screen-container__wrapper__content__cover-wrapper-small': !isCursorMove
+            }"
+            v-if="current_track?.album?.images"
+          >
+            <Image
+              class="full-screen-container__wrapper__content__cover-wrapper__cover"
+              :src="current_track.album.images[0].url"
+              :alt="current_track.name"
+            />
           </div>
           <div class="full-screen-container__wrapper__content__text-wrapper">
-            <h1 class="full-screen-container__wrapper__content__text-wrapper__name" v-if="current_track">
+            <h1
+              class="full-screen-container__wrapper__content__text-wrapper__name"
+              v-if="current_track"
+            >
               {{ current_track.name }}
             </h1>
             <h2 class="full-screen-container__wrapper__content__text-wrapper__artist">
-              <span v-for="(artist, index) in current_track?.artists" :key="artist.uri">{{ (index === 0 ? '' : ', ') +
-                artist.name }}</span>
+              <span v-for="(artist, index) in current_track?.artists" :key="artist.uri">{{
+                (index === 0 ? '' : ', ') + artist.name
+              }}</span>
             </h2>
           </div>
         </div>
-        <div class="full-screen-container__wrapper__player" :class="{
-          'full-screen-container__wrapper__player-show': isCursorMove || isCursorOverPlayer
-        }" @mouseover="isCursorOverPlayer = true" @mouseout="isCursorOverPlayer = false">
+        <div
+          class="full-screen-container__wrapper__player"
+          :class="{
+            'full-screen-container__wrapper__player-show': isCursorMove || isCursorOverPlayer
+          }"
+          @mouseover="isCursorOverPlayer = true"
+          @mouseout="isCursorOverPlayer = false"
+        >
           <div class="full-screen-container__wrapper__player__seek-bar">
             <SeekBar size="large" />
           </div>
           <div class="full-screen-container__wrapper__player__btns">
             <div class="full-screen-container__wrapper__player__btns__left"></div>
             <div class="full-screen-container__wrapper__player__btns__mid">
-              <button v-tooltip="toolTipShuffle" class="icon-wrapper" :class="{ 'btn-active': isShuffle }"
-                @click="toggleShuffle">
+              <button
+                v-tooltip="toolTipShuffle"
+                class="icon-wrapper"
+                :class="{ 'btn-active': isShuffle }"
+                @click="toggleShuffle"
+              >
                 <IconShuffle />
               </button>
               <button v-tooltip="$t('tooltip.previous')" class="icon-wrapper" @click="preTrack">
                 <IconPrevious />
               </button>
-              <button v-tooltip="toolTipPlay" class="full-screen-container__wrapper__player__btns__mid__play"
-                @click="togglePlay">
-                <span class="full-screen-container__wrapper__player__btns__mid__play__icon-wrapper-round">
+              <button
+                v-tooltip="toolTipPlay"
+                class="full-screen-container__wrapper__player__btns__mid__play"
+                @click="togglePlay"
+              >
+                <span
+                  class="full-screen-container__wrapper__player__btns__mid__play__icon-wrapper-round"
+                >
                   <IconPlay v-if="isPause" />
                   <IconPause v-else />
                 </span>
@@ -71,8 +111,12 @@
               <button v-tooltip="$t('tooltip.next')" class="icon-wrapper" @click="nextTrack">
                 <IconNext />
               </button>
-              <button v-tooltip="toolTipRepeat" class="icon-wrapper" :class="{ 'btn-active': repeatMode !== 0 }"
-                @click="setRepeatMode">
+              <button
+                v-tooltip="toolTipRepeat"
+                class="icon-wrapper"
+                :class="{ 'btn-active': repeatMode !== 0 }"
+                @click="setRepeatMode"
+              >
                 <IconRepeatSingle v-if="repeatMode === 2" />
                 <IconRepeat v-else />
               </button>
@@ -81,7 +125,11 @@
               <div class="full-screen-container__wrapper__player__btns__right__volume">
                 <VolumeBar />
               </div>
-              <button v-tooltip="$t('tooltip.exit_fullscreen')" class="icon-wrapper" @click="closeFullScreenPlayer">
+              <button
+                v-tooltip="$t('tooltip.exit_fullscreen')"
+                class="icon-wrapper"
+                @click="closeFullScreenPlayer"
+              >
                 <IconFullScreenClose />
               </button>
             </div>

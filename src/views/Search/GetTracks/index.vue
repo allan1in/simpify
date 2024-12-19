@@ -3,7 +3,13 @@
     <main class="track-container">
       <div class="track-container__results">
         <TrackListHeader />
-        <TrackCard v-for="(item, index) in tracks" :key="item.id" :item="item" :index="index" :uris="uris" />
+        <TrackCard
+          v-for="(item, index) in tracks"
+          :key="item.id"
+          :item="item"
+          :index="index"
+          :uris="uris"
+        />
       </div>
     </main>
   </template>
@@ -66,7 +72,7 @@ export default {
           res = (await searchNextPage(path.slice(path.indexOf('?') + 1))).tracks
         }
 
-        let newVals = res.items.filter(item => item !== null)
+        let newVals = res.items.filter((item) => item !== null)
         newVals.forEach((item) => {
           this.uris.push(item.uri)
         })

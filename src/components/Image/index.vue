@@ -1,7 +1,14 @@
 <template>
   <div class="img-container" :class="imgLoadingClass" :style="colorStyle">
-    <img loading="lazy" :src :alt @load="handleLoad" @error="handleError" class="img-container__img"
-      :class="imgClass" />
+    <img
+      loading="lazy"
+      :src
+      :alt
+      @load="handleLoad"
+      @error="handleError"
+      class="img-container__img"
+      :class="imgClass"
+    />
   </div>
 </template>
 
@@ -15,7 +22,11 @@ export default {
   },
   computed: {
     imgClass() {
-      return { 'img-hidden': !this.loadFinish, 'img-show': this.loadFinish, 'img-scale': !this.noScale }
+      return {
+        'img-hidden': !this.loadFinish,
+        'img-show': this.loadFinish,
+        'img-scale': !this.noScale
+      }
     },
     colorStyle() {
       return `background: ${this.getRandomHSL()}`

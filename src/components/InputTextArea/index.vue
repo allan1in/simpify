@@ -2,11 +2,20 @@
   <div class="input-textarea-container">
     <div class="input-textarea-container__input-box">
       <label class="input-textarea-container__input-box__label" for="textarea">{{ label }}</label>
-      <textarea v-bind="$attrs" v-model="textContent" name="textarea" class="input-textarea-container__input-box__input"
-        :placeholder="placeholder" @focus="$emit('validate')" @focusout="$emit('validate')"
-        @input="$emit('validate')"></textarea>
+      <textarea
+        v-bind="$attrs"
+        v-model="textContent"
+        name="textarea"
+        class="input-textarea-container__input-box__input"
+        :placeholder="placeholder"
+        @focus="$emit('validate')"
+        @focusout="$emit('validate')"
+        @input="$emit('validate')"
+      ></textarea>
     </div>
-    <span v-show="showCount" class="input-textarea-container__count">{{ `${textContent.length} / ${maxLength}` }}</span>
+    <span v-show="showCount" class="input-textarea-container__count">{{
+      `${textContent.length} / ${maxLength}`
+    }}</span>
   </div>
 </template>
 <script>
@@ -44,7 +53,7 @@ export default {
   },
   watch: {
     'textContent.length'(newVal) {
-      if (this.maxLength && (newVal >= Math.floor(this.maxLength * 0.9))) {
+      if (this.maxLength && newVal >= Math.floor(this.maxLength * 0.9)) {
         this.showCount = true
       } else {
         this.showCount = false

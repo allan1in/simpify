@@ -3,8 +3,12 @@
     <div class="player-bar__left">
       <template v-if="current_track && !loading">
         <div class="player-bar__left__cover-wrapper" v-if="current_track?.album?.images">
-          <Image no-scale class="player-bar__left__cover-wrapper__cover" :src="current_track.album.images[0].url"
-            alt="track" />
+          <Image
+            no-scale
+            class="player-bar__left__cover-wrapper__cover"
+            :src="current_track.album.images[0].url"
+            alt="track"
+          />
         </div>
         <div class="player-bar__left__msg-wrapper">
           <div class="player-bar__left__msg-wrapper__title" v-if="current_track?.id">
@@ -13,45 +17,74 @@
             }}</router-link>
           </div>
           <div class="player-bar__left__msg-wrapper__artist" v-if="current_track?.artists?.length">
-            <router-link v-for="(artist, index) in current_track.artists" :key="artist.uri" :to="{
-              name: 'Artist',
-              params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
-            }">
+            <router-link
+              v-for="(artist, index) in current_track.artists"
+              :key="artist.uri"
+              :to="{
+                name: 'Artist',
+                params: { artistId: artist.uri.split(':')[artist.uri.split(':').length - 1] }
+              }"
+            >
               {{ (index === 0 ? '' : ', ') + artist.name }}
             </router-link>
           </div>
         </div>
         <div class="player-bar__left__save-btn">
-          <ButtonSave :isSaved class="icon-wrapper" @button-click="handleToggleTrackSave"
-            :loading="loading_toggle_save" />
+          <ButtonSave
+            :isSaved
+            class="icon-wrapper"
+            @button-click="handleToggleTrackSave"
+            :loading="loading_toggle_save"
+          />
         </div>
       </template>
     </div>
     <div class="player-bar__mid">
       <div class="player-bar__mid__btn-group">
-        <button v-tooltip="toolTipShuffle" class="icon-wrapper"
-          :class="{ 'btn-active': isShuffle, 'not-allowed': notAvaliable || isFreeAccount }" @click="toggleShuffle">
+        <button
+          v-tooltip="toolTipShuffle"
+          class="icon-wrapper"
+          :class="{ 'btn-active': isShuffle, 'not-allowed': notAvaliable || isFreeAccount }"
+          @click="toggleShuffle"
+        >
           <IconShuffle />
         </button>
-        <button v-tooltip="$t('tooltip.previous')" class="icon-wrapper" @click="preTrack"
-          :class="{ 'not-allowed': notAvaliable || isFreeAccount }">
+        <button
+          v-tooltip="$t('tooltip.previous')"
+          class="icon-wrapper"
+          @click="preTrack"
+          :class="{ 'not-allowed': notAvaliable || isFreeAccount }"
+        >
           <IconPrevious />
         </button>
-        <button v-tooltip="toolTipPlay" class="player-bar__mid__btn-group__play" @click="togglePlay"
-          :class="{ 'not-allowed': notAvaliable }">
+        <button
+          v-tooltip="toolTipPlay"
+          class="player-bar__mid__btn-group__play"
+          @click="togglePlay"
+          :class="{ 'not-allowed': notAvaliable }"
+        >
           <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
             <IconPlay v-if="isPause" />
             <IconPause v-else />
           </span>
         </button>
-        <button v-tooltip="$t('tooltip.next')" class="icon-wrapper" @click="nextTrack"
-          :class="{ 'not-allowed': notAvaliable || isFreeAccount }">
+        <button
+          v-tooltip="$t('tooltip.next')"
+          class="icon-wrapper"
+          @click="nextTrack"
+          :class="{ 'not-allowed': notAvaliable || isFreeAccount }"
+        >
           <IconNext />
         </button>
-        <button v-tooltip="toolTipRepeat" class="icon-wrapper" :class="{
-          'btn-active': repeatMode !== 0,
-          'not-allowed': notAvaliable || isFreeAccount
-        }" @click="setRepeatMode">
+        <button
+          v-tooltip="toolTipRepeat"
+          class="icon-wrapper"
+          :class="{
+            'btn-active': repeatMode !== 0,
+            'not-allowed': notAvaliable || isFreeAccount
+          }"
+          @click="setRepeatMode"
+        >
           <IconRepeatSingle v-if="repeatMode === 2" />
           <IconRepeat v-else />
         </button>
@@ -60,8 +93,13 @@
     </div>
     <div class="player-bar__right">
       <VolumeBar class="player-bar__right__volume-bar" :disabled="notAvaliable" />
-      <button v-tooltip="$t('tooltip.fullscreen')" class="icon-wrapper player-bar__right__full-screen"
-        @click="openFullScreenPlayer" :class="{ 'not-allowed': notAvaliable }" :disabled="notAvaliable">
+      <button
+        v-tooltip="$t('tooltip.fullscreen')"
+        class="icon-wrapper player-bar__right__full-screen"
+        @click="openFullScreenPlayer"
+        :class="{ 'not-allowed': notAvaliable }"
+        :disabled="notAvaliable"
+      >
         <IconFullScreen />
       </button>
     </div>

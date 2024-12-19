@@ -5,9 +5,14 @@
     </div>
 
     <Transition name="fade-slide-from-top">
-      <div ref="box" v-show="show" class="drop-down-container__box" :style="{ top: top }"
-        :class="{ 'drop-down-container__box-right': position === 'right' }">
-        <ul class=" drop-down-container__box__items-wrapper">
+      <div
+        ref="box"
+        v-show="show"
+        class="drop-down-container__box"
+        :style="{ top: top }"
+        :class="{ 'drop-down-container__box-right': position === 'right' }"
+      >
+        <ul class="drop-down-container__box__items-wrapper">
           <slot name="dropDownItems"></slot>
         </ul>
       </div>
@@ -72,7 +77,7 @@ export default {
     box-shadow: 0 0 1.5rem 1rem rgba($color-bg-1, 0.2);
 
     &-right:nth-child(n) {
-      left: 0
+      left: 0;
     }
 
     &__items-wrapper {

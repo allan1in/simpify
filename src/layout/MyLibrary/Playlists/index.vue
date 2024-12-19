@@ -17,8 +17,8 @@
 <script>
 import { getCurrentUserPlaylists, getNextCurrentUserPlaylists } from '@/api/meta/user'
 import CardPlaylistLibrary from '@/components/CardPlaylistLibrary/index.vue'
-import { useLibraryStore } from '@/stores/library';
-import { mapState } from 'pinia';
+import { useLibraryStore } from '@/stores/library'
+import { mapState } from 'pinia'
 
 export default {
   name: 'Playlists',

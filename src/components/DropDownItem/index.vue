@@ -1,12 +1,22 @@
 <template>
   <li>
-    <router-link v-if="to !== null" :to="to" class="drop-down-item-container" :class="{ 'top-line': topLine }">
+    <router-link
+      v-if="to !== null"
+      :to="to"
+      class="drop-down-item-container"
+      :class="{ 'top-line': topLine }"
+    >
       <span class="drop-down-item-container__text-wrapper">
         <slot></slot>
       </span>
     </router-link>
-    <a v-else-if="toExternal !== ''" :href="toExternal" target="_blank" class="drop-down-item-container"
-      :class="{ 'top-line': topLine }">
+    <a
+      v-else-if="toExternal !== ''"
+      :href="toExternal"
+      target="_blank"
+      class="drop-down-item-container"
+      :class="{ 'top-line': topLine }"
+    >
       <span class="drop-down-item-container__text-wrapper">
         <slot></slot>
       </span>

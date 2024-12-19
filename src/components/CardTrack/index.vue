@@ -24,21 +24,36 @@
         </template>
       </div>
       <div class="track-card__title">
-        <router-link v-if="showImage && !!item?.id" :to="{ name: 'Track', params: { trackId: item.id } }"
-          class="track-card__title__cover-wrapper">
-          <Image class="track-card__title__cover-wrapper__cover" :src="item.album.images[2].url" alt="Album Cover"
-            no-scale />
+        <router-link
+          v-if="showImage && !!item?.id"
+          :to="{ name: 'Track', params: { trackId: item.id } }"
+          class="track-card__title__cover-wrapper"
+        >
+          <Image
+            class="track-card__title__cover-wrapper__cover"
+            :src="item.album.images[2].url"
+            alt="Album Cover"
+            no-scale
+          />
         </router-link>
         <div class="track-card__title__msg-wrapper">
-          <router-link v-if="!!item?.id" :class="{
-            'track-card__title__msg-wrapper__name-playing': isCurrent
-          }" :to="{ name: 'Track', params: { trackId: item.id } }" class="track-card__title__msg-wrapper__name">
+          <router-link
+            v-if="!!item?.id"
+            :class="{
+              'track-card__title__msg-wrapper__name-playing': isCurrent
+            }"
+            :to="{ name: 'Track', params: { trackId: item.id } }"
+            class="track-card__title__msg-wrapper__name"
+          >
             {{ item.name }}
           </router-link>
           <span v-else class="track-card__title__msg-wrapper__name"> {{ item.name }}</span>
           <div v-if="showArtists" class="track-card__title__msg-wrapper__artists">
             <template v-for="(artist, index) in item.artists" :key="artist.id">
-              <router-link v-if="!!artist.id" :to="{ name: 'Artist', params: { artistId: artist.id } }">
+              <router-link
+                v-if="!!artist.id"
+                :to="{ name: 'Artist', params: { artistId: artist.id } }"
+              >
                 {{ (index === 0 ? '' : ', ') + artist.name }}
               </router-link>
               <span v-else> {{ (index === 0 ? '' : ', ') + artist.name }}</span>
@@ -47,8 +62,12 @@
         </div>
       </div>
       <div v-if="showAlbum" class="track-card__album-wrapper">
-        <router-link v-if="!!item.album?.id" :to="{ name: 'Album', params: { albumId: item.album.id } }"
-          class="track-card__album-wrapper__album">{{ item.album.name }}</router-link>
+        <router-link
+          v-if="!!item.album?.id"
+          :to="{ name: 'Album', params: { albumId: item.album.id } }"
+          class="track-card__album-wrapper__album"
+          >{{ item.album.name }}</router-link
+        >
         <span v-else class="track-card__album-wrapper__album">
           {{ item.album?.name }}
         </span>
@@ -121,7 +140,9 @@ export default {
   props: {
     item: {
       type: Object,
-      default: () => { return {} }
+      default: () => {
+        return {}
+      }
     },
     index: {
       type: Number,
