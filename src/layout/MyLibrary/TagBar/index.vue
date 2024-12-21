@@ -197,7 +197,11 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     border-radius: 50%;
-    padding: 0.8rem;
+    width: calc(1.8 * $font-size-text-primary);
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     z-index: 10;
     background-color: $color-bg-3;
     opacity: 0.9;
@@ -225,8 +229,9 @@ export default {
     }
 
     &__icon-wrapper {
+      display: block;
       height: $font-size-text-secondary;
-      aspect-ratio: 1 / 1;
+      width: $font-size-text-secondary;
       fill: $color-font-secondary;
 
       @include transitionFast;

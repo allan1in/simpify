@@ -1,5 +1,5 @@
 <template>
-  <div class="img-container" :class="imgLoadingClass" :style="colorStyle">
+  <div class="img-container" :class="imgContainerClass" :style="colorStyle">
     <img
       loading="lazy"
       :src
@@ -24,15 +24,14 @@ export default {
     imgClass() {
       return {
         'img-hidden': !this.loadFinish,
-        'img-show': this.loadFinish,
-        'img-scale': !this.noScale
+        'img-show': this.loadFinish
       }
     },
     colorStyle() {
       return `background: ${this.getRandomHSL()}`
     },
-    imgLoadingClass() {
-      return { 'img-loading': !this.loadFinish }
+    imgContainerClass() {
+      return { 'img-loading': !this.loadFinish, 'img-container-scale': !this.noScale }
     }
   },
   props: {
@@ -73,12 +72,18 @@ export default {
 .img-container {
   overflow: hidden;
 
+  @include transition;
+
+  &-scale {
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
   &__img {
     object-fit: cover;
     width: 100%;
     height: 100%;
-
-    @include transition;
   }
 }
 
@@ -93,12 +98,6 @@ export default {
 
   &-loading {
     animation: pulse 1.6s infinite;
-  }
-
-  &-scale {
-    &:hover {
-      transform: scale(1.1);
-    }
   }
 }
 
