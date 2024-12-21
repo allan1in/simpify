@@ -1,32 +1,19 @@
 <template>
   <template v-if="!loading">
-    <div
-      class="card-library-container"
-      @click="$router.push({ name: 'Track', params: { trackId: item.track.id } })"
-    >
+    <div class="card-library-container" @click="$router.push({ name: 'Track', params: { trackId: item.track.id } })">
       <div class="card-library-container__cover-wrapper">
-        <img
-          loading="lazy"
-          class="card-library-container__cover-wrapper__cover"
-          :src="item.track.album.images[0].url"
-          :alt="item.track.name"
-        />
+        <Image class="card-library-container__cover-wrapper__cover" :src="item.track.album.images[0].url"
+          :alt="item.track.name" />
       </div>
       <div class="card-library-container__info-wrapper">
-        <router-link
-          :to="{ name: 'Track', params: { trackId: item.track.id } }"
-          class="card-library-container__info-wrapper__info"
-          >{{ item.track.name }}</router-link
-        >
+        <router-link :to="{ name: 'Track', params: { trackId: item.track.id } }"
+          class="card-library-container__info-wrapper__info">{{ item.track.name }}</router-link>
       </div>
       <div class="card-library-container__right-wrapper">
-        <div
-          class="card-library-container__right-wrapper__btn-wrapper"
-          :class="{
-            'card-library-container__right-wrapper__btn-wrapper-playing':
-              !isPause && item.track.uri === current_track.uri
-          }"
-        >
+        <div class="card-library-container__right-wrapper__btn-wrapper" :class="{
+          'card-library-container__right-wrapper__btn-wrapper-playing':
+            !isPause && item.track.uri === current_track.uri
+        }">
           <ButtonTogglePlay :item="item.track" />
         </div>
       </div>
@@ -42,6 +29,7 @@ import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import { usePlayerStore } from '@/stores/player'
 import { mapState } from 'pinia'
 import Skeleton from '@/components/Skeleton/index.vue'
+import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'CardTrackLibrary',
@@ -61,7 +49,8 @@ export default {
   },
   components: {
     ButtonTogglePlay,
-    Skeleton
+    Skeleton,
+    Image
   },
   computed: {
     ...mapState(usePlayerStore, ['isPause', 'current_track'])

@@ -1,11 +1,7 @@
 <template>
-  <template v-if="!loading">
-    <div class="banner">
-      <div
-        v-if="images"
-        class="banner__img-wrapper"
-        :class="{ 'banner__img-wrapper-round': classImgRound }"
-      >
+  <template v-if="!loading && !loading_color">
+    <div class="banner" :style="{ 'background': color }">
+      <div class="banner__img-wrapper" :class="{ 'banner__img-wrapper-round': classImgRound }">
         <Image v-if="showImg" class="banner__img-wrapper__img" :src="images[0].url" :alt="title" />
         <div v-else class="banner__img-wrapper__icon">
           <IconDefaultUser v-if="showTypeUser" />
@@ -42,6 +38,7 @@ import IconDefaultPlaylist from '../Icons/IconDefaultPlaylist.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
 import IconDefaultUser from '../Icons/IconDefaultUser.vue'
 import Image from '@/components/Image/index.vue'
+import { getAverageColor } from '@/utils/average_color'
 
 export default {
   name: 'Banner',
@@ -51,6 +48,12 @@ export default {
     IconDefaultUser,
     Image
   },
+  data() {
+    return {
+      color: undefined,
+      loading_color: true
+    }
+  },
   computed: {
     classImgRound() {
       return this.imgShape === 'circle'
@@ -59,7 +62,7 @@ export default {
       return this.defaultIcon === 'user'
     },
     showImg() {
-      return this.images !== null && this.images.length !== 0
+      return !!this.images?.[0]?.url
     }
   },
   props: {
@@ -89,6 +92,19 @@ export default {
       type: String,
       default: ''
     }
+  },
+  watch: {
+    images: {
+      async handler(newVal) {
+        if (!newVal?.[0]?.url) {
+          return
+        }
+        this.color = await getAverageColor(newVal[0].url)
+        this.loading_color = false
+      },
+      immediate: true
+    }
+
   }
 }
 </script>
