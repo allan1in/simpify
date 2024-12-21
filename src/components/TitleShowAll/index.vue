@@ -1,16 +1,22 @@
 <template>
   <template v-if="!loading">
-    <div class="title-show-all" v-if="routerName !== ''">
-      <router-link class="title-show-all__title" :to="{ name: routerName }">{{
-        title
-      }}</router-link>
-      <router-link class="title-show-all__show-all" :to="{ name: routerName }">{{
-        $t('title_show_all.show_all')
-      }}</router-link>
+    <div v-bind="$attrs" class="title-show-all">
+      <router-link
+        v-if="routerName !== ''"
+        class="title-show-all__title"
+        :to="{ name: routerName }"
+        >{{ title }}</router-link
+      >
+      <h1 v-if="routerName == ''" class="title-simple">
+        {{ title }}
+      </h1>
+      <router-link
+        v-if="routerName !== ''"
+        class="title-show-all__show-all"
+        :to="{ name: routerName }"
+        >{{ $t('title_show_all.show_all') }}</router-link
+      >
     </div>
-    <h1 v-else class="title-simple">
-      {{ title }}
-    </h1>
   </template>
   <template v-else>
     <div class="title-show-all">
@@ -25,6 +31,7 @@ import Skeleton from '@/components/Skeleton/index.vue'
 
 export default {
   name: 'ShowAllTitle',
+  inheritAttrs: false,
   components: {
     Skeleton
   },
@@ -82,7 +89,7 @@ export default {
 
 .title-simple {
   display: block;
-  padding: $gutter-1-5x;
+  padding: $gutter-1-5x 0;
 
   @include titleStyles;
 }

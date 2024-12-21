@@ -1,19 +1,32 @@
 <template>
   <template v-if="!loading">
-    <div class="card-library-container" @click="$router.push({ name: 'Track', params: { trackId: item.track.id } })">
+    <div
+      class="card-library-container"
+      @click="$router.push({ name: 'Track', params: { trackId: item.track.id } })"
+    >
       <div class="card-library-container__cover-wrapper">
-        <Image class="card-library-container__cover-wrapper__cover" :src="item.track.album.images[0].url"
-          :alt="item.track.name" />
+        <Image
+          no-scale
+          class="card-library-container__cover-wrapper__cover"
+          :src="item.track.album.images[0].url"
+          :alt="item.track.name"
+        />
       </div>
       <div class="card-library-container__info-wrapper">
-        <router-link :to="{ name: 'Track', params: { trackId: item.track.id } }"
-          class="card-library-container__info-wrapper__info">{{ item.track.name }}</router-link>
+        <router-link
+          :to="{ name: 'Track', params: { trackId: item.track.id } }"
+          class="card-library-container__info-wrapper__info"
+          >{{ item.track.name }}</router-link
+        >
       </div>
       <div class="card-library-container__right-wrapper">
-        <div class="card-library-container__right-wrapper__btn-wrapper" :class="{
-          'card-library-container__right-wrapper__btn-wrapper-playing':
-            !isPause && item.track.uri === current_track.uri
-        }">
+        <div
+          class="card-library-container__right-wrapper__btn-wrapper"
+          :class="{
+            'card-library-container__right-wrapper__btn-wrapper-playing':
+              !isPause && item.track.uri === current_track.uri
+          }"
+        >
           <ButtonTogglePlay :item="item.track" />
         </div>
       </div>
@@ -90,7 +103,7 @@ export default {
   }
 
   &:hover {
-    background-color: $color-bg-6;
+    background-color: rgba($color-bg-6, 0.5);
   }
 
   &:hover &__right-wrapper__btn-wrapper {

@@ -30,7 +30,7 @@ export function getAverageColor(imageSrc) {
       g = Math.floor(g / pixelCount)
       b = Math.floor(b / pixelCount)
 
-      resolve(`rgb(${r}, ${g}, ${b})`)
+      resolve({ rgb: `rgb(${r}, ${g}, ${b})`, r, g, b })
     }
 
     img.onerror = reject

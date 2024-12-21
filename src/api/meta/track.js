@@ -38,3 +38,10 @@ export function getRecentlyPlayedTracks(params) {
     params
   })
 }
+
+export function getNextRecentlyPlayedTracks(path) {
+  return request({
+    url: `/me/player/recently-played?${path}`,
+    method: 'get'
+  })
+}

@@ -312,9 +312,6 @@ export default {
 .artist-container {
   &__cover {
     background: linear-gradient(to bottom, $color-bg-6, $color-bg-6);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 0 50%;
     padding: 6.4rem $gutter-4x;
     display: flex;
     flex-direction: column;
@@ -328,7 +325,6 @@ export default {
       top: 0;
       height: 100%;
       width: 100%;
-      object-fit: cover;
       z-index: 1;
     }
 

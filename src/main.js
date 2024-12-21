@@ -14,7 +14,7 @@ import router from './router'
 import App from './App.vue'
 
 import i18n from '@/includes/i18n'
-import tooltipDirective from '@/directives/toolTip'
+import tooltipDirective from '@/directives/tooltip'
 
 // https://github.com/KingSora/OverlayScrollbars?tab=readme-ov-file#consuming-plugins
 OverlayScrollbars.plugin(ClickScrollPlugin)

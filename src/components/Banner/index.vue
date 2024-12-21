@@ -1,6 +1,7 @@
 <template>
-  <template v-if="!loading && !loading_color">
-    <div class="banner" :style="{ 'background': color }">
+  <template v-if="!loading">
+    <div class="banner">
+      <div class="banner__background" :style="backgroundStyle"></div>
       <div class="banner__img-wrapper" :class="{ 'banner__img-wrapper-round': classImgRound }">
         <Image v-if="showImg" class="banner__img-wrapper__img" :src="images[0].url" :alt="title" />
         <div v-else class="banner__img-wrapper__icon">
@@ -50,8 +51,7 @@ export default {
   },
   data() {
     return {
-      color: undefined,
-      loading_color: true
+      color: undefined
     }
   },
   computed: {
@@ -63,6 +63,9 @@ export default {
     },
     showImg() {
       return !!this.images?.[0]?.url
+    },
+    backgroundStyle() {
+      return { background: this.color }
     }
   },
   props: {
@@ -96,15 +99,12 @@ export default {
   watch: {
     images: {
       async handler(newVal) {
-        if (!newVal?.[0]?.url) {
-          return
-        }
-        this.color = await getAverageColor(newVal[0].url)
-        this.loading_color = false
+        try {
+          this.color = (await getAverageColor(newVal[0].url)).rgb
+        } catch (e) {}
       },
       immediate: true
     }
-
   }
 }
 </script>
@@ -134,11 +134,35 @@ export default {
 
 .banner {
   padding: $gutter-3x;
-  background: linear-gradient(to bottom, $color-bg-6, $color-bg-4);
+  background: rgba($color-bg-7, 0.6);
   display: flex;
   align-items: end;
   justify-content: start;
   gap: $gutter-3x;
+  position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba($color-bg-2, 0.8));
+    z-index: 10;
+  }
+
+  &__background {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    @include transition;
+  }
 
   &__img-wrapper {
     flex-shrink: 0;
@@ -151,6 +175,7 @@ export default {
     align-items: center;
     background-color: $color-bg-3;
     box-shadow: 0 0 20px 20px rgba($color-bg-3, 0.2);
+    z-index: 10;
 
     &-round {
       border-radius: 50%;
@@ -170,6 +195,8 @@ export default {
   }
 
   &__info {
+    z-index: 10;
+
     &__type {
       font-size: $font-size-text-secondary;
     }
