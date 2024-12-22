@@ -127,7 +127,7 @@ export default {
         top: 50%;
         left: -10%;
         transform: translateY(-50%);
-        height: 1rem;
+        height: 0.2rem;
         width: 120%;
         background-color: $color-bg-5;
         z-index: -1;

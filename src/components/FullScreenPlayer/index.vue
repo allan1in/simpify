@@ -52,6 +52,7 @@
             v-if="current_track?.album?.images"
           >
             <Image
+              no-scale
               class="full-screen-container__wrapper__content__cover-wrapper__cover"
               :src="current_track.album.images[0].url"
               :alt="current_track.name"
