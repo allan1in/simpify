@@ -1,10 +1,9 @@
 import axios from 'axios'
-import settings from '@/settings.js'
 import { useUserStore } from '@/stores/user'
 import Message from '@/components/Message'
 import i18n from '@/includes/i18n'
 
-const { baseURL } = settings
+const baseURL = import.meta.env.VITE_BASE_URL
 
 // https://axios-http.com/docs/instance
 const service = axios.create({

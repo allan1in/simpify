@@ -1,10 +1,9 @@
 import axios from 'axios'
-import settings from '@/settings.js'
 import router from '@/router'
 import Message from '@/components/Message'
 import i18n from '@/includes/i18n'
 
-const { tokenEndpoint } = settings
+const tokenEndpoint = import.meta.env.VITE_TOKEN_ENDPOINT
 
 // https://axios-http.com/docs/instance
 const service = axios.create({

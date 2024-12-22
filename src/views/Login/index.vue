@@ -7,7 +7,6 @@
 <script>
 import { getCodeChanllenge } from '@/utils/code_challenge_base64'
 import { getCodeVerifier } from '@/utils/code_verifier'
-import settings from '@/settings'
 import { mapActions } from 'pinia'
 import { useUserStore } from '@/stores/user'
 import Loading from '@/components/Loading/index.vue'
@@ -24,7 +23,10 @@ export default {
   },
   methods: {
     async redirectToSpotifyAuthorize() {
-      const { clientId, scope, redirectUrl, authorizationEndpoint } = settings
+      const clientId = import.meta.env.VITE_CLIENT_ID
+      const redirectUrl = import.meta.env.VITE_REDIRECT_URL
+      const authorizationEndpoint = import.meta.env.VITE_AUTHORIZATION_ENDPOINT
+      const scope = import.meta.env.VITE_SCOPE
 
       // https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
       const code_verifier = getCodeVerifier()

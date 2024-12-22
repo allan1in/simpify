@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
-import settings from '@/settings'
 import { getCurrentUserProfile } from '@/api/meta/user'
 import { getToken, refreshToken } from '@/api/auth/index'
 
-const { clientId, redirectUrl } = settings
+const clientId = import.meta.env.VITE_CLIENT_ID
+const redirectUrl = import.meta.env.VITE_REDIRECT_URL
 
 export const useUserStore = defineStore('user', {
   state: () => ({
