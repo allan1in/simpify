@@ -1,6 +1,6 @@
 <template>
   <div class="image-edit-container" @mouseenter="isHover = true" @mouseleave="isHover = false">
-    <Image
+    <MyImage
       no-scale
       v-if="!!currentImage?.file || !!currentImage?.url"
       class="image-edit-container__img"
@@ -43,7 +43,7 @@ import IconMore from '../Icons/IconMore.vue'
 import DropDown from '@/components/DropDown/index.vue'
 import DropDownItem from '@/components/DropDownItem/index.vue'
 import IconPictureEdit from '../Icons/IconPictureEdit.vue'
-import Image from '@/components/Image/index.vue'
+import MyImage from '@/components/Image/index.vue'
 
 export default {
   name: 'ImageEdit',
@@ -67,7 +67,7 @@ export default {
     DropDown,
     DropDownItem,
     IconPictureEdit,
-    Image
+    MyImage
   },
   computed: {
     currentImage: {

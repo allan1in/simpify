@@ -72,6 +72,7 @@ export default {
   top: 0;
   left: 0;
   background-color: rgba($color-bg-1, 0.5);
+  backdrop-filter: blur(1rem);
 
   &__box {
     position: fixed;
