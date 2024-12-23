@@ -183,6 +183,9 @@ export default {
           this.isHome = false
           this.isSearch = true
 
+          console.log(path)
+          console.log(decodeURIComponent(path[2]))
+
           if (
             to.params.inputContent !== undefined &&
             decodeURIComponent(path[2]) === to.params.inputContent
