@@ -13,14 +13,17 @@
             $t('my_library.title')
           }}</span>
         </div>
-        <Transition name="fade">
-          <div v-tooltip="toolTipArrow" v-if="!isCollasped" class="my-library__container__title__right">
-            <button class="my-library__container__title__right__create-playlist" @click.prevent="openDialog = true">
-              <div class="my-library__container__title__right__create-playlist__icon-wrapper">
-                <IconPlus />
-              </div>
-            </button>
-            <button class="my-library__container__title__right__arrow" @click.prevent="isShowMore = !isShowMore">
+
+        <div class="my-library__container__title__right">
+          <button v-tooltip="$t('tooltip.create_playlist')" class="my-library__container__title__right__create-playlist"
+            @click.prevent="openDialog = true">
+            <div class="my-library__container__title__right__create-playlist__icon-wrapper">
+              <IconPlus />
+            </div>
+          </button>
+          <Transition name="fade">
+            <button v-tooltip="toolTipArrow" v-if="!isCollasped" class="my-library__container__title__right__arrow"
+              @click.prevent="isShowMore = !isShowMore">
               <div class="my-library__container__title__right__arrow__wrapper">
                 <Transition name="fade" mode="out-in">
                   <IconArrowRightLonger v-if="!isShowMore" />
@@ -28,8 +31,8 @@
                 </Transition>
               </div>
             </button>
-          </div>
-        </Transition>
+          </Transition>
+        </div>
       </div>
       <TransitionGroup name="list-fade">
         <div v-if="!isCollasped" class="my-library__container__tag-bar" :key="'tagbar'">

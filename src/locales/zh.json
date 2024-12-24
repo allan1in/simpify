@@ -175,6 +175,7 @@
     "add_to_liked_songs": "添加到喜欢的歌曲",
     "remove_from_liked_songs": "从喜欢的歌曲中移除",
     "go_to_spotify": "前往 Spotify",
-    "more_options": "{item} 的更多操作"
+    "more_options": "{item} 的更多操作",
+    "create_playlist": "创建歌单"
   }
 }
