@@ -8,7 +8,7 @@ export const useLibraryStore = defineStore('library', {
     isCollasped: false,
     isShowMore: false,
     duringTransitionWidth: false,
-    activeTag: localStorage.getItem('LibraryActiveTag') || 'liked_songs',
+    activeTag: localStorage.getItem('LibraryActiveTag') || 'songs',
     likedSongs: [],
     playlists: [],
     albums: [],

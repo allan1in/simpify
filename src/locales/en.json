@@ -16,7 +16,7 @@
     "artists": "Artists",
     "albums": "Albums",
     "playlists": "Playlists",
-    "liked_songs": "Liked Songs"
+    "songs": "Songs"
   },
   "get_all": {
     "songs": "Songs",

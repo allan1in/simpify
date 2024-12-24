@@ -42,7 +42,7 @@
           :key="'content'">
           <MyOverlayScrollbars ref="scrollbar" os-element="div" @scroll="updateBottom">
             <div class="my-library__container__content__wrapper">
-              <LikedSongs :active="activeTag === 'liked_songs'" />
+              <Songs :active="activeTag === 'songs'" />
               <Playlists :active="activeTag === 'playlists'" />
               <Albums :active="activeTag === 'albums'" />
               <Artists :active="activeTag === 'artists'" />
@@ -65,7 +65,7 @@ import IconArrowLeftLonger from '@/components/Icons/IconArrowLeftLonger.vue'
 import IconArrowRightLonger from '@/components/Icons/IconArrowRightLonger.vue'
 import { useLibraryStore } from '@/stores/library'
 import MyOverlayScrollbars from '@/components/MyOverlayScrollbars/index.vue'
-import LikedSongs from './LikedSongs/index.vue'
+import Songs from './Songs/index.vue'
 import { computed } from 'vue'
 import Playlists from './Playlists/index.vue'
 import Albums from './Albums/index.vue'
@@ -83,7 +83,7 @@ export default {
   },
   data() {
     return {
-      tags: ['liked_songs', 'playlists', 'albums', 'artists'],
+      tags: ['songs', 'playlists', 'albums', 'artists'],
       bottom: undefined,
       openDialog: false
     }
@@ -117,7 +117,7 @@ export default {
     IconArrowLeftLonger,
     IconArrowRightLonger,
     MyOverlayScrollbars,
-    LikedSongs,
+    Songs,
     Playlists,
     Albums,
     Artists,
