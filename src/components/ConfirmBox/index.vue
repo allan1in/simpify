@@ -10,16 +10,10 @@
             {{ message }}
           </div>
           <div class="confirm-box-container__box__button-group">
-            <button
-              class="confirm-box-container__box__button-group__cancel"
-              @click="openDialog = false"
-            >
+            <button class="confirm-box-container__box__button-group__cancel" @click="openDialog = false">
               {{ $t('confirm_box.cancel') }}
             </button>
-            <button
-              class="confirm-box-container__box__button-group__confirm"
-              @click="$emit('confirm')"
-            >
+            <button class="confirm-box-container__box__button-group__confirm" @click="$emit('confirm')">
               {{ $t('confirm_box.confirm') }}
             </button>
           </div>
@@ -65,6 +59,7 @@ export default {
   top: 0;
   left: 0;
   background-color: rgba($color-bg-1, 0.5);
+  backdrop-filter: blur(1rem);
 
   &__box {
     position: fixed;

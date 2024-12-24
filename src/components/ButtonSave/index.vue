@@ -26,9 +26,9 @@ export default {
   computed: {
     toolTipLike() {
       if (this.isSaved) {
-        return this.$t('tooltip.remove_from_liked_songs')
+        return this.$t('tooltip.remove_from_library')
       }
-      return this.$t('tooltip.add_to_liked_songs')
+      return this.$t('tooltip.add_to_library')
     }
   },
   methods: {

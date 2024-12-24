@@ -44,9 +44,8 @@ export const useLibraryStore = defineStore('library', {
       }
     },
     addPlaylists(newVals) {
-      let oldVals = this.playlists
       if (Array.isArray(newVals)) {
-        this.playlists = [...oldVals, ...newVals]
+        this.playlists = this.playlists.concat(newVals)
       } else {
         this.playlists.unshift(newVals)
       }

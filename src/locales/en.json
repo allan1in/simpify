@@ -97,8 +97,6 @@
   "message": {
     "removed_from_lib": "Removed from Your Library.",
     "added_to_lib": "Added to Your Library.",
-    "removed_from_liked_songs": "Removed from Liked Songs.",
-    "added_to_liked_songs": "Added to Liked Songs.",
     "only_for_premium": "Please Upgrade to Premium to Play Music.",
     "loading": "Loading now...",
     "no_track_playing": "No track is playing.",
@@ -117,6 +115,12 @@
     "textarea_label": "Description",
     "statement": "By proceeding, you agree to give Spotify access to the image you choose to upload. Please make sure you have the right to upload the image.",
     "save": "Save"
+  },
+  "dialog_playlist_create": {
+    "title": "Create New Playlist",
+    "text_placeholder": "Add a name",
+    "text_label": "Name",
+    "create": "Create"
   },
   "drop_down_image_edit": {
     "change_picture": "Change Picture",
@@ -166,9 +170,10 @@
     "unmute": "Unmute",
     "fullscreen": "Fullscreen",
     "exit_fullscreen": "Exit Fullscreen",
-    "add_to_liked_songs": "Add to Liked Songs",
-    "remove_from_liked_songs": "Remove from Liked Songs",
+    "add_to_library": "Add to Your Library",
+    "remove_from_library": "Remove from Your Library",
     "go_to_spotify": "Go to Spotify",
-    "more_options": "More options for {item}"
+    "more_options": "More Options for {item}",
+    "create_playlist": "Create Playlist"
   }
 }

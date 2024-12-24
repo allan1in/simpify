@@ -6,10 +6,7 @@
       <div class="app-container__mid-wrapper__main-view">
         <MyOverlayScrollbars os-element="main" @scroll="updateBottom">
           <div class="app-container__mid-wrapper__main-view__container">
-            <div
-              class="app-container__mid-wrapper__main-view__container__content"
-              v-show="!loading"
-            >
+            <div class="app-container__mid-wrapper__main-view__container__content" v-show="!loading">
               <RouterView />
             </div>
             <Loading :loading="loading" />
@@ -92,6 +89,7 @@ export default {
       position: relative;
 
       &__mask {
+        background-color: rgba($color-bg-1, 0.5);
         backdrop-filter: blur(1rem);
         position: absolute;
         left: 0;

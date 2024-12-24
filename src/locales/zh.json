@@ -118,6 +118,12 @@
     "statement": "继续下一步，则表示你已同意 Spotify 获取你选择上传的图像。请确保你有上传此图像的权利。",
     "save": "保存"
   },
+  "dialog_playlist_create": {
+    "title": "创建新的歌单",
+    "text_placeholder": "添加名称",
+    "text_label": "名称",
+    "create": "创建"
+  },
   "drop_down_image_edit": {
     "change_picture": "更改图片",
     "remove_picture": "删除图片"
@@ -166,9 +172,10 @@
     "unmute": "解除静音",
     "fullscreen": "全屏",
     "exit_fullscreen": "退出全屏",
-    "add_to_liked_songs": "添加到喜欢的歌曲",
-    "remove_from_liked_songs": "从喜欢的歌曲中移除",
+    "add_to_library": "添加到音乐库",
+    "remove_from_library": "从音乐库中移除",
     "go_to_spotify": "前往 Spotify",
-    "more_options": "{item} 的更多操作"
+    "more_options": "{item} 的更多操作",
+    "create_playlist": "创建歌单"
   }
 }
