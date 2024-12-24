@@ -12,7 +12,8 @@ export const useLibraryStore = defineStore('library', {
     likedSongs: [],
     playlists: [],
     albums: [],
-    artists: []
+    artists: [],
+    resizing: false
   }),
   actions: {
     changeActiveTag(newTag) {

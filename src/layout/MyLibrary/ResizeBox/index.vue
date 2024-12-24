@@ -26,12 +26,15 @@ export default {
       'duringTransitionWidth',
       'myLibWidth',
       'isCollasped',
-      'isShowMore'
+      'isShowMore',
+      'resizing'
     ])
   },
   methods: {
     handleMouseDown(event) {
       event.preventDefault()
+      this.resizing = true
+
       this.$refs.resizeBox.style.transition = 'none'
       let boxLeft = this.$refs.resizeBox.getBoundingClientRect().left
       let newWidth
@@ -66,20 +69,25 @@ export default {
       }
 
       document.onmouseup = () => {
+        this.resizing = false
         document.onmousemove = null
         document.onmouseup = null
         this.$refs.resizeBox.style.transition = `width ${variables.duration_slow} ease`
-        this.myLibWidth = newWidth
+        if (!this.isCollasped) {
+          this.myLibWidth = newWidth
+        }
       }
     },
     onTransitionEnd(event) {
       if (event.propertyName === 'width') {
         this.duringTransitionWidth = false
+        this.resizing = false
       }
     },
     onTransitionStart(event) {
       if (event.propertyName === 'width') {
         this.duringTransitionWidth = true
+        this.resizing = true
       }
     },
     startObserve() {

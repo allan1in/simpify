@@ -13,7 +13,7 @@ export function searchTracks(params) {
     url: '/search',
     method: 'get',
     params: {
-      q: params.q,
+      q: encodeURIComponent(params.q),
       type: 'track',
       limit: params.limit,
       offset: params.offset
@@ -26,7 +26,7 @@ export function searchArtists(params) {
     url: '/search',
     method: 'get',
     params: {
-      q: params.q,
+      q: encodeURIComponent(params.q),
       type: 'artist',
       limit: params.limit,
       offset: params.offset
@@ -39,7 +39,7 @@ export function searchAlbums(params) {
     url: '/search',
     method: 'get',
     params: {
-      q: params.q,
+      q: encodeURIComponent(params.q),
       type: 'album',
       limit: params.limit,
       offset: params.offset
@@ -52,7 +52,7 @@ export function searchPlaylists(params) {
     url: '/search',
     method: 'get',
     params: {
-      q: params.q,
+      q: encodeURIComponent(params.q),
       type: 'playlist',
       limit: params.limit,
       offset: params.offset

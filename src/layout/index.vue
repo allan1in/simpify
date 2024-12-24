@@ -15,6 +15,9 @@
             <Loading :loading="loading" />
           </div>
         </MyOverlayScrollbars>
+        <Transition name="fade">
+          <div v-if="resizing" class="app-container__mid-wrapper__main-view__mask"></div>
+        </Transition>
       </div>
     </section>
     <PlayerBar class="app-container__player" />
@@ -30,6 +33,7 @@ import Loading from '@/components/Loading/index.vue'
 import { mapState } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import { computed } from 'vue'
+import { useLibraryStore } from '@/stores/library'
 
 export default {
   name: 'Layout',
@@ -46,7 +50,8 @@ export default {
     Loading
   },
   computed: {
-    ...mapState(useAppStore, ['loading'])
+    ...mapState(useAppStore, ['loading']),
+    ...mapState(useLibraryStore, ['resizing'])
   },
   provide() {
     return {
@@ -84,6 +89,16 @@ export default {
       min-width: 42rem;
       container-type: inline-size;
       container-name: container-box;
+      position: relative;
+
+      &__mask {
+        backdrop-filter: blur(1rem);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
 
       &__container {
         min-height: $height-content;
