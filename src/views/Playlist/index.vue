@@ -7,15 +7,10 @@
             <span v-tooltip="playlist.description">{{ playlist.description }}</span>
           </div>
           <div class="playlist-container__banner-details">
-            <router-link
-              class="playlist-container__banner-details__owner"
-              :to="{ name: 'User', params: { userId: playlist.owner.id } }"
-              >{{ playlist.owner.display_name }}</router-link
-            >
-            <span
-              v-if="playlist.followers.total !== 0"
-              class="playlist-container__banner-details__followers"
-            >
+            <router-link class="playlist-container__banner-details__owner"
+              :to="{ name: 'User', params: { userId: playlist.owner.id } }">{{ playlist.owner.display_name
+              }}</router-link>
+            <span v-if="playlist.followers.total !== 0" class="playlist-container__banner-details__followers">
               {{
                 ` • ${Intl.NumberFormat().format(playlist.followers.total)} ${$t(
                   'playlist.follower',
@@ -23,24 +18,17 @@
                 )}`
               }}
             </span>
-            <span
-              v-if="playlist.tracks.total !== 0"
-              class="playlist-container__banner-details__total-tracks"
-            >
+            <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__total-tracks">
               {{ ` • ${playlist.tracks.total} ${$t('playlist.song', playlist.tracks.total)}` }}
             </span>
-            <span
-              v-if="playlist.tracks.total !== 0"
-              class="playlist-container__banner-details__duration"
-            >
+            <span v-if="playlist.tracks.total !== 0" class="playlist-container__banner-details__duration">
               {{
                 ` •
-              ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${
-                duration.min
+              ${duration.hr ? `${duration.hr} ${$t('playlist.duration.hr')} ` : ''}${duration.min
                   ? `${duration.min}
               ${$t('playlist.duration.min')} `
                   : ''
-              }${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
+                }${duration.sec ? `${duration.sec} ${$t('playlist.duration.sec')} ` : ''}`
               }}
             </span>
           </div>
@@ -51,20 +39,14 @@
           <div v-if="tracks.length" class="playlist-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="playlist" />
           </div>
-          <div v-if="!isOwner" class="playlist-container__content__btn-group__follow-wrapper">
-            <ButtonFollow
-              :loading="loading_toggle_follow"
-              :isFollowed
-              @button-click="handleClickFollowButton"
-            />
+          <div v-if="!isOwner" class="playlist-container__content__btn-group__save-wrapper">
+            <ButtonSave :loading="loading_toggle_save" :isSaved @button-click="handleClickSaveButton" />
           </div>
           <div v-if="isOwner" class="playlist-container__content__btn-group__more">
             <DropDown position="right">
               <template #default>
-                <button
-                  v-tooltip="$t('tooltip.more_options', { item: playlist.name })"
-                  class="playlist-container__content__btn-group__more__btn"
-                >
+                <button v-tooltip="$t('tooltip.more_options', { item: playlist.name })"
+                  class="playlist-container__content__btn-group__more__btn">
                   <div class="playlist-container__content__btn-group__more__btn__icon-wrapper">
                     <IconMore />
                   </div>
@@ -73,9 +55,7 @@
               <template #dropDownItems>
                 <DropDownItem @click="openEditDialog = true">
                   <template #icon>
-                    <div
-                      class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper"
-                    >
+                    <div class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper">
                       <IconEdit />
                     </div>
                   </template>
@@ -85,9 +65,7 @@
                 </DropDownItem>
                 <DropDownItem @click="openRemoveConfirm = true">
                   <template #icon>
-                    <div
-                      class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper"
-                    >
+                    <div class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper">
                       <IconRemove />
                     </div>
                   </template>
@@ -101,27 +79,14 @@
         </div>
         <div class="playlist-container__content__tracks">
           <TrackListHeader v-if="tracks.length" />
-          <TrackCard
-            v-for="(item, index) in tracks"
-            :key="item.id"
-            :item="item.track"
-            :index="index"
-            :context_uri="this.playlist.uri"
-          />
+          <TrackCard v-for="(item, index) in tracks" :key="item.id" :item="item.track" :index="index"
+            :context_uri="this.playlist.uri" />
         </div>
       </div>
     </div>
-    <DialogPlaylistEdit
-      v-model="openEditDialog"
-      :item="playlist"
-      @update-succeed="handleUpdateSucceed"
-    />
-    <ConfirmBox
-      v-model="openRemoveConfirm"
-      @confirm="handleConfirmed"
-      :title="$t('confirm_box_playlist_delete.title')"
-      :message="$t('confirm_box_playlist_delete.message', { name: playlist.name })"
-    />
+    <DialogPlaylistEdit v-model="openEditDialog" :item="playlist" @update-succeed="handleUpdateSucceed" />
+    <ConfirmBox v-model="openRemoveConfirm" @confirm="handleConfirmed" :title="$t('confirm_box_playlist_delete.title')"
+      :message="$t('confirm_box_playlist_delete.message', { name: playlist.name })" />
   </template>
   <template v-else>
     <div class="playlist-container">
@@ -133,11 +98,8 @@
           <div class="playlist-container__content__btn-group__play-wrapper">
             <Skeleton shape="circle" />
           </div>
-          <div class="playlist-container__content__btn-group__follow-wrapper">
-            <Skeleton class="skeleton__button" />
-          </div>
-          <div class="playlist-container__content__btn-group__more">
-            <Skeleton shape="round" />
+          <div class="playlist-container__content__btn-group__save-wrapper">
+            <Skeleton shape="circle" />
           </div>
         </div>
         <div class="playlist-container__content__tracks">
@@ -175,7 +137,7 @@ import DialogPlaylistEdit from '@/components/DialogPlaylistEdit/index.vue'
 import IconRemove from '@/components/Icons/IconRemove.vue'
 import ConfirmBox from '@/components/ConfirmBox/index.vue'
 import { useLibraryStore } from '@/stores/library'
-import ButtonFollow from '@/components/ButtonFollow/index.vue'
+import ButtonSave from '@/components/ButtonSave/index.vue'
 
 export default {
   name: 'Playlist',
@@ -193,7 +155,7 @@ export default {
     DialogPlaylistEdit,
     IconRemove,
     ConfirmBox,
-    ButtonFollow
+    ButtonSave
   },
   data() {
     return {
@@ -205,10 +167,10 @@ export default {
       tracks_next: '',
       loading_skeleton: true,
       loading_more: false,
-      isFollowed: null,
+      isSaved: null,
       openEditDialog: false,
       openRemoveConfirm: false,
-      loading_toggle_follow: false
+      loading_toggle_save: false
     }
   },
   computed: {
@@ -241,7 +203,7 @@ export default {
       this.tracks_offset = 0
       this.tracks_next = ''
       this.loading_skeleton = true
-      ;(this.loading_more = false), (this.loading_toggle_follow = false)
+        ; (this.loading_more = false), (this.loading_toggle_save = false)
     },
     async getAll() {
       await Promise.all([this.getPlaylist(), this.getPlaylistTracks()])
@@ -280,22 +242,22 @@ export default {
     },
     async checkUserSavedPlaylist() {
       const res = await checkUserSavedPlaylists(this.playlist.id)
-      this.isFollowed = res[0]
+      this.isSaved = res[0]
     },
-    async handleClickFollowButton() {
-      this.loading_toggle_follow = true
-      if (this.isFollowed) {
+    async handleClickSaveButton() {
+      this.loading_toggle_save = true
+      if (this.isSaved) {
         await deleteUserSavedPlaylists(this.playlist.id)
-        this.isFollowed = false
+        this.isSaved = false
         useLibraryStore().removePlaylist(this.playlist.id)
         Message(`${this.$t('message.removed_from_lib')}`)
       } else {
         await savePlaylists(this.playlist.id)
-        this.isFollowed = true
+        this.isSaved = true
         useLibraryStore().addPlaylists(this.playlist)
         Message(`${this.$t('message.added_to_lib')}`)
       }
-      this.loading_toggle_follow = false
+      this.loading_toggle_save = false
     },
     async handleUpdateSucceed() {
       await this.getPlaylist()
@@ -357,6 +319,15 @@ export default {
       &__play-wrapper {
         height: 5.4rem;
         aspect-ratio: 1 / 1;
+      }
+
+      &__save-wrapper {
+        height: 2.4rem;
+        aspect-ratio: 1 / 1;
+        fill: $color-font-secondary;
+        cursor: pointer;
+
+        @include clickAnimation;
       }
 
       &__more {
