@@ -118,6 +118,12 @@
     "statement": "By proceeding, you agree to give Spotify access to the image you choose to upload. Please make sure you have the right to upload the image.",
     "save": "Save"
   },
+  "dialog_playlist_create": {
+    "title": "Create New Playlist",
+    "text_placeholder": "Add a name",
+    "text_label": "Name",
+    "create": "Create"
+  },
   "drop_down_image_edit": {
     "change_picture": "Change Picture",
     "remove_picture": "Remove Picture"

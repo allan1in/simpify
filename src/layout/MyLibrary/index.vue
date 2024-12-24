@@ -2,11 +2,8 @@
   <ResizeBox>
     <div class="my-library__container">
       <div class="my-library__container__title">
-        <div
-          v-tooltip="toolTipTitle"
-          class="my-library__container__title__left"
-          @click.prevent="isCollasped = !isCollasped"
-        >
+        <div v-tooltip="toolTipTitle" class="my-library__container__title__left"
+          @click.prevent="isCollasped = !isCollasped">
           <div class="my-library__container__title__left__icon-wrapper">
             <IconLibrary v-if="!isCollasped" />
             <IconLibraryCollasped v-else />
@@ -17,15 +14,13 @@
           }}</span>
         </div>
         <Transition name="fade">
-          <div
-            v-tooltip="toolTipArrow"
-            v-if="!isCollasped"
-            class="my-library__container__title__right"
-          >
-            <button
-              class="my-library__container__title__right__arrow"
-              @click.prevent="isShowMore = !isShowMore"
-            >
+          <div v-tooltip="toolTipArrow" v-if="!isCollasped" class="my-library__container__title__right">
+            <button class="my-library__container__title__right__create-playlist" @click.prevent="openDialog = true">
+              <div class="my-library__container__title__right__create-playlist__icon-wrapper">
+                <IconPlus />
+              </div>
+            </button>
+            <button class="my-library__container__title__right__arrow" @click.prevent="isShowMore = !isShowMore">
               <div class="my-library__container__title__right__arrow__wrapper">
                 <Transition name="fade" mode="out-in">
                   <IconArrowRightLonger v-if="!isShowMore" />
@@ -40,11 +35,8 @@
         <div v-if="!isCollasped" class="my-library__container__tag-bar" :key="'tagbar'">
           <TagBar :tags="tags" :activeTag @handle-click-tag="changeActiveTag" />
         </div>
-        <div
-          class="my-library__container__content"
-          :class="{ 'my-library__container__content-collasped': isCollasped }"
-          :key="'content'"
-        >
+        <div class="my-library__container__content" :class="{ 'my-library__container__content-collasped': isCollasped }"
+          :key="'content'">
           <MyOverlayScrollbars ref="scrollbar" os-element="div" @scroll="updateBottom">
             <div class="my-library__container__content__wrapper">
               <LikedSongs :active="activeTag === 'liked_songs'" />
@@ -57,6 +49,7 @@
       </TransitionGroup>
     </div>
   </ResizeBox>
+  <DialogPlaylistCreate v-model="openDialog" />
 </template>
 
 <script>
@@ -74,6 +67,9 @@ import { computed } from 'vue'
 import Playlists from './Playlists/index.vue'
 import Albums from './Albums/index.vue'
 import Artists from './Artists/index.vue'
+import DialogPlaylistCreate from '@/components/DialogPlaylistCreate/index.vue'
+import IconPlus from '@/components/Icons/IconPlus.vue'
+
 
 export default {
   name: 'MyLibrary',
@@ -85,7 +81,8 @@ export default {
   data() {
     return {
       tags: ['liked_songs', 'playlists', 'albums', 'artists'],
-      bottom: undefined
+      bottom: undefined,
+      openDialog: false
     }
   },
   computed: {
@@ -120,7 +117,9 @@ export default {
     LikedSongs,
     Playlists,
     Albums,
-    Artists
+    Artists,
+    DialogPlaylistCreate,
+    IconPlus
   },
   methods: {
     ...mapActions(useLibraryStore, ['changeActiveTag']),
@@ -197,6 +196,32 @@ export default {
       display: flex;
       align-items: center;
       gap: 0.8rem;
+
+
+      &__create-playlist {
+        border-radius: 50%;
+        padding: 0.5rem;
+
+        @include clickAnimation;
+
+        @include transitionFast;
+
+        &:hover {
+          background-color: $color-bg-3;
+        }
+
+        &:hover &__icon-wrapper {
+          fill: $color-font-primary;
+        }
+
+        &__icon-wrapper {
+          height: 1.4rem;
+          aspect-ratio: 1 / 1;
+          fill: $color-font-secondary;
+
+          @include transitionFast;
+        }
+      }
 
       &__arrow {
         border-radius: 50%;
