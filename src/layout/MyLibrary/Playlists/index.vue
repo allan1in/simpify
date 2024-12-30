@@ -3,7 +3,7 @@
     <template v-if="!loading_skeleton">
       <div class="my-library__container__content__playlists">
         <TransitionGroup name="list">
-          <CardPlaylistLibrary v-for="item in playlists" :key="item.id" :item />
+          <CardPlaylistLibrary v-for="item in current_playlists" :key="item.id" :item />
         </TransitionGroup>
       </div>
     </template>
@@ -41,7 +41,13 @@ export default {
     CardPlaylistLibrary
   },
   computed: {
-    ...mapState(useLibraryStore, ['playlists'])
+    ...mapState(useLibraryStore, ['playlists', 'activeByYou', 'playlists_by_user', 'loading_playlists_by_user']),
+    current_playlists() {
+      if (this.activeByYou) {
+        return this.playlists_by_user
+      }
+      return this.playlists
+    }
   },
   methods: {
     reset() {

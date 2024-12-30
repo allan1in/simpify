@@ -141,6 +141,9 @@ export default {
     activeTag() {
       this.scrollToTop()
     }
+  },
+  created() {
+    useLibraryStore().getPlaylistsOwnedByUser()
   }
 }
 </script>

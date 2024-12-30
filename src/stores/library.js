@@ -1,6 +1,8 @@
 import { getAlbum } from '@/api/meta/album'
 import { getTrack } from '@/api/meta/track'
+import { getCurrentUserPlaylists, getNextCurrentUserPlaylists } from '@/api/meta/user'
 import { defineStore } from 'pinia'
+import { useUserStore } from './user'
 
 export const useLibraryStore = defineStore('library', {
   state: () => ({
@@ -13,7 +15,10 @@ export const useLibraryStore = defineStore('library', {
     playlists: [],
     albums: [],
     artists: [],
-    resizing: false
+    resizing: false,
+    loading_playlists_by_user: true,
+    playlists_by_user: [],
+    activeByYou: false
   }),
   actions: {
     changeActiveTag(newTag) {
@@ -110,6 +115,38 @@ export const useLibraryStore = defineStore('library', {
       if (index > -1) {
         this.artists.splice(index, 1)
       }
+    },
+    async getPlaylistsOwnedByUser() {
+      this.loading_playlists_by_user = true
+      this.playlists_by_user = []
+
+      let next = ''
+      let offset = 0
+      let limit = 5
+      while (next !== null) {
+        this.loading_more = true
+        let res
+
+        if (next === '') {
+          const params = {
+            limit,
+            offset
+          }
+          res = await getCurrentUserPlaylists(params)
+        } else {
+          let path = next
+          res = await getNextCurrentUserPlaylists(path.slice(path.indexOf('?') + 1))
+        }
+
+        let newVals = res.items.filter(
+          (item) => item !== null && item.owner.id === useUserStore().uid
+        )
+
+        this.playlists_by_user = this.playlists_by_user.concat(newVals)
+        next = res.next
+      }
+
+      this.loading_playlists_by_user = false
     }
   }
 })

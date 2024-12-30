@@ -16,7 +16,8 @@
     "tracks": "歌曲",
     "albums": "专辑",
     "playlists": "歌单",
-    "songs": "单曲"
+    "songs": "单曲",
+    "by_you": "我的"
   },
   "get_all": {
     "artists": "艺人",
