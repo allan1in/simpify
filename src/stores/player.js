@@ -15,25 +15,24 @@ export const usePlayerStore = defineStore('player', {
   state: () => ({
     player: null,
     volume: 50,
-    isShuffle: false,
-    isPause: true,
-    repeatMode: 0,
-    isMute: false,
+    active_shuffle: false,
+    active_pause: true,
+    repeat_mode: 0,
     percentage: 0,
     duration: 0,
     position: 0,
     current_track: null,
     context: null,
     index: 0,
-    isReady: false,
+    initialized: false,
     loading: false,
-    isSaved: null
+    saved: null
   }),
   actions: {
     initPlayer() {
       if (useUserStore().checkProduct('premium')) {
         console.log('start init player')
-        this.isReady = false
+        this.initialized = false
         this.loading = false
         // Import SDK
         // https://developer.spotify.com/documentation/web-playback-sdk
@@ -57,7 +56,7 @@ export const usePlayerStore = defineStore('player', {
           this.player.addListener('ready', async (res) => {
             console.log('ready')
             await transferPlayback({ device_ids: [res.device_id] })
-            this.isReady = true
+            this.initialized = true
           })
 
           this.player.addListener('not_ready', (res) => {
@@ -75,16 +74,16 @@ export const usePlayerStore = defineStore('player', {
               return
             } else {
               if (!res.paused && res.position > 0) {
-                this.isPause = false
+                this.active_pause = false
               } else {
-                this.isPause = true
+                this.active_pause = true
               }
               this.duration = res.duration
               this.position = res.position
               this.percentage = 100 * (res.position / res.duration)
               this.current_track = res.track_window?.current_track
-              this.repeatMode = res.repeat_mode
-              this.isShuffle = res.shuffle
+              this.repeat_mode = res.repeat_mode
+              this.active_shuffle = res.shuffle
 
               this.player.getVolume().then((volume) => {
                 this.volume = volume * 100
@@ -93,7 +92,7 @@ export const usePlayerStore = defineStore('player', {
               this.context = res.context
             }
 
-            this.isSaved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]
+            this.saved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]
             this.loading = false
           })
 
@@ -134,14 +133,14 @@ export const usePlayerStore = defineStore('player', {
           this.player.connect()
         }
       } else if (useUserStore().checkProduct('free')) {
-        this.isReady = true
+        this.initialized = true
       }
     },
     startListenPos() {
       if (useUserStore().checkProduct('premium')) {
         this.player.addListener('progress', async (res) => {
           if (res.position > 0) {
-            this.isPause = false
+            this.active_pause = false
           }
           this.position = res.position
           this.percentage = 100 * (res.position / this.duration)
@@ -155,7 +154,7 @@ export const usePlayerStore = defineStore('player', {
     },
     async togglePlay() {
       if (useUserStore().checkProduct('premium')) {
-        if (this.isReady && !!this.current_track) {
+        if (this.initialized && !!this.current_track) {
           let state = await this.player.getCurrentState()
           if (!state) {
             // User is not playing music through the Web Playback SDK
@@ -173,12 +172,12 @@ export const usePlayerStore = defineStore('player', {
       if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
         return
-      } else if (!this.isReady) {
+      } else if (!this.initialized) {
         Message(`${i18n.global.t('message.unready')}`)
         return
       }
-      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
-        this.isPause = true
+      if (useUserStore().checkProduct('premium') && this.initialized && !!this.current_track) {
+        this.active_pause = true
         this.loading = true
         await this.player.nextTrack()
       } else if (useUserStore().checkProduct('free')) {
@@ -189,12 +188,12 @@ export const usePlayerStore = defineStore('player', {
       if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
         return
-      } else if (!this.isReady) {
+      } else if (!this.initialized) {
         Message(`${i18n.global.t('message.unready')}`)
         return
       }
-      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
-        this.isPause = true
+      if (useUserStore().checkProduct('premium') && this.initialized && !!this.current_track) {
+        this.active_pause = true
         this.loading = true
         await this.player.previousTrack()
       } else if (useUserStore().checkProduct('free')) {
@@ -202,44 +201,44 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async setRepeatMode() {
-      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
-        if (this.repeatMode === 0) {
+      if (useUserStore().checkProduct('premium') && this.initialized && !!this.current_track) {
+        if (this.repeat_mode === 0) {
           await setRepeatMode({ state: 'context' })
-          this.repeatMode = 1
-        } else if (this.repeatMode === 1) {
+          this.repeat_mode = 1
+        } else if (this.repeat_mode === 1) {
           await setRepeatMode({ state: 'track' })
-          this.repeatMode = 2
+          this.repeat_mode = 2
         } else {
           await setRepeatMode({ state: 'off' })
-          this.repeatMode = 0
+          this.repeat_mode = 0
         }
       } else if (useUserStore().checkProduct('free')) {
         Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async toggleShuffle() {
-      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
-        await togglePlaybackShuffle({ state: !this.isShuffle })
+      if (useUserStore().checkProduct('premium') && this.initialized && !!this.current_track) {
+        await togglePlaybackShuffle({ state: !this.active_shuffle })
       } else if (useUserStore().checkProduct('free')) {
         Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async setMute() {
-      if (useUserStore().checkProduct('premium') && this.isReady) {
+      if (useUserStore().checkProduct('premium') && this.initialized) {
         await this.player.setVolume(0)
       } else if (useUserStore().checkProduct('free')) {
         Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async setVolume() {
-      if (useUserStore().checkProduct('premium') && this.isReady) {
+      if (useUserStore().checkProduct('premium') && this.initialized) {
         await this.player.setVolume(this.volume / 100)
       } else if (useUserStore().checkProduct('free')) {
         Message(`${i18n.global.t('message.only_for_premium')}`)
       }
     },
     async seekPosition() {
-      if (useUserStore().checkProduct('premium') && this.isReady && !!this.current_track) {
+      if (useUserStore().checkProduct('premium') && this.initialized && !!this.current_track) {
         await this.player.seek((this.duration * this.percentage) / 100)
         await this.startListenPos()
       } else if (useUserStore().checkProduct('free')) {
@@ -250,7 +249,7 @@ export const usePlayerStore = defineStore('player', {
       if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
         return
-      } else if (!this.isReady) {
+      } else if (!this.initialized) {
         Message(`${i18n.global.t('message.unready')}`)
         return
       }
@@ -265,13 +264,13 @@ export const usePlayerStore = defineStore('player', {
       if (this.loading) {
         Message(`${i18n.global.t('message.loading')}`)
         return
-      } else if (!this.isReady) {
+      } else if (!this.initialized) {
         Message(`${i18n.global.t('message.unready')}`)
         return
       }
       if (useUserStore().checkProduct('premium')) {
         this.loading = true
-        if (this.isReady) {
+        if (this.initialized) {
           await startPlayback(data)
         } else {
           Message(`${i18n.global.t('message.loading')}`)
@@ -281,16 +280,16 @@ export const usePlayerStore = defineStore('player', {
       }
     },
     async toggleTrackSave() {
-      if (this.isSaved) {
+      if (this.saved) {
         await deleteUserSavedTracks({ ids: this.current_track?.id })
-        this.isSaved = false
-        useLibraryStore().removeLikedSong(this.current_track.id)
-        Message(`${i18n.global.t('message.removed_from_liked_songs')}`)
+        this.saved = false
+        useLibraryStore().removeSong(this.current_track.id)
+        Message(`${i18n.global.t('message.removed_from_lib')}`)
       } else {
         await saveTracks({ ids: this.current_track?.id })
-        this.isSaved = true
-        useLibraryStore().addLikedSongs(this.current_track)
-        Message(`${i18n.global.t('message.added_to_liked_songs')}`)
+        this.saved = true
+        useLibraryStore().addSongs(this.current_track)
+        Message(`${i18n.global.t('message.added_to_lib')}`)
       }
     }
   }

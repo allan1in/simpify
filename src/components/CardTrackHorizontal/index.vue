@@ -24,7 +24,7 @@
           class="card-library-container__right-wrapper__btn-wrapper"
           :class="{
             'card-library-container__right-wrapper__btn-wrapper-playing':
-              !isPause && item.track.uri === current_track.uri
+              !isPause && item.track?.uri === current_track?.uri
           }"
         >
           <ButtonTogglePlay :item="item.track" />

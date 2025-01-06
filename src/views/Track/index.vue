@@ -4,12 +4,18 @@
       <div class="track-container__banner">
         <Banner :type="$t('track.type')" :title="track.name" :images="track.album.images">
           <div class="track-container__banner-details">
-            <router-link class="track-container__banner-details__artist"
-              :to="{ name: 'Artist', params: { artistId: artists[0].id } }">{{ artists[0].name }}</router-link>
+            <router-link
+              class="track-container__banner-details__artist"
+              :to="{ name: 'Artist', params: { artistId: artists[0].id } }"
+              >{{ artists[0].name }}</router-link
+            >
             <span class="track-container__banner-details__album-wrapper">
               <span> • </span>
-              <router-link class="track-container__banner-details__album-wrapper__album"
-                :to="{ name: 'Album', params: { albumId: track.album.id } }">{{ track.album.name }}</router-link>
+              <router-link
+                class="track-container__banner-details__album-wrapper__album"
+                :to="{ name: 'Album', params: { albumId: track.album.id } }"
+                >{{ track.album.name }}</router-link
+              >
             </span>
             <span class="track-container__banner-details__release-year">
               {{ ` • ${track.album.release_date.split('-')[0]}` }}
@@ -17,11 +23,12 @@
             <span class="track-container__banner-details__duration">
               {{
                 ` •
-              ${duration.hr ? `${duration.hr} ${$t('track.duration.hr')} ` : ''}${duration.min
+              ${duration.hr ? `${duration.hr} ${$t('track.duration.hr')} ` : ''}${
+                duration.min
                   ? `${duration.min}
               ${$t('track.duration.min')} `
                   : ''
-                }${duration.sec ? `${duration.sec} ${$t('track.duration.sec')} ` : ''}`
+              }${duration.sec ? `${duration.sec} ${$t('track.duration.sec')} ` : ''}`
               }}
             </span>
           </div>
@@ -32,8 +39,12 @@
           <div class="track-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="track" />
           </div>
-          <ButtonSave :isSaved class="track-container__content__btn-group__add-wrapper"
-            @button-click="handleClickSaveButton" :loading="loading_toggle_save" />
+          <ButtonSave
+            :saved
+            class="track-container__content__btn-group__add-wrapper"
+            @button-click="handleClickSaveButton"
+            :loading="loading_toggle_save"
+          />
         </div>
         <div class="track-container__content__artists">
           <TitleShowAll :title="$t('track.all_artists')" />
@@ -98,7 +109,7 @@ export default {
     return {
       id: this.$route.params.trackId,
       track: {},
-      isSaved: undefined,
+      saved: undefined,
       artists: [],
       loading_skeleton: true,
       loading_toggle_save: false
@@ -110,7 +121,7 @@ export default {
     },
     ...mapWritableState(usePlayerStore, {
       current_track: 'current_track',
-      isSavedGlobal: 'isSaved'
+      isSavedGlobal: 'saved'
     })
   },
   methods: {
@@ -121,7 +132,7 @@ export default {
       this.loading_skeleton = true
     },
     async checkUserSavedTrack() {
-      this.isSaved = (await checkUserSavedTracks({ ids: this.id }))?.[0]
+      this.saved = (await checkUserSavedTracks({ ids: this.id }))?.[0]
     },
     async getAll() {
       await this.getTrack()
@@ -144,15 +155,15 @@ export default {
     },
     async handleClickSaveButton() {
       this.loading_toggle_save = true
-      if (this.isSaved) {
+      if (this.saved) {
         await deleteUserSavedTracks({ ids: this.id })
-        this.isSaved = false
-        useLibraryStore().removeLikedSong(this.track.id)
+        this.saved = false
+        useLibraryStore().removeSong(this.track.id)
         Message(`${this.$t('message.removed_from_lib')}`)
       } else {
         await saveTracks({ ids: this.id })
-        this.isSaved = true
-        useLibraryStore().addLikedSongs(this.track)
+        this.saved = true
+        useLibraryStore().addSongs(this.track)
         Message(`${this.$t('message.added_to_lib')}`)
       }
       this.loading_toggle_save = false
@@ -169,11 +180,11 @@ export default {
     isSavedGlobal: {
       handler(newVal) {
         if (this.current_track?.id === this.id) {
-          this.isSaved = newVal
+          this.saved = newVal
         }
       }
     },
-    isSaved: {
+    saved: {
       handler(newVal) {
         if (this.current_track?.id === this.id) {
           this.isSavedGlobal = newVal

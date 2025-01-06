@@ -28,7 +28,7 @@
         />
       </div>
       <Transition name="fade">
-        <div v-if="!isCollasped" class="card-album-library-contanier__info">
+        <div v-if="!active_collasped" class="card-album-library-contanier__info">
           <a
             @click.prevent.stop="$router.push({ name: 'Album', params: { albumId: item.id } })"
             class="card-album-library-contanier__info__title"
@@ -64,7 +64,7 @@
       <div class="card-album-library-contanier__cover">
         <Skeleton class="card-album-library-contanier__cover__img" />
       </div>
-      <div v-if="!isCollasped" class="card-album-library-contanier__info">
+      <div v-if="!active_collasped" class="card-album-library-contanier__info">
         <Skeleton class="card-album-library-contanier__info__title skeleton__name" />
         <Skeleton class="card-album-library-contanier__info__artists skeleton__artists" />
       </div>
@@ -106,7 +106,7 @@ export default {
     Image
   },
   computed: {
-    ...mapState(useLibraryStore, ['isCollasped']),
+    ...mapState(useLibraryStore, ['active_collasped']),
     ...mapState(usePlayerStore, ['isPause', 'context']),
     isPlaying() {
       return !this.isPause && this.isCurrentItem

@@ -46,7 +46,7 @@
             <ButtonTogglePlay :item="album" />
           </div>
           <ButtonSave
-            :isSaved
+            :saved
             class="album-container__content__btn-group__add-wrapper"
             @button-click="handleClickSaveButton"
             :loading="loading_toggle_save"
@@ -137,7 +137,7 @@ export default {
       loading_skeleton: true,
       loading_more: false,
       loading_toggle_save: false,
-      isSaved: null
+      saved: null
     }
   },
   computed: {
@@ -202,18 +202,18 @@ export default {
     async checkUserSavedAlbum() {
       let params = { ids: this.id }
       const res = await checkUserSavedAlbums(params)
-      this.isSaved = res[0]
+      this.saved = res[0]
     },
     async handleClickSaveButton() {
       this.loading_toggle_save = true
-      if (this.isSaved) {
+      if (this.saved) {
         await deleteUserSavedAlbums({ ids: this.id })
-        this.isSaved = false
+        this.saved = false
         useLibraryStore().removeAlbum(this.id)
         Message(`${this.$t('message.removed_from_lib')}`)
       } else {
         await saveAlbums({ ids: this.id })
-        this.isSaved = true
+        this.saved = true
         useLibraryStore().addAlbums(this.album)
         Message(`${this.$t('message.added_to_lib')}`)
       }

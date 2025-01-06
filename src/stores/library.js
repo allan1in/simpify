@@ -6,46 +6,46 @@ import { useUserStore } from './user'
 
 export const useLibraryStore = defineStore('library', {
   state: () => ({
-    myLibWidth: 0,
-    isCollasped: false,
-    isShowMore: false,
-    duringTransitionWidth: false,
-    activeTag: localStorage.getItem('LibraryActiveTag') || 'songs',
-    likedSongs: [],
+    library_width: 0,
+    active_collasped: false,
+    active_show_more: false,
+    during_library_width_transition: false,
+    current_tag: localStorage.getItem('LibraryActiveTag') || 'songs',
+    songs: [],
     playlists: [],
     albums: [],
     artists: [],
     resizing: false,
-    loading_playlists_by_user: true,
+    loading_playlists_by_user: false,
     playlists_by_user: [],
-    activeByYou: false
+    active_playlists_by_user: false
   }),
   actions: {
-    changeActiveTag(newTag) {
+    updateLibraryStoreState(newTag) {
       localStorage.setItem('LibraryActiveTag', newTag)
-      this.activeTag = newTag
+      this.current_tag = newTag
     },
     clearList(type) {
       this[type] = []
     },
-    async addLikedSongs(newVals) {
-      let oldVals = this.likedSongs
+    async addSongs(newVals) {
+      let oldVals = this.songs
       if (Array.isArray(newVals)) {
-        this.likedSongs = [...oldVals, ...newVals]
+        this.songs = [...oldVals, ...newVals]
       } else {
         const res = await getTrack(newVals.id)
-        this.likedSongs.unshift({ added_at: new Date().toISOString(), track: res })
+        this.songs.unshift({ added_at: new Date().toISOString(), track: res })
       }
     },
-    removeLikedSong(id) {
+    removeSong(id) {
       let index = -1
-      this.likedSongs.forEach((song, i) => {
+      this.songs.forEach((song, i) => {
         if (song.track.id === id) {
           index = i
         }
       })
       if (index > -1) {
-        this.likedSongs.splice(index, 1)
+        this.songs.splice(index, 1)
       }
     },
     addPlaylists(newVals) {

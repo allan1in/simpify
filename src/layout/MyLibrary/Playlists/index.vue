@@ -41,9 +41,9 @@ export default {
     CardPlaylistLibrary
   },
   computed: {
-    ...mapState(useLibraryStore, ['playlists', 'activeByYou', 'playlists_by_user', 'loading_playlists_by_user']),
+    ...mapState(useLibraryStore, ['playlists', 'active_playlists_by_user', 'playlists_by_user']),
     current_playlists() {
-      if (this.activeByYou) {
+      if (this.active_playlists_by_user) {
         return this.playlists_by_user
       }
       return this.playlists
@@ -52,6 +52,7 @@ export default {
   methods: {
     reset() {
       useLibraryStore().clearList('playlists')
+      useLibraryStore().clearList('playlists_by_user')
       this.playlists_limit = 20
       this.playlists_offset = 0
       this.playlists_next = ''
@@ -85,6 +86,12 @@ export default {
 
         this.loading_more = false
       }
+    },
+    async getPlaylistsOwnedByUser() {
+      this.reset()
+      await useLibraryStore().getPlaylistsOwnedByUser()
+
+      this.loading_skeleton = false
     }
   },
   watch: {
@@ -98,12 +105,23 @@ export default {
     },
     active: {
       handler(newVal) {
-        if (newVal) {
+        if (newVal && !this.active_playlists_by_user) {
           this.reset()
           this.getAll()
         }
       },
       immediate: true
+    },
+    active_playlists_by_user: {
+      handler(newVal) {
+        if (newVal) {
+          this.reset()
+          this.getPlaylistsOwnedByUser()
+        } else {
+          this.reset()
+          this.getAll()
+        }
+      }
     }
   }
 }

@@ -1,13 +1,13 @@
 <template>
   <Transition name="slide-from-bottom">
     <main
-      v-show="showFullScreenPlayer"
+      v-show="show_fullscreen_player"
       @mousemove="isCursorMove = true"
       class="full-screen-container"
     >
       <div
         class="full-screen-container__background"
-        :class="{ 'full-screen-container__background-pause': isPause }"
+        :class="{ 'full-screen-container__background-pause': active_pause }"
       ></div>
       <div class="full-screen-container__wrapper">
         <div class="full-screen-container__wrapper__top">
@@ -89,7 +89,7 @@
               <button
                 v-tooltip="toolTipShuffle"
                 class="icon-wrapper"
-                :class="{ 'btn-active': isShuffle }"
+                :class="{ 'btn-active': active_shuffle }"
                 @click="toggleShuffle"
               >
                 <IconShuffle />
@@ -105,7 +105,7 @@
                 <span
                   class="full-screen-container__wrapper__player__btns__mid__play__icon-wrapper-round"
                 >
-                  <IconPlay v-if="isPause" />
+                  <IconPlay v-if="active_pause" />
                   <IconPause v-else />
                 </span>
               </button>
@@ -115,10 +115,10 @@
               <button
                 v-tooltip="toolTipRepeat"
                 class="icon-wrapper"
-                :class="{ 'btn-active': repeatMode !== 0 }"
+                :class="{ 'btn-active': repeat_mode !== 0 }"
                 @click="setRepeatMode"
               >
-                <IconRepeatSingle v-if="repeatMode === 2" />
+                <IconRepeatSingle v-if="repeat_mode === 2" />
                 <IconRepeat v-else />
               </button>
             </div>
@@ -171,34 +171,33 @@ export default {
   computed: {
     ...mapWritableState(usePlayerStore, [
       'current_track',
-      'isPause',
-      'repeatMode',
-      'isShuffle',
-      'isMute',
+      'active_pause',
+      'repeat_mode',
+      'active_shuffle',
       'volume'
     ]),
-    ...mapWritableState(useAppStore, ['showFullScreenPlayer']),
+    ...mapWritableState(useAppStore, ['show_fullscreen_player']),
     toolTipShuffle() {
-      if (this.isShuffle) {
+      if (this.active_shuffle) {
         return this.$t('tooltip.disable_shuffle')
       }
       return this.$t('tooltip.enable_shuffle')
     },
     toolTipPlay() {
-      if (this.isPause) {
+      if (this.active_pause) {
         return this.$t('tooltip.play')
       }
       return this.$t('tooltip.pause')
     },
     toolTipRepeat() {
-      if (this.repeatMode === 0) {
+      if (this.repeat_mode === 0) {
         return this.$t('tooltip.repeat_enable')
-      } else if (this.repeatMode === 1) {
+      } else if (this.repeat_mode === 1) {
         return this.$t('tooltip.repeat_one')
-      } else if (this.repeatMode === 2) {
+      } else if (this.repeat_mode === 2) {
         return this.$t('tooltip.repeat_disable')
       } else {
-        throw Error('Invalid value of repeatMode! Only accept values 0, 1 or 2.')
+        throw Error('Invalid value of repeat_mode! Only accept values 0, 1 or 2.')
       }
     }
   },
@@ -220,7 +219,7 @@ export default {
   methods: {
     async closeFullScreenPlayer() {
       await this.closeFullscreen()
-      this.showFullScreenPlayer = false
+      this.show_fullscreen_player = false
     },
     /* Close fullscreen */
     async closeFullscreen() {

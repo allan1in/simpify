@@ -137,7 +137,7 @@ export default {
         this.tracks = this.tracks.concat(res.items)
         this.removeDuplicates()
 
-        if (this.tracks.length === this.tracks_limit) {
+        if (this.tracks.length === this.tracks_limit || res.items.length === 0) {
           moreSongsNeeded = false
         }
       }
@@ -186,6 +186,7 @@ export default {
       width: 100%;
       height: 18rem;
       background-image: linear-gradient(to bottom, rgba($color-bg-2, 0.1), $color-bg-2);
+      z-index: -1;
 
       @include transitionExtraSlow;
     }

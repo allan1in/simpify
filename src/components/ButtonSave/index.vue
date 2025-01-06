@@ -1,6 +1,6 @@
 <template>
   <button v-tooltip="toolTipLike" @click.prevent="handleClick">
-    <IconSaved v-if="isSaved" />
+    <IconSaved v-if="saved" />
     <IconAddTo v-else />
   </button>
 </template>
@@ -10,7 +10,7 @@ import IconSaved from '@/components/Icons/IconSaved.vue'
 export default {
   name: 'ButtonSave',
   props: {
-    isSaved: {
+    saved: {
       type: Boolean,
       required: true
     },
@@ -25,7 +25,7 @@ export default {
   },
   computed: {
     toolTipLike() {
-      if (this.isSaved) {
+      if (this.saved) {
         return this.$t('tooltip.remove_from_library')
       }
       return this.$t('tooltip.add_to_library')

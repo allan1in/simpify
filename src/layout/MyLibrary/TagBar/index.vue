@@ -1,26 +1,40 @@
 <template>
-  <div ref="wrapper" class="top-bar-wrapper" @mouseenter="mouseOver = true" @mouseleave="mouseOver = false">
+  <div
+    ref="wrapper"
+    class="top-bar-wrapper"
+    @mouseenter="mouseOver = true"
+    @mouseleave="mouseOver = false"
+  >
     <i v-show="isOverflow && !reachedLeft" class="top-bar-wrapper__shadow-left"></i>
     <i v-show="isOverflow && !reachedRight" class="top-bar-wrapper__shadow-right"></i>
     <Transition name="fade">
-      <button v-show="mouseOver && isOverflow && !reachedLeft"
-        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-left" @click.prevent="scrollX('pre')">
+      <button
+        v-show="mouseOver && isOverflow && !reachedLeft"
+        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-left"
+        @click.prevent="scrollX('pre')"
+      >
         <div class="top-bar-wrapper__arrow__icon-wrapper">
           <IconArrowLeft />
         </div>
       </button>
     </Transition>
     <Transition name="fade">
-      <button v-show="mouseOver && isOverflow && !reachedRight"
-        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-right" @click.prevent="scrollX('next')">
+      <button
+        v-show="mouseOver && isOverflow && !reachedRight"
+        class="top-bar-wrapper__arrow top-bar-wrapper__arrow-right"
+        @click.prevent="scrollX('next')"
+      >
         <div class="top-bar-wrapper__arrow__icon-wrapper">
           <IconArrowRight />
         </div>
       </button>
     </Transition>
     <div ref="topBar" class="top-bar-wrapper__top-bar">
-      <button v-if="activeSecondaryMenu" class="top-bar-wrapper__top-bar__back"
-        @click="$emit('handleClickTag', 'songs')">
+      <button
+        v-if="activeSecondaryMenu"
+        class="top-bar-wrapper__top-bar__back"
+        @click="updateLibraryStoreState('songs')"
+      >
         <div class="top-bar-wrapper__top-bar__back__icon-wrapper">
           <IconClose />
         </div>
@@ -28,15 +42,31 @@
 
       <template v-if="!activeSecondaryMenu">
         <template v-for="tag in tags" :key="tag">
-          <TagButton class="top-bar-wrapper__top-bar__btn" @handle-click="$emit('handleClickTag', tag)"
-            :text="$t(`top_bar.${tag}`)" :activeTag="activeTag === tag" />
+          <TagButton
+            class="top-bar-wrapper__top-bar__btn"
+            @handle-click="updateLibraryStoreState(tag)"
+            :text="$t(`top_bar.${tag}`)"
+            :is-active="current_tag === tag"
+          />
         </template>
       </template>
       <template v-else>
-        <TagButton class="top-bar-wrapper__top-bar__btn" @handle-click="$emit('handleClickTag', 'playlists')"
-          :text="$t(`top_bar.playlists`)" :activeTag="activeTag === 'playlists'" />
-        <TagButton class="top-bar-wrapper__top-bar__btn" @handle-click="activeByYou = !activeByYou"
-          :text="$t(`top_bar.by_you`)" :activeTag="activeByYou" />
+        <TagButton
+          class="top-bar-wrapper__top-bar__btn"
+          @handle-click="updateLibraryStoreState('playlists')"
+          :text="$t(`top_bar.playlists`)"
+          :is-active="current_tag === 'playlists'"
+        />
+        <TagButton
+          class="top-bar-wrapper__top-bar__btn"
+          @handle-click="
+            loading_playlists_by_user
+              ? () => {}
+              : (active_playlists_by_user = !active_playlists_by_user)
+          "
+          :text="$t(`top_bar.by_you`)"
+          :is-active="active_playlists_by_user"
+        />
       </template>
     </div>
   </div>
@@ -45,24 +75,12 @@
 import TagButton from '@/components/TagButton/index.vue'
 import IconArrowRight from '@/components/Icons/IconArrowRight.vue'
 import IconArrowLeft from '@/components/Icons/IconArrowLeft.vue'
-import { mapWritableState } from 'pinia'
+import { mapActions, mapWritableState } from 'pinia'
 import { useLibraryStore } from '@/stores/library'
 import IconClose from '@/components/Icons/IconClose.vue'
 
 export default {
   name: 'TagBar',
-  props: {
-    tags: {
-      type: Array,
-      default: () => {
-        return []
-      }
-    },
-    activeTag: {
-      type: String,
-      default: ''
-    }
-  },
   components: {
     TagButton,
     IconArrowRight,
@@ -75,19 +93,25 @@ export default {
       reachedLeft: true,
       reachedRight: false,
       mouseOver: false,
-      resizeObserver: undefined
+      resizeObserver: undefined,
+      tags: ['songs', 'playlists', 'albums', 'artists']
     }
   },
   computed: {
-    ...mapWritableState(useLibraryStore, ['myLibWidth', 'isCollasped', 'activeByYou']),
+    ...mapWritableState(useLibraryStore, [
+      'active_playlists_by_user',
+      'current_tag',
+      'loading_playlists_by_user'
+    ]),
     isOverflow() {
       return this.overflow > 0
     },
     activeSecondaryMenu() {
-      return this.activeTag === "playlists"
+      return this.current_tag === 'playlists'
     }
   },
   methods: {
+    ...mapActions(useLibraryStore, ['updateLibraryStoreState']),
     scrollX(direction, distance) {
       // Set default distance
       if (direction == 'pre') {
@@ -263,7 +287,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: $gutter;
+      margin-right: $gutter-1-5x;
 
       &:hover &__icon-wrapper {
         fill: $color-font-primary;

@@ -3,9 +3,7 @@ import { defineStore } from 'pinia'
 export const useAppStore = defineStore('app', {
   state: () => ({
     loading: true,
-    loadMore: false,
-    showFullScreenPlayer: false,
-    showMessage: false,
+    show_fullscreen_player: false,
     language: localStorage.getItem('language') || 'en'
   }),
   actions: {

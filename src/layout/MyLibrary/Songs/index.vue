@@ -3,7 +3,13 @@
     <template v-if="!loading_skeleton">
       <div class="my-library__container__content__liked-songs">
         <TransitionGroup name="list">
-          <CardTrackLibrary v-for="(item, index) in likedSongs" :key="item.track.id" :item="item.track" :index :uris />
+          <CardTrackLibrary
+            v-for="(item, index) in songs"
+            :key="item.track.id"
+            :item="item.track"
+            :index
+            :uris
+          />
         </TransitionGroup>
       </div>
     </template>
@@ -44,17 +50,17 @@ export default {
   computed: {
     uris() {
       let uris = []
-      this.likedSongs.forEach((item) => {
+      this.songs.forEach((item) => {
         uris.push(item.track.uri)
       })
       return uris
     },
-    ...mapState(useLibraryStore, ['likedSongs'])
+    ...mapState(useLibraryStore, ['songs'])
   },
   methods: {
-    ...mapActions(useLibraryStore, ['addLikedSongs']),
+    ...mapActions(useLibraryStore, ['addSongs']),
     reset() {
-      useLibraryStore().clearList('likedSongs')
+      useLibraryStore().clearList('songs')
       this.tracks_limit = 20
       this.tracks_offset = 0
       this.tracks_next = ''
@@ -82,7 +88,7 @@ export default {
         }
 
         let newVals = res.items.filter((item) => item !== null)
-        this.addLikedSongs(newVals)
+        this.addSongs(newVals)
         this.tracks_next = res.next
 
         this.loading_more = false
