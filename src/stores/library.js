@@ -10,7 +10,7 @@ export const useLibraryStore = defineStore('library', {
     active_collasped: false,
     active_show_more: false,
     during_library_width_transition: false,
-    current_tag: localStorage.getItem('LibraryActiveTag') || 'songs',
+    current_tag: localStorage.getItem('lib_current_tag') || 'songs',
     songs: [],
     playlists: [],
     albums: [],
@@ -18,12 +18,13 @@ export const useLibraryStore = defineStore('library', {
     resizing: false,
     loading_playlists_by_user: false,
     playlists_by_user: [],
-    active_playlists_by_user: false
+    active_playlists_by_user:
+      localStorage.getItem('lib_active_playlists_by_user') === 'true' || false
   }),
   actions: {
-    updateLibraryStoreState(newTag) {
-      localStorage.setItem('LibraryActiveTag', newTag)
-      this.current_tag = newTag
+    updateLibraryStoreState(state, newVal) {
+      localStorage.setItem(`lib_${state}`, newVal)
+      this[state] = newVal
     },
     clearList(type) {
       this[type] = []
@@ -122,7 +123,7 @@ export const useLibraryStore = defineStore('library', {
 
       let next = ''
       let offset = 0
-      let limit = 5
+      let limit = 20
       while (next !== null) {
         this.loading_more = true
         let res

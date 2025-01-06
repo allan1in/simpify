@@ -121,7 +121,8 @@ export default {
           this.reset()
           this.getAll()
         }
-      }
+      },
+      immediate: true
     }
   }
 }

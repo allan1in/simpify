@@ -33,7 +33,7 @@
       <button
         v-if="activeSecondaryMenu"
         class="top-bar-wrapper__top-bar__back"
-        @click="updateLibraryStoreState('songs')"
+        @click="updateLibraryStoreState('current_tag', 'songs')"
       >
         <div class="top-bar-wrapper__top-bar__back__icon-wrapper">
           <IconClose />
@@ -44,7 +44,7 @@
         <template v-for="tag in tags" :key="tag">
           <TagButton
             class="top-bar-wrapper__top-bar__btn"
-            @handle-click="updateLibraryStoreState(tag)"
+            @handle-click="updateLibraryStoreState('current_tag', tag)"
             :text="$t(`top_bar.${tag}`)"
             :is-active="current_tag === tag"
           />
@@ -53,7 +53,7 @@
       <template v-else>
         <TagButton
           class="top-bar-wrapper__top-bar__btn"
-          @handle-click="updateLibraryStoreState('playlists')"
+          @handle-click="updateLibraryStoreState('current_tag', 'playlists')"
           :text="$t(`top_bar.playlists`)"
           :is-active="current_tag === 'playlists'"
         />
@@ -62,7 +62,7 @@
           @handle-click="
             loading_playlists_by_user
               ? () => {}
-              : (active_playlists_by_user = !active_playlists_by_user)
+              : updateLibraryStoreState('active_playlists_by_user', !active_playlists_by_user)
           "
           :text="$t(`top_bar.by_you`)"
           :is-active="active_playlists_by_user"
