@@ -50,16 +50,11 @@ export default {
     }
   },
   methods: {
-    reset() {
-      useLibraryStore().clearList('playlists')
-      useLibraryStore().clearList('playlists_by_user')
-      this.playlists_limit = 20
-      this.playlists_offset = 0
-      this.playlists_next = ''
-      this.loading_skeleton = true
-    },
     async getAll() {
-      await this.getCurrentUserPlaylists()
+      await Promise.all([
+        this.getCurrentUserPlaylists(),
+        useLibraryStore().getPlaylistsOwnedByUser()
+      ])
 
       this.loading_skeleton = false
     },
@@ -86,44 +81,20 @@ export default {
 
         this.loading_more = false
       }
-    },
-    async getPlaylistsOwnedByUser() {
-      this.reset()
-      await useLibraryStore().getPlaylistsOwnedByUser()
-
-      this.loading_skeleton = false
     }
   },
   watch: {
     bottom: {
       handler(newVal) {
-        if (newVal <= 0) {
+        if (newVal <= 0 && this.active) {
           this.getCurrentUserPlaylists()
         }
       },
       immediate: true
-    },
-    active: {
-      handler(newVal) {
-        if (newVal && !this.active_playlists_by_user) {
-          this.reset()
-          this.getAll()
-        }
-      },
-      immediate: true
-    },
-    active_playlists_by_user: {
-      handler(newVal) {
-        if (newVal) {
-          this.reset()
-          this.getPlaylistsOwnedByUser()
-        } else {
-          this.reset()
-          this.getAll()
-        }
-      },
-      immediate: true
     }
+  },
+  created() {
+    this.getAll()
   }
 }
 </script>

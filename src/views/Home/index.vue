@@ -134,6 +134,7 @@ export default {
       }
       while (moreSongsNeeded) {
         const res = await getNextRecentlyPlayedTracks(next)
+        next = res.next?.slice(res.next.indexOf('?') + 1)
         this.tracks = this.tracks.concat(res.items)
         this.removeDuplicates()
 

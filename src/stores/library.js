@@ -13,11 +13,11 @@ export const useLibraryStore = defineStore('library', {
     current_tag: localStorage.getItem('lib_current_tag') || 'songs',
     songs: [],
     playlists: [],
+    playlists_by_user: [],
     albums: [],
     artists: [],
     resizing: false,
     loading_playlists_by_user: false,
-    playlists_by_user: [],
     active_playlists_by_user:
       localStorage.getItem('lib_active_playlists_by_user') === 'true' || false
   }),

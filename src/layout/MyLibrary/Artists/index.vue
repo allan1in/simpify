@@ -44,12 +44,6 @@ export default {
     ...mapState(useLibraryStore, ['artists'])
   },
   methods: {
-    reset() {
-      useLibraryStore().clearList('artists')
-      this.artists_limit = 20
-      this.artists_next = ''
-      this.loading_skeleton = true
-    },
     async getAll() {
       await this.getCurrentUserArtists()
 
@@ -81,21 +75,15 @@ export default {
   watch: {
     bottom: {
       handler(newVal) {
-        if (newVal <= 0) {
+        if (newVal <= 0 && this.active) {
           this.getCurrentUserArtists()
         }
       },
       immediate: true
-    },
-    active: {
-      handler(newVal) {
-        if (newVal) {
-          this.reset()
-          this.getAll()
-        }
-      },
-      immediate: true
     }
+  },
+  created() {
+    this.getAll()
   }
 }
 </script>

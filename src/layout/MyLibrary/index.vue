@@ -136,7 +136,7 @@ export default {
       const instance = this.$refs.scrollbar.getOsInstance()
       if (instance) {
         // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollTo
-        instance.elements().viewport.scrollTo({ top: 0, behavior: 'smooth' })
+        instance.elements().viewport.scrollTo({ top: 0 })
       }
     }
   },

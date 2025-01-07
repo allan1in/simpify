@@ -59,13 +59,6 @@ export default {
   },
   methods: {
     ...mapActions(useLibraryStore, ['addSongs']),
-    reset() {
-      useLibraryStore().clearList('songs')
-      this.tracks_limit = 20
-      this.tracks_offset = 0
-      this.tracks_next = ''
-      this.loading_skeleton = true
-    },
     async getAll() {
       await this.getUserlikedSongs()
 
@@ -98,21 +91,15 @@ export default {
   watch: {
     bottom: {
       handler(newVal) {
-        if (newVal <= 0) {
+        if (newVal <= 0 && this.active) {
           this.getUserlikedSongs()
         }
       },
       immediate: true
-    },
-    active: {
-      handler(newVal) {
-        if (newVal) {
-          this.reset()
-          this.getAll()
-        }
-      },
-      immediate: true
     }
+  },
+  created() {
+    this.getAll()
   }
 }
 </script>

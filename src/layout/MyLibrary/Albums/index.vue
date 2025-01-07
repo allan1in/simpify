@@ -45,13 +45,6 @@ export default {
     ...mapState(useLibraryStore, ['albums'])
   },
   methods: {
-    reset() {
-      useLibraryStore().clearList('albums')
-      this.albums_limit = 20
-      this.albums_offset = 0
-      this.albums_next = ''
-      this.loading_skeleton = true
-    },
     async getAll() {
       await this.getCurrentUserAlbums()
 
@@ -84,21 +77,15 @@ export default {
   watch: {
     bottom: {
       handler(newVal) {
-        if (newVal <= 0) {
+        if (newVal <= 0 && this.active) {
           this.getCurrentUserAlbums()
         }
       },
       immediate: true
-    },
-    active: {
-      handler(newVal) {
-        if (newVal) {
-          this.reset()
-          this.getAll()
-        }
-      },
-      immediate: true
     }
+  },
+  created() {
+    this.getAll()
   }
 }
 </script>
