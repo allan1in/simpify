@@ -153,7 +153,7 @@ export default {
       this.inputContent = ''
     },
     getSearchResult() {
-      if (this.inputContent.length !== 0) {
+      if (this.inputContent.trim().length !== 0) {
         this.$router.push({
           name: 'SearchResult',
           params: { inputContent: this.inputContent }
