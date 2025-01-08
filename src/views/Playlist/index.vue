@@ -225,6 +225,7 @@ export default {
     async handleConfirmed() {
       await deleteUserSavedPlaylists(this.playlist.id)
       useLibraryStore().removePlaylist(this.playlist.id)
+      useLibraryStore().deletePlaylistByUser(this.playlist.id)
       if (this.$route.fullPath.split('/').indexOf(this.playlist.id) !== -1) {
         this.$router.push({ name: 'Home' })
       }

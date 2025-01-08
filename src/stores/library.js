@@ -67,6 +67,20 @@ export const useLibraryStore = defineStore('library', {
         this.playlists.splice(index, 1)
       }
     },
+    createPlaylistByUser(newVals) {
+      this.playlists_by_user.unshift(newVals)
+    },
+    deletePlaylistByUser(id) {
+      let index = -1
+      this.playlists_by_user.forEach((item, i) => {
+        if (item.id === id) {
+          index = i
+        }
+      })
+      if (index > -1) {
+        this.playlists_by_user.splice(index, 1)
+      }
+    },
     updatePlaylist(newVal) {
       let index = -1
       this.playlists.forEach((item, i) => {

@@ -120,6 +120,7 @@ export default {
         if (res?.id) {
           res.owner.display_name = this.display_name
           useLibraryStore().addPlaylists(res)
+          useLibraryStore().createPlaylistByUser(res)
           Message(`${this.$t('message.added_to_lib')}`)
         } else {
           Message(`${this.$t('message.something_wrong')}`)
