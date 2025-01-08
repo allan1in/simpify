@@ -161,7 +161,6 @@ export default {
         let obj = await getAverageColor(item?.track?.album?.images?.[0]?.url)
         this.color = `rgba(${obj.r}, ${obj.g}, ${obj.b}, 0.6)`
       } catch (e) {
-        /* empty */
         console.log(e)
       }
     },

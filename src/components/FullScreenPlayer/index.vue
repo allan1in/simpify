@@ -8,6 +8,7 @@
       <div
         class="full-screen-container__background"
         :class="{ 'full-screen-container__background-pause': active_pause }"
+        :style="{ background: color }"
       ></div>
       <div class="full-screen-container__wrapper">
         <div class="full-screen-container__wrapper__top">
@@ -158,6 +159,7 @@ import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
 import { useAppStore } from '@/stores/app'
 import Image from '@/components/Image/index.vue'
+import { getAverageColor } from '@/utils/average_color'
 
 export default {
   name: 'FullScreenPlayer',
@@ -165,7 +167,8 @@ export default {
     return {
       isCursorMove: true,
       isCursorOverPlayer: false,
-      isCursorOverClose: false
+      isCursorOverClose: false,
+      color: undefined
     }
   },
   computed: {
@@ -217,6 +220,14 @@ export default {
     Image
   },
   methods: {
+    async changeColor() {
+      try {
+        let obj = await getAverageColor(this.current_track?.album?.images?.[0]?.url)
+        this.color = obj.rgb
+      } catch (e) {
+        console.log(e)
+      }
+    },
     async closeFullScreenPlayer() {
       await this.closeFullscreen()
       this.show_fullscreen_player = false
@@ -243,6 +254,12 @@ export default {
             this.isCursorMove = false
           }, 3000)
         }
+      },
+      immediate: true
+    },
+    current_track: {
+      handler() {
+        this.changeColor()
       },
       immediate: true
     }
@@ -303,30 +320,41 @@ export default {
   overflow: hidden;
 
   &__background {
-    background: linear-gradient(to bottom, $color-bg-6, $color-bg-3);
-    height: 400%;
-    width: 400%;
+    width: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    animation: pulse 3.2s infinite;
-    animation-play-state: running;
 
-    &-pause {
+    @include transition;
+
+    &-pause:nth-child(n)::after {
       animation-play-state: paused;
     }
 
-    @keyframes pulse {
-      0% {
-        transform: scale(1) rotate(0);
-      }
+    &::after {
+      content: '';
+      background: linear-gradient(to bottom, rgba($color-bg-7, 0.5), rgba($color-bg-1, 0.5));
+      height: 300%;
+      width: 300%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      animation: pulse 5s infinite;
+      animation-play-state: running;
 
-      50% {
-        transform: scale(4) rotate(180deg);
-      }
+      @keyframes pulse {
+        0% {
+          transform: scale(1) rotate(0);
+        }
 
-      100% {
-        transform: scale(1) rotate(0);
+        50% {
+          transform: scale(4) rotate(180deg);
+        }
+
+        100% {
+          transform: scale(1) rotate(0);
+        }
       }
     }
   }
@@ -382,7 +410,7 @@ export default {
         height: 4rem;
         width: 4rem;
         border-radius: 50%;
-        background-color: $color-bg-5;
+        background-color: rgba($color-bg-3, 0.5);
         display: flex;
         align-items: center;
         justify-content: center;
