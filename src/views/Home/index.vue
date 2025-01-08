@@ -9,7 +9,8 @@
         />
         <div class="dashboard-container__recent-play__content">
           <CardTrackHorizontal
-            @mouseenter="changeColor(item)"
+            @mouseenter="handleMouseEnter(item)"
+            @mouseleave="handleMouseLeave()"
             v-for="item in tracks"
             :key="item.id"
             :item="item"
@@ -77,7 +78,8 @@ export default {
       tracks: [],
       days: 7,
       tracks_limit: 8,
-      color: undefined
+      color: undefined,
+      timer: undefined
     }
   },
   methods: {
@@ -143,12 +145,24 @@ export default {
         }
       }
     },
+    handleMouseEnter(item) {
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      this.timer = setTimeout(() => this.changeColor(item), 200)
+    },
+    handleMouseLeave() {
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+    },
     async changeColor(item) {
       try {
         let obj = await getAverageColor(item?.track?.album?.images?.[0]?.url)
         this.color = `rgba(${obj.r}, ${obj.g}, ${obj.b}, 0.6)`
       } catch (e) {
         /* empty */
+        console.log(e)
       }
     },
     removeDuplicates() {

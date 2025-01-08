@@ -1,6 +1,7 @@
 <template>
   <template v-if="!loading">
     <div
+      v-bind="$attrs"
       class="card-library-container"
       @click="$router.push({ name: 'Track', params: { trackId: item.track.id } })"
     >
@@ -46,6 +47,7 @@ import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'CardTrackLibrary',
+  inheritAttrs: false,
   props: {
     item: {
       type: Object,
