@@ -84,9 +84,9 @@ export default {
   },
   computed: {
     ...mapState(useLibraryStore, ['active_collasped']),
-    ...mapState(usePlayerStore, ['isPause', 'context']),
+    ...mapState(usePlayerStore, ['active_pause', 'context']),
     isPlaying() {
-      return !this.isPause && this.isCurrentItem
+      return !this.active_pause && this.isCurrentItem
     },
     isCurrentItem() {
       return this.context?.uri === this.item.uri

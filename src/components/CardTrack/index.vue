@@ -122,7 +122,7 @@ export default {
     Image
   },
   computed: {
-    ...mapState(usePlayerStore, ['current_track', 'isPause']),
+    ...mapState(usePlayerStore, ['current_track', 'active_pause']),
     ...mapState(useLibraryStore, ['isCollasped']),
     available() {
       if (this.item?.restrictions) {
@@ -131,7 +131,7 @@ export default {
       return true
     },
     isPlaying() {
-      return !this.isPause && this.isCurrent
+      return !this.active_pause && this.isCurrent
     },
     isCurrent() {
       return this.current_track?.uri === this.item.uri

@@ -47,8 +47,6 @@
 <script>
 import IconDefaultArtist from '@/components/Icons/IconDefaultArtist.vue'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
-import { mapState } from 'pinia'
-import { usePlayerStore } from '@/stores/player'
 import Skeleton from '@/components/Skeleton/index.vue'
 import Image from '@/components/Image/index.vue'
 
@@ -70,9 +68,6 @@ export default {
       require: false,
       default: false
     }
-  },
-  computed: {
-    ...mapState(usePlayerStore, ['isPause', 'context'])
   }
 }
 </script>

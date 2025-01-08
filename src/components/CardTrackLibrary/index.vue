@@ -112,9 +112,9 @@ export default {
   },
   computed: {
     ...mapState(useLibraryStore, ['active_collasped']),
-    ...mapState(usePlayerStore, ['isPause', 'current_track']),
+    ...mapState(usePlayerStore, ['active_pause', 'current_track']),
     isPlaying() {
-      return !this.isPause && this.isCurrentItem
+      return !this.active_pause && this.isCurrentItem
     },
     isCurrentItem() {
       return this.current_track?.uri === this.item.uri

@@ -24,7 +24,7 @@
           class="card-library-container__right-wrapper__btn-wrapper"
           :class="{
             'card-library-container__right-wrapper__btn-wrapper-playing':
-              !isPause && item.track?.uri === current_track?.uri
+              !active_pause && item.track?.uri === current_track?.uri
           }"
         >
           <ButtonTogglePlay :item="item.track" />
@@ -66,7 +66,7 @@ export default {
     Image
   },
   computed: {
-    ...mapState(usePlayerStore, ['isPause', 'current_track'])
+    ...mapState(usePlayerStore, ['active_pause', 'current_track'])
   }
 }
 </script>
