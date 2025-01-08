@@ -39,7 +39,6 @@
           <IconClose />
         </div>
       </button>
-
       <template v-if="!activeSecondaryMenu">
         <template v-for="tag in tags" :key="tag">
           <TagButton

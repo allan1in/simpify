@@ -11,12 +11,12 @@
             <IconLibrary v-if="!active_collasped" />
             <IconLibraryCollasped v-else />
           </div>
-
-          <span v-if="!active_collasped" class="my-library__container__title__left__text">{{
-            $t('my_library.title')
-          }}</span>
+          <Transition name="fade">
+            <span v-if="!active_collasped" class="my-library__container__title__left__text">{{
+              $t('my_library.title')
+            }}</span>
+          </Transition>
         </div>
-
         <Transition name="fade">
           <div v-if="!active_collasped" class="my-library__container__title__right">
             <button
@@ -272,6 +272,11 @@ export default {
       padding: 0 $gutter $gutter $gutter;
       width: 100%;
     }
+  }
+
+  &__content__wrapper {
+    overflow: hidden;
+    min-height: 100%;
   }
 }
 </style>
