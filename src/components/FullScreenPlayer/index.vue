@@ -221,11 +221,13 @@ export default {
   },
   methods: {
     async changeColor() {
-      try {
-        let obj = await getAverageColor(this.current_track?.album?.images?.[0]?.url)
-        this.color = obj.rgb
-      } catch (e) {
-        console.log(e)
+      if (this.current_track) {
+        try {
+          let obj = await getAverageColor(this.current_track?.album?.images?.[0]?.url)
+          this.color = obj.rgb
+        } catch (e) {
+          console.log(e)
+        }
       }
     },
     async closeFullScreenPlayer() {
