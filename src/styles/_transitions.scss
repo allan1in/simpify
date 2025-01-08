@@ -1,7 +1,7 @@
 .fade-slide-from-top {
   &-enter-active,
   &-leave-active {
-    transition: all $duration-default ease;
+    transition: all $duration-default ease-in-out;
   }
 
   &-enter-from,
@@ -14,7 +14,7 @@
 .fade-slide-from-bottom {
   &-enter-active,
   &-leave-active {
-    transition: all $duration-slow ease;
+    transition: all $duration-slow ease-in-out;
   }
 
   &-enter-from,
@@ -27,7 +27,7 @@
 .slide-from-bottom {
   &-enter-active,
   &-leave-active {
-    transition: all $duration-slow ease;
+    transition: all $duration-slow ease-in-out;
   }
 
   &-enter-from,
@@ -39,7 +39,7 @@
 .fade {
   &-enter-active,
   &-leave-active {
-    transition: opacity $duration-default ease;
+    transition: opacity $duration-default ease-in-out;
   }
 
   &-enter-from,
@@ -52,13 +52,12 @@
   &-move,
   &-enter-active,
   &-leave-active {
-    transition: all $duration-default ease;
-    // Fill collapse due to position: absolute
-    width: calc(100% - 2 * $gutter);
+    transition: all $duration-default ease-in-out;
   }
 
   &-leave-active {
     position: absolute;
+    width: 100%;
   }
 
   &-enter-from,
@@ -72,7 +71,7 @@
   &-move,
   &-enter-active,
   &-leave-active {
-    transition: all $duration-default ease;
+    transition: all $duration-default ease-in-out;
     width: 100%;
   }
 

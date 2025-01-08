@@ -88,4 +88,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.my-library__container__content__artists {
+  position: relative;
+}
+</style>

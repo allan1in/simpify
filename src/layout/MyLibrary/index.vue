@@ -271,7 +271,6 @@ export default {
     &__wrapper {
       padding: 0 $gutter $gutter $gutter;
       width: 100%;
-      overflow: hidden;
     }
   }
 }
