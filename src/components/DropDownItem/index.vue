@@ -1,5 +1,6 @@
 <template>
-  <li>
+  <li @click="$emit('itemClick')">
+    <!-- inner link -->
     <router-link
       v-if="to !== null"
       :to="to"
@@ -10,6 +11,7 @@
         <slot></slot>
       </span>
     </router-link>
+    <!-- external link -->
     <a
       v-else-if="toExternal !== ''"
       :href="toExternal"
@@ -24,11 +26,13 @@
         <IconExternalLink />
       </span>
     </a>
+    <!-- normal text -->
     <button v-else class="drop-down-item-button" :class="{ 'top-line': topLine }">
       <slot name="icon"></slot>
       <span class="drop-down-item-button__text-wrapper">
         <slot></slot>
       </span>
+      <slot name="right"></slot>
     </button>
   </li>
 </template>
@@ -76,7 +80,6 @@ export default {
 
   &:hover {
     background-color: $color-bg-6;
-    text-decoration: underline;
   }
 
   &__icon-wrapper {
@@ -89,17 +92,22 @@ export default {
 
 .drop-down-item-button {
   width: 100%;
-  display: flex;
-  justify-content: start;
+  justify-content: space-between;
   font-size: $font-size-text-secondary;
   padding: 1.2rem;
   cursor: pointer;
   display: flex;
   align-items: center;
+  gap: $gutter-1-5x;
+
+  &__text-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: start;
+  }
 
   &:hover {
     background-color: $color-bg-6;
-    text-decoration: underline;
   }
 }
 </style>

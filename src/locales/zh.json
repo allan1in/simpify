@@ -123,13 +123,11 @@
     "text_label": "名称",
     "create": "创建"
   },
-  "drop_down_image_edit": {
+  "drop_down": {
     "change_picture": "更改图片",
-    "remove_picture": "删除图片"
-  },
-  "drop_down_playlist": {
     "edit_details": "编辑详情",
-    "remove": "移除"
+    "remove": "移除",
+    "add_to_playlist": "添加到歌单"
   },
   "alert_box": {
     "require_name": "歌单名称是必填项。",

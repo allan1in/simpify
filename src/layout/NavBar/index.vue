@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="nav-bar__right">
-      <DropDown>
+      <DropDown v-model="show_menu_language" position="bottom-end">
         <div v-tooltip="$t('tooltip.language')" class="nav-bar__right__language">
           <button class="nav-bar__right__language__language-wrapper">
             <IconLanguage />
@@ -66,11 +66,15 @@
         </div>
 
         <template #dropDownItems>
-          <DropDownItem @click="changeLocale('en')">English</DropDownItem>
-          <DropDownItem @click="changeLocale('zh')">简体中文 </DropDownItem>
+          <DropDownItem @item-click="show_menu_language = false" @click="changeLocale('en')"
+            >English</DropDownItem
+          >
+          <DropDownItem @item-click="show_menu_language = false" @click="changeLocale('zh')"
+            >简体中文
+          </DropDownItem>
         </template>
       </DropDown>
-      <DropDown>
+      <DropDown v-model="show_menu_me" position="bottom-end">
         <button v-tooltip="display_name" class="nav-bar__right__photo-wrapper">
           <img
             v-if="avatar.length !== 0"
@@ -87,20 +91,27 @@
         </button>
         <template #dropDownItems>
           <DropDownItem
+            @item-click="show_menu_me = false"
             toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account"
           >
             {{ $t('user.account') }}</DropDownItem
           >
-          <DropDownItem :to="{ name: 'User', params: { userId: uid } }">{{
-            $t('user.profile')
-          }}</DropDownItem>
           <DropDownItem
+            @item-click="show_menu_me = false"
+            :to="{ name: 'User', params: { userId: uid } }"
+            >{{ $t('user.profile') }}</DropDownItem
+          >
+          <DropDownItem
+            @item-click="show_menu_me = false"
             toExternal="https://www.spotify.com/us/premium/?ref=web_loggedin_upgrade_menu"
             >{{ $t('user.upgrade') }}
           </DropDownItem>
-          <DropDownItem :topLine="true" @click.prevent="logout">{{
-            $t('user.log_out')
-          }}</DropDownItem>
+          <DropDownItem
+            @item-click="show_menu_me = false"
+            :topLine="true"
+            @click.prevent="logout"
+            >{{ $t('user.log_out') }}</DropDownItem
+          >
         </template>
       </DropDown>
     </div>
@@ -143,7 +154,9 @@ export default {
     return {
       isHome: true,
       isSearch: false,
-      inputContent: ''
+      inputContent: '',
+      show_menu_language: false,
+      show_menu_me: false
     }
   },
   methods: {

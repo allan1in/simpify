@@ -3,7 +3,6 @@
     <div
       ref="clickWrapper"
       class="drop-down-container__click-wrapper"
-      @click.prevent="handleClick"
       @mouseenter.prevent="handleMouseEnter"
     >
       <slot></slot>
@@ -26,15 +25,11 @@
 
 <script>
 export default {
-  name: 'DropDown',
+  name: 'DropDownSecondary',
   props: {
     position: {
       type: String,
-      default: 'bottom-start'
-    },
-    gutter: {
-      type: Number,
-      default: 8
+      default: 'right-start'
     },
     modelValue: {}
   },
@@ -48,15 +43,8 @@ export default {
   },
   methods: {
     setPosition() {
-      if (this.position.startsWith('bottom')) {
-        this.top = this.$refs.clickWrapper.offsetHeight + this.gutter + 'px'
-        if (this.position === 'bottom-start') {
-          this.left = 0
-        } else if (this.position === 'bottom-end') {
-          this.right = 0
-        }
-      } else if (this.position.startsWith('right')) {
-        this.left = this.$refs.clickWrapper.offsetWidth + this.gutter + 'px'
+      if (this.position.startsWith('right')) {
+        this.left = this.$refs.clickWrapper.offsetWidth + 'px'
         if (this.position === 'right-start') {
           this.top = 0
         } else if (this.position === 'right-end') {
@@ -64,18 +52,16 @@ export default {
         }
       }
     },
-    handleClick() {
+    handleMouseEnter() {
       this.setPosition()
-      this.$emit('update:modelValue', !this.modelValue)
+
+      this.$emit('handleMouseEnter')
 
       // Hide element when click outside of it.
       document.addEventListener('mouseup', this.hide)
     },
     hide(event) {
-      if (
-        !this.$refs.clickWrapper.contains(event.target) &&
-        !this.$refs.box.contains(event.target)
-      ) {
+      if (!this.$refs.clickWrapper.contains(event.target)) {
         this.$emit('update:modelValue', false)
       }
       document.removeEventListener('mouseup', this.hide)

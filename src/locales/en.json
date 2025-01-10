@@ -123,13 +123,11 @@
     "text_label": "Name",
     "create": "Create"
   },
-  "drop_down_image_edit": {
+  "drop_down": {
     "change_picture": "Change Picture",
-    "remove_picture": "Remove Picture"
-  },
-  "drop_down_playlist": {
     "edit_details": "Edit Details",
-    "remove": "Remove"
+    "remove": "Remove",
+    "add_to_playlist": "Add to playlist"
   },
   "alert_box": {
     "require_name": "Playlist name is required.",

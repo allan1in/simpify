@@ -59,7 +59,7 @@
             />
           </div>
           <div v-if="isOwner" class="playlist-container__content__btn-group__more">
-            <DropDown position="right">
+            <DropDown v-model="show_menu">
               <template #default>
                 <button
                   v-tooltip="$t('tooltip.more_options', { item: playlist.name })"
@@ -71,7 +71,7 @@
                 </button>
               </template>
               <template #dropDownItems>
-                <DropDownItem @click="openEditDialog = true">
+                <DropDownItem @item-click="show_menu = false" @click="openEditDialog = true">
                   <template #icon>
                     <div
                       class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper"
@@ -80,10 +80,10 @@
                     </div>
                   </template>
                   <template #default>
-                    {{ $t('drop_down_playlist.edit_details') }}
+                    {{ $t('drop_down.edit_details') }}
                   </template>
                 </DropDownItem>
-                <DropDownItem @click="openRemoveConfirm = true">
+                <DropDownItem @item-click="show_menu = false" @click="openRemoveConfirm = true">
                   <template #icon>
                     <div
                       class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper"
@@ -92,7 +92,7 @@
                     </div>
                   </template>
                   <template #default>
-                    {{ $t('drop_down_playlist.remove') }}
+                    {{ $t('drop_down.remove') }}
                   </template>
                 </DropDownItem>
               </template>
@@ -205,7 +205,8 @@ export default {
       saved: null,
       openEditDialog: false,
       openRemoveConfirm: false,
-      loading_toggle_save: false
+      loading_toggle_save: false,
+      show_menu: false
     }
   },
   computed: {
@@ -384,8 +385,7 @@ export default {
 
         &__drop-down-item {
           &__icon-wrapper {
-            margin-right: $gutter-1-5x;
-            height: calc($font-size-text-primary + 0.2rem);
+            height: calc($font-size-text-primary);
             aspect-ratio: 1 / 1;
             fill: $color-font-secondary;
           }

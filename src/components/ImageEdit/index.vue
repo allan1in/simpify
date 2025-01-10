@@ -29,7 +29,7 @@
               </div>
             </template>
             <template #default>
-              {{ $t('drop_down_image_edit.change_picture') }}
+              {{ $t('drop_down.change_picture') }}
             </template>
           </DropDownItem>
         </template>

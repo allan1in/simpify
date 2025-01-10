@@ -39,12 +39,70 @@
           <div class="track-container__content__btn-group__play-wrapper">
             <ButtonTogglePlay :item="track" />
           </div>
-          <ButtonSave
-            :saved
-            class="track-container__content__btn-group__add-wrapper"
-            @button-click="handleClickSaveButton"
-            :loading="loading_toggle_save"
-          />
+          <div class="track-container__content__btn-group__add-wrapper">
+            <ButtonSave
+              :saved
+              @button-click="handleClickSaveButton"
+              :loading="loading_toggle_save"
+            />
+          </div>
+          <div class="track-container__content__btn-group__more">
+            <DropDown v-model="show_menu">
+              <template #default>
+                <button
+                  v-tooltip="$t('tooltip.more_options', { item: track.name })"
+                  class="track-container__content__btn-group__more__btn"
+                >
+                  <div class="track-container__content__btn-group__more__btn__icon-wrapper">
+                    <IconMore />
+                  </div>
+                </button>
+              </template>
+              <template #dropDownItems>
+                <DropDownSecondary
+                  @handle-mouse-enter="show_menu_secondary = true"
+                  v-model="show_menu_secondary"
+                >
+                  <template #default>
+                    <DropDownItem>
+                      <template #icon>
+                        <div
+                          class="track-container__content__btn-group__more__drop-down-item__icon-wrapper"
+                        >
+                          <IconPlus />
+                        </div>
+                      </template>
+                      <template #default>
+                        {{ $t('drop_down.add_to_playlist') }}
+                      </template>
+                      <template #right>
+                        <div
+                          class="track-container__content__btn-group__more__drop-down-item__icon-wrapper"
+                        >
+                          <IconTriangleRight />
+                        </div>
+                      </template>
+                    </DropDownItem>
+                  </template>
+                  <template #dropDownItems>
+                    <div
+                      class="track-container__content__btn-group__more__drop-down-item-secondary"
+                    >
+                      <DropDownItem
+                        @item-click="closeMenu"
+                        v-for="item in playlists_by_user"
+                        :key="item.id"
+                        >{{ item.name }}</DropDownItem
+                      >
+                    </div>
+                  </template>
+                </DropDownSecondary>
+                <DropDownItem @item-click="closeMenu" @mouseenter="show_menu_secondary = false">{{
+                  $t('drop_down.add_to_playlist')
+                }}</DropDownItem>
+              </template>
+            </DropDown>
+          </div>
         </div>
         <div class="track-container__content__artists">
           <TitleShowAll :title="$t('track.all_artists')" />
@@ -94,6 +152,12 @@ import { mapWritableState } from 'pinia'
 import { usePlayerStore } from '@/stores/player'
 import { useLibraryStore } from '@/stores/library'
 import ButtonSave from '@/components/ButtonSave/index.vue'
+import DropDown from '@/components/DropDown/index.vue'
+import DropDownItem from '@/components/DropDownItem/index.vue'
+import IconPlus from '@/components/Icons/IconPlus.vue'
+import IconMore from '@/components/Icons/IconMore.vue'
+import IconTriangleRight from '@/components/Icons/IconTriangleRight.vue'
+import DropDownSecondary from '@/components/DropDownSecondary/index.vue'
 
 export default {
   name: 'Track',
@@ -103,7 +167,13 @@ export default {
     Banner,
     Skeleton,
     ButtonTogglePlay,
-    ButtonSave
+    ButtonSave,
+    DropDown,
+    DropDownItem,
+    IconPlus,
+    IconMore,
+    IconTriangleRight,
+    DropDownSecondary
   },
   data() {
     return {
@@ -112,7 +182,9 @@ export default {
       saved: undefined,
       artists: [],
       loading_skeleton: true,
-      loading_toggle_save: false
+      loading_toggle_save: false,
+      show_menu_secondary: false,
+      show_menu: false
     }
   },
   computed: {
@@ -122,9 +194,14 @@ export default {
     ...mapWritableState(usePlayerStore, {
       current_track: 'current_track',
       isSavedGlobal: 'saved'
-    })
+    }),
+    ...mapWritableState(useLibraryStore, { playlists_by_user: 'playlists_by_user' })
   },
   methods: {
+    closeMenu() {
+      this.show_menu_secondary = false
+      this.show_menu = false
+    },
     async reset() {
       this.id = this.$route.params.trackId
       this.track = {}
@@ -234,6 +311,31 @@ export default {
         cursor: pointer;
 
         @include clickAnimation;
+      }
+
+      &__more {
+        height: 2.4rem;
+        aspect-ratio: 3 / 2;
+
+        &__btn {
+          height: 2.4rem;
+
+          @include clickAnimation;
+
+          &__icon-wrapper {
+            height: 100%;
+            width: 100%;
+            fill: $color-font-secondary;
+          }
+        }
+
+        &__drop-down-item {
+          &__icon-wrapper {
+            height: calc($font-size-text-primary);
+            aspect-ratio: 1 / 1;
+            fill: $color-font-secondary;
+          }
+        }
       }
     }
 

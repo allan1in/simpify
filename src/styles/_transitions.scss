@@ -1,6 +1,5 @@
 .fade-slide-from-top {
-  &-enter-active,
-  &-leave-active {
+  &-enter-active {
     transition: all $duration-default ease-in-out;
   }
 
