@@ -11,11 +11,9 @@
             <IconLibrary v-if="!active_collasped" />
             <IconLibraryCollasped v-else />
           </div>
-          <Transition name="fade">
-            <span v-if="!active_collasped" class="my-library__container__title__left__text">{{
-              $t('my_library.title')
-            }}</span>
-          </Transition>
+          <span v-if="!active_collasped" class="my-library__container__title__left__text">{{
+            $t('my_library.title')
+          }}</span>
         </div>
         <Transition name="fade">
           <div v-if="!active_collasped" class="my-library__container__title__right">
