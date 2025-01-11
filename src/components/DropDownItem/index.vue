@@ -7,9 +7,11 @@
       class="drop-down-item-container"
       :class="{ 'top-line': topLine }"
     >
+      <slot name="left"></slot>
       <span class="drop-down-item-container__text-wrapper">
         <slot></slot>
       </span>
+      <slot name="right"></slot>
     </router-link>
     <!-- external link -->
     <a
@@ -28,7 +30,7 @@
     </a>
     <!-- normal text -->
     <button v-else class="drop-down-item-button" :class="{ 'top-line': topLine }">
-      <slot name="icon"></slot>
+      <slot name="left"></slot>
       <span class="drop-down-item-button__text-wrapper">
         <slot></slot>
       </span>
@@ -77,6 +79,7 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
+  gap: $gutter-1-5x;
 
   &:hover {
     background-color: $color-bg-6;
@@ -88,15 +91,24 @@ export default {
     width: calc($font-size-text-secondary + 0.2rem);
     fill: $color-font-primary;
   }
+
+  &__text-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: start;
+    text-align: left;
+
+    @include oneLineEllipsis;
+  }
 }
 
 .drop-down-item-button {
   width: 100%;
-  justify-content: space-between;
   font-size: $font-size-text-secondary;
   padding: 1.2rem;
   cursor: pointer;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: $gutter-1-5x;
 
@@ -104,6 +116,9 @@ export default {
     flex: 1;
     display: flex;
     justify-content: start;
+    text-align: left;
+
+    @include oneLineEllipsis;
   }
 
   &:hover {

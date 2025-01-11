@@ -1,7 +1,7 @@
 <template>
   <div class="drop-down-container">
     <div
-      ref="clickWrapper"
+      ref="trigger"
       class="drop-down-container__click-wrapper"
       @click.prevent="handleClick"
       @mouseenter.prevent="handleMouseEnter"
@@ -49,14 +49,14 @@ export default {
   methods: {
     setPosition() {
       if (this.position.startsWith('bottom')) {
-        this.top = this.$refs.clickWrapper.offsetHeight + this.gutter + 'px'
+        this.top = this.$refs.trigger.offsetHeight + this.gutter + 'px'
         if (this.position === 'bottom-start') {
           this.left = 0
         } else if (this.position === 'bottom-end') {
           this.right = 0
         }
       } else if (this.position.startsWith('right')) {
-        this.left = this.$refs.clickWrapper.offsetWidth + this.gutter + 'px'
+        this.left = this.$refs.trigger.offsetWidth + this.gutter + 'px'
         if (this.position === 'right-start') {
           this.top = 0
         } else if (this.position === 'right-end') {
@@ -72,13 +72,10 @@ export default {
       document.addEventListener('mouseup', this.hide)
     },
     hide(event) {
-      if (
-        !this.$refs.clickWrapper.contains(event.target) &&
-        !this.$refs.box.contains(event.target)
-      ) {
+      if (!this.$refs.trigger.contains(event.target) && !this.$refs.box.contains(event.target)) {
         this.$emit('update:modelValue', false)
+        document.removeEventListener('mouseup', this.hide)
       }
-      document.removeEventListener('mouseup', this.hide)
     }
   }
 }
@@ -87,11 +84,6 @@ export default {
 <style lang="scss" scoped>
 .drop-down-container {
   position: relative;
-
-  &__click-wrapper {
-    height: max-content;
-    width: max-content;
-  }
 
   &__box {
     width: max-content;

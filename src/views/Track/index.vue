@@ -60,15 +60,15 @@
               </template>
               <template #dropDownItems>
                 <DropDownSecondary
-                  @handle-mouse-enter="show_menu_secondary = true"
-                  v-model="show_menu_secondary"
+                  @handle-mouse-enter="show_menu_secondary_playlists = true"
+                  v-model="show_menu_secondary_playlists"
                 >
-                  <template #default>
-                    <DropDownItem>
-                      <template #icon>
-                        <div
-                          class="track-container__content__btn-group__more__drop-down-item__icon-wrapper"
-                        >
+                  <template #trigger>
+                    <DropDownItem
+                      @mouseenter="closeOtherMenuSecondary('show_menu_secondary_playlists')"
+                    >
+                      <template #left>
+                        <div class="icon-wrapper">
                           <IconPlus />
                         </div>
                       </template>
@@ -76,30 +76,95 @@
                         {{ $t('drop_down.add_to_playlist') }}
                       </template>
                       <template #right>
-                        <div
-                          class="track-container__content__btn-group__more__drop-down-item__icon-wrapper"
-                        >
+                        <div class="icon-wrapper">
                           <IconTriangleRight />
                         </div>
                       </template>
                     </DropDownItem>
                   </template>
                   <template #dropDownItems>
-                    <div
-                      class="track-container__content__btn-group__more__drop-down-item-secondary"
-                    >
-                      <DropDownItem
-                        @item-click="closeMenu"
+                    <div class="drop-down__item__drop-down-secondary__item-wrapper">
+                      <div
                         v-for="item in playlists_by_user"
                         :key="item.id"
-                        >{{ item.name }}</DropDownItem
+                        class="drop-down__item__drop-down-secondary__item-wrapper__item"
                       >
+                        <DropDownItem @item-click="closeMenu">{{ item.name }}</DropDownItem>
+                      </div>
                     </div>
                   </template>
                 </DropDownSecondary>
-                <DropDownItem @item-click="closeMenu" @mouseenter="show_menu_secondary = false">{{
-                  $t('drop_down.add_to_playlist')
-                }}</DropDownItem>
+                <DropDownItem
+                  v-if="artists.length === 1"
+                  :to="{ name: 'Artist', params: { artistId: artists[0].id } }"
+                  top-line
+                  @item-click="closeMenu"
+                  @mouseenter="show_menu_secondary_playlists = false"
+                >
+                  <template #left>
+                    <div class="icon-wrapper">
+                      <IconDefaultArtist />
+                    </div>
+                  </template>
+                  <template #default>
+                    {{ $t('drop_down.go_to_artist') }}
+                  </template>
+                </DropDownItem>
+                <DropDownSecondary
+                  v-else-if="artists.length > 1"
+                  @handle-mouse-enter="show_menu_secondary_artists = true"
+                  v-model="show_menu_secondary_artists"
+                >
+                  <template #trigger>
+                    <DropDownItem
+                      top-line
+                      @mouseenter="closeOtherMenuSecondary('show_menu_secondary_artists')"
+                    >
+                      <template #left>
+                        <div class="icon-wrapper">
+                          <IconDefaultArtist />
+                        </div>
+                      </template>
+                      <template #default>
+                        {{ $t('drop_down.go_to_artist') }}
+                      </template>
+                      <template #right>
+                        <div class="icon-wrapper">
+                          <IconTriangleRight />
+                        </div>
+                      </template>
+                    </DropDownItem>
+                  </template>
+                  <template #dropDownItems>
+                    <div class="drop-down__item__drop-down-secondary__item-wrapper">
+                      <div
+                        v-for="item in artists"
+                        :key="item.id"
+                        class="drop-down__item__drop-down-secondary__item-wrapper__item"
+                      >
+                        <DropDownItem
+                          :to="{ name: 'Artist', params: { artistId: item.id } }"
+                          @item-click="closeMenu"
+                          >{{ item.name }}</DropDownItem
+                        >
+                      </div>
+                    </div>
+                  </template>
+                </DropDownSecondary>
+                <DropDownItem
+                  :to="{ name: 'Album', params: { albumId: track.album.id } }"
+                  @item-click="closeMenu"
+                  @mouseenter="closeOtherMenuSecondary"
+                >
+                  <template #left>
+                    <div class="icon-wrapper">
+                      <IconDefaultAlbum />
+                    </div>
+                  </template>
+                  <template #default>
+                    {{ $t('drop_down.go_to_album') }}
+                  </template>
+                </DropDownItem>
               </template>
             </DropDown>
           </div>
@@ -158,6 +223,8 @@ import IconPlus from '@/components/Icons/IconPlus.vue'
 import IconMore from '@/components/Icons/IconMore.vue'
 import IconTriangleRight from '@/components/Icons/IconTriangleRight.vue'
 import DropDownSecondary from '@/components/DropDownSecondary/index.vue'
+import IconDefaultArtist from '@/components/Icons/IconDefaultArtist.vue'
+import IconDefaultAlbum from '@/components/Icons/IconDefaultAlbum.vue'
 
 export default {
   name: 'Track',
@@ -173,7 +240,9 @@ export default {
     IconPlus,
     IconMore,
     IconTriangleRight,
-    DropDownSecondary
+    DropDownSecondary,
+    IconDefaultArtist,
+    IconDefaultAlbum
   },
   data() {
     return {
@@ -183,8 +252,9 @@ export default {
       artists: [],
       loading_skeleton: true,
       loading_toggle_save: false,
-      show_menu_secondary: false,
-      show_menu: false
+      show_menu_secondary_playlists: false,
+      show_menu: false,
+      show_menu_secondary_artists: false
     }
   },
   computed: {
@@ -198,8 +268,17 @@ export default {
     ...mapWritableState(useLibraryStore, { playlists_by_user: 'playlists_by_user' })
   },
   methods: {
+    closeOtherMenuSecondary(propName) {
+      this.show_menu_secondary_playlists = false
+      this.show_menu_secondary_artists = false
+
+      if (propName) {
+        this[propName] = true
+      }
+    },
     closeMenu() {
-      this.show_menu_secondary = false
+      this.show_menu_secondary_playlists = false
+      this.show_menu_secondary_artists = false
       this.show_menu = false
     },
     async reset() {
@@ -273,6 +352,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.icon-wrapper {
+  height: calc($font-size-text-primary);
+  aspect-ratio: 1 / 1;
+  fill: $color-font-secondary;
+}
+
+.drop-down__item {
+  &__drop-down-secondary {
+    &__item-wrapper {
+      max-height: 12rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-color: #7f7f7f transparent;
+      padding: 0.3rem;
+      padding-right: 0;
+
+      &__item {
+        max-width: 20rem;
+      }
+    }
+  }
+}
+
 .track-container {
   &__banner-details {
     @include twoLineEllipsis;
@@ -325,14 +427,6 @@ export default {
           &__icon-wrapper {
             height: 100%;
             width: 100%;
-            fill: $color-font-secondary;
-          }
-        }
-
-        &__drop-down-item {
-          &__icon-wrapper {
-            height: calc($font-size-text-primary);
-            aspect-ratio: 1 / 1;
             fill: $color-font-secondary;
           }
         }

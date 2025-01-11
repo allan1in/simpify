@@ -72,7 +72,7 @@
               </template>
               <template #dropDownItems>
                 <DropDownItem @item-click="show_menu = false" @click="openEditDialog = true">
-                  <template #icon>
+                  <template #left>
                     <div
                       class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper"
                     >
@@ -84,7 +84,7 @@
                   </template>
                 </DropDownItem>
                 <DropDownItem @item-click="show_menu = false" @click="openRemoveConfirm = true">
-                  <template #icon>
+                  <template #left>
                     <div
                       class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper"
                     >

@@ -1,11 +1,11 @@
 <template>
   <div class="drop-down-container">
     <div
-      ref="clickWrapper"
+      ref="trigger"
       class="drop-down-container__click-wrapper"
       @mouseenter.prevent="handleMouseEnter"
     >
-      <slot></slot>
+      <slot name="trigger"></slot>
     </div>
 
     <Transition name="fade-slide-from-top">
@@ -15,7 +15,7 @@
         class="drop-down-container__box"
         :style="{ top: top, left: left, bottom: bottom, right: right }"
       >
-        <ul class="drop-down-container__box__items-wrapper">
+        <ul>
           <slot name="dropDownItems"></slot>
         </ul>
       </div>
@@ -44,7 +44,7 @@ export default {
   methods: {
     setPosition() {
       if (this.position.startsWith('right')) {
-        this.left = this.$refs.clickWrapper.offsetWidth + 'px'
+        this.left = this.$refs.trigger.offsetWidth + 'px'
         if (this.position === 'right-start') {
           this.top = 0
         } else if (this.position === 'right-end') {
@@ -61,10 +61,10 @@ export default {
       document.addEventListener('mouseup', this.hide)
     },
     hide(event) {
-      if (!this.$refs.clickWrapper.contains(event.target)) {
+      if (!this.$refs.trigger.contains(event.target) && !this.$refs.box.contains(event.target)) {
         this.$emit('update:modelValue', false)
+        document.removeEventListener('mouseup', this.hide)
       }
-      document.removeEventListener('mouseup', this.hide)
     }
   }
 }
@@ -73,11 +73,6 @@ export default {
 <style lang="scss" scoped>
 .drop-down-container {
   position: relative;
-
-  &__click-wrapper {
-    height: max-content;
-    width: max-content;
-  }
 
   &__box {
     width: max-content;
@@ -88,10 +83,6 @@ export default {
     border-radius: $border-radius-small;
     z-index: 10;
     box-shadow: 0 0 1.5rem 1rem rgba($color-bg-1, 0.2);
-
-    &__items-wrapper {
-      padding: 0.3rem;
-    }
   }
 }
 </style>

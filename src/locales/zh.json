@@ -127,7 +127,9 @@
     "change_picture": "更改图片",
     "edit_details": "编辑详情",
     "remove": "移除",
-    "add_to_playlist": "添加到歌单"
+    "add_to_playlist": "添加到歌单",
+    "go_to_artist": "查看艺术家",
+    "go_to_album": "查看专辑"
   },
   "alert_box": {
     "require_name": "歌单名称是必填项。",
