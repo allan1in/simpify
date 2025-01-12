@@ -59,12 +59,13 @@
     </div>
     <div class="nav-bar__right">
       <DropDown v-model="show_menu_language" position="bottom-end">
-        <div v-tooltip="$t('tooltip.language')" class="nav-bar__right__language">
-          <button class="nav-bar__right__language__language-wrapper">
-            <IconLanguage />
-          </button>
-        </div>
-
+        <template #trigger>
+          <div v-tooltip="$t('tooltip.language')" class="nav-bar__right__language">
+            <button class="nav-bar__right__language__language-wrapper">
+              <IconLanguage />
+            </button>
+          </div>
+        </template>
         <template #dropDownItems>
           <DropDownItem @item-click="show_menu_language = false" @click="changeLocale('en')"
             >English</DropDownItem
@@ -75,20 +76,22 @@
         </template>
       </DropDown>
       <DropDown v-model="show_menu_me" position="bottom-end">
-        <button v-tooltip="display_name" class="nav-bar__right__photo-wrapper">
-          <img
-            v-if="avatar.length !== 0"
-            class="nav-bar__right__photo-wrapper__photo"
-            :src="avatar"
-            :alt="display_name"
-            :title="display_name"
-          />
-          <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
-            <span class="nav-bar__right__photo-wrapper__photo-default-wrapper__default">{{
-              display_name.charAt(0).toLocaleUpperCase()
-            }}</span>
-          </div>
-        </button>
+        <template #trigger>
+          <button v-tooltip="display_name" class="nav-bar__right__photo-wrapper">
+            <img
+              v-if="avatar.length !== 0"
+              class="nav-bar__right__photo-wrapper__photo"
+              :src="avatar"
+              :alt="display_name"
+              :title="display_name"
+            />
+            <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
+              <span class="nav-bar__right__photo-wrapper__photo-default-wrapper__default">{{
+                display_name.charAt(0).toLocaleUpperCase()
+              }}</span>
+            </div>
+          </button>
+        </template>
         <template #dropDownItems>
           <DropDownItem
             @item-click="show_menu_me = false"

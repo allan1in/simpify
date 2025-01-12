@@ -106,7 +106,8 @@
     "autoplay_failed": "Autoplay is not allowed by the browser autoplay rules. Please play manually.",
     "check_network": "Please check your network.",
     "too_many_requests": "The request is too frequent, please try again later.",
-    "unready": "Initializing..."
+    "unready": "Initializing...",
+    "added_to_playlist": "Added to {playlist}."
   },
   "dialog_playlist_edit": {
     "title": "Edit Details",

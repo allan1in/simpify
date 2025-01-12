@@ -60,7 +60,7 @@
           </div>
           <div v-if="isOwner" class="playlist-container__content__btn-group__more">
             <DropDown v-model="show_menu">
-              <template #default>
+              <template #trigger>
                 <button
                   v-tooltip="$t('tooltip.more_options', { item: playlist.name })"
                   class="playlist-container__content__btn-group__more__btn"

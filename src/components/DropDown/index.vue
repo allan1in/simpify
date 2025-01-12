@@ -6,9 +6,8 @@
       @click.prevent="handleClick"
       @mouseenter.prevent="handleMouseEnter"
     >
-      <slot></slot>
+      <slot name="trigger"></slot>
     </div>
-
     <Transition name="fade-slide-from-top">
       <div
         ref="box"
