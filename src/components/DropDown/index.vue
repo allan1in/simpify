@@ -8,18 +8,18 @@
     >
       <slot name="trigger"></slot>
     </div>
-    <Transition name="fade-slide-from-top">
+    <Teleport to="body">
       <div
         ref="box"
         v-show="modelValue"
         class="drop-down-container__box"
-        :style="{ top: top, left: left, bottom: bottom, right: right }"
+        :style="{ top: top, left: left }"
       >
         <ul class="drop-down-container__box__items-wrapper">
           <slot name="dropDownItems"></slot>
         </ul>
       </div>
-    </Transition>
+    </Teleport>
   </div>
 </template>
 
@@ -27,10 +27,6 @@
 export default {
   name: 'DropDown',
   props: {
-    position: {
-      type: String,
-      default: 'bottom-start'
-    },
     gutter: {
       type: Number,
       default: 8
@@ -39,33 +35,38 @@ export default {
   },
   data() {
     return {
-      top: 'unset',
-      bottom: 'unset',
-      left: 'unset',
-      right: 'unset'
+      top: '0',
+      left: '0'
     }
   },
   methods: {
     setPosition() {
-      if (this.position.startsWith('bottom')) {
-        this.top = this.$refs.trigger.offsetHeight + this.gutter + 'px'
-        if (this.position === 'bottom-start') {
-          this.left = 0
-        } else if (this.position === 'bottom-end') {
-          this.right = 0
+      this.$nextTick(() => {
+        const triggerRect = this.$refs.trigger.getBoundingClientRect()
+        const boxRect = this.$refs.box.getBoundingClientRect()
+        const viewWidth = window.innerWidth
+        const viewHeight = window.innerHeight
+
+        let position = {
+          left: triggerRect.left + 'px',
+          top: triggerRect.bottom + this.gutter + 'px'
         }
-      } else if (this.position.startsWith('right')) {
-        this.left = this.$refs.trigger.offsetWidth + this.gutter + 'px'
-        if (this.position === 'right-start') {
-          this.top = 0
-        } else if (this.position === 'right-end') {
-          this.bottom = 0
+
+        if (boxRect.width + triggerRect.left > viewWidth) {
+          position.left = triggerRect.right - boxRect.width + 'px'
         }
-      }
+
+        if (triggerRect.bottom + this.gutter + boxRect.height > viewHeight) {
+          position.top = triggerRect.top - boxRect.height - this.gutter + 'px'
+        }
+
+        this.left = position.left
+        this.top = position.top
+      })
     },
     handleClick() {
-      this.setPosition()
       this.$emit('update:modelValue', !this.modelValue)
+      this.setPosition()
 
       // Hide element when click outside of it.
       document.addEventListener('mouseup', this.hide)
@@ -91,7 +92,7 @@ export default {
     right: 0;
     background-color: $color-bg-4;
     border-radius: $border-radius-small;
-    z-index: 10;
+    z-index: 99999;
     box-shadow: 0 0 1.5rem 1rem rgba($color-bg-1, 0.2);
 
     &__items-wrapper {

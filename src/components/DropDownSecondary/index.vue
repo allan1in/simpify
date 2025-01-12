@@ -7,19 +7,16 @@
     >
       <slot name="trigger"></slot>
     </div>
-
-    <Transition name="fade-slide-from-top">
-      <div
-        ref="box"
-        v-show="modelValue"
-        class="drop-down-container__box"
-        :style="{ top: top, left: left, bottom: bottom, right: right }"
-      >
-        <ul>
-          <slot name="dropDownItems"></slot>
-        </ul>
-      </div>
-    </Transition>
+    <div
+      ref="box"
+      v-show="modelValue"
+      class="drop-down-container__box"
+      :style="{ top: top, left: left }"
+    >
+      <ul>
+        <slot name="dropDownItems"></slot>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -27,35 +24,41 @@
 export default {
   name: 'DropDownSecondary',
   props: {
-    position: {
-      type: String,
-      default: 'right-start'
-    },
     modelValue: {}
   },
   data() {
     return {
       top: 'unset',
-      bottom: 'unset',
-      left: 'unset',
-      right: 'unset'
+      left: 'unset'
     }
   },
   methods: {
     setPosition() {
-      if (this.position.startsWith('right')) {
-        this.left = this.$refs.trigger.offsetWidth + 'px'
-        if (this.position === 'right-start') {
-          this.top = 0
-        } else if (this.position === 'right-end') {
-          this.bottom = 0
+      this.$nextTick(() => {
+        const triggerRect = this.$refs.trigger.getBoundingClientRect()
+        const boxRect = this.$refs.box.getBoundingClientRect()
+        const viewWidth = window.innerWidth
+
+        let position = {
+          left: triggerRect.width + 'px',
+          top: 0
         }
-      }
+
+        if (boxRect.width + triggerRect.right > viewWidth) {
+          position.left = 0 - boxRect.width + 'px'
+        }
+
+        this.left = position.left
+        this.top = position.top
+      })
+
+      this.left = this.$refs.trigger.offsetWidth + 'px'
+
+      this.right = this.$refs.trigger.offsetWidth + 'px'
     },
     handleMouseEnter() {
-      this.setPosition()
-
       this.$emit('handleMouseEnter')
+      this.setPosition()
 
       // Hide element when click outside of it.
       document.addEventListener('mouseup', this.hide)
