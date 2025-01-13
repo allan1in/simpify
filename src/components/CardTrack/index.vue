@@ -109,6 +109,7 @@
       <div class="track-card__duration-wrapper">
         <Skeleton class="skeleton__duration" />
       </div>
+      <div class="track-card__more-wrapper"></div>
     </div>
   </template>
 </template>

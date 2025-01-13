@@ -136,6 +136,7 @@ export default {
       default: null
     }
   },
+  inject: ['bottom'],
   components: {
     DropDown,
     DropDownItem,
@@ -166,8 +167,7 @@ export default {
       }
     },
     closeMenu() {
-      this.show_menu_secondary_playlists = false
-      this.show_menu_secondary_artists = false
+      this.closeOtherMenuSecondary()
       this.show_menu = false
     },
     async addToPlaylist(id, name) {
@@ -178,6 +178,13 @@ export default {
       const res = await addItemsToPlaylist(id, data)
       if (res.snapshot_id) {
         Message(this.$t('message.added_to_playlist', { playlist: name }))
+      }
+    }
+  },
+  watch: {
+    bottom: {
+      handler() {
+        this.closeMenu()
       }
     }
   }

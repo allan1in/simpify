@@ -28,9 +28,7 @@
       <div class="list-header__duration">
         <Skeleton class="skeleton__duration" />
       </div>
-      <div class="list-header__more">
-        <Skeleton class="skeleton__more" />
-      </div>
+      <div class="list-header__more"></div>
     </div>
   </template>
 </template>

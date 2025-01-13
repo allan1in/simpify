@@ -37,7 +37,7 @@ export default {
 
       this.$refs.resizeBox.style.transition = 'none'
       let boxLeft = this.$refs.resizeBox.getBoundingClientRect().left
-      let newWidth
+      let newWidth = event.clientX - boxLeft
 
       document.onmousemove = (e) => {
         newWidth = e.clientX - boxLeft

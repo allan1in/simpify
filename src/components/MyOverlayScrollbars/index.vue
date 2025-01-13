@@ -48,6 +48,9 @@ export default {
         event.srcElement.scrollHeight -
         Math.ceil(event.srcElement.clientHeight + event.srcElement.scrollTop)
       this.$emit('scroll', bottom)
+    },
+    getOsInstance() {
+      return this.$refs.osInstance?.osInstance()
     }
   }
 }

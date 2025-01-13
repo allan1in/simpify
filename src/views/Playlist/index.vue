@@ -59,44 +59,7 @@
             />
           </div>
           <div v-if="isOwner" class="playlist-container__content__btn-group__more">
-            <DropDown v-model="show_menu">
-              <template #trigger>
-                <button
-                  v-tooltip="$t('tooltip.more_options', { item: playlist.name })"
-                  class="playlist-container__content__btn-group__more__btn"
-                >
-                  <div class="playlist-container__content__btn-group__more__btn__icon-wrapper">
-                    <IconMore />
-                  </div>
-                </button>
-              </template>
-              <template #dropDownItems>
-                <DropDownItem @item-click="show_menu = false" @click="openEditDialog = true">
-                  <template #left>
-                    <div
-                      class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper"
-                    >
-                      <IconEdit />
-                    </div>
-                  </template>
-                  <template #default>
-                    {{ $t('drop_down.edit_details') }}
-                  </template>
-                </DropDownItem>
-                <DropDownItem @item-click="show_menu = false" @click="openRemoveConfirm = true">
-                  <template #left>
-                    <div
-                      class="playlist-container__content__btn-group__more__drop-down-item__icon-wrapper"
-                    >
-                      <IconRemove />
-                    </div>
-                  </template>
-                  <template #default>
-                    {{ $t('drop_down.remove') }}
-                  </template>
-                </DropDownItem>
-              </template>
-            </DropDown>
+            <DropDownMenu :playlist @update-succeed="getPlaylist" />
           </div>
         </div>
         <div class="playlist-container__content__tracks">
@@ -111,17 +74,6 @@
         </div>
       </div>
     </div>
-    <DialogPlaylistEdit
-      v-model="openEditDialog"
-      :item="playlist"
-      @update-succeed="handleUpdateSucceed"
-    />
-    <ConfirmBox
-      v-model="openRemoveConfirm"
-      @confirm="handleConfirmed"
-      :title="$t('confirm_box_playlist_delete.title')"
-      :message="$t('confirm_box_playlist_delete.message', { name: playlist.name })"
-    />
   </template>
   <template v-else>
     <div class="playlist-container">
@@ -151,28 +103,18 @@ import TrackListHeader from '@/components/HeaderTrackList/index.vue'
 import TrackCard from '@/components/CardTrack/index.vue'
 import {
   checkUserSavedPlaylists,
-  deleteUserSavedPlaylists,
   getNextPlaylistTracks,
   getPlaylist,
-  getPlaylistTracks,
-  savePlaylists
+  getPlaylistTracks
 } from '@/api/meta/playlist'
 import { timeFormatAlbum } from '@/utils/time_format'
 import Banner from '@/components/Banner/index.vue'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
-import Message from '@/components/Message'
 import { mapState } from 'pinia'
 import { useUserStore } from '@/stores/user'
-import DropDown from '@/components/DropDown/index.vue'
-import DropDownItem from '@/components/DropDownItem/index.vue'
-import IconMore from '@/components/Icons/IconMore.vue'
-import IconEdit from '@/components/Icons/IconEdit.vue'
-import DialogPlaylistEdit from '@/components/DialogPlaylistEdit/index.vue'
-import IconRemove from '@/components/Icons/IconRemove.vue'
-import ConfirmBox from '@/components/ConfirmBox/index.vue'
-import { useLibraryStore } from '@/stores/library'
 import ButtonSave from '@/components/ButtonSave/index.vue'
+import DropDownMenu from './DropDownMenu/index.vue'
 
 export default {
   name: 'Playlist',
@@ -183,14 +125,8 @@ export default {
     Banner,
     ButtonTogglePlay,
     Skeleton,
-    DropDown,
-    DropDownItem,
-    IconMore,
-    IconEdit,
-    DialogPlaylistEdit,
-    IconRemove,
-    ConfirmBox,
-    ButtonSave
+    ButtonSave,
+    DropDownMenu
   },
   data() {
     return {
@@ -202,11 +138,7 @@ export default {
       tracks_next: '',
       loading_skeleton: true,
       loading_more: false,
-      saved: null,
-      openEditDialog: false,
-      openRemoveConfirm: false,
-      loading_toggle_save: false,
-      show_menu: false
+      saved: null
     }
   },
   computed: {
@@ -223,15 +155,6 @@ export default {
     }
   },
   methods: {
-    async handleConfirmed() {
-      await deleteUserSavedPlaylists(this.playlist.id)
-      useLibraryStore().removePlaylist(this.playlist.id)
-      useLibraryStore().deletePlaylistByUser(this.playlist.id)
-      if (this.$route.fullPath.split('/').indexOf(this.playlist.id) !== -1) {
-        this.$router.push({ name: 'Home' })
-      }
-      this.openRemoveConfirm = false
-    },
     reset() {
       this.id = this.$route.params.playlistId
       this.playlist = {}
@@ -280,25 +203,6 @@ export default {
     async checkUserSavedPlaylist() {
       const res = await checkUserSavedPlaylists(this.playlist.id)
       this.saved = res[0]
-    },
-    async handleClickSaveButton() {
-      this.loading_toggle_save = true
-      if (this.saved) {
-        await deleteUserSavedPlaylists(this.playlist.id)
-        this.saved = false
-        useLibraryStore().removePlaylist(this.playlist.id)
-        Message(`${this.$t('message.removed_from_lib')}`)
-      } else {
-        await savePlaylists(this.playlist.id)
-        this.saved = true
-        useLibraryStore().addPlaylists(this.playlist)
-        Message(`${this.$t('message.added_to_lib')}`)
-      }
-      this.loading_toggle_save = false
-    },
-    async handleUpdateSucceed() {
-      await this.getPlaylist()
-      await useLibraryStore().updatePlaylist(this.playlist)
     }
   },
   watch: {
@@ -365,31 +269,6 @@ export default {
         cursor: pointer;
 
         @include clickAnimation;
-      }
-
-      &__more {
-        height: 2.4rem;
-        aspect-ratio: 3 / 2;
-
-        &__btn {
-          height: 2.4rem;
-
-          @include clickAnimation;
-
-          &__icon-wrapper {
-            height: 100%;
-            width: 100%;
-            fill: $color-font-secondary;
-          }
-        }
-
-        &__drop-down-item {
-          &__icon-wrapper {
-            height: calc($font-size-text-primary);
-            aspect-ratio: 1 / 1;
-            fill: $color-font-secondary;
-          }
-        }
       }
     }
 

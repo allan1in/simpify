@@ -64,7 +64,10 @@ export default {
       document.addEventListener('mouseup', this.hide)
     },
     hide(event) {
-      if (!this.$refs.trigger.contains(event.target) && !this.$refs.box.contains(event.target)) {
+      if (
+        !this.$refs?.trigger?.contains(event.target) &&
+        !this.$refs?.box?.contains(event.target)
+      ) {
         this.$emit('update:modelValue', false)
         document.removeEventListener('mouseup', this.hide)
       }
