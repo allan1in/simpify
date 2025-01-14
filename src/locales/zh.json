@@ -16,7 +16,8 @@
     "tracks": "歌曲",
     "albums": "专辑",
     "playlists": "歌单",
-    "songs": "单曲"
+    "songs": "单曲",
+    "by_you": "我的"
   },
   "get_all": {
     "artists": "艺人",
@@ -105,7 +106,9 @@
     "autoplay_failed": "浏览器自动播放规则不允许自动播放。请手动播放。",
     "check_network": "请检查你的网络。",
     "too_many_requests": "请求过于频繁，请稍后再试。",
-    "unready": "初始化中..."
+    "unready": "初始化中...",
+    "added_to_playlist": "已添加到 {playlist}。",
+    "removed_from_playlist": "已从 {playlist} 中删除。"
   },
   "dialog_playlist_edit": {
     "title": "编辑详情",
@@ -122,13 +125,14 @@
     "text_label": "名称",
     "create": "创建"
   },
-  "drop_down_image_edit": {
+  "drop_down": {
     "change_picture": "更改图片",
-    "remove_picture": "删除图片"
-  },
-  "drop_down_playlist": {
     "edit_details": "编辑详情",
-    "remove": "移除"
+    "remove": "移除",
+    "add_to_playlist": "添加到歌单",
+    "go_to_artist": "查看艺术家",
+    "go_to_album": "查看专辑",
+    "remove_from_this_playlist": "从当前歌单中删除"
   },
   "alert_box": {
     "require_name": "歌单名称是必填项。",

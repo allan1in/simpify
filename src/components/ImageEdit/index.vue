@@ -11,10 +11,10 @@
       <IconDefaultPlaylist class="image-edit-container__icon-wrapper__playlist" />
     </div>
     <div class="image-edit-container__more">
-      <DropDown position="right">
-        <template #default="{ open }">
+      <DropDown v-model="show_menu">
+        <template #trigger>
           <div class="image-edit-container__more__wrapper">
-            <button v-show="isHover || open" class="image-edit-container__more__wrapper__btn">
+            <button v-if="isHover || show_menu" class="image-edit-container__more__wrapper__btn">
               <div class="image-edit-container__more__wrapper__btn__icon-wrapper">
                 <IconMore />
               </div>
@@ -29,7 +29,7 @@
               </div>
             </template>
             <template #default>
-              {{ $t('drop_down_image_edit.change_picture') }}
+              {{ $t('drop_down.change_picture') }}
             </template>
           </DropDownItem>
         </template>
@@ -58,7 +58,8 @@ export default {
   },
   data() {
     return {
-      isHover: false
+      isHover: false,
+      show_menu: false
     }
   },
   components: {
@@ -80,7 +81,11 @@ export default {
     }
   },
   methods: {
+    closeMenu() {
+      this.show_menu = false
+    },
     triggerFileSelect() {
+      this.closeMenu()
       const input = document.createElement('input')
       input.type = 'file'
       input.style.display = 'none'

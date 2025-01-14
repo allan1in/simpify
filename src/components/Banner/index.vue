@@ -101,7 +101,7 @@ export default {
       async handler(newVal) {
         try {
           this.color = (await getAverageColor(newVal[0].url)).rgb
-        } catch (e) {}
+        } catch (e) { /* empty */ }
       },
       immediate: true
     }

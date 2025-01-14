@@ -1,15 +1,22 @@
 <template>
   <template v-if="!loading">
-    <div class="track-card" :class="{ 'track-card-not-available': !available }">
+    <div
+      ref="trackCard"
+      @mouseenter="hover = true"
+      @mouseleave="hover = false"
+      @click="handleClick"
+      class="track-card"
+      :class="[{ 'track-card-not-available': !available }, { 'track-card-active': active }]"
+    >
       <div class="track-card__left">
         <template v-if="available">
-          <div class="track-card__left__icon-wrapper">
+          <div v-if="active" class="track-card__left__icon-wrapper">
             <button class="track-card__left__icon-wrapper__icon" @click="handleTogglePlay">
               <IconPause v-if="isPlaying" />
               <IconPlay v-else />
             </button>
           </div>
-          <div class="track-card__left__num-wrapper">
+          <div v-if="!active" class="track-card__left__num-wrapper">
             <div class="track-card__left__num-wrapper__playing" v-if="isPlaying">
               <i class="track-card__left__num-wrapper__playing__icon"></i>
             </div>
@@ -75,6 +82,16 @@
       <div class="track-card__duration-wrapper">
         <span>{{ getFormatTime(item.duration_ms) }}</span>
       </div>
+      <div class="track-card__more-wrapper">
+        <DropDownMenu
+          @remove-succeed="handleRemoveSucceed"
+          @add-succeed="handleAddSucceed"
+          :playlist
+          v-show="active"
+          :track="item"
+          :active
+        />
+      </div>
     </div>
   </template>
   <template v-else>
@@ -99,6 +116,7 @@
       <div class="track-card__duration-wrapper">
         <Skeleton class="skeleton__duration" />
       </div>
+      <div class="track-card__more-wrapper"></div>
     </div>
   </template>
 </template>
@@ -112,6 +130,7 @@ import { usePlayerStore } from '@/stores/player'
 import Skeleton from '@/components/Skeleton/index.vue'
 import { useLibraryStore } from '@/stores/library'
 import Image from '@/components/Image/index.vue'
+import DropDownMenu from './DropDownMenu/index.vue'
 
 export default {
   name: 'CardTrack',
@@ -119,10 +138,11 @@ export default {
     IconPlay,
     IconPause,
     Skeleton,
-    Image
+    Image,
+    DropDownMenu
   },
   computed: {
-    ...mapState(usePlayerStore, ['current_track', 'isPause']),
+    ...mapState(usePlayerStore, ['current_track', 'active_pause']),
     ...mapState(useLibraryStore, ['isCollasped']),
     available() {
       if (this.item?.restrictions) {
@@ -131,18 +151,25 @@ export default {
       return true
     },
     isPlaying() {
-      return !this.isPause && this.isCurrent
+      return !this.active_pause && this.isCurrent
     },
     isCurrent() {
       return this.current_track?.uri === this.item.uri
+    },
+    active() {
+      return this.hover || this.focus
+    }
+  },
+  data() {
+    return {
+      hover: false,
+      focus: false
     }
   },
   props: {
     item: {
       type: Object,
-      default: () => {
-        return {}
-      }
+      default: () => {}
     },
     index: {
       type: Number,
@@ -171,9 +198,31 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    playlist: {
+      type: Object,
+      default: () => {}
     }
   },
   methods: {
+    handleRemoveSucceed(trackId) {
+      this.$emit('removeSucceed', trackId)
+    },
+    handleAddSucceed(id, track) {
+      this.$emit('addSucceed', id, track)
+    },
+    handleClick() {
+      this.focus = true
+      document.addEventListener('mouseup', this.hide)
+    },
+    hide(e) {
+      if (!this.$refs.trackCard) {
+        document.removeEventListener('mouseup', this.hide)
+      } else if (!this.$refs.trackCard.contains(e.target)) {
+        this.focus = false
+        document.removeEventListener('mouseup', this.hide)
+      }
+    },
     ...mapActions(usePlayerStore, ['togglePlay', 'playNewTrack']),
     getFormatTime(time) {
       return timeFormatTrack(time)
@@ -211,14 +260,6 @@ export default {
 .no-hover:nth-child(n) {
   &:hover {
     background-color: unset;
-  }
-
-  &:hover .track-card__left__num-wrapper {
-    opacity: 1;
-  }
-
-  &:hover .track-card__left__icon-wrapper {
-    opacity: 0;
   }
 }
 
@@ -261,36 +302,16 @@ export default {
   transition-duration: $duration-default;
   transition-timing-function: ease;
 
-  @include respondContainer(collasped) {
-    padding: 0;
+  &-active {
+    background-color: $color-bg-3;
   }
 
   &-not-available {
     opacity: 0.5;
   }
 
-  &:hover {
-    background-color: $color-bg-5;
-  }
-
-  &:hover &__left__num-wrapper {
-    opacity: 0;
-  }
-
-  &:hover &__left__icon-wrapper {
-    opacity: 1;
-  }
-
-  &:hover &__title__msg-wrapper__artists {
-    color: $color-font-primary;
-  }
-
-  &:hover &__album-wrapper__album {
-    color: $color-font-primary;
-  }
-
   &__left {
-    flex-basis: 6.4rem;
+    flex-basis: 4.8rem;
     position: relative;
 
     &__num-wrapper,
@@ -298,7 +319,7 @@ export default {
       font-size: $font-size-text-primary;
       position: absolute;
       top: 0;
-      right: 2.8rem;
+      right: 2rem;
       height: 100%;
       display: flex;
       align-items: center;
@@ -321,27 +342,20 @@ export default {
 
     &__icon-wrapper {
       height: 100%;
-      opacity: 0;
       display: flex;
       align-items: center;
       z-index: 1;
       position: absolute;
       top: 0;
-      right: 2.4rem;
-
-      @include transition;
+      right: 1.8rem;
 
       &__icon {
-        height: 1.6rem;
+        height: 1.4rem;
         aspect-ratio: 1 / 1;
         fill: $color-font-primary;
 
         @include clickAnimation;
       }
-    }
-
-    @include respondContainer(collasped) {
-      display: none;
     }
   }
 
@@ -352,10 +366,6 @@ export default {
     justify-content: start;
     align-items: center;
 
-    @include respondContainer(collasped) {
-      justify-content: center;
-    }
-
     &__cover-wrapper {
       display: block;
       height: 70%;
@@ -365,10 +375,6 @@ export default {
       flex-shrink: 0;
       background-color: $color-bg-3;
       position: relative;
-
-      @include respondContainer(collasped) {
-        margin-right: 0;
-      }
 
       &__cover {
         height: 100%;
@@ -389,8 +395,8 @@ export default {
       width: 100%;
       padding-right: 1rem;
 
-      @include respondContainer(collasped) {
-        display: none;
+      @include respondContainer(phone) {
+        padding-right: unset;
       }
 
       &__name {
@@ -421,10 +427,6 @@ export default {
     align-items: center;
     height: 100%;
 
-    @include respondContainer(collasped) {
-      display: none;
-    }
-
     &__album {
       font-size: $font-size-text-secondary;
       padding-right: 1rem;
@@ -440,19 +442,23 @@ export default {
   }
 
   &__duration-wrapper {
-    flex-basis: 7.2rem;
+    flex-basis: 3.6rem;
     display: flex;
     align-items: center;
+    justify-content: end;
     height: 100%;
     font-size: $font-size-text-secondary;
 
     @include respondContainer(phone) {
       display: none;
     }
+  }
 
-    @include respondContainer(collasped) {
-      display: none;
-    }
+  &__more-wrapper {
+    flex-basis: 4.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

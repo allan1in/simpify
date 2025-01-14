@@ -23,10 +23,10 @@ export default {
   },
   computed: {
     ...mapWritableState(useLibraryStore, [
-      'duringTransitionWidth',
-      'myLibWidth',
-      'isCollasped',
-      'isShowMore',
+      'during_library_width_transition',
+      'library_width',
+      'active_collasped',
+      'active_show_more',
       'resizing'
     ])
   },
@@ -37,23 +37,23 @@ export default {
 
       this.$refs.resizeBox.style.transition = 'none'
       let boxLeft = this.$refs.resizeBox.getBoundingClientRect().left
-      let newWidth
+      let newWidth = event.clientX - boxLeft
 
       document.onmousemove = (e) => {
         newWidth = e.clientX - boxLeft
 
         if (newWidth <= this.minWidth) {
           // Change the arrow to point to the right
-          this.isShowMore = false
+          this.active_show_more = false
 
           if (newWidth > this.minWidth / 2) {
             // Open resizable box
-            this.myLibWidth = this.minWidth
-            this.isCollasped = false
+            this.library_width = this.minWidth
+            this.active_collasped = false
             return
           } else {
             // Close resizable box
-            this.isCollasped = true
+            this.active_collasped = true
             return
           }
         }
@@ -64,7 +64,7 @@ export default {
         // Has reached the maximum width
         if (this.$refs.resizeBox.offsetWidth !== newWidth) {
           // Change the arrow to point to the left
-          this.isShowMore = true
+          this.active_show_more = true
         }
       }
 
@@ -73,20 +73,20 @@ export default {
         document.onmousemove = null
         document.onmouseup = null
         this.$refs.resizeBox.style.transition = `width ${variables.duration_slow} ease`
-        if (!this.isCollasped) {
-          this.myLibWidth = newWidth
+        if (!this.active_collasped) {
+          this.library_width = newWidth
         }
       }
     },
     onTransitionEnd(event) {
       if (event.propertyName === 'width') {
-        this.duringTransitionWidth = false
+        this.during_library_width_transition = false
         this.resizing = false
       }
     },
     onTransitionStart(event) {
       if (event.propertyName === 'width') {
-        this.duringTransitionWidth = true
+        this.during_library_width_transition = true
         this.resizing = true
       }
     },
@@ -100,26 +100,26 @@ export default {
     },
     init() {
       this.$nextTick(() => {
-        this.myLibWidth = this.minWidth
-        this.$refs.resizeBox.style.width = this.myLibWidth + 'px'
+        this.library_width = this.minWidth
+        this.$refs.resizeBox.style.width = this.library_width + 'px'
       })
     }
   },
   watch: {
-    isCollasped(newVal) {
+    active_collasped(newVal) {
       if (newVal) {
         this.$nextTick(() => {
           this.$refs.resizeBox.style.width = this.collapsedWidth + 'px'
         })
       } else {
         this.$nextTick(() => {
-          this.$refs.resizeBox.style.width = Math.max(this.minWidth, this.myLibWidth) + 'px'
+          this.$refs.resizeBox.style.width = Math.max(this.minWidth, this.library_width) + 'px'
         })
       }
     },
-    isShowMore(newVal) {
-      // Only update box width when value of isCollasped is false
-      if (this.isCollasped) {
+    active_show_more(newVal) {
+      // Only update box width when value of active_collasped is false
+      if (this.active_collasped) {
         return
       }
       if (newVal) {
@@ -132,10 +132,10 @@ export default {
         })
       }
     },
-    duringTransitionWidth(newVal) {
+    during_library_width_transition(newVal) {
       if (!newVal) {
-        if (!this.isCollasped) {
-          this.myLibWidth = this.$refs.resizeBox.offsetWidth
+        if (!this.active_collasped) {
+          this.library_width = this.$refs.resizeBox.offsetWidth
         }
       }
     }

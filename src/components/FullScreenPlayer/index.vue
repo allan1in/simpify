@@ -1,13 +1,14 @@
 <template>
   <Transition name="slide-from-bottom">
     <main
-      v-show="showFullScreenPlayer"
+      v-show="show_fullscreen_player"
       @mousemove="isCursorMove = true"
       class="full-screen-container"
     >
       <div
         class="full-screen-container__background"
-        :class="{ 'full-screen-container__background-pause': isPause }"
+        :class="{ 'full-screen-container__background-pause': active_pause }"
+        :style="{ background: color }"
       ></div>
       <div class="full-screen-container__wrapper">
         <div class="full-screen-container__wrapper__top">
@@ -89,7 +90,7 @@
               <button
                 v-tooltip="toolTipShuffle"
                 class="icon-wrapper"
-                :class="{ 'btn-active': isShuffle }"
+                :class="{ 'btn-active': active_shuffle }"
                 @click="toggleShuffle"
               >
                 <IconShuffle />
@@ -105,7 +106,7 @@
                 <span
                   class="full-screen-container__wrapper__player__btns__mid__play__icon-wrapper-round"
                 >
-                  <IconPlay v-if="isPause" />
+                  <IconPlay v-if="active_pause" />
                   <IconPause v-else />
                 </span>
               </button>
@@ -115,10 +116,10 @@
               <button
                 v-tooltip="toolTipRepeat"
                 class="icon-wrapper"
-                :class="{ 'btn-active': repeatMode !== 0 }"
+                :class="{ 'btn-active': repeat_mode !== 0 }"
                 @click="setRepeatMode"
               >
-                <IconRepeatSingle v-if="repeatMode === 2" />
+                <IconRepeatSingle v-if="repeat_mode === 2" />
                 <IconRepeat v-else />
               </button>
             </div>
@@ -158,6 +159,7 @@ import VolumeBar from '@/components/VolumeBar/index.vue'
 import SeekBar from '@/components/SeekBar/index.vue'
 import { useAppStore } from '@/stores/app'
 import Image from '@/components/Image/index.vue'
+import { getAverageColor } from '@/utils/average_color'
 
 export default {
   name: 'FullScreenPlayer',
@@ -165,40 +167,40 @@ export default {
     return {
       isCursorMove: true,
       isCursorOverPlayer: false,
-      isCursorOverClose: false
+      isCursorOverClose: false,
+      color: undefined
     }
   },
   computed: {
     ...mapWritableState(usePlayerStore, [
       'current_track',
-      'isPause',
-      'repeatMode',
-      'isShuffle',
-      'isMute',
+      'active_pause',
+      'repeat_mode',
+      'active_shuffle',
       'volume'
     ]),
-    ...mapWritableState(useAppStore, ['showFullScreenPlayer']),
+    ...mapWritableState(useAppStore, ['show_fullscreen_player']),
     toolTipShuffle() {
-      if (this.isShuffle) {
+      if (this.active_shuffle) {
         return this.$t('tooltip.disable_shuffle')
       }
       return this.$t('tooltip.enable_shuffle')
     },
     toolTipPlay() {
-      if (this.isPause) {
+      if (this.active_pause) {
         return this.$t('tooltip.play')
       }
       return this.$t('tooltip.pause')
     },
     toolTipRepeat() {
-      if (this.repeatMode === 0) {
+      if (this.repeat_mode === 0) {
         return this.$t('tooltip.repeat_enable')
-      } else if (this.repeatMode === 1) {
+      } else if (this.repeat_mode === 1) {
         return this.$t('tooltip.repeat_one')
-      } else if (this.repeatMode === 2) {
+      } else if (this.repeat_mode === 2) {
         return this.$t('tooltip.repeat_disable')
       } else {
-        throw Error('Invalid value of repeatMode! Only accept values 0, 1 or 2.')
+        throw Error('Invalid value of repeat_mode! Only accept values 0, 1 or 2.')
       }
     }
   },
@@ -218,9 +220,19 @@ export default {
     Image
   },
   methods: {
+    async changeColor() {
+      if (this.current_track) {
+        try {
+          let obj = await getAverageColor(this.current_track?.album?.images?.[0]?.url)
+          this.color = obj.rgb
+        } catch (e) {
+          console.log(e)
+        }
+      }
+    },
     async closeFullScreenPlayer() {
       await this.closeFullscreen()
-      this.showFullScreenPlayer = false
+      this.show_fullscreen_player = false
     },
     /* Close fullscreen */
     async closeFullscreen() {
@@ -244,6 +256,12 @@ export default {
             this.isCursorMove = false
           }, 3000)
         }
+      },
+      immediate: true
+    },
+    current_track: {
+      handler() {
+        this.changeColor()
       },
       immediate: true
     }
@@ -304,30 +322,41 @@ export default {
   overflow: hidden;
 
   &__background {
-    background: linear-gradient(to bottom, $color-bg-6, $color-bg-3);
-    height: 400%;
-    width: 400%;
+    width: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    animation: pulse 3.2s infinite;
-    animation-play-state: running;
 
-    &-pause {
+    @include transition;
+
+    &-pause:nth-child(n)::after {
       animation-play-state: paused;
     }
 
-    @keyframes pulse {
-      0% {
-        transform: scale(1) rotate(0);
-      }
+    &::after {
+      content: '';
+      background: linear-gradient(to bottom, rgba($color-bg-7, 0.5), rgba($color-bg-1, 0.5));
+      height: 300%;
+      width: 300%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      animation: pulse 5s infinite;
+      animation-play-state: running;
 
-      50% {
-        transform: scale(4) rotate(180deg);
-      }
+      @keyframes pulse {
+        0% {
+          transform: scale(1) rotate(0);
+        }
 
-      100% {
-        transform: scale(1) rotate(0);
+        50% {
+          transform: scale(4) rotate(180deg);
+        }
+
+        100% {
+          transform: scale(1) rotate(0);
+        }
       }
     }
   }
@@ -383,7 +412,7 @@ export default {
         height: 4rem;
         width: 4rem;
         border-radius: 50%;
-        background-color: $color-bg-5;
+        background-color: rgba($color-bg-3, 0.5);
         display: flex;
         align-items: center;
         justify-content: center;

@@ -1,6 +1,7 @@
 <template>
   <template v-if="!loading">
     <div
+      v-bind="$attrs"
       class="card-library-container"
       @click="$router.push({ name: 'Track', params: { trackId: item.track.id } })"
     >
@@ -24,7 +25,7 @@
           class="card-library-container__right-wrapper__btn-wrapper"
           :class="{
             'card-library-container__right-wrapper__btn-wrapper-playing':
-              !isPause && item.track.uri === current_track.uri
+              !active_pause && item.track?.uri === current_track?.uri
           }"
         >
           <ButtonTogglePlay :item="item.track" />
@@ -46,6 +47,7 @@ import Image from '@/components/Image/index.vue'
 
 export default {
   name: 'CardTrackLibrary',
+  inheritAttrs: false,
   props: {
     item: {
       type: Object,
@@ -66,7 +68,7 @@ export default {
     Image
   },
   computed: {
-    ...mapState(usePlayerStore, ['isPause', 'current_track'])
+    ...mapState(usePlayerStore, ['active_pause', 'current_track'])
   }
 }
 </script>

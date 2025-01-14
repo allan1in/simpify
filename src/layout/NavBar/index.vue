@@ -58,49 +58,63 @@
       </div>
     </div>
     <div class="nav-bar__right">
-      <DropDown>
-        <div v-tooltip="$t('tooltip.language')" class="nav-bar__right__language">
-          <button class="nav-bar__right__language__language-wrapper">
-            <IconLanguage />
-          </button>
-        </div>
-
+      <DropDown position="bottom-start" v-model="show_menu_language">
+        <template #trigger>
+          <div v-tooltip="$t('tooltip.language')" class="nav-bar__right__language">
+            <button class="nav-bar__right__language__language-wrapper">
+              <IconLanguage />
+            </button>
+          </div>
+        </template>
         <template #dropDownItems>
-          <DropDownItem @click="changeLocale('en')">English</DropDownItem>
-          <DropDownItem @click="changeLocale('zh')">简体中文 </DropDownItem>
+          <DropDownItem @item-click="show_menu_language = false" @click="changeLocale('en')"
+            >English</DropDownItem
+          >
+          <DropDownItem @item-click="show_menu_language = false" @click="changeLocale('zh')"
+            >简体中文
+          </DropDownItem>
         </template>
       </DropDown>
-      <DropDown>
-        <button v-tooltip="display_name" class="nav-bar__right__photo-wrapper">
-          <img
-            v-if="avatar.length !== 0"
-            class="nav-bar__right__photo-wrapper__photo"
-            :src="avatar"
-            :alt="display_name"
-            :title="display_name"
-          />
-          <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
-            <span class="nav-bar__right__photo-wrapper__photo-default-wrapper__default">{{
-              display_name.charAt(0).toLocaleUpperCase()
-            }}</span>
-          </div>
-        </button>
+      <DropDown v-model="show_menu_me" position="bottom-end">
+        <template #trigger>
+          <button v-tooltip="display_name" class="nav-bar__right__photo-wrapper">
+            <img
+              v-if="avatar.length !== 0"
+              class="nav-bar__right__photo-wrapper__photo"
+              :src="avatar"
+              :alt="display_name"
+              :title="display_name"
+            />
+            <div v-else class="nav-bar__right__photo-wrapper__photo-default-wrapper">
+              <span class="nav-bar__right__photo-wrapper__photo-default-wrapper__default">{{
+                display_name.charAt(0).toLocaleUpperCase()
+              }}</span>
+            </div>
+          </button>
+        </template>
         <template #dropDownItems>
           <DropDownItem
+            @item-click="show_menu_me = false"
             toExternal="https://www.spotify.com/us/account/overview/?utm_source=spotify&utm_medium=menu&utm_campaign=your_account"
           >
             {{ $t('user.account') }}</DropDownItem
           >
-          <DropDownItem :to="{ name: 'User', params: { userId: uid } }">{{
-            $t('user.profile')
-          }}</DropDownItem>
           <DropDownItem
+            @item-click="show_menu_me = false"
+            :to="{ name: 'User', params: { userId: uid } }"
+            >{{ $t('user.profile') }}</DropDownItem
+          >
+          <DropDownItem
+            @item-click="show_menu_me = false"
             toExternal="https://www.spotify.com/us/premium/?ref=web_loggedin_upgrade_menu"
             >{{ $t('user.upgrade') }}
           </DropDownItem>
-          <DropDownItem :topLine="true" @click.prevent="logout">{{
-            $t('user.log_out')
-          }}</DropDownItem>
+          <DropDownItem
+            @item-click="show_menu_me = false"
+            :topLine="true"
+            @click.prevent="logout"
+            >{{ $t('user.log_out') }}</DropDownItem
+          >
         </template>
       </DropDown>
     </div>
@@ -143,7 +157,9 @@ export default {
     return {
       isHome: true,
       isSearch: false,
-      inputContent: ''
+      inputContent: '',
+      show_menu_language: false,
+      show_menu_me: false
     }
   },
   methods: {
@@ -153,7 +169,7 @@ export default {
       this.inputContent = ''
     },
     getSearchResult() {
-      if (this.inputContent.length !== 0) {
+      if (this.inputContent.trim().length !== 0) {
         this.$router.push({
           name: 'SearchResult',
           params: { inputContent: this.inputContent }
@@ -182,9 +198,6 @@ export default {
           // Path: '/search/*'
           this.isHome = false
           this.isSearch = true
-
-          console.log(path)
-          console.log(decodeURIComponent(path[2]))
 
           if (
             to.params.inputContent !== undefined &&

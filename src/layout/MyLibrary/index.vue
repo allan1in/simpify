@@ -2,50 +2,60 @@
   <ResizeBox>
     <div class="my-library__container">
       <div class="my-library__container__title">
-        <div v-tooltip="toolTipTitle" class="my-library__container__title__left"
-          @click.prevent="isCollasped = !isCollasped">
+        <div
+          v-tooltip="toolTipTitle"
+          class="my-library__container__title__left"
+          @click.prevent="active_collasped = !active_collasped"
+        >
           <div class="my-library__container__title__left__icon-wrapper">
-            <IconLibrary v-if="!isCollasped" />
+            <IconLibrary v-if="!active_collasped" />
             <IconLibraryCollasped v-else />
           </div>
-
-          <span v-if="!isCollasped" class="my-library__container__title__left__text">{{
+          <span v-if="!active_collasped" class="my-library__container__title__left__text">{{
             $t('my_library.title')
           }}</span>
         </div>
-
-        <div class="my-library__container__title__right">
-          <button v-tooltip="$t('tooltip.create_playlist')" class="my-library__container__title__right__create-playlist"
-            @click.prevent="openDialog = true">
-            <div class="my-library__container__title__right__create-playlist__icon-wrapper">
-              <IconPlus />
-            </div>
-          </button>
-          <Transition name="fade">
-            <button v-tooltip="toolTipArrow" v-if="!isCollasped" class="my-library__container__title__right__arrow"
-              @click.prevent="isShowMore = !isShowMore">
+        <Transition name="fade">
+          <div v-if="!active_collasped" class="my-library__container__title__right">
+            <button
+              v-tooltip="$t('tooltip.create_playlist')"
+              class="my-library__container__title__right__create-playlist"
+              @click.prevent="openDialog = true"
+            >
+              <div class="my-library__container__title__right__create-playlist__icon-wrapper">
+                <IconPlus />
+              </div>
+            </button>
+            <button
+              v-tooltip="toolTipArrow"
+              class="my-library__container__title__right__arrow"
+              @click.prevent="active_show_more = !active_show_more"
+            >
               <div class="my-library__container__title__right__arrow__wrapper">
                 <Transition name="fade" mode="out-in">
-                  <IconArrowRightLonger v-if="!isShowMore" />
+                  <IconArrowRightLonger v-if="!active_show_more" />
                   <IconArrowLeftLonger v-else />
                 </Transition>
               </div>
             </button>
-          </Transition>
-        </div>
+          </div>
+        </Transition>
       </div>
       <TransitionGroup name="list-fade">
-        <div v-if="!isCollasped" class="my-library__container__tag-bar" :key="'tagbar'">
-          <TagBar :tags="tags" :activeTag @handle-click-tag="changeActiveTag" />
+        <div v-if="!active_collasped" class="my-library__container__tag-bar" :key="'tagbar'">
+          <TagBar />
         </div>
-        <div class="my-library__container__content" :class="{ 'my-library__container__content-collasped': isCollasped }"
-          :key="'content'">
+        <div
+          class="my-library__container__content"
+          :class="{ 'my-library__container__content-collasped': active_collasped }"
+          :key="'content'"
+        >
           <MyOverlayScrollbars ref="scrollbar" os-element="div" @scroll="updateBottom">
             <div class="my-library__container__content__wrapper">
-              <Songs :active="activeTag === 'songs'" />
-              <Playlists :active="activeTag === 'playlists'" />
-              <Albums :active="activeTag === 'albums'" />
-              <Artists :active="activeTag === 'artists'" />
+              <Songs :active="current_tag === 'songs'" />
+              <Playlists :active="current_tag === 'playlists'" />
+              <Albums :active="current_tag === 'albums'" />
+              <Artists :active="current_tag === 'artists'" />
             </div>
           </MyOverlayScrollbars>
         </div>
@@ -59,7 +69,7 @@
 import IconLibrary from '@/components/Icons/IconLibrary.vue'
 import ResizeBox from './ResizeBox/index.vue'
 import TagBar from './TagBar/index.vue'
-import { mapActions, mapWritableState } from 'pinia'
+import { mapWritableState } from 'pinia'
 import IconLibraryCollasped from '@/components/Icons/IconLibraryCollasped.vue'
 import IconArrowLeftLonger from '@/components/Icons/IconArrowLeftLonger.vue'
 import IconArrowRightLonger from '@/components/Icons/IconArrowRightLonger.vue'
@@ -73,7 +83,6 @@ import Artists from './Artists/index.vue'
 import DialogPlaylistCreate from '@/components/DialogPlaylistCreate/index.vue'
 import IconPlus from '@/components/Icons/IconPlus.vue'
 
-
 export default {
   name: 'MyLibrary',
   provide() {
@@ -83,27 +92,20 @@ export default {
   },
   data() {
     return {
-      tags: ['songs', 'playlists', 'albums', 'artists'],
       bottom: undefined,
       openDialog: false
     }
   },
   computed: {
-    ...mapWritableState(useLibraryStore, [
-      'duringTransitionWidth',
-      'isCollasped',
-      'myLibWidth',
-      'isShowMore',
-      'activeTag'
-    ]),
+    ...mapWritableState(useLibraryStore, ['active_collasped', 'active_show_more', 'current_tag']),
     toolTipTitle() {
-      if (this.isCollasped) {
+      if (this.active_collasped) {
         return { content: this.$t('tooltip.expand_lib'), placement: 'right' }
       }
       return { content: this.$t('tooltip.collaspe_lib'), placement: 'top' }
     },
     toolTipArrow() {
-      if (this.isShowMore) {
+      if (this.active_show_more) {
         return this.$t('tooltip.show_less')
       }
       return this.$t('tooltip.show_more')
@@ -125,7 +127,6 @@ export default {
     IconPlus
   },
   methods: {
-    ...mapActions(useLibraryStore, ['changeActiveTag']),
     updateBottom(bottom) {
       this.bottom = bottom
     },
@@ -133,12 +134,12 @@ export default {
       const instance = this.$refs.scrollbar.getOsInstance()
       if (instance) {
         // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollTo
-        instance.elements().viewport.scrollTo({ top: 0, behavior: 'smooth' })
+        instance.elements().viewport.scrollTo({ top: 0 })
       }
     }
   },
   watch: {
-    activeTag() {
+    current_tag() {
       this.scrollToTop()
     }
   }
@@ -199,7 +200,6 @@ export default {
       display: flex;
       align-items: center;
       gap: 0.8rem;
-
 
       &__create-playlist {
         border-radius: 50%;
@@ -269,8 +269,12 @@ export default {
     &__wrapper {
       padding: 0 $gutter $gutter $gutter;
       width: 100%;
-      overflow: hidden;
     }
+  }
+
+  &__content__wrapper {
+    overflow: hidden;
+    min-height: 100%;
   }
 }
 </style>

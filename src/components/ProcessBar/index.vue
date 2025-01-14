@@ -150,7 +150,7 @@ $progress-line-color: #4d4d4d;
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    background-color: $progress-line-color;
+    background-color: rgba($color-bg-7, 0.6);
     width: 100%;
     height: 0.4rem;
     border-radius: 0.2rem;

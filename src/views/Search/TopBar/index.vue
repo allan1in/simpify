@@ -1,11 +1,11 @@
 <template>
   <section class="top-bar-container">
-    <TagButton @handle-click="getAll" :text="$t('top_bar.all')" :active-tag="!isActive" />
+    <TagButton @handle-click="getAll" :text="$t('top_bar.all')" :is-active="!activeTag" />
     <template v-for="tag in tags" :key="tag">
       <TagButton
         @handle-click="jumpTo(tag)"
         :text="$t(`top_bar.${tag}`)"
-        :active-tag="isActive === tag"
+        :is-active="activeTag === tag"
       />
     </template>
   </section>
@@ -18,7 +18,7 @@ export default {
   name: 'TopBar',
   data() {
     return {
-      isActive: undefined,
+      activeTag: undefined,
       showTags: {},
       loading_skeleton: true,
       tags: ['tracks', 'artists', 'albums', 'playlists']
@@ -38,7 +38,7 @@ export default {
   watch: {
     $route: {
       handler() {
-        this.isActive = decodeURIComponent(
+        this.activeTag = decodeURIComponent(
           this.$route.fullPath.split('/')[3] ? this.$route.fullPath.split('/')[3] : ''
         )
       },

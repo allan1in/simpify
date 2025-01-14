@@ -51,8 +51,7 @@ export default {
       'position',
       'duration',
       'player',
-      'duration',
-      'isPause'
+      'duration'
     ])
   },
   methods: {

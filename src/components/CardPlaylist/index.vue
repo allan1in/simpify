@@ -19,7 +19,8 @@
         <div
           class="playlist-card__img-box__toggle-play"
           :class="{
-            'playlist-card__img-box__toggle-play-playing': !isPause && item.uri === context?.uri
+            'playlist-card__img-box__toggle-play-playing':
+              !active_pause && item.uri === context?.uri
           }"
         >
           <ButtonTogglePlay :item />
@@ -90,7 +91,7 @@ export default {
     Image
   },
   computed: {
-    ...mapState(usePlayerStore, ['isPause', 'context'])
+    ...mapState(usePlayerStore, ['active_pause', 'context'])
   }
 }
 </script>

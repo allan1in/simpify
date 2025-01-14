@@ -9,7 +9,8 @@
         />
         <div class="dashboard-container__recent-play__content">
           <CardTrackHorizontal
-            @mouseenter="changeColor(item)"
+            @mouseenter="handleMouseEnter(item)"
+            @mouseleave="handleMouseLeave()"
             v-for="item in tracks"
             :key="item.id"
             :item="item"
@@ -77,7 +78,8 @@ export default {
       tracks: [],
       days: 7,
       tracks_limit: 8,
-      color: undefined
+      color: undefined,
+      timer: undefined
     }
   },
   methods: {
@@ -134,12 +136,24 @@ export default {
       }
       while (moreSongsNeeded) {
         const res = await getNextRecentlyPlayedTracks(next)
+        next = res.next?.slice(res.next.indexOf('?') + 1)
         this.tracks = this.tracks.concat(res.items)
         this.removeDuplicates()
 
-        if (this.tracks.length === this.tracks_limit) {
+        if (this.tracks.length === this.tracks_limit || res.items.length === 0) {
           moreSongsNeeded = false
         }
+      }
+    },
+    handleMouseEnter(item) {
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      this.timer = setTimeout(() => this.changeColor(item), 200)
+    },
+    handleMouseLeave() {
+      if (this.timer) {
+        clearTimeout(this.timer)
       }
     },
     async changeColor(item) {
@@ -147,7 +161,7 @@ export default {
         let obj = await getAverageColor(item?.track?.album?.images?.[0]?.url)
         this.color = `rgba(${obj.r}, ${obj.g}, ${obj.b}, 0.6)`
       } catch (e) {
-        /* empty */
+        console.log(e)
       }
     },
     removeDuplicates() {
@@ -186,6 +200,7 @@ export default {
       width: 100%;
       height: 18rem;
       background-image: linear-gradient(to bottom, rgba($color-bg-2, 0.1), $color-bg-2);
+      z-index: -1;
 
       @include transitionExtraSlow;
     }

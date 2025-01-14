@@ -1,15 +1,19 @@
 <template>
-  <li>
+  <li @click="$emit('itemClick')">
+    <!-- inner link -->
     <router-link
       v-if="to !== null"
       :to="to"
       class="drop-down-item-container"
       :class="{ 'top-line': topLine }"
     >
+      <slot name="left"></slot>
       <span class="drop-down-item-container__text-wrapper">
         <slot></slot>
       </span>
+      <slot name="right"></slot>
     </router-link>
+    <!-- external link -->
     <a
       v-else-if="toExternal !== ''"
       :href="toExternal"
@@ -24,11 +28,13 @@
         <IconExternalLink />
       </span>
     </a>
+    <!-- normal text -->
     <button v-else class="drop-down-item-button" :class="{ 'top-line': topLine }">
-      <slot name="icon"></slot>
+      <slot name="left"></slot>
       <span class="drop-down-item-button__text-wrapper">
         <slot></slot>
       </span>
+      <slot name="right"></slot>
     </button>
   </li>
 </template>
@@ -73,10 +79,10 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
+  gap: $gutter-1-5x;
 
   &:hover {
     background-color: $color-bg-6;
-    text-decoration: underline;
   }
 
   &__icon-wrapper {
@@ -85,21 +91,38 @@ export default {
     width: calc($font-size-text-secondary + 0.2rem);
     fill: $color-font-primary;
   }
+
+  &__text-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: start;
+    text-align: left;
+
+    @include oneLineEllipsis;
+  }
 }
 
 .drop-down-item-button {
   width: 100%;
-  display: flex;
-  justify-content: start;
   font-size: $font-size-text-secondary;
   padding: 1.2rem;
   cursor: pointer;
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  gap: $gutter-1-5x;
+
+  &__text-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: start;
+    text-align: left;
+
+    @include oneLineEllipsis;
+  }
 
   &:hover {
     background-color: $color-bg-6;
-    text-decoration: underline;
   }
 }
 </style>

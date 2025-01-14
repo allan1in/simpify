@@ -31,7 +31,7 @@
         </div>
         <div class="player-bar__left__save-btn">
           <ButtonSave
-            :isSaved
+            :saved
             class="icon-wrapper"
             @button-click="handleToggleTrackSave"
             :loading="loading_toggle_save"
@@ -44,7 +44,7 @@
         <button
           v-tooltip="toolTipShuffle"
           class="icon-wrapper"
-          :class="{ 'btn-active': isShuffle, 'not-allowed': notAvaliable || isFreeAccount }"
+          :class="{ 'btn-active': active_shuffle, 'not-allowed': notAvaliable || isFreeAccount }"
           @click="toggleShuffle"
         >
           <IconShuffle />
@@ -64,7 +64,7 @@
           :class="{ 'not-allowed': notAvaliable }"
         >
           <span class="player-bar__mid__btn-group__play__icon-wrapper-round">
-            <IconPlay v-if="isPause" />
+            <IconPlay v-if="active_pause" />
             <IconPause v-else />
           </span>
         </button>
@@ -80,12 +80,12 @@
           v-tooltip="toolTipRepeat"
           class="icon-wrapper"
           :class="{
-            'btn-active': repeatMode !== 0,
+            'btn-active': repeat_mode !== 0,
             'not-allowed': notAvaliable || isFreeAccount
           }"
           @click="setRepeatMode"
         >
-          <IconRepeatSingle v-if="repeatMode === 2" />
+          <IconRepeatSingle v-if="repeat_mode === 2" />
           <IconRepeat v-else />
         </button>
       </div>
@@ -150,52 +150,52 @@ export default {
       'player',
       'current_track',
       'percentage',
-      'isPause',
-      'isShuffle',
-      'repeatMode',
+      'active_pause',
+      'active_shuffle',
+      'repeat_mode',
       'volume',
-      'isReady',
-      'isSaved',
+      'initialized',
+      'saved',
       'loading'
     ]),
-    ...mapWritableState(useAppStore, ['showFullScreenPlayer']),
+    ...mapWritableState(useAppStore, ['show_fullscreen_player']),
     isFreeAccount() {
       return useUserStore().checkProduct('free')
     },
     notAvaliable() {
-      return !this.isReady || this.isFreeAccount
+      return !this.initialized || this.isFreeAccount
     },
     draggable() {
       return !!this.current_track
     },
     toolTipShuffle() {
-      if (this.isShuffle) {
+      if (this.active_shuffle) {
         return this.$t('tooltip.disable_shuffle')
       }
       return this.$t('tooltip.enable_shuffle')
     },
     toolTipPlay() {
-      if (this.isPause) {
+      if (this.active_pause) {
         return this.$t('tooltip.play')
       }
       return this.$t('tooltip.pause')
     },
     toolTipRepeat() {
-      if (this.repeatMode === 0) {
+      if (this.repeat_mode === 0) {
         return this.$t('tooltip.repeat_enable')
-      } else if (this.repeatMode === 1) {
+      } else if (this.repeat_mode === 1) {
         return this.$t('tooltip.repeat_one')
-      } else if (this.repeatMode === 2) {
+      } else if (this.repeat_mode === 2) {
         return this.$t('tooltip.repeat_disable')
       } else {
-        throw Error('Invalid value of repeatMode! Only accept values 0, 1 or 2.')
+        throw Error('Invalid value of repeat_mode! Only accept values 0, 1 or 2.')
       }
     }
   },
   methods: {
     async openFullScreenPlayer() {
       await this.openFullscreen()
-      this.showFullScreenPlayer = true
+      this.show_fullscreen_player = true
     },
     /* View in fullscreen */
     async openFullscreen() {

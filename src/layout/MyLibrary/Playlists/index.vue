@@ -3,7 +3,7 @@
     <template v-if="!loading_skeleton">
       <div class="my-library__container__content__playlists">
         <TransitionGroup name="list">
-          <CardPlaylistLibrary v-for="item in playlists" :key="item.id" :item />
+          <CardPlaylistLibrary v-for="item in current_playlists" :key="item.id" :item />
         </TransitionGroup>
       </div>
     </template>
@@ -41,18 +41,20 @@ export default {
     CardPlaylistLibrary
   },
   computed: {
-    ...mapState(useLibraryStore, ['playlists'])
+    ...mapState(useLibraryStore, ['playlists', 'active_playlists_by_user', 'playlists_by_user']),
+    current_playlists() {
+      if (this.active_playlists_by_user) {
+        return this.playlists_by_user
+      }
+      return this.playlists
+    }
   },
   methods: {
-    reset() {
-      useLibraryStore().clearList('playlists')
-      this.playlists_limit = 20
-      this.playlists_offset = 0
-      this.playlists_next = ''
-      this.loading_skeleton = true
-    },
     async getAll() {
-      await this.getCurrentUserPlaylists()
+      await Promise.all([
+        this.getCurrentUserPlaylists(),
+        useLibraryStore().getPlaylistsOwnedByUser()
+      ])
 
       this.loading_skeleton = false
     },
@@ -84,23 +86,21 @@ export default {
   watch: {
     bottom: {
       handler(newVal) {
-        if (newVal <= 0) {
+        if (newVal <= 0 && this.active) {
           this.getCurrentUserPlaylists()
         }
       },
       immediate: true
-    },
-    active: {
-      handler(newVal) {
-        if (newVal) {
-          this.reset()
-          this.getAll()
-        }
-      },
-      immediate: true
     }
+  },
+  created() {
+    this.getAll()
   }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.my-library__container__content__playlists {
+  position: relative;
+}
+</style>

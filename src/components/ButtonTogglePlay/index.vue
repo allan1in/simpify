@@ -30,9 +30,14 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(usePlayerStore, ['context', 'current_track', 'isPause', 'activeDevice']),
+    ...mapWritableState(usePlayerStore, [
+      'context',
+      'current_track',
+      'active_pause',
+      'activeDevice'
+    ]),
     isPlaying() {
-      return !this.isPause && this.isCurrent
+      return !this.active_pause && this.isCurrent
     },
     isCurrent() {
       if (this.item.type === 'track') {

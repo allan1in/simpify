@@ -59,8 +59,6 @@
 </template>
 
 <script>
-import { usePlayerStore } from '@/stores/player'
-import { mapState } from 'pinia'
 import ButtonTogglePlay from '@/components/ButtonTogglePlay/index.vue'
 import Skeleton from '@/components/Skeleton/index.vue'
 import Image from '@/components/Image/index.vue'
@@ -84,9 +82,6 @@ export default {
     ButtonTogglePlay,
     Skeleton,
     Image
-  },
-  computed: {
-    ...mapState(usePlayerStore, ['isPause', 'context'])
   }
 }
 </script>

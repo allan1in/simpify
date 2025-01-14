@@ -78,3 +78,19 @@ export function updatePlaylistCover(id, data) {
     data
   })
 }
+
+export function addItemsToPlaylist(id, data) {
+  return request({
+    url: `/playlists/${id}/tracks`,
+    method: 'post',
+    data
+  })
+}
+
+export function removePlaylistItems(id, data) {
+  return request({
+    url: `/playlists/${id}/tracks`,
+    method: 'delete',
+    data
+  })
+}

@@ -6,7 +6,10 @@
       </div>
       <div class="list-header__title">{{ $t('header_track_list.title') }}</div>
       <div v-if="showAlbum" class="list-header__album">{{ $t('header_track_list.album') }}</div>
-      <div class="list-header__duration">{{ $t('header_track_list.duration') }}</div>
+      <div class="list-header__duration">
+        <div class="list-header__duration__icon-wrapper"><IconDuration /></div>
+      </div>
+      <div class="list-header__more"></div>
     </div>
   </template>
   <template v-else>
@@ -25,12 +28,14 @@
       <div class="list-header__duration">
         <Skeleton class="skeleton__duration" />
       </div>
+      <div class="list-header__more"></div>
     </div>
   </template>
 </template>
 
 <script>
 import Skeleton from '@/components/Skeleton/index.vue'
+import IconDuration from '../Icons/IconDuration.vue'
 
 export default {
   name: 'HeaderTrackList',
@@ -45,7 +50,8 @@ export default {
     }
   },
   components: {
-    Skeleton
+    Skeleton,
+    IconDuration
   }
 }
 </script>
@@ -88,15 +94,10 @@ export default {
   }
 
   &__num-wrapper {
-    flex-basis: 6.4rem;
-    position: relative;
-
-    &__num {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      right: 2.8rem;
-    }
+    flex-basis: 4.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__title,
@@ -107,9 +108,20 @@ export default {
   }
 
   &__duration {
-    flex-basis: 7.2rem;
+    flex-basis: 3.6rem;
     display: flex;
     align-items: center;
+    justify-content: end;
+
+    &__icon-wrapper {
+      height: $font-size-text-secondary;
+      aspect-ratio: 1 / 1;
+      fill: $color-font-secondary;
+    }
+  }
+
+  &__more {
+    flex-basis: 4.8rem;
   }
 }
 </style>

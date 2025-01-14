@@ -22,13 +22,13 @@
         </div>
         <Image
           class="card-track-library-contanier__cover__img"
-          :src="item.album.images[0]?.url"
+          :src="item.album?.images[0]?.url"
           :alt="item.name"
           no-scale
         />
       </div>
       <Transition name="fade">
-        <div v-if="!isCollasped" class="card-track-library-contanier__info">
+        <div v-if="!active_collasped" class="card-track-library-contanier__info">
           <a
             @click.prevent.stop="$router.push({ name: 'Track', params: { trackId: item.id } })"
             class="card-track-library-contanier__info__title"
@@ -64,7 +64,7 @@
       <div class="card-track-library-contanier__cover">
         <Skeleton class="card-track-library-contanier__cover__img" />
       </div>
-      <div v-if="!isCollasped" class="card-track-library-contanier__info">
+      <div v-if="!active_collasped" class="card-track-library-contanier__info">
         <Skeleton class="card-track-library-contanier__info__title skeleton__name" />
         <Skeleton class="card-track-library-contanier__info__artists skeleton__artists" />
       </div>
@@ -111,10 +111,10 @@ export default {
     Image
   },
   computed: {
-    ...mapState(useLibraryStore, ['isCollasped']),
-    ...mapState(usePlayerStore, ['isPause', 'current_track']),
+    ...mapState(useLibraryStore, ['active_collasped']),
+    ...mapState(usePlayerStore, ['active_pause', 'current_track']),
     isPlaying() {
-      return !this.isPause && this.isCurrentItem
+      return !this.active_pause && this.isCurrentItem
     },
     isCurrentItem() {
       return this.current_track?.uri === this.item.uri

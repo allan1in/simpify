@@ -154,7 +154,8 @@ export default {
   methods: {
     debouncedGetAll() {},
     async getAll() {
-      if (this.$route.params.inputContent) {
+      const input = this.$route.params.inputContent.trim()
+      if (input) {
         await Promise.all([
           this.getTracks(),
           this.getArtists(),
@@ -162,6 +163,8 @@ export default {
           this.getPlaylists()
         ])
 
+        this.loading_skeleton = false
+      } else {
         this.loading_skeleton = false
       }
     },
