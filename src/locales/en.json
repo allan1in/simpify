@@ -107,7 +107,8 @@
     "check_network": "Please check your network.",
     "too_many_requests": "The request is too frequent, please try again later.",
     "unready": "Initializing...",
-    "added_to_playlist": "Added to {playlist}."
+    "added_to_playlist": "Added to {playlist}.",
+    "removed_from_playlist": "Removed from {playlist}."
   },
   "dialog_playlist_edit": {
     "title": "Edit Details",
@@ -130,7 +131,8 @@
     "remove": "Remove",
     "add_to_playlist": "Add to playlist",
     "go_to_artist": "Go to artist",
-    "go_to_album": "Go to album"
+    "go_to_album": "Go to album",
+    "remove_from_this_playlist": "Remove from this playlist"
   },
   "alert_box": {
     "require_name": "Playlist name is required.",

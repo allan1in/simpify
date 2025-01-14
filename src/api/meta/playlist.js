@@ -86,3 +86,11 @@ export function addItemsToPlaylist(id, data) {
     data
   })
 }
+
+export function removePlaylistItems(id, data) {
+  return request({
+    url: `/playlists/${id}/tracks`,
+    method: 'delete',
+    data
+  })
+}

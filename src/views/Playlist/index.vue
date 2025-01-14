@@ -64,13 +64,15 @@
         </div>
         <div class="playlist-container__content__tracks">
           <TrackListHeader v-if="tracks.length" />
-          <TrackCard
-            v-for="(item, index) in tracks"
-            :key="item.id"
-            :item="item.track"
-            :index="index"
-            :context_uri="this.playlist.uri"
-          />
+            <CardTrack
+              v-for="(item, index) in tracks"
+              :key="index"
+              :item="item.track"
+              :index="index"
+              :context_uri="playlist.uri"
+              :playlist="playlist"
+              @update-succeed="handleUpdateSucceed"
+            />
         </div>
       </div>
     </div>
@@ -91,7 +93,7 @@
         </div>
         <div class="playlist-container__content__tracks">
           <TrackListHeader :loading="loading_skeleton" />
-          <TrackCard v-for="i in tracks_limit" :key="i" :loading="loading_skeleton" />
+          <CardTrack v-for="i in tracks_limit" :key="i" :loading="loading_skeleton" />
         </div>
       </div>
     </div>
@@ -100,12 +102,14 @@
 
 <script>
 import TrackListHeader from '@/components/HeaderTrackList/index.vue'
-import TrackCard from '@/components/CardTrack/index.vue'
+import CardTrack from '@/components/CardTrack/index.vue'
 import {
   checkUserSavedPlaylists,
+  deleteUserSavedPlaylists,
   getNextPlaylistTracks,
   getPlaylist,
-  getPlaylistTracks
+  getPlaylistTracks,
+  savePlaylists
 } from '@/api/meta/playlist'
 import { timeFormatAlbum } from '@/utils/time_format'
 import Banner from '@/components/Banner/index.vue'
@@ -115,13 +119,15 @@ import { mapState } from 'pinia'
 import { useUserStore } from '@/stores/user'
 import ButtonSave from '@/components/ButtonSave/index.vue'
 import DropDownMenu from './DropDownMenu/index.vue'
+import Message from '@/components/Message'
+import { useLibraryStore } from '@/stores/library'
 
 export default {
   name: 'Playlist',
   inject: ['bottom'],
   components: {
     TrackListHeader,
-    TrackCard,
+    CardTrack,
     Banner,
     ButtonTogglePlay,
     Skeleton,
@@ -155,6 +161,9 @@ export default {
     }
   },
   methods: {
+    handleUpdateSucceed(trackId) {
+      this.tracks = this.tracks.filter((item) => item.track.id !== trackId)
+    },
     reset() {
       this.id = this.$route.params.playlistId
       this.playlist = {}
@@ -163,7 +172,8 @@ export default {
       this.tracks_offset = 0
       this.tracks_next = ''
       this.loading_skeleton = true
-      ;(this.loading_more = false), (this.loading_toggle_save = false)
+      this.loading_more = false
+      this.loading_toggle_save = false
     },
     async getAll() {
       await Promise.all([this.getPlaylist(), this.getPlaylistTracks()])
@@ -203,6 +213,21 @@ export default {
     async checkUserSavedPlaylist() {
       const res = await checkUserSavedPlaylists(this.playlist.id)
       this.saved = res[0]
+    },
+    async handleClickSaveButton() {
+      this.loading_toggle_save = true
+      if (this.saved) {
+        await deleteUserSavedPlaylists(this.playlist.id)
+        this.saved = false
+        useLibraryStore().removePlaylist(this.playlist.id)
+        Message(`${this.$t('message.removed_from_lib')}`)
+      } else {
+        await savePlaylists(this.playlist.id)
+        this.saved = true
+        useLibraryStore().addPlaylists(this.playlist)
+        Message(`${this.$t('message.added_to_lib')}`)
+      }
+      this.loading_toggle_save = false
     }
   },
   watch: {

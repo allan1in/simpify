@@ -83,7 +83,13 @@
         <span>{{ getFormatTime(item.duration_ms) }}</span>
       </div>
       <div class="track-card__more-wrapper">
-        <DropDownMenu v-show="active" :track="item" :active />
+        <DropDownMenu
+          @update-succeed="handleUpdateSucceed"
+          :playlist
+          v-show="active"
+          :track="item"
+          :active
+        />
       </div>
     </div>
   </template>
@@ -191,15 +197,24 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    playlist: {
+      type: Object,
+      default: () => {}
     }
   },
   methods: {
+    handleUpdateSucceed(trackId) {
+      this.$emit('updateSucceed', trackId)
+    },
     handleClick() {
       this.focus = true
       document.addEventListener('mouseup', this.hide)
     },
     hide(e) {
-      if (!this.$refs.trackCard.contains(e.target)) {
+      if (!this.$refs.trackCard) {
+        document.removeEventListener('mouseup', this.hide)
+      } else if (!this.$refs.trackCard.contains(e.target)) {
         this.focus = false
         document.removeEventListener('mouseup', this.hide)
       }

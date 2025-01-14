@@ -53,8 +53,7 @@ import { mapState } from 'pinia'
 import { useLibraryStore } from '@/stores/library'
 import DialogPlaylistEdit from '@/components/DialogPlaylistEdit/index.vue'
 import ConfirmBox from '@/components/ConfirmBox/index.vue'
-import { deleteUserSavedPlaylists, savePlaylists } from '@/api/meta/playlist'
-import Message from '@/components/Message'
+import { deleteUserSavedPlaylists } from '@/api/meta/playlist'
 
 export default {
   name: 'DropDownMenu',
@@ -98,21 +97,6 @@ export default {
         this.$router.push({ name: 'Home' })
       }
       this.openRemoveConfirm = false
-    },
-    async handleClickSaveButton() {
-      this.loading_toggle_save = true
-      if (this.saved) {
-        await deleteUserSavedPlaylists(this.playlist.id)
-        this.saved = false
-        useLibraryStore().removePlaylist(this.playlist.id)
-        Message(`${this.$t('message.removed_from_lib')}`)
-      } else {
-        await savePlaylists(this.playlist.id)
-        this.saved = true
-        useLibraryStore().addPlaylists(this.playlist)
-        Message(`${this.$t('message.added_to_lib')}`)
-      }
-      this.loading_toggle_save = false
     },
     async handleUpdateSucceed() {
       await this.$emit('updateSucceed')

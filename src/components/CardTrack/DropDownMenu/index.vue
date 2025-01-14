@@ -5,7 +5,7 @@
     </template>
     <template #dropDownItems>
       <DropDownSecondary
-        @handle-mouse-enter="show_menu_secondary_playlists = true"
+        @handle-mouse-enter="closeOtherMenuSecondary('show_menu_secondary_playlists')"
         v-model="show_menu_secondary_playlists"
       >
         <template #trigger>
@@ -40,11 +40,26 @@
         </template>
       </DropDownSecondary>
       <DropDownItem
+        v-if="playlist != {}"
+        @item-click="closeMenu"
+        @mouseenter="closeOtherMenuSecondary"
+        @click="handleRemoveTrackFromPlaylist"
+      >
+        <template #left>
+          <div class="icon-wrapper">
+            <IconTrashBin />
+          </div>
+        </template>
+        <template #default>
+          {{ $t('drop_down.remove_from_this_playlist') }}
+        </template>
+      </DropDownItem>
+      <DropDownItem
         v-if="track.artists.length === 1"
         :to="{ name: 'Artist', params: { artistId: track.artists[0].id } }"
         top-line
         @item-click="closeMenu"
-        @mouseenter="show_menu_secondary_playlists = false"
+        @mouseenter="closeOtherMenuSecondary('show_menu_secondary_artists')"
       >
         <template #left>
           <div class="icon-wrapper">
@@ -57,7 +72,7 @@
       </DropDownItem>
       <DropDownSecondary
         v-else-if="track.artists.length > 1"
-        @handle-mouse-enter="show_menu_secondary_artists = true"
+        @handle-mouse-enter="closeOtherMenuSecondary('show_menu_secondary_artists')"
         v-model="show_menu_secondary_artists"
       >
         <template #trigger>
@@ -125,8 +140,9 @@ import IconDefaultArtist from '@/components/Icons/IconDefaultArtist.vue'
 import IconDefaultAlbum from '@/components/Icons/IconDefaultAlbum.vue'
 import { mapState } from 'pinia'
 import { useLibraryStore } from '@/stores/library'
-import { addItemsToPlaylist } from '@/api/meta/playlist'
+import { addItemsToPlaylist, removePlaylistItems } from '@/api/meta/playlist'
 import Message from '@/components/Message'
+import IconTrashBin from '@/components/Icons/IconTrashBin.vue'
 
 export default {
   name: 'DropDownMenu',
@@ -134,6 +150,10 @@ export default {
     track: {
       type: Object,
       default: null
+    },
+    playlist: {
+      type: Object,
+      default: () => {}
     }
   },
   inject: ['bottom'],
@@ -145,7 +165,8 @@ export default {
     IconTriangleRight,
     DropDownSecondary,
     IconDefaultArtist,
-    IconDefaultAlbum
+    IconDefaultAlbum,
+    IconTrashBin
   },
   data() {
     return {
@@ -158,6 +179,20 @@ export default {
     ...mapState(useLibraryStore, { playlists_by_user: 'playlists_by_user' })
   },
   methods: {
+    async handleRemoveTrackFromPlaylist() {
+      const data = {
+        tracks: [
+          {
+            uri: this.track.uri
+          }
+        ]
+      }
+      const res = await removePlaylistItems(this.playlist.id, data)
+      if (res.snapshot_id) {
+        Message(this.$t('message.removed_from_playlist', { playlist: this.playlist.name }))
+        this.$emit('updateSucceed', this.track.id)
+      }
+    },
     closeOtherMenuSecondary(propName) {
       this.show_menu_secondary_playlists = false
       this.show_menu_secondary_artists = false
@@ -172,8 +207,7 @@ export default {
     },
     async addToPlaylist(id, name) {
       const data = {
-        uris: [this.track.uri],
-        position: 0
+        uris: [this.track.uri]
       }
       const res = await addItemsToPlaylist(id, data)
       if (res.snapshot_id) {
@@ -184,7 +218,9 @@ export default {
   watch: {
     bottom: {
       handler() {
-        this.closeMenu()
+        if (this.show_menu) {
+          this.closeMenu()
+        }
       }
     }
   }
