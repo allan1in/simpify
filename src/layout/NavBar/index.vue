@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="nav-bar__right">
-      <DropDown v-model="show_menu_language" position="bottom-end">
+      <DropDown position="bottom-start" v-model="show_menu_language">
         <template #trigger>
           <div v-tooltip="$t('tooltip.language')" class="nav-bar__right__language">
             <button class="nav-bar__right__language__language-wrapper">

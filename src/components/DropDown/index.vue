@@ -31,7 +31,11 @@ export default {
       type: Number,
       default: 8
     },
-    modelValue: {}
+    modelValue: {},
+    position: {
+      type: String,
+      default: 'bottom-end'
+    }
   },
   data() {
     return {
@@ -47,9 +51,65 @@ export default {
         const viewWidth = window.innerWidth
         const viewHeight = window.innerHeight
 
-        let position = {
-          left: triggerRect.left + 'px',
-          top: triggerRect.bottom + this.gutter + 'px'
+        let position
+
+        switch (this.position) {
+          case 'bottom-start': {
+            position = {
+              left: triggerRect.right - boxRect.width + 'px',
+              top: triggerRect.bottom + this.gutter + 'px'
+            }
+            break
+          }
+          case 'bottom-end': {
+            position = {
+              left: triggerRect.left + 'px',
+              top: triggerRect.bottom + this.gutter + 'px'
+            }
+            break
+          }
+          case 'top-start': {
+            position = {
+              left: triggerRect.right - boxRect.width + 'px',
+              top: triggerRect.top - this.gutter - boxRect.height + 'px'
+            }
+            break
+          }
+          case 'top-end': {
+            position = {
+              left: triggerRect.left + 'px',
+              top: triggerRect.top - this.gutter - boxRect.height + 'px'
+            }
+            break
+          }
+          case 'left-start': {
+            position = {
+              left: triggerRect.left - boxRect.width - this.gutter + 'px',
+              top: triggerRect.bottom - boxRect.height + 'px'
+            }
+            break
+          }
+          case 'left-end': {
+            position = {
+              left: triggerRect.left - boxRect.width - this.gutter + 'px',
+              top: triggerRect.top + 'px'
+            }
+            break
+          }
+          case 'right-start': {
+            position = {
+              left: triggerRect.right + this.gutter + 'px',
+              top: triggerRect.bottom - boxRect.height + 'px'
+            }
+            break
+          }
+          case 'right-end': {
+            position = {
+              left: triggerRect.right + this.gutter + 'px',
+              top: triggerRect.top + 'px'
+            }
+            break
+          }
         }
 
         if (boxRect.width + triggerRect.left > viewWidth) {
