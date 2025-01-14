@@ -84,7 +84,8 @@
       </div>
       <div class="track-card__more-wrapper">
         <DropDownMenu
-          @update-succeed="handleUpdateSucceed"
+          @remove-succeed="handleRemoveSucceed"
+          @add-succeed="handleAddSucceed"
           :playlist
           v-show="active"
           :track="item"
@@ -204,8 +205,11 @@ export default {
     }
   },
   methods: {
-    handleUpdateSucceed(trackId) {
-      this.$emit('updateSucceed', trackId)
+    handleRemoveSucceed(trackId) {
+      this.$emit('removeSucceed', trackId)
+    },
+    handleAddSucceed(id, track) {
+      this.$emit('addSucceed', id, track)
     },
     handleClick() {
       this.focus = true

@@ -64,15 +64,16 @@
         </div>
         <div class="playlist-container__content__tracks">
           <TrackListHeader v-if="tracks.length" />
-            <CardTrack
-              v-for="(item, index) in tracks"
-              :key="index"
-              :item="item.track"
-              :index="index"
-              :context_uri="playlist.uri"
-              :playlist="playlist"
-              @update-succeed="handleUpdateSucceed"
-            />
+          <CardTrack
+            v-for="(item, index) in tracks"
+            :key="index"
+            :item="item.track"
+            :index="index"
+            :context_uri="playlist.uri"
+            :playlist="playlist"
+            @remove-succeed="handleRemoveSucceed"
+            @add-succeed="handleAddSucceed"
+          />
         </div>
       </div>
     </div>
@@ -161,8 +162,13 @@ export default {
     }
   },
   methods: {
-    handleUpdateSucceed(trackId) {
+    handleRemoveSucceed(trackId) {
       this.tracks = this.tracks.filter((item) => item.track.id !== trackId)
+    },
+    handleAddSucceed(id, track) {
+      if (this.playlist.id === id) {
+        this.tracks.push({ track })
+      }
     },
     reset() {
       this.id = this.$route.params.playlistId

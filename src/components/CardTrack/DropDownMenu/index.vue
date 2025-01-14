@@ -32,9 +32,11 @@
               :key="item.id"
               class="drop-down__item__drop-down-secondary__item-wrapper__item"
             >
-              <DropDownItem @click="addToPlaylist(item.id, item.name)" @item-click="closeMenu">{{
-                item.name
-              }}</DropDownItem>
+              <DropDownItem
+                @click="handleAddToPlaylist(item.id, item.name)"
+                @item-click="closeMenu"
+                >{{ item.name }}</DropDownItem
+              >
             </div>
           </div>
         </template>
@@ -190,7 +192,7 @@ export default {
       const res = await removePlaylistItems(this.playlist.id, data)
       if (res.snapshot_id) {
         Message(this.$t('message.removed_from_playlist', { playlist: this.playlist.name }))
-        this.$emit('updateSucceed', this.track.id)
+        this.$emit('removeSucceed', this.track.id)
       }
     },
     closeOtherMenuSecondary(propName) {
@@ -205,12 +207,13 @@ export default {
       this.closeOtherMenuSecondary()
       this.show_menu = false
     },
-    async addToPlaylist(id, name) {
+    async handleAddToPlaylist(id, name) {
       const data = {
         uris: [this.track.uri]
       }
       const res = await addItemsToPlaylist(id, data)
       if (res.snapshot_id) {
+        this.$emit('addSucceed', id, this.track)
         Message(this.$t('message.added_to_playlist', { playlist: name }))
       }
     }
