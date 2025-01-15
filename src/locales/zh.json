@@ -178,6 +178,7 @@
     "remove_from_library": "从音乐库中移除",
     "go_to_spotify": "前往 Spotify",
     "more_options": "{item} 的更多操作",
-    "create_playlist": "创建歌单"
+    "create_playlist": "创建歌单",
+    "duration": "时长"
   }
 }
