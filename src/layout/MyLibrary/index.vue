@@ -15,7 +15,7 @@
             $t('my_library.title')
           }}</span>
         </div>
-        <Transition name="fade">
+        <Transition :name="resizing ? '' : 'fade'">
           <div v-if="!active_collasped" class="my-library__container__title__right">
             <button
               v-tooltip="$t('tooltip.create_playlist')"
@@ -32,7 +32,7 @@
               @click.prevent="active_show_more = !active_show_more"
             >
               <div class="my-library__container__title__right__arrow__wrapper">
-                <Transition name="fade" mode="out-in">
+                <Transition :name="resizing ? '' : 'fade'" mode="out-in">
                   <IconArrowRightLonger v-if="!active_show_more" />
                   <IconArrowLeftLonger v-else />
                 </Transition>

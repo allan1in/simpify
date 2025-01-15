@@ -32,7 +32,7 @@
           />
         </div>
       </div>
-      <Transition name="fade">
+      <Transition :name="resizing ? '' : 'fade'">
         <div v-if="!active_collasped" class="card-playlist-library-contanier__info">
           <a
             @click.prevent.stop="
