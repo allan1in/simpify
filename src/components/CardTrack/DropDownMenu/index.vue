@@ -263,12 +263,7 @@ export default {
   &__item {
     &__drop-down-secondary {
       &__item-wrapper {
-        max-height: 12rem;
-        overflow-y: auto;
-        overflow-x: hidden;
-        scrollbar-color: #7f7f7f transparent;
         padding: 0.3rem;
-        padding-right: 0;
 
         &__item {
           max-width: 20rem;
