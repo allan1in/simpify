@@ -100,7 +100,8 @@ export default {
     ...mapWritableState(useLibraryStore, [
       'active_playlists_by_user',
       'current_tag',
-      'loading_playlists_by_user'
+      'loading_playlists_by_user',
+      'resizing'
     ]),
     isOverflow() {
       return this.overflow > 0

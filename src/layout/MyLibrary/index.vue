@@ -97,7 +97,12 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useLibraryStore, ['active_collasped', 'active_show_more', 'current_tag']),
+    ...mapWritableState(useLibraryStore, [
+      'active_collasped',
+      'active_show_more',
+      'current_tag',
+      'resizing'
+    ]),
     toolTipTitle() {
       if (this.active_collasped) {
         return { content: this.$t('tooltip.expand_lib'), placement: 'right' }

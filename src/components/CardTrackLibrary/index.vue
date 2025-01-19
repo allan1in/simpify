@@ -111,7 +111,7 @@ export default {
     Image
   },
   computed: {
-    ...mapState(useLibraryStore, ['active_collasped']),
+    ...mapState(useLibraryStore, ['active_collasped', 'resizing']),
     ...mapState(usePlayerStore, ['active_pause', 'current_track']),
     isPlaying() {
       return !this.active_pause && this.isCurrentItem
