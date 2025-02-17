@@ -7,7 +7,9 @@
       <div class="list-header__title">{{ $t('header_track_list.title') }}</div>
       <div v-if="showAlbum" class="list-header__album">{{ $t('header_track_list.album') }}</div>
       <div class="list-header__duration">
-        <div class="list-header__duration__icon-wrapper"><IconDuration /></div>
+        <div class="list-header__duration__icon-wrapper">
+          <IconDuration v-tooltip="$t('tooltip.duration')" />
+        </div>
       </div>
       <div class="list-header__more"></div>
     </div>

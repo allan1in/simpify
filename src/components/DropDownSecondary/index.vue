@@ -13,7 +13,7 @@
       class="drop-down-container__box"
       :style="{ top: top, left: left }"
     >
-      <ul>
+      <ul class="drop-down-container__box__list-wrapper">
         <slot name="dropDownItems"></slot>
       </ul>
     </div>
@@ -91,6 +91,13 @@ export default {
     border-radius: $border-radius-small;
     z-index: 10;
     box-shadow: 0 0 1.5rem 1rem rgba($color-bg-1, 0.2);
+
+    &__list-wrapper {
+      max-height: 12rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-color: #7f7f7f transparent;
+    }
   }
 }
 </style>

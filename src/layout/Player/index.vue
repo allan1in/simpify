@@ -31,7 +31,7 @@
         </div>
         <div class="player-bar__left__save-btn">
           <ButtonSave
-            :saved
+            :saved="saved"
             class="icon-wrapper"
             @button-click="handleToggleTrackSave"
             :loading="loading_toggle_save"

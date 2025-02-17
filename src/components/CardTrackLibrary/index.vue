@@ -27,7 +27,7 @@
           no-scale
         />
       </div>
-      <Transition name="fade">
+      <Transition :name="resizing ? '' : 'fade'">
         <div v-if="!active_collasped" class="card-track-library-contanier__info">
           <a
             @click.prevent.stop="$router.push({ name: 'Track', params: { trackId: item.id } })"
@@ -111,7 +111,7 @@ export default {
     Image
   },
   computed: {
-    ...mapState(useLibraryStore, ['active_collasped']),
+    ...mapState(useLibraryStore, ['active_collasped', 'resizing']),
     ...mapState(usePlayerStore, ['active_pause', 'current_track']),
     isPlaying() {
       return !this.active_pause && this.isCurrentItem

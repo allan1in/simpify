@@ -7,7 +7,7 @@
   >
     <i v-show="isOverflow && !reachedLeft" class="top-bar-wrapper__shadow-left"></i>
     <i v-show="isOverflow && !reachedRight" class="top-bar-wrapper__shadow-right"></i>
-    <Transition name="fade">
+    <Transition :name="resizing ? '' : 'fade'">
       <button
         v-show="mouseOver && isOverflow && !reachedLeft"
         class="top-bar-wrapper__arrow top-bar-wrapper__arrow-left"
@@ -100,7 +100,8 @@ export default {
     ...mapWritableState(useLibraryStore, [
       'active_playlists_by_user',
       'current_tag',
-      'loading_playlists_by_user'
+      'loading_playlists_by_user',
+      'resizing'
     ]),
     isOverflow() {
       return this.overflow > 0

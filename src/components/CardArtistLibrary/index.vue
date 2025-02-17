@@ -27,7 +27,7 @@
           no-scale
         />
       </div>
-      <Transition name="fade">
+      <Transition :name="resizing ? '' : 'fade'">
         <div v-if="!active_collasped" class="card-artist-library-contanier__info">
           <a
             @click.prevent.stop="$router.push({ name: 'Artist', params: { artistId: item.id } })"

@@ -12,8 +12,11 @@
         <template v-if="available">
           <div v-if="active" class="track-card__left__icon-wrapper">
             <button class="track-card__left__icon-wrapper__icon" @click="handleTogglePlay">
-              <IconPause v-if="isPlaying" />
-              <IconPlay v-else />
+              <IconPause
+                v-tooltip="$t('tooltip.pause_item', { item: item?.name })"
+                v-if="isPlaying"
+              />
+              <IconPlay v-tooltip="$t('tooltip.play_item', { item: item?.name })" v-else />
             </button>
           </div>
           <div v-if="!active" class="track-card__left__num-wrapper">

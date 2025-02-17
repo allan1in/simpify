@@ -44,7 +44,7 @@ export const usePlayerStore = defineStore('player', {
         window.onSpotifyWebPlaybackSDKReady = () => {
           const token = useUserStore().access_token
           this.player = new window.Spotify.Player({
-            name: 'Web Player (Vue)',
+            name: 'Simpify Player (desktop)',
             getOAuthToken: (cb) => {
               cb(token)
             },
@@ -78,6 +78,13 @@ export const usePlayerStore = defineStore('player', {
               } else {
                 this.active_pause = true
               }
+              // Only upadte the state of saved when current_track has changed
+              if (this.current_track?.id != res.track_window?.current_track?.id) {
+                const resp = await checkUserSavedTracks({
+                  ids: res.track_window?.current_track?.id
+                })
+                this.saved = resp?.[0]
+              }
               this.duration = res.duration
               this.position = res.position
               this.percentage = 100 * (res.position / res.duration)
@@ -91,8 +98,6 @@ export const usePlayerStore = defineStore('player', {
 
               this.context = res.context
             }
-
-            this.saved = (await checkUserSavedTracks({ ids: this.current_track?.id }))?.[0]
             this.loading = false
           })
 

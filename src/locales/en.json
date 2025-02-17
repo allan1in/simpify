@@ -178,6 +178,7 @@
     "remove_from_library": "Remove from Your Library",
     "go_to_spotify": "Go to Spotify",
     "more_options": "More Options for {item}",
-    "create_playlist": "Create Playlist"
+    "create_playlist": "Create Playlist",
+    "duration": "Duration"
   }
 }
