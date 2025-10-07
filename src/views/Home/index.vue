@@ -132,6 +132,7 @@ export default {
       if (this.tracks.length === this.tracks_limit) {
         moreSongsNeeded = false
       } else {
+        if (next == null) return
         next = res.next.slice(res.next.indexOf('?') + 1)
       }
       while (moreSongsNeeded) {
