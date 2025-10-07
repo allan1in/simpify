@@ -102,7 +102,6 @@ export default {
         min-height: $height-content;
 
         &__content {
-          max-width: $max-width-main-view;
           min-height: inherit;
           margin: 0 auto;
         }
